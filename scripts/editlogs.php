@@ -1,16 +1,45 @@
 <?php
-include 'permset.php';
-error_reporting(E_ALL);
-ini_set('display_errors', True);
+include 'dbconnect.php';
 
-$editedlog = isset($_POST['editlog']) ? vali($_POST['editlog']) : '';
-$editedtitle = isset($_POST['edittitle']) ? vali($_POST['edittitle']) : '';
-$choosen  = isset($_POST['choosen']) ? vali($_POST['choosen']) : '';
-
-//Update log entry
-if (!mysqli_query($con, 'UPDATE log SET title = "'.$editedtitle.'", entry = "'.$editedlog.'", edited = 1 WHERE logid = "'.$choosen.'"')){
-	die('Error saving log: ' . mysqli_error($con));
+if (checkLogIn()) {
+	if ($_SESSION['userInfo'][5] == "guest") {
+		header( 'Location: viewlog.php' );
+	}
+	
+	if ($_SESSION['userInfo'][5] === "admin") {
+		$admin_link = '| <a href="admin.php">Administration</a>';
+	}
+	else {
+		$admin_link = '';
+	}
+	
+	if ($_SESSION['userInfo'][5] !== "guest") {
+		$settings_link = '| <a href="settings.php">Settings</a>';
+	}
+	else {
+		$settings_link = '';
+	}
 }
 else {
-	echo "Log updated";
+	header( 'Location: index.php' );
+}
+
+$editedlog = isset($_POST['editlog']) ? $_POST['editlog'] : '';
+$editedtitle = isset($_POST['edittitle']) ? $_POST['edittitle'] : '';
+$choosen  = isset($_POST['choosen']) ? $_POST['choosen'] : '';
+
+// Connect to DB
+$db = new DB();
+$conn = $db->dbConnect();
+
+// Update the database
+try {
+    $stmt = $conn->prepare('UPDATE `log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :leLogID');
+    $stmt->execute(array(
+        'eTitle' => $editedtitle,
+        'eEntry' => $editedlog,
+        'leLogID' => $choosen
+    ));
+} catch(PDOExeception $e) {
+    echo 'Error editing log.';
 }

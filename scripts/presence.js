@@ -36,7 +36,7 @@ var presence = {
     },
     
     popOut: function() {
-        window.open("presenceWindow.php","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
+        window.open("presenceWindow.phtml","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
     },
     
     sendNewStatus: function(stat, rt, isWin, message) {

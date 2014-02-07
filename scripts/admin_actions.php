@@ -1,36 +1,53 @@
-<!DOCTYPE html>
-
 <?php
+/*
+ * Lee Keitel
+ * January 28, 2014
+ *
+ * This script contains any non-user related
+ * admin functions.
+*/
+
 include 'dbconnect.php';
-error_reporting(E_ALL);
-ini_set('display_errors', True);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $a_action = $_POST["sub_action"];
+        
+        // Connect to DB
+        $db = new DB();
+        $conn = $db->dbConnect();
 		
 		if ($a_action == "Clear Session Tokens") {
-			$qu = "TRUNCATE TABLE session_token";
-			
-			if (!mysqli_query($con, $qu)) {
-				die('<br /><br />Error: ' . mysqli_error($con));
-			}
+            // Clear session token table
+            // This will not log people out
+            // until their PHP session expires.
+            // TODO: Create a force logout system
+            try {
+                $stmt = $conn->prepare('TRUNCATE TABLE session_token');
+                $stmt->execute();
+            } catch(PDOException $e) {
+                echo 'Error clearing session tokens.';
+            }
 		}
 		elseif ($a_action == "Optimize Database") {
-			$qu = "OPTIMIZE TABLE log";
-			
-			if (!mysqli_query($con, $qu)) {
-				die('<br /><br />Error: ' . mysqli_error($con));
-			}
+            // Optimize log table
+            try {
+                $stmt = $conn->prepare('OPTIMIZE TABLE log');
+                $stmt->execute();
+            } catch(PDOException $e) {
+                echo 'Error clearing session tokens.';
+            }
 		}
         
-        //Try SQL statement UPDATE users SET firsttime = 3;
-        //Don't use a WHERE statement
 		elseif ($a_action == "Set New Features") {
-			$grab_users = mysqli_query($con, "SELECT * FROM users");
-
-			while ($row = mysqli_fetch_array($grab_users)) {
-				mysqli_query($con, 'UPDATE users SET firsttime = 3 WHERE userid = "'.$row['userid'].'"');
-			}
+            // When the new features page needs to be shown
+            // Or a splash screen needs to be shown, set the
+            // firsttime column of all non-guest accounts to 3
+            try {
+                $stmt = $conn->prepare('UPDATE `users` SET `firsttime` = 3 WHERE `role` != "guest"');
+                $stmt->execute();
+            } catch(PDOException $e) {
+                echo 'Error setting variable.';
+            }
 		}
 		
 		header( 'Location: ../admin.php' );

@@ -1,0 +1,7 @@
+<?php
+include_once 'dbconnect.php';
+
+//Authenticate user, if fail go to login page
+if (!checkLogIn()) {
+    header( 'Location: index.php' );
+}
