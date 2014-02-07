@@ -10,4 +10,82 @@
  * http://trentrichardson.com/Impromptu/MIT-LICENSE.txt
  * 
  */
- (function(e){e.fn.extend({sliderAccess:function(t){t=t||{};t.touchonly=t.touchonly!==undefined?t.touchonly:true;if(t.touchonly===true&&!("ontouchend"in document)){return e(this)}return e(this).each(function(n,r){var i=e(this),s=e.extend({},{where:"after",step:i.slider("option","step"),upIcon:"ui-icon-plus",downIcon:"ui-icon-minus",text:false,upText:"+",downText:"-",buttonset:true,buttonsetTag:"span",isRTL:false},t),o=e("<"+s.buttonsetTag+' class="ui-slider-access">'+'<button data-icon="'+s.downIcon+'" data-step="'+(s.isRTL?s.step:s.step*-1)+'">'+s.downText+"</button>"+'<button data-icon="'+s.upIcon+'" data-step="'+(s.isRTL?s.step*-1:s.step)+'">'+s.upText+"</button>"+"</"+s.buttonsetTag+">");o.children("button").each(function(t,n){var r=e(this);r.button({text:s.text,icons:{primary:r.data("icon")}}).click(function(e){var t=r.data("step"),n=i.slider("value"),s=n+=t*1,o=i.slider("option","min"),u=i.slider("option","max"),a=i.slider("option","slide")||function(){},f=i.slider("option","stop")||function(){};e.preventDefault();if(s<o||s>u){return}i.slider("value",s);a.call(i,null,{value:s});f.call(i,null,{value:s})})});i[s.where](o);if(s.buttonset){o.removeClass("ui-corner-right").removeClass("ui-corner-left").buttonset();o.eq(0).addClass("ui-corner-left");o.eq(1).addClass("ui-corner-right")}var u=o.css({marginLeft:s.where==="after"&&!s.isRTL||s.where==="before"&&s.isRTL?10:0,marginRight:s.where==="before"&&!s.isRTL||s.where==="after"&&s.isRTL?10:0}).outerWidth(true)+5;var a=i.outerWidth(true);i.css("display","inline-block").width(a-u)})}})})(jQuery)
+ (function($){
+
+	$.fn.extend({
+		sliderAccess: function(options){
+			options = options || {};
+			options.touchonly = options.touchonly !== undefined? options.touchonly : true; // by default only show it if touch device
+
+			if(options.touchonly === true && !("ontouchend" in document)){
+				return $(this);
+			}
+				
+			return $(this).each(function(i,obj){
+						var $t = $(this),
+							o = $.extend({},{ 
+											where: 'after',
+											step: $t.slider('option','step'), 
+											upIcon: 'ui-icon-plus', 
+											downIcon: 'ui-icon-minus',
+											text: false,
+											upText: '+',
+											downText: '-',
+											buttonset: true,
+											buttonsetTag: 'span',
+											isRTL: false
+										}, options),
+							$buttons = $('<'+ o.buttonsetTag +' class="ui-slider-access">'+
+											'<button data-icon="'+ o.downIcon +'" data-step="'+ (o.isRTL? o.step : o.step*-1) +'">'+ o.downText +'</button>'+
+											'<button data-icon="'+ o.upIcon +'" data-step="'+ (o.isRTL? o.step*-1 : o.step) +'">'+ o.upText +'</button>'+
+										'</'+ o.buttonsetTag +'>');
+
+						$buttons.children('button').each(function(j, jobj){
+							var $jt = $(this);
+							$jt.button({ 
+											text: o.text, 
+											icons: { primary: $jt.data('icon') }
+										})
+								.click(function(e){
+											var step = $jt.data('step'),
+												curr = $t.slider('value'),
+												newval = curr += step*1,
+												minval = $t.slider('option','min'),
+												maxval = $t.slider('option','max'),
+												slidee = $t.slider("option", "slide") || function(){},
+												stope = $t.slider("option", "stop") || function(){};
+
+											e.preventDefault();
+											
+											if(newval < minval || newval > maxval){
+												return;
+											}
+											
+											$t.slider('value', newval);
+
+											slidee.call($t, null, { value: newval });
+											stope.call($t, null, { value: newval });
+										});
+						});
+						
+						// before or after					
+						$t[o.where]($buttons);
+
+						if(o.buttonset){
+							$buttons.removeClass('ui-corner-right').removeClass('ui-corner-left').buttonset();
+							$buttons.eq(0).addClass('ui-corner-left');
+							$buttons.eq(1).addClass('ui-corner-right');
+						}
+
+						// adjust the width so we don't break the original layout
+						var bOuterWidth = $buttons.css({
+									marginLeft: ((o.where === 'after' && !o.isRTL) || (o.where === 'before' && o.isRTL)? 10:0), 
+									marginRight: ((o.where === 'before' && !o.isRTL) || (o.where === 'after' && o.isRTL)? 10:0)
+								}).outerWidth(true) + 5;
+						var tOuterWidth = $t.outerWidth(true);
+						$t.css('display','inline-block').width(tOuterWidth-bOuterWidth);
+					});		
+		}
+	});
+
+})(jQuery);

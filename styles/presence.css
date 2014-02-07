@@ -1,3 +1,71 @@
 /*Stylesheet for Presence Pane*/
 
-body{margin:0;text-align:left;width:100%}#presence{position:absolute;float:left;left:1em;max-width:12em;border:1px solid #000;padding:5px;background:#fff}#divMain{margin:0 auto;text-align:center;width:60%}h3{margin:0;margin-bottom:5px}table{border-collapse:collapse;border:1px solid #000}td{border:1px solid #000;padding:5px}.statusi{text-align:center}thead td{font-weight:700}.green{color:green;cursor:help}.blue{color:#00f;cursor:help}.red{color:red;cursor:help}.message{cursor:help}.linklike{margin-top:10px;color:#00f;cursor:pointer}
+body {
+    margin: 0px 0px;
+    text-align: left;
+    width: 100%;
+}
+    
+#presence {
+    position: absolute;
+    float: left;
+    left: 1em;
+    max-width: 12em;
+    border: 1px solid black;
+    padding: 5px;
+    background: #ffffff;
+}
+
+#divMain {
+    margin: 0px auto;
+    text-align: center;
+    width: 60%;
+}
+
+h3 {
+    margin: 0px;
+    margin-bottom: 5px;
+}
+
+table {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.statusi {
+    text-align: center;
+}
+
+thead td {
+    font-weight: bold;
+}
+
+.green {
+    color: green;
+    cursor: help;
+}
+
+.blue {
+    color: blue;
+    cursor: help;
+}
+
+.red {
+    color: red;
+    cursor: help;
+}
+
+.message {
+    cursor: help;
+}
+
+.linklike {
+    margin-top: 10px;
+    color: blue;
+    cursor: pointer;
+}

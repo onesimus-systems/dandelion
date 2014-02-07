@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<?php
+/*
+ * Lee Keitel
+ * January 28, 2014
+ *
+ * This page allows users to change their password
+ * and change the number of logs show on the home page.
+*/
+
+include 'scripts/dbconnect.php';
+
+if (checkLogIn()) {
+	if ($_SESSION['userInfo'][5] == "guest") {
+		header( 'Location: viewlog.php' );
+	}
+	
+	if ($_SESSION['userInfo'][5] === "admin") {
+		$admin_link = '| <a href="admin.php">Administration</a>';
+	}
+	else {
+		$admin_link = '';
+	}
+	
+	if ($_SESSION['userInfo'][5] !== "guest") {
+		$settings_link = '| <a href="settings.php">Settings</a>';
+	}
+	else {
+		$settings_link = '';
+	}
+}
+else {
+	header( 'Location: index.php' );
+}
+?>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+        <link rel="icon" type="image/ico" href="images/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<title>Dandelion Web Log</title>
+	</head>
+	<body>
+        <header>
+            <?php include 'scripts/header.php'; ?>
+        </header>
+		
+		<h3>User Settings</h3>
+		
+		<?php
+        $limit = $_SESSION['userInfo'][8];
+        
+		if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				$u_action = isset($_POST['set_action']) ? $_POST['set_action'] : '';
+				$sub_action = isset($_POST['sub_act']) ? $_POST['sub_act'] : '';
+				
+				if ($u_action == "Reset Password") {
+				
+					//Form to reset user's password
+					?>
+					<div id="editform"><br />
+					<h2>Reset Password for <?php echo $_SESSION['userInfo'][3]; ?>:</h2>
+					<form name="edit_form" method="post">
+						<table>
+							<tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
+							<tr><td>Repeat Password:</td><td><input type="password" name="reset_2" /></td></tr>
+						</table>
+						<input type="submit" name="sub_act" value="Reset" />
+					</form></div><br />
+					<?php
+				}
+                else if ($u_action == "Save Show Limit") {
+                    $showlimit = $_POST['show_limit'];
+                    
+                    if ($showlimit >= 5 AND $showlimit <= 250) {
+                        // Connect to DB
+                        $db = new DB();
+                        $conn = $db->dbConnect();
+                        
+                        try {
+                            // Update record with new record limit
+                            $stmt = $conn->prepare('UPDATE `users` SET `showlimit` = :newlimit WHERE `userid` = :myID');
+                            $stmt->execute(array(
+                                'newlimit' => $showlimit,
+                                'myID' => $_SESSION['userInfo'][0]
+                            ));
+                            
+                            echo 'Show limit change successful.<br /><br />';
+                            
+                        } catch(PDOExeception $e) {
+                            echo 'Error updating show limit.<br /><br />';
+                        }
+                        $limit = $_SESSION['userInfo'][8] = $showlimit;
+                    }
+                    else {
+                        echo "Please choose a number between 5-250 for log view limit.<br /><br />";
+                    }
+                }
+				
+                // Check and save new password
+				if ($sub_action == "Reset") {
+					$reset_3 = $_POST['reset_1'];
+					$reset_4 = $_POST['reset_2'];
+					
+					if ($reset_3 == $reset_4) {
+                        $reset_3 = password_hash($reset_3, PASSWORD_BCRYPT); // Hash the password if they match
+                        
+                        // Connect to DB
+                        $db = new DB();
+                        $conn = $db->dbConnect();
+                        
+                        try {
+                            // Update record with new password
+                            $stmt = $conn->prepare('UPDATE `users` SET `password` = :newpass WHERE `userid` = :myID');
+                            $stmt->execute(array(
+                                'newpass' => $reset_3,
+                                'myID' => $_SESSION['userInfo'][0]
+                            ));
+                            
+                            echo 'Password change successful.<br /><br />';
+                            
+                        } catch(PDOExeception $e) {
+                            echo 'Error updating password.<br /><br />';
+                        }
+					}
+					else {
+						echo 'New passwords do not match<br /><br />';
+					}
+				}
+			}
+		?>
+        
+        Your username is <?php echo $_SESSION['userInfo'][1]; ?>.<br /><br />
+        
+        <?php
+            if ($_SESSION['userInfo'][5] != "guest") {
+            ?>
+            <form method="post">
+                <input type="submit" name="set_action" value="Reset Password" /><br /><br />
+                <input type="text" name="show_limit" size="3" value="<?php echo $limit; ?>" />
+                <input type="submit" name="set_action" value="Save Show Limit" />
+            </form>
+            <?php
+            }
+        ?>
+        
+        <br />More settings to come as development continues.
+        
+        <footer>
+            <p id="credits">&copy; 2013 Daedalus Computer Services</p>
+        </footer>
+	</body>
+</html>

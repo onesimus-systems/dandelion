@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<?php
+include_once 'scripts/dbconnect.php';
+
+// Authenticate user, if fail go to login page
+if (checkLogIn()) {
+	if ($_SESSION['userInfo'][5] === "admin") {
+		$admin_link = '| <a href="admin.php">Administration</a>';
+	}
+	else {
+		$admin_link = '';
+	}
+	
+	if ($_SESSION['userInfo'][5] !== "guest") {
+		$settings_link = '| <a href="settings.php">Settings</a>';
+	}
+	else {
+		$settings_link = '';
+	}
+}
+else {
+	header( 'Location: index.php' );
+}
+?>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+        <link rel="icon" type="image/ico" href="images/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<title>Dandelion Web Log</title>
+	</head>
+	<body>
+        <header>
+            <?php include 'scripts/header.php'; ?>
+        </header>
+		
+        <h3>Administration</h3>
+		
+        <form name="admin_form" method="post" action="scripts/admin_actions.php">
+			<input type="submit" name="sub_action" value="Set New Features" /><br />
+			<input type="submit" name="sub_action" value="Clear Session Tokens" /><br />
+			<input type="submit" name="sub_action" value="Backup Database" /><br />
+			<input type="submit" name="sub_action" value="Optimize Database" /><br />
+        </form>
+        
+        <br /><a href="editusers.php">Edit Users</a>
+        <br /><a href="categories.php">Manage Categories</a>
+        
+        <footer>
+            <p id="credits">&copy; 2013 Daedalus Computer Services</p>
+        </footer>
+	</body>
+</html>

@@ -1,13 +1,16 @@
 <?php
-include 'dbconnect.php';
+/*
+ * @author Lee Keitel
+ * @date February 3, 2014
+ *
+ * This script deletes the cookies for authentication
+ * and the PHP session effectivly logging out the user.
+*/
 
-$cookie = isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : '';
-if ($cookie) {
-    list ($user, $token, $mac) = explode(':', $cookie);
-	mysqli_query($con, 'DELETE FROM session_token WHERE userid = "' . $user . '"');
-}
+include_once 'dbconnect.php';
 
-setcookie($cookie_name, "", time() - 3600);
+setcookie($cookie_name, "", time()-3600, "/");   // Delete token cookie
+setcookie(session_name(), "", time()-3600, "/"); // Delete Session cookie
 
-echo 'You are now logged out!';
-header( 'Location: ../index.php' );
+echo 'You are now logged out!';     // Little message in case it takes a moment
+header( 'Location: ../index.php' ); // To the login page with you!
