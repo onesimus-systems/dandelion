@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `presence` (
 --
 
 INSERT INTO `presence` (`id`, `uid`, `realname`, `status`, `message`, `return`, `dmodified`) VALUES
-(1, 1, 'Admin', 1, '', '', '2014-02-08 10:21:34');
+(1, 1, 'Admin', 1, '', '00:00:00', '2014-02-08 10:21:34');
 
 -- --------------------------------------------------------
 
