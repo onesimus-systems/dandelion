@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     }
 
 // Determines if the person is a user or not
-// If yes, validates and redirects to viewlog.php
+// If yes, validates and redirects to viewlog.phtml
 // If no, yells at user, loudly
 function isuser($uname, $pword, $conn, $cookie_name) {
 

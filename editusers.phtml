@@ -5,15 +5,15 @@ include_once 'scripts/dbconnect.php';
 
 //Authenticate user, if fail go to login page
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.php">Administration</a>';
+	if ($_SESSION['userInfo']['role'] === "admin") {
+		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.php">Settings</a>';
+	if ($_SESSION['userInfo']['role'] !== "guest") {
+		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
@@ -67,14 +67,10 @@ else {
 			</tr>
 			
 			<?php
-                try {
-                    $stmt = $conn->prepare('SELECT * FROM users');
-                    $stmt->execute();
-                } catch(PDOException $e) {
-                    echo 'Error clearing session tokens.';
-                }
+                $stmt = 'SELECT * FROM users';
+                $allUsers = $conn->queryDB($stmt, NULL);
 				
-				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				foreach ($allUsers as $row) {
 					echo '<tr>';
 					echo '<td><input type="radio" name="the_choosen_one" value="' . $row['userid'] . '" /></td>';
 					echo '<td>' . $row['userid'] . '</td>';
@@ -86,8 +82,6 @@ else {
 					echo '<td>' . $row['firsttime'] . '</td>';
 					echo '</tr>';
 				}
-                
-                $conn = NULL;
 			?>
 		</table>
 		<br />

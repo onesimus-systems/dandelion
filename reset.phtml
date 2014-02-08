@@ -14,19 +14,19 @@ include 'scripts/dbconnect.php';
 
 // Check whether the user is logged in
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] == "guest") {
-		header( 'Location: viewlog.php' );
+	if ($_SESSION['userInfo']['role'] == "guest") {
+		header( 'Location: viewlog.phtml' );
 	}
 	
-	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.php">Administration</a>';
+	if ($_SESSION['userInfo']['role'] === "admin") {
+		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.php">Settings</a>';
+	if ($_SESSION['userInfo']['role'] !== "guest") {
+		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
@@ -34,41 +34,6 @@ if (checkLogIn()) {
 }
 else {
 	header( 'Location: index.php' );
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-	$sub_action = isset($_POST['sub_act']) ? $_POST['sub_act'] : ''; // Action type
-	
-	if ($sub_action == "Reset") {
-		$reset_3 = isset($_POST['reset_1']) ? $_POST['reset_1'] : ''; // Password 1
-		$reset_4 = isset($_POST['reset_2']) ? $_POST['reset_2'] : ''; // Password 2
-		
-		if ($reset_3 == $reset_4) { // Do they match?
-			$reset_3 = password_hash($reset_3, PASSWORD_BCRYPT); // Hash the password if they match
-            
-            // Connect to DB
-            $db = new DB();
-            $conn = $db->dbConnect();
-            
-            try {
-                // Update record with new password and change firsttime
-                $stmt = $conn->prepare('UPDATE `users` SET `password` = :newpass, `firsttime` = 1 WHERE `userid` = :myID');
-                $stmt->execute(array(
-                    'newpass' => $reset_3,
-                    'myID' => $_SESSION['userInfo'][0]
-                ));
-                
-            } catch(PDOExeception $e) {
-                echo 'Error updating password.';
-            }
-            
-			echo 'Password Reset<br /><br />';
-			header( 'Location: scripts/logout.php' );
-		}
-		else {
-			echo 'New passwords do not match<br /><br />';
-		}
-	}
 }
 ?>
 <html>
@@ -82,13 +47,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	<body>
         <header>
             <h1 class="t_cen">Dandelion Web Log - v <?php echo D_VERSION ?></h1>
-            <p class="t_cen">Welcome, <?php echo $_SESSION['userInfo'][3]; ?> <a href="scripts/logout.php">Logout</a></p>
+            <p class="t_cen">Welcome, <?php echo $_SESSION['userInfo']['realname']; ?> <a href="scripts/logout.php">Logout</a></p>
         </header>
         
-        <p class="le">This is your first time logging into Dandelion. Please reset your password:</p>
+        <p>This is your first time logging into Dandelion. Please reset your password:</p>
 		
-		<div id="editform"><br />
-			<form name="edit_form" method="post">
+        <br />
+        <?php echo (isset($_SESSION['errors']) ? $_SESSION['errors'] : ''); $_SESSION['errors']=''; ?>
+        <br />
+        
+		<div id="editform">
+			<form name="edit_form" method="post" action="scripts/resetpw.php">
 				<table>
 					<tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
 					<tr><td>Repeat Password:</td><td><input type="password" name="reset_2" /></td></tr>
