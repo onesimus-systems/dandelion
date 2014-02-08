@@ -255,19 +255,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			if ($reset_3 == $reset_4) {
 				$reset_3 = password_hash($reset_3, PASSWORD_BCRYPT); // Hash the password if they match
 
-                try {
-                    // Update record with new password
-                    $stmt = $conn->prepare('UPDATE `users` SET `password` = :newpass WHERE `userid` = :myID');
-                    $stmt->execute(array(
-                        'newpass' => $reset_3,
-                        'myID' => $_POST['reset_uid']
-                    ));
+                // Update record with new password
+                $stmt = 'UPDATE `users` SET `password` = :newpass WHERE `userid` = :myID';
+                $params = array(
+                    'newpass' => $reset_3,
+                    'myID' => $_POST['reset_uid']
+                );
+                $conn->queryDB($stmt, $params);
                     
-                    echo 'Password change successful.<br /><br />';
-                    
-                } catch(PDOExeception $e) {
-                    echo 'Error updating password.<br /><br />';
-                }
+                echo 'Password change successful.<br /><br />';
 			}
 			else {
 				echo 'New passwords do not match<br />';
@@ -341,20 +337,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stat_return = "00:00:00";
             }
             
-            try {
-                $stmt = $conn->prepare('UPDATE `presence` SET `message` = :message, `status` = :status, `return` = :return, `dmodified` = :date WHERE `uid` = :userid');
-                $stmt->execute(array(
-                    'message' => $stat_message,
-                    'status' => $stat_s,
-                    'return' => $stat_return,
-                    'date' => $date,
-                    'userid' => $stat_user
-                ));
-            
-                echo 'User Status Updated<br />';
-            } catch(PDOException $e) {
-                echo 'Error updating user status.';
-            }
+            $stmt = 'UPDATE `presence` SET `message` = :message, `status` = :status, `return` = :return, `dmodified` = :date WHERE `uid` = :userid';
+            $params = array(
+                'message' => $stat_message,
+                'status' => $stat_s,
+                'return' => $stat_return,
+                'date' => $date,
+                'userid' => $stat_user
+            );
+            $conn->queryDB($stmt, $params);
+        
+            echo 'User Status Updated<br />';
 		}
         
         //-----END SECOND LEVEL ACTIONS-------//
