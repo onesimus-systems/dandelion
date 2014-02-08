@@ -12,19 +12,19 @@
 include 'scripts/dbconnect.php';
 
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] == "guest") {
-		header( 'Location: viewlog.php' );
+	if ($_SESSION['userInfo']['role'] == "guest") {
+		header( 'Location: viewlog.phtml' );
 	}
 	
-	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.php">Administration</a>';
+	if ($_SESSION['userInfo']['role'] === "admin") {
+		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.php">Settings</a>';
+	if ($_SESSION['userInfo']['role'] !== "guest") {
+		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
@@ -50,7 +50,7 @@ else {
 		<h3>User Settings</h3>
 		
 		<?php
-        $limit = $_SESSION['userInfo'][8];
+        $limit = $_SESSION['userInfo']['showlimit'];
         
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$u_action = isset($_POST['set_action']) ? $_POST['set_action'] : '';
@@ -61,7 +61,7 @@ else {
 					//Form to reset user's password
 					?>
 					<div id="editform"><br />
-					<h2>Reset Password for <?php echo $_SESSION['userInfo'][3]; ?>:</h2>
+					<h2>Reset Password for <?php echo $_SESSION['userInfo']['realname']; ?>:</h2>
 					<form name="edit_form" method="post">
 						<table>
 							<tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
@@ -71,28 +71,25 @@ else {
 					</form></div><br />
 					<?php
 				}
+                
                 else if ($u_action == "Save Show Limit") {
                     $showlimit = $_POST['show_limit'];
                     
                     if ($showlimit >= 5 AND $showlimit <= 250) {
                         // Connect to DB
-                        $db = new DB();
-                        $conn = $db->dbConnect();
+                        $conn = new dbManage();
+
+                        // Update record with new record limit
+                        $stmt = 'UPDATE `users` SET `showlimit` = :newlimit WHERE `userid` = :myID';
+                        $params = array(
+                            'newlimit' => $showlimit,
+                            'myID' => $_SESSION['userInfo']['userid']
+                        );
+                        $conn->queryDB($stmt, $params);
                         
-                        try {
-                            // Update record with new record limit
-                            $stmt = $conn->prepare('UPDATE `users` SET `showlimit` = :newlimit WHERE `userid` = :myID');
-                            $stmt->execute(array(
-                                'newlimit' => $showlimit,
-                                'myID' => $_SESSION['userInfo'][0]
-                            ));
-                            
-                            echo 'Show limit change successful.<br /><br />';
-                            
-                        } catch(PDOExeception $e) {
-                            echo 'Error updating show limit.<br /><br />';
-                        }
-                        $limit = $_SESSION['userInfo'][8] = $showlimit;
+                        echo 'Show limit change successful.<br /><br />';
+
+                        $limit = $_SESSION['userInfo']['showlimit'] = $showlimit;
                     }
                     else {
                         echo "Please choose a number between 5-250 for log view limit.<br /><br />";
@@ -108,22 +105,18 @@ else {
                         $reset_3 = password_hash($reset_3, PASSWORD_BCRYPT); // Hash the password if they match
                         
                         // Connect to DB
-                        $db = new DB();
-                        $conn = $db->dbConnect();
+                        $conn = new dbManage();
                         
-                        try {
-                            // Update record with new password
-                            $stmt = $conn->prepare('UPDATE `users` SET `password` = :newpass WHERE `userid` = :myID');
-                            $stmt->execute(array(
-                                'newpass' => $reset_3,
-                                'myID' => $_SESSION['userInfo'][0]
-                            ));
-                            
-                            echo 'Password change successful.<br /><br />';
-                            
-                        } catch(PDOExeception $e) {
-                            echo 'Error updating password.<br /><br />';
-                        }
+                        // Update record with new password
+                        $stmt = 'UPDATE `users` SET `password` = :newpass WHERE `userid` = :myID';
+                        $params = array(
+                            'newpass' => $reset_3,
+                            'myID' => $_SESSION['userInfo']['userid']
+                        );
+                        $conn->queryDB($stmt, $params);
+                        
+                        echo 'Password change successful.<br /><br />';
+
 					}
 					else {
 						echo 'New passwords do not match<br /><br />';
@@ -132,10 +125,10 @@ else {
 			}
 		?>
         
-        Your username is <?php echo $_SESSION['userInfo'][1]; ?>.<br /><br />
+        Your username is <?php echo $_SESSION['userInfo']['username']; ?>.<br /><br />
         
         <?php
-            if ($_SESSION['userInfo'][5] != "guest") {
+            if ($_SESSION['userInfo']['role'] != "guest") {
             ?>
             <form method="post">
                 <input type="submit" name="set_action" value="Reset Password" /><br /><br />

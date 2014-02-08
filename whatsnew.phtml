@@ -15,37 +15,31 @@ include_once 'scripts/dbconnect.php';
 
 if (checkLogIn()) {
 
-	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.php">Administration</a>';
+	if ($_SESSION['userInfo']['role'] === "admin") {
+		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.php">Settings</a>';
+	if ($_SESSION['userInfo']['role'] !== "guest") {
+		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
 	}
     
-    if ($_SESSION['userInfo'][7] == 3) {        
+    if ($_SESSION['userInfo']['firsttime'] == 3) {        
         // Connect to DB
-        $db = new DB();
-        $conn = $db->dbConnect();
-        
-        try {
-            // Update record and change firsttime
-            $stmt = $conn->prepare('UPDATE `users` SET `firsttime` = 0 WHERE `userid` = :myID');
-            $stmt->execute(array(
-                'myID' => $_SESSION['userInfo'][0]
-            ));
-            
-        } catch(PDOExeception $e) {
-            echo 'Error updating user record.';
-        }
-        
-        $_SESSION['userInfo'][7] = 0;
+        $conn = new dbManage();
+
+        // Update record and change firsttime
+        $stmt = 'UPDATE `users` SET `firsttime` = 0 WHERE `userid` = :myID';
+        $params = array(
+            'myID' => $_SESSION['userInfo']['userid']
+        );
+        $conn->queryDB($stmt, $params);
+        $_SESSION['userInfo']['firsttime'] = 0;
     }
 }
 else {
@@ -89,7 +83,7 @@ else {
         
         <p>If you have any feature suggestions or need to report a bug, email Lee Keitel at <a href="mailto:lfkeitel@usi.edu">lfkeitel@usi.edu</a></p>
         
-        <p><a href="viewlog.php">Continue to Dandelion --></a></p>
+        <p><a href="viewlog.phtml">Continue to Dandelion --></a></p>
         
         <footer>
             <p id="credits" class="t_cen">&copy; 2014 Daedalus Computer Services</p>

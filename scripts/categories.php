@@ -4,14 +4,14 @@ include_once 'dbconnect.php';
 // Authenticate user, if fail go to login page
 if (checkLogIn()) {
 	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.php">Administration</a>';
+		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
 	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.php">Settings</a>';
+		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';

@@ -50,8 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 		}
 		
-		header( 'Location: ../admin.php' );
+		header( 'Location: ../admin.phtml' );
 	}
 	else {
-		header( 'Location: ../admin.php' );
+		header( 'Location: ../admin.phtml' );
 	}

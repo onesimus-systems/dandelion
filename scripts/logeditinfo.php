@@ -10,19 +10,19 @@
 include 'dbconnect.php';
 
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] == "guest") {
-		header( 'Location: viewlog.php' );
+	if ($_SESSION['userInfo']['role'] == "guest") {
+		header( 'Location: viewlog.phtml' );
 	}
 	
-	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.php">Administration</a>';
+	if ($_SESSION['userInfo']['role'] === "admin") {
+		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.php">Settings</a>';
+	if ($_SESSION['userInfo']['role'] !== "guest") {
+		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
@@ -35,15 +35,14 @@ else {
 $loguid = isset($_POST['loguid']) ? $_POST['loguid'] : '';
 
 // Connect to DB
-$db = new DB();
-$conn = $db->dbConnect();
+$conn = new dbManage();
 
 // Grab log
-$stmt = $conn->prepare('SELECT * FROM `log` WHERE `logid` = :logid');
-$stmt->execute(array(
+$stmt = 'SELECT * FROM `log` WHERE `logid` = :logid';
+$params = array(
     'logid' => $loguid
-));
-$edit_log_info = $stmt->fetch(PDO::FETCH_ASSOC);
+);
+$edit_log_info = $conn->queryDB($stmt, $params);
 
 // Return JSON encoded array with log data
 echo json_encode($edit_log_info);

@@ -7,15 +7,13 @@
   * and set the app cookie to keep users logged in.
 ***/
 
-// Comment these two lines during deployment
+// Remove these two lines during deployment
 error_reporting(E_ALL);
 ini_set('display_errors', True);
 
 session_start();
-$cookie_name = "dandelionrememt"; // Used for login remembering
-define("D_VERSION", "3.5");       // Defines current Dandelion version
-define("DB_USERNAME", "username");       // Defines current Dandelion version
-define("DB_PASSWORD", "password");       // Defines current Dandelion version
+$cookie_name = 'dandelionrememt'; // Used for login remembering (soon to go away)
+define('D_VERSION', '3.5');       // Defines current Dandelion version
  
 /**
   * @brief DB connects to the database and stores the handle in $dbConn.
@@ -30,13 +28,17 @@ define("DB_PASSWORD", "password");       // Defines current Dandelion version
 ***/
 class DB
 {
-    protected $dbConn; /**< $dbConn is passed to the dbManage extended class and is used to interact with the database. */
+    protected $dbConn;                  /**< $dbConn is passed to the dbManage extended class and is used to interact with the database. */
+    private $db_username = '';      /**< Username for SQL database */
+    private $db_password = '';  /**< Password for SQL database */
+    private $db_host     = 'localhost'; /**< Host URI/IP address for SQL database */
+    private $db_dbname   = 'gardener';  /**< Database name for SQL database */
     
     /** Attempts to start a connection with the database and store it in $dbConn */
     function __construct()
     {
         try {
-            $conn = new PDO('mysql:host=localhost;dbname=gardener', DB_USERNAME, DB_PASSWORD, array(
+            $conn = new PDO('mysql:host='.$this->db_host.';dbname='.$this->db_dbname, $this->db_username, $this->db_password, array(
                 PDO::ATTR_PERSISTENT => true
             ));
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //comment when deployed
@@ -132,16 +134,20 @@ function checkLogIn() {
     $loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;
     $cookie = isset($_COOKIE[$cookie_name]) ? $_COOKIE[$cookie_name] : false;
     
-    // Connect to DB
-    $conn = new dbManage;
-    
     if ($loggedin) { // If a current PHP session is running, log in
         return true;
     }
 
-    // If a PHP session has expired, but a person is still logged in,
-    // Replace the loggedin and realName session variables, and go in
-    if ($cookie) {
+    /* If a PHP session has expired, but a person is still logged in,
+     * Replace the loggedin and realName session variables, and go in
+     *
+     * This function will soon go away. I have since learned more about
+     * PHP sessions and will able to remove this function.
+    */
+    if ($cookie) {    
+        // Connect to DB
+        $conn = new dbManage;
+        
         list ($user, $token, $mac) = explode(':', $cookie);
 
         // Grab information from session_token

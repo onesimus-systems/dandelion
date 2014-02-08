@@ -2,19 +2,19 @@
 include 'dbconnect.php';
 
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] == "guest") {
-		header( 'Location: viewlog.php' );
+	if ($_SESSION['userInfo']['role'] == "guest") {
+		header( 'Location: viewlog.phtml' );
 	}
 	
-	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.php">Administration</a>';
+	if ($_SESSION['userInfo']['role'] === "admin") {
+		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.php">Settings</a>';
+	if ($_SESSION['userInfo']['role'] !== "guest") {
+		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
@@ -29,17 +29,13 @@ $editedtitle = isset($_POST['edittitle']) ? $_POST['edittitle'] : '';
 $choosen  = isset($_POST['choosen']) ? $_POST['choosen'] : '';
 
 // Connect to DB
-$db = new DB();
-$conn = $db->dbConnect();
+$conn = new dbManage();
 
 // Update the database
-try {
-    $stmt = $conn->prepare('UPDATE `log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :leLogID');
-    $stmt->execute(array(
-        'eTitle' => $editedtitle,
-        'eEntry' => $editedlog,
-        'leLogID' => $choosen
-    ));
-} catch(PDOExeception $e) {
-    echo 'Error editing log.';
-}
+$stmt = 'UPDATE `log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :leLogID';
+$params = array(
+    'eTitle' => $editedtitle,
+    'eEntry' => $editedlog,
+    'leLogID' => $choosen
+);
+$conn->queryDB($stmt, $params);

@@ -10,19 +10,19 @@
 include 'dbconnect.php';
 
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] == "guest") {
-		header( 'Location: viewlog.php' );
+	if ($_SESSION['userInfo']['role'] == "guest") {
+		header( 'Location: viewlog.phtml' );
 	}
 	
-	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.php">Administration</a>';
+	if ($_SESSION['userInfo']['role'] === "admin") {
+		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.php">Settings</a>';
+	if ($_SESSION['userInfo']['role'] !== "guest") {
+		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
@@ -32,7 +32,7 @@ else {
 	header( 'Location: index.php' );
 }
 
-if ($_SESSION['userInfo'][3] != "Angie Martin") {
+if ($_SESSION['userInfo']['username'] != 'ajmartin') { // This is the skeleton of an eventual blacklist/rights management
     // Grab all the variables from the POST array
     $new_title = isset($_POST['add_title']) ? $_POST['add_title'] : '';
     $new_entry = isset($_POST['add_entry']) ? $_POST['add_entry'] : '';
@@ -77,27 +77,23 @@ if ($_SESSION['userInfo'][3] != "Angie Martin") {
         $new_time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
        
         // Connect to DB
-        $db = new DB();
-        $conn = $db->dbConnect();
+        $conn = new dbManage();
         
         // Add new entry
-        try {
-            $stmt = $conn->prepare('INSERT INTO `log` (datec, timec, title, entry, usercreated, cat)  VALUES (:datec, :timec, :title, :entry, :usercreated, :cat)');
-            $stmt->execute(array(
-                'datec' => $new_date,
-                'timec' => $new_time,
-                'title' => $new_title,
-                'entry' => $new_entry,
-                'usercreated' => $_SESSION['userInfo'][0], // Don't ask
-                'cat' => $new_cat,
-            ));
-            echo "Log entry created successfully.";
-            
-        } catch(PDOExeception $e) {
-            echo 'Error saving log entry.';
-        }
+        $stmt = 'INSERT INTO `log` (datec, timec, title, entry, usercreated, cat)  VALUES (:datec, :timec, :title, :entry, :usercreated, :cat)';
+        $params = array(
+            'datec' => $new_date,
+            'timec' => $new_time,
+            'title' => $new_title,
+            'entry' => $new_entry,
+            'usercreated' => $_SESSION['userInfo']['userid'], // Don't ask
+            'cat' => $new_cat,
+        );
+        $conn->queryDB($stmt, $params);
+        
+        echo "Log entry created successfully.";
     }
     else {
-        echo '<span class="bad">Log entries must have a valid title, category, and entry text.</span>';
+        echo '<span class="bad">Log entries must have a title, category, and entry text.</span>';
     }
 }

@@ -50,7 +50,7 @@ var miscFun = {
 }
  
 var refreshFun = {
-    //This function is ran onload() of viewlog.php
+    //This function is ran onload() of viewlog.phtml
     //It refreshes the log and then begins an interval
     //counter for every 2 minutes
     //This function can also be called on to restart
@@ -209,7 +209,7 @@ function pagentation(pageOffset) {
                     refreshFun.stoprefresh(); // If on pages > 1, stop refresh
                 }
                 
-                document.body.scrollTop = document.documentElement.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
             }
           else if (xmlhttp.readyState===4 && xmlhttp.status===404)
             {
@@ -331,7 +331,7 @@ var addFun = {
         document.getElementById("add_edit").appendChild(add_form);
         
         editing = true;
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
     },
 
     //This function sends details for a new log entry to
@@ -370,7 +370,8 @@ var addFun = {
 var editFun = {
     //This function displays the fields to edit a log
     showeditinputs: function(log_info) {
-        var linfo = eval ("(" + log_info + ")");
+
+        var linfo = eval ('(' + log_info.slice(1, -1) + ')');
         
         miscFun.clearaddedit();
         var add_form = document.createElement("form");
@@ -426,7 +427,7 @@ var editFun = {
         document.getElementById("add_edit").appendChild(add_form);
         
         editing = true;
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
     },
 
     //This function is called when a user clicks edit
