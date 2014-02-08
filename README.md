@@ -14,17 +14,33 @@ Notes
 
 This is version 3.1 and for the time being has the feature set in place. I'm currently working on cleaning up the code and adding database driven category management (instead of the horrendious (sp) categories.js script).
 
-Requirements
------------
+## Is it any good?
 
-* Apache Web-Server 2.2
-* PHP 5.5
+[Yes](https://news.ycombinator.com/item?id=3067434)
 
-TODO
------------
+## Requirements
+
+* Apache >= 2.4
+* PHP >= 5.5
+* MySQL/Maria DB >= 5.0
+
+## Install
+
+1. Import Base_DB.sql into your MySQL/Maria database
+2. Create a user and give it rw permissions to the new database
+3. Edit scripts/dbconnect.php with the correct database parameters
+4. Browse to index.php and login with:
+
+   ```
+   Username: admin
+   Password: admin
+   ```
+
+5. Change the admin password, login again, and see your new empty log.
+
+## TODO
 
 * Make an install script
-* Write proper README
 * Continue code clean-up from 3.1
 
 ## Versioning
