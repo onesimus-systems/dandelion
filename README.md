@@ -12,6 +12,6 @@ Requirements
 TODO
 -----------
 
-* Make and install script
+* Make an install script
 * Write proper README
 * Continue code clean-up from 3.1
