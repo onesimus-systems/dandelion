@@ -5,14 +5,14 @@ include_once 'scripts/dbconnect.php';
 
 // Authenticate user, if fail go to login page
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] === "admin") {
+	if ($_SESSION['userInfo']['role'] === "admin") {
 		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
+	if ($_SESSION['userInfo']['role'] !== "guest") {
 		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
@@ -45,8 +45,8 @@ else {
 			<input type="submit" name="sub_action" value="Optimize Database" /><br />
         </form>
         
-        <br /><a href="editusers.php">Edit Users</a>
-        <br /><a href="categories.php">Manage Categories</a>
+        <br /><a href="editusers.phtml">Edit Users</a>
+        <br /><a href="categories.phtml">Manage Categories</a>
         
         <footer>
             <p id="credits">&copy; 2013 Daedalus Computer Services</p>

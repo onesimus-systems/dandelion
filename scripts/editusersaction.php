@@ -8,8 +8,7 @@
 */
 
 // Connect to DB
-$db = new DB();
-$conn = $db->dbConnect();
+$conn = new dbManage();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		$u_action  = isset($_POST['user_action']) ? $_POST['user_action'] : '';
@@ -28,11 +27,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			echo "ERROR: Both action boxes had a selection.<br /><br />";
 		}
         
-        $stmt = $conn->prepare('SELECT * FROM `users` WHERE `userid` = :userid');
-        $stmt->execute(array(
+        $stmt = 'SELECT * FROM `users` WHERE `userid` = :userid';
+        $params = array(
             'userid' => $choosen
-        ));
-        $edit_user_info = $stmt->fetch(PDO::FETCH_ASSOC);
+        );
+        $edit_user_info = $conn->queryDB($stmt, $params);
+        $edit_user_info = isset($edit_user_info[0]) ? $edit_user_info[0] : '';
 		
         //-----FIRST LEVEL ACTIONS-------//
         
@@ -55,11 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         elseif ($u_action == "cxeesto") { // Show status update form
 			// Form to edit Cxeesto status.
-            $stmt = $conn->prepare('SELECT * FROM `presence` WHERE `uid` = :userid');
-            $stmt->execute(array(
+            $stmt = 'SELECT * FROM `presence` WHERE `uid` = :userid';
+            $params = array(
                 'userid' => $choosen
-            ));
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            );
+            $row = $conn->queryDB($stmt, $params);
             
 			if ($choosen != NULL AND $choosen != "") { ?>
 			<div id="editform"><br />
@@ -171,84 +171,80 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
 		if ($sub_typee == "Save Edit") { // Edit user data
 			// Edit selected users information
-            try {
-                $stmt = $conn->prepare('UPDATE `users` SET `realname` = :realname, `settings_id` = :s_id, `role` = :role, `firsttime` = :first WHERE `userid` = :userid');
-                $stmt->execute(array(
-                    'realname' => $_POST['edit_real'],
-                    's_id' => $_POST['edit_sid'],
-                    'role' => $_POST['edit_role'],
-                    'first' => $_POST['edit_first'],
-                    'userid' => $_POST['edit_uid']
-                ));
-                
-                $stmt = $conn->prepare('UPDATE `presence` SET `realname` = :realname WHERE `uid` = :userid');
-                $stmt->execute(array(
-                    'realname' => $_POST['edit_real'],
-                    'userid' => $_POST['edit_uid']
-                ));
+            $stmt = 'UPDATE `users` SET `realname` = :realname, `settings_id` = :s_id, `role` = :role, `firsttime` = :first WHERE `userid` = :userid';
+            $params = array(
+                'realname' => $_POST['edit_real'],
+                's_id' => $_POST['edit_sid'],
+                'role' => $_POST['edit_role'],
+                'first' => $_POST['edit_first'],
+                'userid' => $_POST['edit_uid']
+            );
             
-                echo 'User Updated<br />';
-            } catch(PDOException $e) {
-                echo 'Error editing user.';
-            }
+            $conn->queryDB($stmt, $params);
+            
+            $stmt = 'UPDATE `presence` SET `realname` = :realname WHERE `uid` = :userid';
+            $params = array(
+                'realname' => $_POST['edit_real'],
+                'userid' => $_POST['edit_uid']
+            );
+            
+            $conn->queryDB($stmt, $params);
+        
+            echo 'User Updated<br />';
 		}
         
 		elseif ($sub_typee == "Add") { // Create new user
             // Check if username already exists            
-            try {
-                $stmt = $conn->prepare('SELECT * FROM `users` WHERE `username` = :username');
-                $stmt->execute(array(
-                    'username' => $_POST['add_user']
-                ));
-                $row = $stmt->fetch();
-                
-                if ($row == NULL) {
-                    //Add new user to DB
-                    $date = new DateTime();
-                    //$date = $date->format('Y-m-d H:i:s');
-                    
-                    $add_user = $_POST['add_user'];
-                    $add_pass = password_hash($_POST['add_pass'], PASSWORD_BCRYPT);
-                    $add_real = $_POST['add_real'];
-                    $add_sid = $_POST['add_sid'];
-                    $add_role = $_POST['add_role'];
-                    $qu = 'INSERT INTO users (username, password, realname, settings_id, role, datecreated) VALUES (:username, :password, :realname, :s_id, :role, :datecreated)';
-                    
-                    $stmt = $conn->prepare($qu);
-                    $stmt->execute(array(
-                        'username' => $add_user,
-                        'password' => $add_pass,
-                        'realname' => $add_real,
-                        's_id' => $add_sid,
-                        'role' => $add_role,
-                        'datecreated' => $date->format('Y-m-d')
-                    ));
-                    
-                    $stmt = $conn->prepare('SELECT * FROM users WHERE username = :user');
-                    $stmt->execute(array(
-                        'user' => $add_user
-                    ));
+            $stmt = 'SELECT * FROM `users` WHERE `username` = :username';
+            $params = array(
+                'username' => $_POST['add_user']
+            );
+            $row = $conn->queryDB($stmt, $params);
             
-                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-                    
-                    $qu2 = 'INSERT INTO presence (uid, realname, status, dmodified) VALUES (:uid, :real, 1, :date)';
-                    
-                    $stmt = $conn->prepare($qu2);
-                    $stmt->execute(array(
-                        'uid' => $row['userid'],
-                        'real' => $add_real,
-                        'date' => $date->format('Y-m-d H:i:s')
-                    ));
-                    
-                    echo 'User Added<br />';
-                }
-
-                else {
-                    echo 'Username already exists!';
-                }
+            if ($row == NULL) {
+                //Add new user to DB
+                $date = new DateTime();
+                //$date = $date->format('Y-m-d H:i:s');
                 
-            } catch(PDOException $e) {
-                echo 'Database error 42';
+                $add_user = $_POST['add_user'];
+                $add_pass = password_hash($_POST['add_pass'], PASSWORD_BCRYPT);
+                $add_real = $_POST['add_real'];
+                $add_sid = $_POST['add_sid'];
+                $add_role = $_POST['add_role'];
+                
+                // Create user in database
+                $stmt = 'INSERT INTO users (username, password, realname, settings_id, role, datecreated) VALUES (:username, :password, :realname, :s_id, :role, :datecreated)';
+                $params = array(
+                    'username' => $add_user,
+                    'password' => $add_pass,
+                    'realname' => $add_real,
+                    's_id' => $add_sid,
+                    'role' => $add_role,
+                    'datecreated' => $date->format('Y-m-d')
+                );                
+                $conn->queryDB($stmt, $params);
+                
+                // Get the ID of the new user
+                $stmt = 'SELECT `userid` FROM users WHERE username = :user';
+                $params = array(
+                    'user' => $add_user
+                );        
+                $row = $conn->queryDB($stmt, $params);;
+                
+                // Create a Cxeesto ID for the new user
+                $stmt = 'INSERT INTO presence (uid, realname, status, dmodified) VALUES (:uid, :real, 1, :date)';
+                $params = array(
+                    'uid' => $row[0]['userid'],
+                    'real' => $add_real,
+                    'date' => $date->format('Y-m-d H:i:s')
+                );                
+                $conn->queryDB($stmt, $params);
+                
+                echo 'User Added<br />';
+            }
+
+            else {
+                echo 'Username already exists!';
             }
 		}
         
@@ -280,22 +276,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
 		elseif ($sub_typee == "Yes") { // Delete user
 
-            try {
-                $stmt = $conn->prepare('DELETE FROM `users` WHERE `userid` = :userid');
-                $stmt->execute(array(
-                    'userid' => $choosen
-                ));
-                
-                $stmt = $conn->prepare('DELETE FROM `presence` WHERE `uid` = :userid');
-                $stmt->execute(array(
-                    'userid' => $choosen
-                ));
-                
-                echo "Action Taken: User Deleted<br /><br />";
-                
-            } catch(PDOException $e) {
-                echo 'Error deleting user. ' . $e;
-            }
+            $stmt = 'DELETE FROM `users` WHERE `userid` = :userid';
+            $params = array(
+                'userid' => $choosen
+            );
+            
+            $stmt2 = 'DELETE FROM `presence` WHERE `uid` = :userid';
+            $params2 = array(
+                'userid' => $choosen
+            );
+            
+            $conn->queryDB($stmt, $params);
+            $conn->queryDB($stmt2, $params2);
+            
+            echo "Action Taken: User Deleted<br /><br />";
 		}
         
         elseif ($sub_typee == "Set Status") { // Change user Cxeesto status

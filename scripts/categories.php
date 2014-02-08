@@ -1,16 +1,23 @@
 <?php
+/**
+  * Beware All Ye Who Enter This File!
+  *
+  * You will find nothing but heartache,
+  * headache, and utter disgust.
+  *
+**/
 include_once 'dbconnect.php';
 
 // Authenticate user, if fail go to login page
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] === "admin") {
+	if ($_SESSION['userInfo']['role'] === "admin") {
 		$admin_link = '| <a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo'][5] !== "guest") {
+	if ($_SESSION['userInfo']['role'] !== "guest") {
 		$settings_link = '| <a href="settings.phtml">Settings</a>';
 	}
 	else {
@@ -22,22 +29,16 @@ else {
 }
 
 // Connect to DB
-$db = new DB();
-$conn = $db->dbConnect();
+$conn = new dbManage();
 
-try {
-    $getCategories = $conn->prepare('SELECT * FROM `category`');
-    $getCategories->execute();
-} catch(PDOException $e) {
-    echo 'Database error';
-}
+$getCategories = 'SELECT * FROM `category`';
+$cat = $conn->queryDB($getCategories, NULL);
 
 /*
 echo '<pre>';
 print_r($getCategories->fetchall(PDO::FETCH_ASSOC));
 echo '</pre>';*/
 
-$cat = $getCategories->fetchall(PDO::FETCH_ASSOC);
 $depth = isset($_POST['maxdepth']) ? $_POST['maxdepth'] : 0;
 //$parent = isset($_POST['parent']) ? $_POST['parent'] : '';
 
