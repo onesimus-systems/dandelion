@@ -16,7 +16,7 @@ Dandelion is a web-based entry log system almost like a journal.
 
 1. Import Base_DB.sql into your MySQL/Maria database
 2. Create a user and give it rw permissions to the new database
-3. Edit scripts/dbconnect.php with the correct database parameters
+3. Edit config/config.php with the correct database parameters
 4. Browse to index.php and login with:
 
    ```
