@@ -30,3 +30,19 @@ Dandelion is a web-based entry log system almost like a journal.
 
 * Make an install script
 * Continue code clean-up from 3.1
+
+## Versioning
+
+For transparency into the release cycle and in striving to maintain backward compatibility, Dandelion is maintained under the Semantic Versioning guidelines. Sometimes we screw up, but we'll adhere to these rules whenever possible.
+
+Releases will be numbered with the following format:
+
+`<major>.<minor>.<patch>`
+
+And constructed with the following guidelines:
+
+- Breaking backward compatibility **bumps the major** while resetting minor and patch
+- New additions without breaking backward compatibility **bumps the minor** while resetting the patch
+- Bug fixes and misc changes **bumps only the patch**
+
+For more information on SemVer, please visit <http://semver.org/>.
