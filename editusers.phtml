@@ -22,6 +22,8 @@ if (checkLogIn()) {
 else {
 	header( 'Location: index.php' );
 }
+
+$showList = true;
 ?>
 
 <html>
@@ -39,70 +41,70 @@ else {
         
 		<?php include 'scripts/editusersaction.php'; ?>
 		
-        <form method="post">
-		Action: 
-		<select name="user_action2">
-			<option value="none">Select:</option>
-			<option value="cxeesto">Change &#264;eesto</option>
-			<option value="delete">Delete</option>
-			<option value="edit">Edit</option>
-			<option value="reset">Reset Password</option>
-			<option value="add">Add User</option>
-		</select>
-		
-		<input type="submit" name="sub_type" value="Go" />
-        
-		<br /><br />
-		
-        <table id="main">
-			<tr>
-				<th>Choose:</th>
-				<th>User ID</th>
-				<th>Username</th>
-				<th>Real Name</th>
-				<th>Settings ID</th>
-				<th>Role</th>
-				<th>Date Created</th>
-				<th>First Login</th>
-			</tr>
-			
-			<?php
-                $stmt = 'SELECT * FROM users';
-                $allUsers = $conn->queryDB($stmt, NULL);
-				
-				foreach ($allUsers as $row) {
-					echo '<tr>';
-					echo '<td><input type="radio" name="the_choosen_one" value="' . $row['userid'] . '" /></td>';
-					echo '<td>' . $row['userid'] . '</td>';
-					echo '<td>' . $row['username'] . '</td>';
-					echo '<td>' . $row['realname'] . '</td>';
-					echo '<td>' . $row['settings_id'] . '</td>';
-					echo '<td>' . $row['role'] . '</td>';
-					echo '<td>' . $row['datecreated'] . '</td>';
-					echo '<td>' . $row['firsttime'] . '</td>';
-					echo '</tr>';
-				}
-			?>
-		</table>
-		<br />
-        
-		Action: 
-		<select name="user_action">
-			<option value="none">Select:</option>
-			<option value="cxeesto">Change &#264;eesto</option>
-			<option value="delete">Delete</option>
-			<option value="edit">Edit</option>
-			<option value="reset">Reset Password</option>
-			<option value="add">Add User</option>
-		</select>
-		
-		<input type="submit" name="sub_type" value="Go" />
-        </form>
-        
-        
+        <?php if ($showList) {?>
+            <form method="post">
+                Action: 
+                <select name="user_action2">
+                    <option value="none">Select:</option>
+                    <option value="cxeesto">Change &#264;eesto</option>
+                    <option value="delete">Delete</option>
+                    <option value="edit">Edit</option>
+                    <option value="reset">Reset Password</option>
+                    <option value="add">Add User</option>
+                </select>
+                
+                <input type="submit" name="sub_type" value="Go" />
+                
+                <br /><br />
+                
+                <table id="main">
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Real Name</th>
+                        <th>Settings ID</th>
+                        <th>Role</th>
+                        <th>Date Created</th>
+                        <th>First Login</th>
+                    </tr>
+                    
+                    <?php
+                        $stmt = 'SELECT * FROM users';
+                        $allUsers = $conn->queryDB($stmt, NULL);
+                        
+                        foreach ($allUsers as $row) {
+                            echo '<tr>';
+                            echo '<td><input type="radio" name="the_choosen_one" value="' . $row['userid'] . '" /></td>';
+                            echo '<td>' . $row['userid'] . '</td>';
+                            echo '<td>' . $row['username'] . '</td>';
+                            echo '<td>' . $row['realname'] . '</td>';
+                            echo '<td>' . $row['settings_id'] . '</td>';
+                            echo '<td>' . $row['role'] . '</td>';
+                            echo '<td>' . $row['datecreated'] . '</td>';
+                            echo '<td>' . $row['firsttime'] . '</td>';
+                            echo '</tr>';
+                        }
+                    ?>
+                </table>
+                <br />
+                
+                Action: 
+                <select name="user_action">
+                    <option value="none">Select:</option>
+                    <option value="cxeesto">Change &#264;eesto</option>
+                    <option value="delete">Delete</option>
+                    <option value="edit">Edit</option>
+                    <option value="reset">Reset Password</option>
+                    <option value="add">Add User</option>
+                </select>
+                
+                <input type="submit" name="sub_type" value="Go" />
+            </form>
+        <?php } ?>
         
         <footer>
-            <p id="credits">&copy; 2013 Daedalus Computer Services</p>
+            <?php include_once 'scripts/footer.php'; ?>
         </footer>
 	</body>
 </html>
