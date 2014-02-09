@@ -1,4 +1,4 @@
-# Dandelion 3.5
+# Dandelion 4.0.1
 
 Dandelion is a web-based entry log system almost like a journal.
 
