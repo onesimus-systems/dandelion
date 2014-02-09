@@ -13,7 +13,7 @@ ini_set('display_errors', True);
 
 session_start();
 $cookie_name = 'dandelionrememt'; // Used for login remembering (soon to go away)
-define('D_VERSION', '4.0 - Alpha');       // Defines current Dandelion version
+define('D_VERSION', '4.0.1 - Alpha');       // Defines current Dandelion version
  
 /**
   * @brief DB connects to the database and stores the handle in $dbConn.
@@ -29,16 +29,19 @@ define('D_VERSION', '4.0 - Alpha');       // Defines current Dandelion version
 class DB
 {
     protected $dbConn;                  /**< $dbConn is passed to the dbManage extended class and is used to interact with the database. */
-    private $db_username = '';          /**< Username for SQL database */
-    private $db_password = '';          /**< Password for SQL database */
-    private $db_host     = 'localhost'; /**< Host URI/IP address for SQL database */
-    private $db_dbname   = 'gardener';  /**< Database name for SQL database */
     
     /** Attempts to start a connection with the database and store it in $dbConn */
     function __construct()
     {
+        if (file_exists('config/config.php')) {
+            include 'config/config.php';
+        }
+        else {
+            include '../config/config.php';
+        }
+
         try {
-            $conn = new PDO('mysql:host='.$this->db_host.';dbname='.$this->db_dbname, $this->db_username, $this->db_password, array(
+            $conn = new PDO('mysql:host='.$CONFIG['db_host'].';dbname='.$CONFIG['db_name'], $CONFIG['db_user'], $CONFIG['db_pass'], array(
                 PDO::ATTR_PERSISTENT => true
             ));
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //comment when deployed
@@ -156,7 +159,7 @@ function checkLogIn() {
         $auth_user = $conn->queryDB($stmt, $params);
         
         // If a result was returned, check if it has expired
-        if ($auth_user[0]['expire']) {
+        if ($auth_user['expire']['expire']) {
             if ($mac === hash_hmac('sha256', $user . ':' . $token, "usi.edu")
                 AND $auth_user[0]['token'] === $token
                 AND $auth_user[0]['expire'] >= time()) {
