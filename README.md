@@ -4,8 +4,9 @@ Dandelion is a web-based entry log application.
 
 ## Requirements
 
-* Apache >= 2.2
-* PHP >= 5
+* Apache >= 2.4
+* PHP >= 5.5
+* MySQL/Maria DB >= 5.0
 
 ## Notes
 
