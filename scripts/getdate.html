@@ -60,7 +60,7 @@
                 newStatus = window.opener.newStatus;
                 rtime = document.getElementById('datepick').value;
                 isWin = window.opener.isWind;
-                message = document.getElementById('messagetext').value;
+                message = encodeURIComponent(document.getElementById('messagetext').value);
                 
                 window.opener.presence.sendNewStatus(newStatus, rtime, isWin, message);
                 window.close();
