@@ -1,4 +1,4 @@
-# Dandelion 4.0.1
+# Dandelion 4.1.0 - Alpha 2
 
 Dandelion is a web-based entry log system almost like a journal.
 
@@ -14,22 +14,21 @@ Dandelion is a web-based entry log system almost like a journal.
 
 ## Install
 
-1. Import Base_DB.sql into your MySQL/Maria database
-2. Create a user and give it rw permissions to the new database
-3. Edit config/config.php with the correct database parameters
-4. Browse to index.php and login with:
+1. Create a MySQL/Maria database to house Dandelion
+3. Browse to install.php in the root of Dandelion
+4. Fill in the information, check the box, and let it go
+5. The installer will direct you to the index page. Login with:
 
    ```
    Username: admin
    Password: admin
    ```
 
-5. Change the admin password, login again, and see your new empty log.
+6. Change the admin password, login again, and see your new empty log.
 
 ## TODO
 
-* Make an install script
-* Continue code clean-up from 3.1
+* Continue code clean-up
 
 ## Versioning
 
