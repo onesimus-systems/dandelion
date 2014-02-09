@@ -33,7 +33,12 @@ class DB
     /** Attempts to start a connection with the database and store it in $dbConn */
     function __construct()
     {
-        include '../config/config.php';
+        if (file_exists('config/config.php')) {
+            include 'config/config.php';
+        }
+        else {
+            include '../config/config.php';
+        }
 
         try {
             $conn = new PDO('mysql:host='.$CONFIG['db_host'].';dbname='.$CONFIG['db_name'], $CONFIG['db_user'], $CONFIG['db_pass'], array(
@@ -154,7 +159,7 @@ function checkLogIn() {
         $auth_user = $conn->queryDB($stmt, $params);
         
         // If a result was returned, check if it has expired
-        if ($auth_user[0]['expire']) {
+        if ($auth_user['expire']['expire']) {
             if ($mac === hash_hmac('sha256', $user . ':' . $token, "usi.edu")
                 AND $auth_user[0]['token'] === $token
                 AND $auth_user[0]['expire'] >= time()) {

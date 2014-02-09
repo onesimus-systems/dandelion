@@ -1,7 +1,8 @@
 <?php
 $CONFIG = array(
-    'db_name' => 'gardener',
+    'db_name' => '',
     'db_host' => '',
     'db_user' => '',
-    'db_pass' => ''
+    'db_pass' => '',
+    'installed' => false
 );
