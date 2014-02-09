@@ -1,16 +1,13 @@
-Dandelion
-=============
+# Dandelion
 
 Dandelion is a web-based entry log application.
 
-Requirements
--------------
+## Requirements
 
 * Apache >= 2.2
 * PHP >= 5
 
-Notes
-------------
+## Notes
 
 This is version 3.1 and for the time being has the feature set in place. I'm currently working on cleaning up the code and adding database driven category management (instead of the horrendious (sp) categories.js script).
 
@@ -26,10 +23,10 @@ This is version 3.1 and for the time being has the feature set in place. I'm cur
 
 ## Install
 
-1. Import Base_DB.sql into your MySQL/Maria database
-2. Create a user and give it rw permissions to the new database
-3. Edit scripts/dbconnect.php with the correct database parameters
-4. Browse to index.php and login with:
+1. Create a MySQL/Maria database to house Dandelion
+2. Browse to install.php in the root of Dandelion
+3. Fill in the information, check the box, and let it go
+4. The installer will direct you to the index page. Login with:
 
    ```
    Username: admin
@@ -40,8 +37,7 @@ This is version 3.1 and for the time being has the feature set in place. I'm cur
 
 ## TODO
 
-* Make an install script
-* Continue code clean-up from 3.1
+* Continue code clean-up
 
 ## Versioning
 
