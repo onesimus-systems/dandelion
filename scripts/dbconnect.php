@@ -13,7 +13,7 @@ ini_set('display_errors', True);
 
 session_start();
 $cookie_name = 'dandelionrememt'; // Used for login remembering (soon to go away)
-define('D_VERSION', '3.5');       // Defines current Dandelion version
+define('D_VERSION', '4.0 - Alpha');       // Defines current Dandelion version
  
 /**
   * @brief DB connects to the database and stores the handle in $dbConn.
@@ -29,8 +29,8 @@ define('D_VERSION', '3.5');       // Defines current Dandelion version
 class DB
 {
     protected $dbConn;                  /**< $dbConn is passed to the dbManage extended class and is used to interact with the database. */
-    private $db_username = '';      /**< Username for SQL database */
-    private $db_password = '';  /**< Password for SQL database */
+    private $db_username = '';          /**< Username for SQL database */
+    private $db_password = '';          /**< Password for SQL database */
     private $db_host     = 'localhost'; /**< Host URI/IP address for SQL database */
     private $db_dbname   = 'gardener';  /**< Database name for SQL database */
     
