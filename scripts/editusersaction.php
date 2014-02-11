@@ -285,17 +285,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		elseif ($sub_typee == "Yes") { // Delete user
 
             $stmt = 'DELETE FROM `users` WHERE `userid` = :userid';
+            $stmt2 = 'DELETE FROM `presence` WHERE `uid` = :userid';
             $params = array(
                 'userid' => $choosen
             );
             
-            $stmt2 = 'DELETE FROM `presence` WHERE `uid` = :userid';
-            $params2 = array(
-                'userid' => $choosen
-            );
-            
             $conn->queryDB($stmt, $params);
-            $conn->queryDB($stmt2, $params2);
+            $conn->queryDB($stmt2, $params);
             
             echo "Action Taken: User Deleted<br /><br />";
 		}

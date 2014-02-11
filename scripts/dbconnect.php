@@ -92,7 +92,7 @@ class dbManage extends DB
             $command = substr($stmt, 0, 3); /**< This variable holds the first 3 characters of the query statement **/
             
             // If the statement was to update or insert, do not perform a fetchall
-            if ($command !== "UPD" && $command !== "INS") {
+            if ($command == "SEL") {
                 return $query->fetchall(PDO::FETCH_ASSOC);
             } else {
                 return true;
