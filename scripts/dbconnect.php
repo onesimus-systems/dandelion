@@ -13,7 +13,7 @@ ini_set('display_errors', True);
 
 session_start();
 $cookie_name = 'dandelionrememt'; // Used for login remembering (soon to go away)
-define('D_VERSION', '4.0.1 - Alpha');       // Defines current Dandelion version
+define('D_VERSION', '4.0.0');       // Defines current Dandelion version
  
 /**
   * @brief DB connects to the database and stores the handle in $dbConn.
