@@ -79,10 +79,7 @@ a:visited, a:hover, a:link, a:active {
 	margin-left: 15px;
 }
 
-#refreshed {
-    word-wrap: break-word;
-}
-
 .entry {
-    max-width: 60em;
+    max-width: 55em;
+    word-wrap: break-word;
 }
