@@ -1,7 +1,7 @@
 /* Main Stylesheet for Dandelion Web Log */
 
 body {
-	background-color: #FBD699;
+	background-color: #6E6E6E; /*#FBD699;*/
     margin: 0px auto;
     text-align: center;
     width: 60%;
@@ -10,7 +10,8 @@ body {
 }
 
 h1 {
-    margin-bottom: .25em;
+    margin-bottom: .65em;
+	text-align: center;
 }
 
 a:visited, a:hover, a:link, a:active {
@@ -28,7 +29,7 @@ a:visited, a:hover, a:link, a:active {
 	margin-top: -7em;
 	margin-left: -15em;
 	border: 1px solid #CCC;
-	background-color: #F3AC33;
+	background-color: #F3843E;
 }
 
 #main {
@@ -49,6 +50,10 @@ a:visited, a:hover, a:link, a:active {
 
 .bad {
     color: red;
+}
+
+.white {
+	color: white;
 }
 
 .le {
@@ -85,31 +90,36 @@ a:visited, a:hover, a:link, a:active {
 }
 
 #refreshed_core {
-	background-color: #FCCC7C; /*#F3AC33;*/
+	background-color: #F3843E; /*#FCCC7C; #F3AC33;*/
 	padding: .5em 1.5em;
 }
 
 #nav_link a:visited, #nav_link a:link, #nav_link a:hover, #nav_link a:active {
-	background-color: #219E82;
+	background-color: #393939; /*#219E82;*/
 	color: white;
 	text-decoration: none;
 	padding: 10px 20px;
+}
+
+header {
+	margin-bottom: 1.5em;
 }
 
 .pagination {
 	display: block;
 	overflow:hidden;
 	padding: 0 0;
-	background-color: #7D6EDA;
+	background-color: #393939; /*#7D6EDA;*/
 }
 
 .pagination input, #login_button, .logentry input {
-	background-color: #7D6EDA;
+	background-color: #393939; /*#7D6EDA;*/
 	border: none;
-	color: white;
+	color: black;
 	padding: 1em 2em;
 	margin: 0;
 	font-size: 1em;
+	color: white;
 }
 
 #login_button, .logentry input {
@@ -118,5 +128,6 @@ a:visited, a:hover, a:link, a:active {
 }
 
 .pagination input:hover, #login_button:hover, .logentry input:hover {
-	background-color: #473B91;
+	background-color: #F90;
+	color: white;
 }
