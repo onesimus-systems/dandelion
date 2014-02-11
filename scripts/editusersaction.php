@@ -40,12 +40,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		
 			// Delete selected user from DB
 			if ($choosen != NULL AND $choosen != "") { ?>
-				Are you sure you want to delete user <?php echo $choosen ?>?
+                <br /><hr width="500">
+				Are you sure you want to delete "<?php echo $edit_user_info['realname'] ?>"?<br /><br />
 				<form method="post">
 					<input type="hidden" name="the_choosen_one" value="<?php echo $choosen; ?>" />
 					<input type="submit" name="sub_type" value="Yes" />
-					<input type="submit" value="No" /><br />
-				</form>
+					<input type="submit" value="No" />
+				</form><hr width="500"><br />
 			<?php
 			}
 			else {
@@ -202,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             $conn->queryDB($stmt, $params);
         
-            echo 'User Updated<br />';
+            echo 'User Updated<br /><br />';
 		}
         
 		elseif ($sub_typee == "Add") { // Create new user
@@ -252,7 +253,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 );                
                 $conn->queryDB($stmt, $params);
                 
-                echo 'User Added<br />';
+                echo 'User Added<br /><br />';
             }
 
             else {
@@ -278,7 +279,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo 'Password change successful.<br /><br />';
 			}
 			else {
-				echo 'New passwords do not match<br />';
+				echo 'New passwords do not match<br /><br />';
 			}
 		}
         
@@ -355,7 +356,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             );
             $conn->queryDB($stmt, $params);
         
-            echo 'User Status Updated<br />';
+            echo 'User Status Updated<br /><br />';
 		}
         
         //-----END SECOND LEVEL ACTIONS-------//
