@@ -16,14 +16,14 @@ include_once 'scripts/dbconnect.php';
 if (checkLogIn()) {
 
 	if ($_SESSION['userInfo']['role'] == "admin") {
-		$admin_link = '| <a href="admin.phtml">Administration</a>';
+		$admin_link = '<a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
 	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '| <a href="settings.phtml">Settings</a>';
+		$settings_link = '<a href="settings.phtml">Settings</a>';
 		$add_link = '<input type="button" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 	}
 	else {

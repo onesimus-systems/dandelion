@@ -1,2 +1,2 @@
 <h1 class="t_cen">Dandelion Web Log - v <?php echo D_VERSION ?></h1>
-<p class="t_cen">Welcome, <?php echo $_SESSION['userInfo']['realname']; ?> <a href="viewlog.phtml">Homepage</a> <?php echo $settings_link; ?> <?php echo $admin_link; ?> | <a href="tutorial.phtml">Tutorial</a> | <a href="scripts/logout.php">Logout</a></p>
+<p class="t_cen" id="nav_link"><a href="viewlog.phtml">View Log</a><?php echo $settings_link; ?><?php echo $admin_link; ?><a href="tutorial.phtml">Tutorial</a><a href="scripts/logout.php">Logout</a></p>
