@@ -67,12 +67,17 @@ class DisplayLogs {
         
         foreach ($grab_logs as $row) {
         
+            $creator = '';
             // Cycle through all users to find which one the entry belongs to
             foreach ($userArray as $user) {
                 if ($row['usercreated'] == $user['userid']) {
                     $creator = $user['realname'];
                     break; // If the user is already found why go through the rest?
                 }
+            }
+            
+            if ($creator == '') { // If the creator doesn't exist, say something. Need to work on reattribution of deleted users
+                $creator = 'Unknown User';
             }
             
             // Display each log entry
