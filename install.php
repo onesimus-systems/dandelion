@@ -50,9 +50,6 @@ if ($needToInstall) {
                             <td><input type="text" name="dbname" /></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><input type="checkbox" value="iUndsertand" /> I understand that this action will DELETE ALL data in the current tables.</td>
-                        </tr>
-                        <tr>
                             <td><input type="submit" value="Finish Install" /></td>
                         </tr>
                     </table>
