@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>Dandelion: Class Hierarchy</title>
+<title>Dandelion: Dandelion</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -39,8 +39,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -59,15 +59,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-  <div id="navrow2" class="tabs2">
-    <ul class="tablist">
-      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
-      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
-      <li class="current"><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
-      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
-    </ul>
-  </div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -82,24 +73,52 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+</div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Class Hierarchy</div>  </div>
+<div class="title">Dandelion </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock">This inheritance list is sorted roughly, but not completely, alphabetically:</div><div class="directory">
-<div class="levels">[detail level <span onclick="javascript:toggleLevel(1);">1</span><span onclick="javascript:toggleLevel(2);">2</span><span onclick="javascript:toggleLevel(3);">3</span>]</div><table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><img src="ftv2node.png" alt="o" width="16" height="22" /><img src="ftv2cl.png" alt="C" width="24" height="22" /><a class="el" href="class_categories.html" target="_self">Categories</a></td><td class="desc"><a class="el" href="class_categories.html" title="Categories is responsible for displaying and managing categories. ">Categories</a> is responsible for displaying and managing categories </td></tr>
-<tr id="row_1_"><td class="entry"><img id="arr_1_" src="ftv2mnode.png" alt="o" width="16" height="22" onclick="toggleFolder('1_')"/><img src="ftv2cl.png" alt="C" width="24" height="22" /><a class="el" href="class_d_b.html" target="_self">DB</a></td><td class="desc"><a class="el" href="class_d_b.html" title="DB connects to the database and stores the handle in $dbConn. ">DB</a> connects to the database and stores the handle in $dbConn </td></tr>
-<tr id="row_1_0_" class="even"><td class="entry"><img src="ftv2vertline.png" alt="|" width="16" height="22" /><img id="arr_1_0_" src="ftv2mlastnode.png" alt="\" width="16" height="22" onclick="toggleFolder('1_0_')"/><img src="ftv2cl.png" alt="C" width="24" height="22" /><a class="el" href="classdb_manage.html" target="_self">dbManage</a></td><td class="desc">DbManage is called in Dandelion to handle all database queries </td></tr>
-<tr id="row_1_0_0_"><td class="entry"><img src="ftv2vertline.png" alt="|" width="16" height="22" /><img src="ftv2blank.png" alt="&#160;" width="16" height="22" /><img src="ftv2lastnode.png" alt="\" width="16" height="22" /><img src="ftv2cl.png" alt="C" width="24" height="22" /><a class="el" href="classcxeesto.html" target="_self">cxeesto</a></td><td class="desc">Handles the display of Cxeesto statuses </td></tr>
-<tr id="row_2_" class="even"><td class="entry"><img src="ftv2lastnode.png" alt="\" width="16" height="22" /><img src="ftv2cl.png" alt="C" width="24" height="22" /><a class="el" href="class_display_logs.html" target="_self">DisplayLogs</a></td><td class="desc"><a class="el" href="class_display_logs.html" title="DisplayLogs shows the log entries provided. ">DisplayLogs</a> shows the log entries provided </td></tr>
-</table>
-</div><!-- directory -->
-</div><!-- contents -->
+<div class="textblock"><p>Dandelion is a web-based entry log application.</p>
+<h2>Requirements </h2>
+<ul>
+<li>Apache &gt;= 2.4</li>
+<li>PHP &gt;= 5.5</li>
+<li>MySQL/Maria <a class="el" href="class_d_b.html" title="DB connects to the database and stores the handle in $dbConn. ">DB</a> &gt;= 5.0</li>
+</ul>
+<h2>Notes </h2>
+<p>This is version 4 and for the time being has the feature set in place. I'm currently working on cleaning up the code and adding database driven category management (instead of the horrendous categories.js script).</p>
+<h2>Is it any good? </h2>
+<p><a href="https://news.ycombinator.com/item?id=3067434">Yes</a></p>
+<h2>Install </h2>
+<ol type="1">
+<li>Create a MySQL/Maria database to house Dandelion</li>
+<li>Browse to install.php in the root of Dandelion</li>
+<li>Fill in the information, check the box, and let it go</li>
+<li><p class="startli">The installer will direct you to the index page. Login with:</p>
+<p class="startli">``` Username: admin Password: admin ```</p>
+</li>
+<li>Change the admin password, login again, and see your new empty log.</li>
+</ol>
+<h2>TODO for Release </h2>
+<ul>
+<li>Continue code clean-up</li>
+</ul>
+<h2>Versioning </h2>
+<p>For transparency into the release cycle and in striving to maintain backward compatibility, Dandelion is maintained under the Semantic Versioning guidelines. Sometimes we screw up, but we'll adhere to these rules whenever possible.</p>
+<p>Releases will be numbered with the following format:</p>
+<p><code>&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code></p>
+<p>And constructed with the following guidelines:</p>
+<ul>
+<li>Breaking backward compatibility <b>bumps the major</b> while resetting minor and patch</li>
+<li>New additions without breaking backward compatibility <b>bumps the minor</b> while resetting the patch</li>
+<li>Bug fixes and misc changes <b>bumps only the patch</b></li>
+</ul>
+<p>For more information on SemVer, please visit <a href="http://semver.org/">http://semver.org/</a>. </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Feb 11 2014 21:53:46 for Dandelion by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Feb 11 2014 21:53:45 for Dandelion by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
