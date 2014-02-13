@@ -60,9 +60,9 @@ $showList = true;
                 <table id="main">
                     <tr>
                         <th>&nbsp;</th>
-                        <th>User ID</th>
-                        <th>Username</th>
+                        <!--<th>User ID</th>-->
                         <th>Real Name</th>
+                        <th>Username</th>
                         <th>Settings ID</th>
                         <th>Role</th>
                         <th>Date Created</th>
@@ -76,9 +76,9 @@ $showList = true;
                         foreach ($allUsers as $row) {
                             echo '<tr>';
                             echo '<td><input type="radio" name="the_choosen_one" value="' . $row['userid'] . '" /></td>';
-                            echo '<td>' . $row['userid'] . '</td>';
-                            echo '<td>' . $row['username'] . '</td>';
+                            //echo '<td>' . $row['userid'] . '</td>';
                             echo '<td>' . $row['realname'] . '</td>';
+                            echo '<td>' . $row['username'] . '</td>';
                             echo '<td>' . $row['settings_id'] . '</td>';
                             echo '<td>' . $row['role'] . '</td>';
                             echo '<td>' . $row['datecreated'] . '</td>';
