@@ -159,7 +159,7 @@ function checkLogIn() {
         $auth_user = $conn->queryDB($stmt, $params);
         
         // If a result was returned, check if it has expired
-        if ($auth_user['expire']['expire']) {
+        if (isset($auth_user['expire'])) {
             if ($mac === hash_hmac('sha256', $user . ':' . $token, "usi.edu")
                 AND $auth_user[0]['token'] === $token
                 AND $auth_user[0]['expire'] >= time()) {

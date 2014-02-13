@@ -6,14 +6,14 @@ include_once 'scripts/dbconnect.php';
 //Authenticate user, if fail go to login page
 if (checkLogIn()) {
 	if ($_SESSION['userInfo']['role'] === "admin") {
-		$admin_link = '| <a href="admin.phtml">Administration</a>';
+		$admin_link = '<a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
 	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '| <a href="settings.phtml">Settings</a>';
+		$settings_link = '<a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
@@ -60,9 +60,9 @@ $showList = true;
                 <table id="main">
                     <tr>
                         <th>&nbsp;</th>
-                        <th>User ID</th>
-                        <th>Username</th>
+                        <!--<th>User ID</th>-->
                         <th>Real Name</th>
+                        <th>Username</th>
                         <th>Settings ID</th>
                         <th>Role</th>
                         <th>Date Created</th>
@@ -76,9 +76,9 @@ $showList = true;
                         foreach ($allUsers as $row) {
                             echo '<tr>';
                             echo '<td><input type="radio" name="the_choosen_one" value="' . $row['userid'] . '" /></td>';
-                            echo '<td>' . $row['userid'] . '</td>';
-                            echo '<td>' . $row['username'] . '</td>';
+                            //echo '<td>' . $row['userid'] . '</td>';
                             echo '<td>' . $row['realname'] . '</td>';
+                            echo '<td>' . $row['username'] . '</td>';
                             echo '<td>' . $row['settings_id'] . '</td>';
                             echo '<td>' . $row['role'] . '</td>';
                             echo '<td>' . $row['datecreated'] . '</td>';

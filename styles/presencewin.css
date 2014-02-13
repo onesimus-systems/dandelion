@@ -1,11 +1,20 @@
 /*Stylesheet for Presence Popout*/
 
 body {
-	background-color: #DDD;
+	background-color: #6E6E6E;
     margin-top: 10px;
-    width: 80%;
     font-family: sans-serif;
-	/*font-size: 15px;*/
+	margin: 0 auto;
+	width: 90%;
+}
+
+#mainWindow {
+	background-color: #F3843E;
+	min-width: 25em;
+	padding: 1em 1em;
+	margin: auto auto;
+	margin-top: 2em;
+    word-wrap: break-word;
 }
 
 #presence {

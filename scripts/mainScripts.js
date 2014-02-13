@@ -67,25 +67,7 @@ var refreshFun = {
 
     //This functions shows the refresh clock and initiates a refresh
     //after 2 minutes.
-    rcounterc: function() {/*
-        if (secleft > 119) {
-            var minutes = 2;
-        }
-        else if (secleft > 59) {
-            var minutes = 1;
-        }
-        else {
-            var minutes = 0;
-        }
-        
-        var seconds = secleft-(60*minutes);
-        
-        if (seconds < 10 || seconds == 0) {
-            seconds = "0"+seconds;
-        }
-        
-        document.getElementById("rcounter").innerHTML = minutes + ":" + seconds;*/
-        
+    rcounterc: function() {        
         if (secleft > 0) {
             secleft = secleft - 1;
             }
@@ -97,8 +79,7 @@ var refreshFun = {
 
     //This function displays the appropriate refresh button
     refreshb: function() {
-
-        document.getElementById("refreshbutton").innerHTML = autore ? '<input type="button" value="Stop Auto Refresh" onClick="refreshFun.stoprefresh();" /> Autorefresh: <span class="good">On</span> ' : '<input type="button" value="Start Auto Refresh" onClick="refreshFun.startrefresh();" /> Autorefresh: <span class="bad">Off</span> ';
+        document.getElementById("refreshbutton").innerHTML = autore ? '<input type="button" value="Stop Auto Refresh" onClick="refreshFun.stoprefresh();" /> Autorefresh: On' : '<input type="button" value="Start Auto Refresh" onClick="refreshFun.startrefresh();" /> Autorefresh: Off ';
     },
 
     //Stops auto refresh

@@ -1,16 +1,18 @@
 /* Main Stylesheet for Dandelion Web Log */
 
 body {
-	background-color: #DDD;
+	background-color: #6E6E6E;
     margin: 0px auto;
     text-align: center;
     width: 60%;
 	font-family: sans-serif;
 	font-size: 15px;
+	color: white;
 }
 
 h1 {
-    margin-bottom: .25em;
+    margin-bottom: .65em;
+	text-align: center;
 }
 
 a:visited, a:hover, a:link, a:active {
@@ -24,11 +26,12 @@ a:visited, a:hover, a:link, a:active {
 	top: 50%;
 	left: 50%;
 	width: 30em;
-	height: 14em;
+	height: 16em;
 	margin-top: -7em;
 	margin-left: -15em;
 	border: 1px solid #CCC;
-	background-color: #E3E3E3;
+	background-color: #F3843E;
+	color: black;
 }
 
 #main {
@@ -43,20 +46,16 @@ a:visited, a:hover, a:link, a:active {
 	text-align: left;
 }
 
-.logentry {
-	margin: 5px;
-	margin-bottom: 50px;
-	border: 0px solid black;
-	text-align: left;
-	font-family: sans-serif;
-}
-
 .good {
     color: green;
 }
 
 .bad {
     color: red;
+}
+
+.white {
+	color: white;
 }
 
 .le {
@@ -79,10 +78,59 @@ a:visited, a:hover, a:link, a:active {
 	margin-left: 15px;
 }
 
-#refreshed {
-    word-wrap: break-word;
+.logentry {
+	margin: 5px;
+	margin-bottom: 50px;
+	border: 0px solid black;
+	text-align: left;
+	font-family: sans-serif;
+    color: black;
 }
 
 .entry {
-    max-width: 60em;
+    max-width: 55em;
+    word-wrap: break-word;
+}
+
+#refreshed_core {
+	background-color: #F3843E;
+	padding: .5em 1.5em;
+}
+
+#nav_link a:visited, #nav_link a:link, #nav_link a:hover, #nav_link a:active {
+	background-color: #393939;
+	color: white;
+	text-decoration: none;
+	padding: 10px 20px;
+}
+
+header {
+	margin-bottom: 1.5em;
+}
+
+.pagination {
+	display: block;
+	overflow:hidden;
+	padding: 0 0;
+	background-color: #393939;
+}
+
+.pagination input, #login_button, .logentry input {
+	background-color: #393939;
+	border: none;
+	color: black;
+	padding: 1em 2em;
+	margin: 0;
+	font-size: 1em;
+	color: white;
+}
+
+#login_button, .logentry input {
+	padding: .5em 1.5em;
+	margin-top: .75em;
+}
+
+.pagination input:hover, #login_button:hover, .logentry input:hover {
+	background-color: #F90;
+	color: black;
 }

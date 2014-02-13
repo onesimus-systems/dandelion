@@ -41,13 +41,13 @@ class DisplayLogs {
         
         // If this isn't filtered results, show the page controls
         if (!$isFiltered) {
-            echo '<div style="display: block;overflow:hidden;">';
+            echo '<div class="pagination">';
             echo '<form method="post">';
             if ($pageOffset > 0) {
-                echo '<input type="button" value="<- Previous" onClick="pagentation('. ($pageOffset-$_SESSION['userInfo']['showlimit']) .');" class="flle" />';
+                echo '<input type="button" value="Previous '.$_SESSION['userInfo']['showlimit'].'" onClick="pagentation('. ($pageOffset-$_SESSION['userInfo']['showlimit']) .');" class="flle" />';
             }
             if ($pageOffset+$_SESSION['userInfo']['showlimit'] < $logSize[0]['COUNT(*)']) {
-                echo '<input type="button" value="Next ->" onClick="pagentation('. ($pageOffset+$_SESSION['userInfo']['showlimit']) .');" class="flri" />';
+                echo '<input type="button" value="Next '.$_SESSION['userInfo']['showlimit'].'" onClick="pagentation('. ($pageOffset+$_SESSION['userInfo']['showlimit']) .');" class="flri" />';
             }
             echo '</form></div>';
         }
@@ -64,6 +64,7 @@ class DisplayLogs {
         $conn = new dbManage;
         $stmt = 'SELECT `userid`,`realname` FROM users';
         $userArray = $conn->queryDB($stmt, NULL);
+		echo '<div id="refreshed_core">';
         
         foreach ($grab_logs as $row) {
         
@@ -102,5 +103,6 @@ class DisplayLogs {
             
             echo '</p></div></form>';
         }
+		echo '</div>';
     }
 }

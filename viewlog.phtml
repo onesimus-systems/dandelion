@@ -16,14 +16,14 @@ include_once 'scripts/dbconnect.php';
 if (checkLogIn()) {
 
 	if ($_SESSION['userInfo']['role'] == "admin") {
-		$admin_link = '| <a href="admin.phtml">Administration</a>';
+		$admin_link = '<a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
 	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '| <a href="settings.phtml">Settings</a>';
+		$settings_link = '<a href="settings.phtml">Settings</a>';
 		$add_link = '<input type="button" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 	}
 	else {
@@ -78,7 +78,7 @@ else {
             </header>
             
             <form id="category" method="post">
-                Filter: 
+                <span class="white">Filter: </span>
                 <select name="f_cat_1" id="f_cat_1" onchange="f_pop_cat_2(this)">
                     <option value="select">Select:</option>
                     <option value="Desktop">Desktop</option>
@@ -105,7 +105,7 @@ else {
             </form>
             
             <form>		
-                <div id="refreshbutton" style="display:inline;"></div>
+                <div id="refreshbutton" class="white" style="display:inline;"></div>
                 <div id="rcounter" class="good" style="display:inline;"></div>
                 
                 <?php echo $add_link; ?>

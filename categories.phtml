@@ -11,7 +11,7 @@ if (checkLogIn()) {
 	else {
 		$admin_link = '';
 	}
-	
+
 	if ($_SESSION['userInfo']['role'] !== "guest") {
 		$settings_link = '<a href="settings.phtml">Settings</a>';
 	}

@@ -13,7 +13,8 @@ body {
     max-width: 12em;
     border: 1px solid black;
     padding: 5px;
-    background: #ffffff;
+    background-color: #F39A61;
+	color: black;
 }
 
 #divMain {
