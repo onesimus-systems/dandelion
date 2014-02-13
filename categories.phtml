@@ -37,9 +37,17 @@ else {
         </header>
 		
         <h3>Category Management</h3>
+        
+        <div id="message"></div>
 
-        <div id="workArea"></div>
-        <?php include_once 'scripts/categories.php'; ?>
+        <form>
+        	<div id="workArea">
+        		<?php include_once 'scripts/categories.php'; ?>
+        	</div>
+        	<input type="button" onClick="deleteMe();" value="Delete" />
+        </form>
+        
+        <div id="tester"></div>
         
         <footer>
             <?php include_once 'scripts/footer.php'; ?>
