@@ -1,13 +1,16 @@
-function ajax(address, data, success, failure) {
-	requestID = getRandomInt();
-	console.log(requestID);
+function ajax(address, data, success, failure, async) {
+	async = typeof async !== 'undefinded' ? async : true;
+	requestID = "1";
+
     window.XMLHttpRequest ? requestID=new XMLHttpRequest() : requestID=new ActiveXObject("Microsoft.XMLHTTP");
       
     requestID.onreadystatechange=function()
 	    {
     		responseText = '';
     		responseText = requestID.responseText;
-	        if (requestID.readyState===4 && requestID.status===200)
+    		ready 		 = requestID.readyState;
+    		status 		 = requestID.status;
+	        if (ready===4 && status===200)
 	          {
 	        	if(success != null) {
 	        		success();
@@ -21,39 +24,11 @@ function ajax(address, data, success, failure) {
 	          }
 	    }
       
-    requestID.open("POST",address,true);
+    requestID.open("POST",address,async);
     requestID.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     requestID.send(data);
 }
 
-function ajax2(address, data, success, failure) {
-	requestID = getRandomInt();
-	console.log(requestID);
-    window.XMLHttpRequest ? requestID=new XMLHttpRequest() : requestID=new ActiveXObject("Microsoft.XMLHTTP");
-      
-    requestID.onreadystatechange=function()
-	    {
-    		responseText = '';
-    		responseText = requestID.responseText;
-	        if (requestID.readyState===4 && requestID.status===200)
-	          {
-	        	if(success != null) {
-	        		success();
-	        	}
-	          }
-	        else
-	          {
-	        	if(failure != null) {
-	        		failure();
-	        	}
-	          }
-	    }
-      
-    requestID.open("POST",address,true);
-    requestID.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    requestID.send(data);
-}
-
-function getRandomInt() {
-	return Math.floor(Math.random() * (100 - 0 + 1) + 0);
+function getRandomInt(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) + min);
 }

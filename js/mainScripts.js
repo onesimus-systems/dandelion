@@ -51,8 +51,6 @@ var refreshFun = {
         refreshc = setInterval(refreshLog("update"), 120000);
         wherearewe = setInterval(presence.checkstat(0), 30000);
         autore = true;
-        //refreshLog("update");
-        //presence.checkstat(0);
     },
 } //refreshFun
 
@@ -78,7 +76,7 @@ function refreshLog(kindof) {
 	    }
     failure = function()
 	    {
-	    	if (requestID.readyState===4 && requestID.status===404)
+	    	if (ready===4 && status===404)
 	        {
 		        document.getElementById("refreshed").innerHTML="";
 		        document.location.href = 'index.php';
@@ -88,9 +86,9 @@ function refreshLog(kindof) {
     if (kindof==="update" && !filt)
         {
             address = 'scripts/updatelog.php';
-            ajax(address, '', success, failure);
+            ajax(address, '', success, failure, false);
         }
-    /*else if (kindof==="filter")
+    else if (kindof==="filter")
         {
             cat1 = document.getElementById("f_cat_1").value;
             
@@ -113,14 +111,14 @@ function refreshLog(kindof) {
         {
             miscFun.clearfilt();
             address = 'scripts/updatelog.php';
-            ajax(address, '', success, failure);
+            ajax(address, '', success, failure, false);
             filt=false;
             document.getElementById('searchterm').value="Keyword";
             document.getElementById('datesearch').value="Date";
             refreshFun.startrefresh();
-        }*/
+        }
 }
-/*
+
 // This function manages the pagentation of the
 // log. It receives the desired DB row offset
 // which is supplied by readlog.php then sends
@@ -131,7 +129,7 @@ function pagentation(pageOffset) {
       {
         miscFun.clearaddedit(); // Clear any open add/edit forms
         
-        document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
+        document.getElementById("refreshed").innerHTML=responseText;
         
         if (pageOffset <= 0)
         {
@@ -146,7 +144,7 @@ function pagentation(pageOffset) {
       }
     failure = function()
       {
-    	if (xmlhttp.readyState===4 && xmlhttp.status===404)
+    	if (ready===4 && status===404)
             {
 	            document.getElementById("refreshed").innerHTML="";
 	            document.location.href = 'index.php';
@@ -285,7 +283,7 @@ var addFun = {
         
         success=function()
           {
-            document.getElementById("add_edit").innerHTML=xmlhttp.responseText;
+            document.getElementById("add_edit").innerHTML=responseText;
             clearinput = false;
             editing = false;
             refreshLog("update");
@@ -370,7 +368,7 @@ var editFun = {
         data = 'loguid=' + logid;
         success = function()
 	        {
-              editFun.showeditinputs(xmlhttp.responseText);
+              editFun.showeditinputs(responseText);
 	        }
         
         ajax(address, data, success);
@@ -386,7 +384,7 @@ var editFun = {
 
         success = function()
           {
-            document.getElementById("add_edit").innerHTML=xmlhttp.responseText;
+            document.getElementById("add_edit").innerHTML=responseText;
             clearinput = false;
             editing = false;
             refreshLog("update");
@@ -435,9 +433,9 @@ var searchFun = {
               miscFun.clearaddedit();
               filt=true;
               refreshFun.stoprefresh();
-              document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
+              document.getElementById("refreshed").innerHTML=responseText;
 	        }
         
         ajax(address, data, statechange);
     },
-}*/
+}

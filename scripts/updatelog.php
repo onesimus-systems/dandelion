@@ -42,22 +42,13 @@ if ($pageOffset > $logSize[0]['COUNT(*)']) {
 // When using a LIMIT, the parameter MUST be an integer.
 // To accomplish this the bindValue method was needed while parsing
 // the user setting as an integer.
-try {
-    $stmt = 'SELECT * FROM `log` ORDER BY `logid` DESC LIMIT :pO,:lim';
-    /*
-    $grab_logs->bindValue(':lim', (int) trim($_SESSION['userInfo'][8]), PDO::PARAM_INT); // Show amount
-    $grab_logs->bindValue(':pO', (int) trim($pageOffset), PDO::PARAM_INT); // Row offset
-    $grab_logs->execute();*/
-    $params = array(
-        ':lim' => ((int) trim($_SESSION['userInfo']['showlimit'])),
-        ':pO' => ((int) trim($pageOffset))
-    );
+$stmt = 'SELECT * FROM `log` ORDER BY `logid` DESC LIMIT :pO,:lim';
+$params = array(
+    ':lim' => ((int) trim($_SESSION['userInfo']['showlimit'])),
+    ':pO' => ((int) trim($pageOffset))
+);
     
-    $grab_logs = $conn->queryDBbind($stmt, $params);
-    
-} catch(PDOException $e) {
-    echo 'Database error';
-}
+$grab_logs = $conn->queryDBbind($stmt, $params);
 
 $isFiltered = false; // Show paging controls
 
