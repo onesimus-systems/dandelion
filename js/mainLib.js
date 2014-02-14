@@ -5,8 +5,8 @@ function ajax(address, data, success, failure) {
       
     requestID.onreadystatechange=function()
 	    {
-    		$responseText = '';
-    		$responseText = requestID.responseText;
+    		responseText = '';
+    		responseText = requestID.responseText;
 	        if (requestID.readyState===4 && requestID.status===200)
 	          {
 	        	if(success != null) {
@@ -33,8 +33,8 @@ function ajax2(address, data, success, failure) {
       
     requestID.onreadystatechange=function()
 	    {
-    		$responseText = '';
-    		$responseText = requestID.responseText;
+    		responseText = '';
+    		responseText = requestID.responseText;
 	        if (requestID.readyState===4 && requestID.status===200)
 	          {
 	        	if(success != null) {

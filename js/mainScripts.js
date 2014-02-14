@@ -63,7 +63,7 @@ var refreshFun = {
 function refreshLog(kindof) {
     success = function()
 	    {
-		    document.getElementById("refreshed").innerHTML=$responseText;
+		    document.getElementById("refreshed").innerHTML=responseText;
 		    
 		    if (clearinput && !editing) {
 		        document.getElementById("add_edit").innerHTML="";
@@ -88,7 +88,7 @@ function refreshLog(kindof) {
     if (kindof==="update" && !filt)
         {
             address = 'scripts/updatelog.php';
-            ajax2(address, '', success, failure);
+            ajax(address, '', success, failure);
         }
     /*else if (kindof==="filter")
         {
