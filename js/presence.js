@@ -4,14 +4,15 @@ var presence = {
     },
     
     checkstat: function(isWin) {
-      success = function()
-      	{
-    	  document.getElementById("pt").innerHTML=requestID.responseText;
-        }
+    	var params = new Object;
+    	params.success = function()
+	      	{
+	    	  document.getElementById("pt").innerHTML=requestID.responseText;
+	        }
         
-        address= 'scripts/presence.php';
-        data = "windowedt=" + isWin;
-        ajax(address, data, success);
+    	params.address= 'scripts/presence.php';
+    	params.data = "windowedt=" + isWin;
+        ajax(params);
     },
     
     setStatus: function(isWin) {
@@ -35,19 +36,16 @@ var presence = {
     },
     
     sendNewStatus: function(stat, rt, isWin, message) {
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        var params = new Object();
           
-        xmlhttp.onreadystatechange=function()
-          {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    document.getElementById("pt").innerHTML=xmlhttp.responseText;
-                }
-          }
+        params.success = function()
+	        {
+	            document.getElementById("pt").innerHTML=responseText;
+	        }
         
-        xmlhttp.open("POST",'scripts/presence.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("setorno=" + stat + "&returntime=" + rt + "&windowedt=" + isWin + "&message=" + message);
+        params.address = 'scripts/presence.php';
+        params.data = "setorno=" + stat + "&returntime=" + rt + "&windowedt=" + isWin + "&message=" + message;
+        ajax(params);
         
         document.getElementById('cstatus').selectedIndex = 0;
     },

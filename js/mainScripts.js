@@ -52,6 +52,12 @@ var refreshFun = {
         wherearewe = setInterval(presence.checkstat(0), 30000);
         autore = true;
     },
+
+    //Stops auto refresh
+    stoprefresh: function() {
+        clearInterval(refreshc);
+        autore = false;
+    },
 } //refreshFun
 
 //This function updates the live feed.
@@ -59,7 +65,8 @@ var refreshFun = {
 //If kindof == "filter" it sends the filter details to
 //logfilter.php and shows the returned output.
 function refreshLog(kindof) {
-    success = function()
+	var params = new Object();
+    params.success = function()
 	    {
 		    document.getElementById("refreshed").innerHTML=responseText;
 		    
@@ -74,7 +81,7 @@ function refreshLog(kindof) {
 		        miscFun.clearfilt();
 		    }
 	    }
-    failure = function()
+    params.failure = function()
 	    {
 	    	if (ready===4 && status===404)
 	        {
@@ -85,8 +92,9 @@ function refreshLog(kindof) {
     
     if (kindof==="update" && !filt)
         {
-            address = 'scripts/updatelog.php';
-            ajax(address, '', success, failure, false);
+    		params.address = 'scripts/updatelog.php';
+    		params.async = false;
+    		ajax(params);
         }
     else if (kindof==="filter")
         {
@@ -110,8 +118,9 @@ function refreshLog(kindof) {
     else if (kindof==="clearf")
         {
             miscFun.clearfilt();
-            address = 'scripts/updatelog.php';
-            ajax(address, '', success, failure, false);
+            params.address = 'scripts/updatelog.php';
+    		params.async = false;
+    		ajax(params);
             filt=false;
             document.getElementById('searchterm').value="Keyword";
             document.getElementById('datesearch').value="Date";
@@ -125,7 +134,8 @@ function refreshLog(kindof) {
 // the request to updatelog.php which handles
 // the SELECT limits.
 function pagentation(pageOffset) {
-    success = function()
+	var params = new Object;
+    params.success = function()
       {
         miscFun.clearaddedit(); // Clear any open add/edit forms
         
@@ -142,7 +152,7 @@ function pagentation(pageOffset) {
         
         document.documentElement.scrollTop = 0;
       }
-    failure = function()
+    params.failure = function()
       {
     	if (ready===4 && status===404)
             {
@@ -150,10 +160,10 @@ function pagentation(pageOffset) {
 	            document.location.href = 'index.php';
             }
       }      
-    address = 'scripts/updatelog.php';
-    data = 'pageOffset=' + pageOffset;
+    params.address = 'scripts/updatelog.php';
+    params.data = 'pageOffset=' + pageOffset;
     
-    ajax(address, data, success, failure);
+    ajax(params);
 }
 
 var addFun = {
@@ -280,8 +290,9 @@ var addFun = {
         cat3 = document.getElementById("cat_3").value;
         cat4 = document.getElementById("cat_4").value;
         cat5 = document.getElementById("cat_5").value;
+        var params = new Object;
         
-        success=function()
+        params.success=function()
           {
             document.getElementById("add_edit").innerHTML=responseText;
             clearinput = false;
@@ -289,10 +300,10 @@ var addFun = {
             refreshLog("update");
             secleft=120;
           }        
-        address = 'scripts/add_log.php';
-        data = 'cat_1=' + cat1 + '&cat_2=' + cat2 + '&cat_3=' + cat3 + '&cat_4=' + cat4 + '&cat_5=' + cat5 + '&add_title=' + title + '&add_entry=' + entry;
+        params.address = 'scripts/add_log.php';
+        params.data = 'cat_1=' + cat1 + '&cat_2=' + cat2 + '&cat_3=' + cat3 + '&cat_4=' + cat4 + '&cat_5=' + cat5 + '&add_title=' + title + '&add_entry=' + entry;
         
-        ajax(address, data, success);
+        ajax(params);
     },
 } //addFun
 
@@ -363,26 +374,27 @@ var editFun = {
     //It grabs the information about the log entry they
     //want to edit then calls showeditinputs(); to display
     //the fields.
-    grabedit: function(logid) { 
-        address = 'scripts/logeditinfo.php';
-        data = 'loguid=' + logid;
-        success = function()
+    grabedit: function(logid) {
+    	var params = new Object;
+    	params.address = 'scripts/logeditinfo.php';
+    	params.data = 'loguid=' + logid;
+    	params.success = function()
 	        {
               editFun.showeditinputs(responseText);
 	        }
         
-        ajax(address, data, success);
+        ajax(params);
     },
 
     //Sends the finished edited log to a PHP file for processing
     editlogs: function(id) {
-
+    	var params = new Object;
         var editedtitle = document.getElementById("edittitle").value;
         editedtitle = encodeURIComponent(editedtitle);
         var editedlog = document.getElementById("editlog").value;
         editedlog = encodeURIComponent(editedlog);
 
-        success = function()
+        params.success = function()
           {
             document.getElementById("add_edit").innerHTML=responseText;
             clearinput = false;
@@ -390,10 +402,10 @@ var editFun = {
             refreshLog("update");
             secleft=120;
           }        
-        address = 'scripts/editlogs.php';
-        data = 'editlog=' + editedlog + '&edittitle=' + editedtitle + '&choosen=' + id;
+        params.address = 'scripts/editlogs.php';
+        params.data = 'editlog=' + editedlog + '&edittitle=' + editedtitle + '&choosen=' + id;
         
-        ajax(address, data, success)
+        ajax(params)
     },
 } //editFun
 
@@ -407,10 +419,10 @@ var searchFun = {
 
     // Actually searches the database
     searchlog :function() {
-    
+    	var params    = new Object();
         var searchfor = document.getElementById('searchterm').value;
-        searchfor     = encodeURIComponent(searchfor);
         var datefor   = document.getElementById('datesearch').value;
+        searchfor     = encodeURIComponent(searchfor);
 
         if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null && datefor!=="" && datefor!=="Date" && datefor!==null) {
             type="both";
@@ -426,9 +438,9 @@ var searchFun = {
             return false;
         }
         
-        address     = 'scripts/logfilter.php';
-        data        = 'keyw=' + searchfor + '&dates=' + datefor + '&type=' + type;
-        statechange = function()
+        params.address     = 'scripts/logfilter.php';
+        params.data        = 'keyw=' + searchfor + '&dates=' + datefor + '&type=' + type;
+        params.success = function()
 	        {
               miscFun.clearaddedit();
               filt=true;
@@ -436,6 +448,6 @@ var searchFun = {
               document.getElementById("refreshed").innerHTML=responseText;
 	        }
         
-        ajax(address, data, statechange);
+        ajax(params);
     },
 }
