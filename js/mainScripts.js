@@ -21,14 +21,6 @@ $(document).ready(function() {
 }); 
     
 var miscFun = {
-    //Gets and formats the current Unix Epoch time and returns value
-    microtime: function(get_as_float) {
-      var now = new Date().getTime() / 1000;
-      var s = parseInt(now, 10);
-
-      return (get_as_float) ? now : (Math.round((now - s) * 1000) / 1000) + ' ' + s;
-    },
-
     //clears the add_edit div element
     clearaddedit: function() {
         document.getElementById("add_edit").innerHTML="";
@@ -56,38 +48,11 @@ var refreshFun = {
     //This function can also be called on to restart
     //the autorefresh counter
     startrefresh: function() {
-        secleft=120;
-        //document.getElementById("rcounter").innerHTML = "2:01";
-        refreshc = setInterval(function() {refreshFun.rcounterc()}, 1000);
-        wherearewe = setInterval(function() {presence.checkstat(0)}, 30000);
+        refreshc = setInterval(refreshLog("update"), 120000);
+        wherearewe = setInterval(presence.checkstat(0), 30000);
         autore = true;
-        refreshLog("update");
-        refreshFun.refreshb();
-    },
-
-    //This functions shows the refresh clock and initiates a refresh
-    //after 2 minutes.
-    rcounterc: function() {        
-        if (secleft > 0) {
-            secleft = secleft - 1;
-            }
-        else {
-            secleft=120;
-            refreshLog("update");
-            }
-    },
-
-    //This function displays the appropriate refresh button
-    refreshb: function() {
-        document.getElementById("refreshbutton").innerHTML = autore ? '<input type="button" value="Stop Auto Refresh" onClick="refreshFun.stoprefresh();" /> Autorefresh: On' : '<input type="button" value="Start Auto Refresh" onClick="refreshFun.startrefresh();" /> Autorefresh: Off ';
-    },
-
-    //Stops auto refresh
-    stoprefresh: function() {
-        clearInterval(refreshc);
-        autore = false;
-        document.getElementById("rcounter").innerHTML = "";
-        refreshFun.refreshb();
+        //refreshLog("update");
+        //presence.checkstat(0);
     },
 } //refreshFun
 
@@ -95,46 +60,37 @@ var refreshFun = {
 //If kindof == "update" it shows the recent log entries
 //If kindof == "filter" it sends the filter details to
 //logfilter.php and shows the returned output.
-function refreshLog(kindof) {    
-    var start=miscFun.microtime(true);
-    
-    window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-      
-    xmlhttp.onreadystatechange=function()
-      {
-          if (xmlhttp.readyState===4 && xmlhttp.status===200)
-            {
-                var end=miscFun.microtime(true);
-                var distime=end-start;
-                
-                document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
-                
-                presence.checkstat(0);
-                
-                if (clearinput && !editing) {
-                    document.getElementById("add_edit").innerHTML="";
-                }
-                else {
-                    clearinput = true;
-                }
-                
-                if (filt) {
-                    miscFun.clearfilt();
-                }
-            }
-          else if (xmlhttp.readyState===4 && xmlhttp.status===404)
-            {
-                document.getElementById("refreshed").innerHTML="";
-                document.location.href = 'index.php';
-            }
-      }
+function refreshLog(kindof) {
+    success = function()
+	    {
+		    document.getElementById("refreshed").innerHTML=$responseText;
+		    
+		    if (clearinput && !editing) {
+		        document.getElementById("add_edit").innerHTML="";
+		    }
+		    else {
+		        clearinput = true;
+		    }
+		    
+		    if (filt) {
+		        miscFun.clearfilt();
+		    }
+	    }
+    failure = function()
+	    {
+	    	if (requestID.readyState===4 && requestID.status===404)
+	        {
+		        document.getElementById("refreshed").innerHTML="";
+		        document.location.href = 'index.php';
+	        }
+	    }
     
     if (kindof==="update" && !filt)
         {
-            xmlhttp.open("POST",'scripts/updatelog.php',true);
-            xmlhttp.send();
+            address = 'scripts/updatelog.php';
+            ajax2(address, '', success, failure);
         }
-    else if (kindof==="filter")
+    /*else if (kindof==="filter")
         {
             cat1 = document.getElementById("f_cat_1").value;
             
@@ -143,9 +99,9 @@ function refreshLog(kindof) {
                 cat3 = document.getElementById("f_cat_3").value;
                 cat4 = document.getElementById("f_cat_4").value;
                 cat5 = document.getElementById("f_cat_5").value;
-                xmlhttp.open("POST",'scripts/logfilter.php',true);
-                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-                xmlhttp.send("f_cat_1=" + cat1 + "&f_cat_2=" + cat2 + "&f_cat_3=" + cat3 + "&f_cat_4=" + cat4 + "&f_cat_5=" + cat5);
+                address = 'scripts/logfilter.php';
+                data="f_cat_1=" + cat1 + "&f_cat_2=" + cat2 + "&f_cat_3=" + cat3 + "&f_cat_4=" + cat4 + "&f_cat_5=" + cat5;
+                ajax(address, data, success, failure);
                 filt=true;
                 refreshFun.stoprefresh();
             }
@@ -156,51 +112,50 @@ function refreshLog(kindof) {
     else if (kindof==="clearf")
         {
             miscFun.clearfilt();
-            xmlhttp.open("POST",'scripts/updatelog.php',true);
-            xmlhttp.send();
+            address = 'scripts/updatelog.php';
+            ajax(address, '', success, failure);
             filt=false;
             document.getElementById('searchterm').value="Keyword";
             document.getElementById('datesearch').value="Date";
             refreshFun.startrefresh();
-        }
+        }*/
 }
-
+/*
 // This function manages the pagentation of the
 // log. It receives the desired DB row offset
 // which is supplied by readlog.php then sends
 // the request to updatelog.php which handles
 // the SELECT limits.
 function pagentation(pageOffset) {
-    window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-      
-    xmlhttp.onreadystatechange=function()
+    success = function()
       {
-          if (xmlhttp.readyState===4 && xmlhttp.status===200)
-            {
-                miscFun.clearaddedit(); // Clear any open add/edit forms
-                
-                document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
-                
-                if (pageOffset <= 0)
-                {
-                    refreshLog('clearf'); // If the page offset returnes to page "1", return to auto refresh
-                }
-                else
-                {
-                    refreshFun.stoprefresh(); // If on pages > 1, stop refresh
-                }
-                
-                document.documentElement.scrollTop = 0;
-            }
-          else if (xmlhttp.readyState===4 && xmlhttp.status===404)
-            {
-                document.getElementById("refreshed").innerHTML="<span class=\"bad\">Error communicating with server. Please <a href=\"index.php\">log in again</a></span>";
-            }
+        miscFun.clearaddedit(); // Clear any open add/edit forms
+        
+        document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
+        
+        if (pageOffset <= 0)
+        {
+            refreshLog('clearf'); // If the page offset returnes to page "1", return to auto refresh
+        }
+        else
+        {
+            refreshFun.stoprefresh(); // If on pages > 1, stop refresh
+        }
+        
+        document.documentElement.scrollTop = 0;
       }
-      
-    xmlhttp.open("POST",'scripts/updatelog.php',true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send("pageOffset=" + pageOffset);
+    failure = function()
+      {
+    	if (xmlhttp.readyState===4 && xmlhttp.status===404)
+            {
+	            document.getElementById("refreshed").innerHTML="";
+	            document.location.href = 'index.php';
+            }
+      }      
+    address = 'scripts/updatelog.php';
+    data = 'pageOffset=' + pageOffset;
+    
+    ajax(address, data, success, failure);
 }
 
 var addFun = {
@@ -328,23 +283,18 @@ var addFun = {
         cat4 = document.getElementById("cat_4").value;
         cat5 = document.getElementById("cat_5").value;
         
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
+        success=function()
           {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    document.getElementById("add_edit").innerHTML=xmlhttp.responseText;
-                    clearinput = false;
-                    editing = false;
-                    refreshLog("update");
-                    secleft=120;
-                }
-          }
+            document.getElementById("add_edit").innerHTML=xmlhttp.responseText;
+            clearinput = false;
+            editing = false;
+            refreshLog("update");
+            secleft=120;
+          }        
+        address = 'scripts/add_log.php';
+        data = 'cat_1=' + cat1 + '&cat_2=' + cat2 + '&cat_3=' + cat3 + '&cat_4=' + cat4 + '&cat_5=' + cat5 + '&add_title=' + title + '&add_entry=' + entry;
         
-        xmlhttp.open("POST",'scripts/add_log.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("cat_1=" + cat1 + "&cat_2=" + cat2 + "&cat_3=" + cat3 + "&cat_4=" + cat4 + "&cat_5=" + cat5 + "&add_title=" + title + "&add_entry=" + entry);
+        ajax(address, data, success);
     },
 } //addFun
 
@@ -416,19 +366,14 @@ var editFun = {
     //want to edit then calls showeditinputs(); to display
     //the fields.
     grabedit: function(logid) { 
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
-          {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    editFun.showeditinputs(xmlhttp.responseText);
-                }
-          }
+        address = 'scripts/logeditinfo.php';
+        data = 'loguid=' + logid;
+        success = function()
+	        {
+              editFun.showeditinputs(xmlhttp.responseText);
+	        }
         
-        xmlhttp.open("POST",'scripts/logeditinfo.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("loguid=" + logid);
+        ajax(address, data, success);
     },
 
     //Sends the finished edited log to a PHP file for processing
@@ -438,43 +383,36 @@ var editFun = {
         editedtitle = encodeURIComponent(editedtitle);
         var editedlog = document.getElementById("editlog").value;
         editedlog = encodeURIComponent(editedlog);
-        
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
+
+        success = function()
           {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    document.getElementById("add_edit").innerHTML=xmlhttp.responseText;
-                    clearinput = false;
-                    editing = false;
-                    refreshLog("update");
-                    secleft=120;
-                }
-          }
+            document.getElementById("add_edit").innerHTML=xmlhttp.responseText;
+            clearinput = false;
+            editing = false;
+            refreshLog("update");
+            secleft=120;
+          }        
+        address = 'scripts/editlogs.php';
+        data = 'editlog=' + editedlog + '&edittitle=' + editedtitle + '&choosen=' + id;
         
-        xmlhttp.open("POST",'scripts/editlogs.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("editlog=" + editedlog + "&edittitle=" + editedtitle + "&choosen=" + id);
+        ajax(address, data, success)
     },
 } //editFun
 
-var searchFun = {    
+var searchFun = {
     // Checks if enter key was pressed, if so search
     check: function(e) {
-    
         if (e.keyCode == 13) {
             searchFun.searchlog();
         }
-    
     },
 
     // Actually searches the database
     searchlog :function() {
     
         var searchfor = document.getElementById('searchterm').value;
-        searchfor = encodeURIComponent(searchfor);
-        var datefor = document.getElementById('datesearch').value;
+        searchfor     = encodeURIComponent(searchfor);
+        var datefor   = document.getElementById('datesearch').value;
 
         if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null && datefor!=="" && datefor!=="Date" && datefor!==null) {
             type="both";
@@ -490,21 +428,16 @@ var searchFun = {
             return false;
         }
         
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
-          {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    miscFun.clearaddedit();
-                    filt=true;
-                    refreshFun.stoprefresh();
-                    document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
-                }
-          }
+        address     = 'scripts/logfilter.php';
+        data        = 'keyw=' + searchfor + '&dates=' + datefor + '&type=' + type;
+        statechange = function()
+	        {
+              miscFun.clearaddedit();
+              filt=true;
+              refreshFun.stoprefresh();
+              document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
+	        }
         
-        xmlhttp.open("POST",'scripts/logfilter.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("keyw=" + searchfor + "&dates=" + datefor + "&type=" + type);
+        ajax(address, data, statechange);
     },
-}
+}*/

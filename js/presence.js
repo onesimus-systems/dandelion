@@ -4,19 +4,14 @@ var presence = {
     },
     
     checkstat: function(isWin) {
-      window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
-          {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    document.getElementById("pt").innerHTML=xmlhttp.responseText;
-                }
-          }
+      success = function()
+      	{
+    	  document.getElementById("pt").innerHTML=requestID.responseText;
+        }
         
-        xmlhttp.open("POST",'scripts/presence.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("windowedt=" + isWin);
+        address= 'scripts/presence.php';
+        data = "windowedt=" + isWin;
+        ajax(address, data, success);
     },
     
     setStatus: function(isWin) {
