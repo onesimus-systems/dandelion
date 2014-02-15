@@ -54,8 +54,10 @@ class cxeesto extends dbManage
                 
                 echo '<td class="statusi"><span title="' . $statusProps[0] . '" class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td></tr>';
             }
+            //echo '<a role="button" tabindex="0" onClick="presence.popOut();" class="linklike">Popout &#264;eesto</a>';
+            echo '<tr><td colspan="2" class="cen"><form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto" /></form></td></tr>';
+
             echo '</tbody></table>';
-            echo '<a role="button" tabindex="0" onClick="presence.popOut();" class="linklike">Popout &#264;eesto</a>';
         }
         
         // Updating the windowed version

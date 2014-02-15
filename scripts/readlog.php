@@ -90,14 +90,9 @@ class DisplayLogs {
             if ($row['edited']) { echo '(Edited)'; }
             echo '<br />Categorized as ' . $row['cat'] . '.';
             
-            if ($_SESSION['userInfo']['userid'] == $row['usercreated'] OR ($_SESSION['userInfo']['userid'] == $row['usercreated'] AND $_SESSION['userInfo']['role'] == 'admin')) {
+            if ($_SESSION['userInfo']['userid'] == $row['usercreated'] OR $_SESSION['userInfo']['role'] == 'admin') {
                 ?>
                     <input type="button" value="Edit" onClick="editFun.grabedit(<?php echo $row['logid']; ?>);" class="flri" />
-                <?php
-            }
-            elseif ($_SESSION['userInfo']['role'] == 'admin') {
-                ?>
-                    <input type="button" value="Edit as Admin" onClick="editFun.grabedit(<?php echo $row['logid']; ?>);" class="flri" />
                 <?php
             }
             

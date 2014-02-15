@@ -97,6 +97,10 @@ a:visited, a:hover, a:link, a:active {
 	padding: .5em 1.5em;
 }
 
+#refreshed, #add_edit {
+	margin-top: 1em;
+}
+
 #nav_link a:visited, #nav_link a:link, #nav_link a:hover, #nav_link a:active {
 	background-color: #393939;
 	color: white;
@@ -118,9 +122,17 @@ header {
 .pagination input, #login_button, .logentry input {
 	background-color: #393939;
 	border: none;
-	color: black;
 	padding: 1em 2em;
 	margin: 0;
+	font-size: 1em;
+	color: white;
+}
+
+.dButton {
+	background-color: #393939;
+	border: none;
+	padding: .25em .5em;
+	margin: .25em .15em;
 	font-size: 1em;
 	color: white;
 }
@@ -130,7 +142,7 @@ header {
 	margin-top: .75em;
 }
 
-.pagination input:hover, #login_button:hover, .logentry input:hover {
+.pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
 	background-color: #F90;
 	color: black;
 }
