@@ -79,7 +79,7 @@ var refreshFun = {
 
     //This function displays the appropriate refresh button
     refreshb: function() {
-        document.getElementById("refreshbutton").innerHTML = autore ? '<input type="button" value="Stop Auto Refresh" onClick="refreshFun.stoprefresh();" /> Autorefresh: On' : '<input type="button" value="Start Auto Refresh" onClick="refreshFun.startrefresh();" /> Autorefresh: Off ';
+        document.getElementById("refreshbutton").innerHTML = autore ? '<input type="button" class="dButton" value="Stop Auto Refresh" onClick="refreshFun.stoprefresh();" /> Autorefresh: On' : '<input type="button" class="dButton" value="Start Auto Refresh" onClick="refreshFun.startrefresh();" /> Autorefresh: Off ';
     },
 
     //Stops auto refresh
