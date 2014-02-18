@@ -13,12 +13,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         switch($CONFIG['db_type']) {
         	case 'mysql':
 	            $db_connect = 'mysql:host='.$CONFIG['db_host'].';dbname='.$CONFIG['db_name'];
+	            $db_user = $CONFIG['db_user'];
+	            $db_pass = $CONFIG['db_pass'];
+	            $stmt = 'SHOW TABLES';
 	            break;
 	            
         	case 'sqlite':
 	            $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database.sq3';
-	            $CONFIG['db_user'] = null;
-	            $CONFIG['db_pass'] = null;
+	            $db_user = null;
+	            $db_pass = null;
+	            $stmt = '.tables';
 	            break;
 	            
         	default:
@@ -26,15 +30,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         		break;
         }
         
-        $conn = new PDO($db_connect, $CONFIG['db_user'], $CONFIG['db_pass'], array(
-            PDO::ATTR_PERSISTENT => true
-        ));
+        $conn = new PDO($db_connect, $db_user, $db_pass);
         
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$dbConn = $conn;
 		
 		/** Drop any existing tables in the database */
-		$stmt = 'SHOW TABLES';
 		$exec = $dbConn->prepare($stmt);
 		$exec->execute();
 		
@@ -54,7 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			$exec->execute();
 		}
 
-		include_once 'mysqlInstall.php'; // Once the user can choose, make this dynamically load the correct creation statements
+		include_once $CONFIG['db_type'].'Install.php'; // Load the database specific creation commands
+		
+		$conn = null;
 		
 		/** Write config file */
 		$handle = fopen('../config/config.php', 'w');
