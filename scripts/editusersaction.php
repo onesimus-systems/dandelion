@@ -246,7 +246,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $row = $conn->queryDB($stmt, $params);;
                 
                 // Create a Cxeesto ID for the new user
-                $stmt = 'INSERT INTO presence (uid, realname, status, dmodified) VALUES (:uid, :real, 1, :date)';
+                $stmt = 'INSERT INTO presence (uid, realname, status, message, return, dmodified) VALUES (:uid, :real, 1, \'\', \'\', :date)';
                 $params = array(
                     'uid' => $row[0]['userid'],
                     'real' => $add_real,

@@ -77,38 +77,40 @@ else {
                 <?php include 'scripts/header.php'; ?>
             </header>
 
-            <form id="category" method="post">
-                <span class="white">Filter: </span>
-                <select name="f_cat_1" id="f_cat_1" onchange="f_pop_cat_2(this)">
-                    <option value="select">Select:</option>
-                    <option value="Desktop">Desktop</option>
-                    <option value="Appliances">Appliances</option>
-                    <option value="Network">Network</option>
-                    <option value="Servers">Servers</option>
-                    <option value="UPS">UPS</option>
-                </select>
-                <select name="f_cat_2" id="f_cat_2" onchange="f_pop_cat_3(this)" value="select">
-                    
-                </select>
-                <select name="f_cat_3" id="f_cat_3" onchange="f_pop_cat_4(this)">
-                    
-                </select>
-                <select name="f_cat_4" id="f_cat_4" onchange="f_pop_cat_5(this)">
-                    
-                </select>
-                <select name="f_cat_5" id="f_cat_5">
-                    
-                </select>
-                <input type="button" value="Filter" onClick="refreshLog('filter');" /><br />
-                <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
-                <input type="button" value="Search Log" onClick="searchFun.searchlog();" />
-            </form>
-            
-            <form>
-                <?php echo $add_link; ?>
-            </form>
-            
-            <div id="add_edit"></div>
+            <div id="controlPanel">
+                <form id="category" method="post">
+                    <span class="white">Filter: </span>
+                    <select name="f_cat_1" id="f_cat_1" onchange="f_pop_cat_2(this)">
+                        <option value="select">Select:</option>
+                        <option value="Desktop">Desktop</option>
+                        <option value="Appliances">Appliances</option>
+                        <option value="Network">Network</option>
+                        <option value="Servers">Servers</option>
+                        <option value="UPS">UPS</option>
+                    </select>
+                    <select name="f_cat_2" id="f_cat_2" onchange="f_pop_cat_3(this)" value="select">
+                        
+                    </select>
+                    <select name="f_cat_3" id="f_cat_3" onchange="f_pop_cat_4(this)">
+                        
+                    </select>
+                    <select name="f_cat_4" id="f_cat_4" onchange="f_pop_cat_5(this)">
+                        
+                    </select>
+                    <select name="f_cat_5" id="f_cat_5">
+                        
+                    </select>
+                    <input type="button" value="Filter" onClick="refreshLog('filter');" /><br />
+                    <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
+                    <input type="button" value="Search Log" onClick="searchFun.searchlog();" />
+                </form>
+                
+                <form>
+                    <?php echo $add_link; ?>
+                </form>
+                
+                <div id="add_edit"></div>
+            </div>
             
             <div id="refreshed"></div>
             
