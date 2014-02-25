@@ -71,7 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h2>Edit User Status:</h2>
                 <form name="edit_form" method="post">
                     <table>
-                        <tr><td>Name:</td><td><input type="text" name="status_name" value="<?php echo $row['uid']; ?>" autocomplete="off" /></td></tr>
+                        <tr><td>User ID:</td><td><input type="text" name="status_id" value="<?php echo $row['uid']; ?>" autocomplete="off" readonly /></td></tr>
+                        <tr><td>Name:</td><td><input type="text" name="status_name" value="<?php echo $row['realname']; ?>" autocomplete="off" readonly /></td></tr>
                         <tr><td>Status:</td><td>
                             <select name="status_s">
                                 <option>Set Status:</option>
@@ -245,7 +246,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $row = $conn->queryDB($stmt, $params);;
                 
                 // Create a Cxeesto ID for the new user
-                $stmt = 'INSERT INTO presence (uid, realname, status, dmodified) VALUES (:uid, :real, 1, :date)';
+                $stmt = 'INSERT INTO presence (uid, realname, status, message, return, dmodified) VALUES (:uid, :real, 1, \'\', \'\', :date)';
                 $params = array(
                     'uid' => $row[0]['userid'],
                     'real' => $add_real,
@@ -301,7 +302,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $date = new DateTime();
             $date = $date->format('Y-m-d H:i:s');
             
-            $stat_user = $_POST['status_name'];
+            $stat_id = $_POST['status_id'];
             $stat_s = $_POST['status_s'];
             $stat_message = $_POST['status_message'];
             $stat_return = $_POST['status_return'];
@@ -352,7 +353,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'status' => $stat_s,
                 'return' => $stat_return,
                 'date' => $date,
-                'userid' => $stat_user
+                'userid' => $stat_id
             );
             $conn->queryDB($stmt, $params);
         

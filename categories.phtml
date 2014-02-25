@@ -5,15 +5,15 @@ include_once 'scripts/dbconnect.php';
 
 // Authenticate user, if fail go to login page
 if (checkLogIn()) {
-	if ($_SESSION['userInfo'][5] === "admin") {
-		$admin_link = '| <a href="admin.phtml">Administration</a>';
+	if ($_SESSION['userInfo']['role'] === "admin") {
+		$admin_link = '<a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
-	
-	if ($_SESSION['userInfo'][5] !== "guest") {
-		$settings_link = '| <a href="settings.phtml">Settings</a>';
+
+	if ($_SESSION['userInfo']['role'] !== "guest") {
+		$settings_link = '<a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
@@ -37,14 +37,23 @@ else {
         </header>
 		
         <h3>Category Management</h3>
+        
+        <div id="message"></div>
 
-        <div id="workArea"></div>
-        <?php include_once 'scripts/categories.php'; ?>
+        <form>
+        	<div id="workArea">
+        		<?php include_once 'scripts/categories.php'; ?>
+        	</div>
+        	<input type="button" onClick="deleteMe();" value="Delete" />
+        </form>
+        
+        <div id="tester"></div>
         
         <footer>
             <?php include_once 'scripts/footer.php'; ?>
         </footer>
 	</body>
     
-    <script type="text/javascript" src="scripts/catManage.js"></script>
+    <script type="text/javascript" src="js/catManage.js"></script>
+    <script type="text/javascript" src="js/mainLib.js"></script>
 </html>

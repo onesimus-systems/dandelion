@@ -16,15 +16,15 @@ include_once 'scripts/dbconnect.php';
 if (checkLogIn()) {
 
 	if ($_SESSION['userInfo']['role'] == "admin") {
-		$admin_link = '| <a href="admin.phtml">Administration</a>';
+		$admin_link = '<a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
 	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '| <a href="settings.phtml">Settings</a>';
-		$add_link = '<input type="button" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
+		$settings_link = '<a href="settings.phtml">Settings</a>';
+		$add_link = '<input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 	}
 	else {
 		$add_link = '';
@@ -67,7 +67,7 @@ else {
                     <option>Out Sick</option>
                     <option>Vacation</option>
                 </select>
-                <input type="button" value="Set" onClick="presence.setStatus(0);" />
+                <input type="button" value="Set" class="linklike set" onClick="presence.setStatus(0);" />
             </form>
             <div id="pt"></div>
         </div>
@@ -76,44 +76,41 @@ else {
             <header>
                 <?php include 'scripts/header.php'; ?>
             </header>
-            
-            <form id="category" method="post">
-                Filter: 
-                <select name="f_cat_1" id="f_cat_1" onchange="f_pop_cat_2(this)">
-                    <option value="select">Select:</option>
-                    <option value="Desktop">Desktop</option>
-                    <option value="Appliances">Appliances</option>
-                    <option value="Network">Network</option>
-                    <option value="Servers">Servers</option>
-                    <option value="UPS">UPS</option>
-                </select>
-                <select name="f_cat_2" id="f_cat_2" onchange="f_pop_cat_3(this)" value="select">
-                    
-                </select>
-                <select name="f_cat_3" id="f_cat_3" onchange="f_pop_cat_4(this)">
-                    
-                </select>
-                <select name="f_cat_4" id="f_cat_4" onchange="f_pop_cat_5(this)">
-                    
-                </select>
-                <select name="f_cat_5" id="f_cat_5">
-                    
-                </select>
-                <input type="button" value="Filter" onClick="refreshLog('filter');" /><br />
-                <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
-                <input type="button" value="Search Log" onClick="searchFun.searchlog();" />
-            </form>
-            
-            <form>		
-                <div id="refreshbutton" style="display:inline;"></div>
-                <div id="rcounter" class="good" style="display:inline;"></div>
+
+            <div id="controlPanel">
+                <form id="category" method="post">
+                    <span class="white">Filter: </span>
+                    <select name="f_cat_1" id="f_cat_1" onchange="f_pop_cat_2(this)">
+                        <option value="select">Select:</option>
+                        <option value="Desktop">Desktop</option>
+                        <option value="Appliances">Appliances</option>
+                        <option value="Network">Network</option>
+                        <option value="Servers">Servers</option>
+                        <option value="UPS">UPS</option>
+                    </select>
+                    <select name="f_cat_2" id="f_cat_2" onchange="f_pop_cat_3(this)" value="select">
+                        
+                    </select>
+                    <select name="f_cat_3" id="f_cat_3" onchange="f_pop_cat_4(this)">
+                        
+                    </select>
+                    <select name="f_cat_4" id="f_cat_4" onchange="f_pop_cat_5(this)">
+                        
+                    </select>
+                    <select name="f_cat_5" id="f_cat_5">
+                        
+                    </select>
+                    <input type="button" value="Filter" onClick="refreshLog('filter');" /><br />
+                    <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
+                    <input type="button" value="Search Log" onClick="searchFun.searchlog();" />
+                </form>
                 
-                <?php echo $add_link; ?>
-            </form>
-            
-            <p id="gentime"></p>
-            
-            <div id="add_edit"></div>
+                <form>
+                    <?php echo $add_link; ?>
+                </form>
+                
+                <div id="add_edit"></div>
+            </div>
             
             <div id="refreshed"></div>
             
@@ -124,8 +121,9 @@ else {
         
         <script src="jquery/js/jquery-2.1.0.min.js"></script>
         <script src="jquery/js/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="scripts/categories.js"></script>
-        <script src="scripts/mainScripts.js"></script>
-        <script src="scripts/presence.js"></script>
+        <script src="js/mainLib.js"></script>
+        <script src="js/categories.js"></script>
+        <script src="js/mainScripts.js"></script>
+        <script src="js/presence.js"></script>
 	</body>
 </html>
