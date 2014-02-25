@@ -33,7 +33,6 @@ class DB
     /** Attempts to start a connection with the database and store it in $dbConn */
     function __construct()
     {
-
         try {
 	        if (file_exists('config/config.php')) {
 	            include 'config/config.php';
@@ -51,7 +50,7 @@ class DB
 		            break;
 		            
 	        	case 'sqlite':
-		            $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database.sq3';
+		            $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database/'.$CONFIG['sqlite_fn'];
 		            $CONFIG['db_user'] = null;
 		            $CONFIG['db_pass'] = null;
 		            break;
