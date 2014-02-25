@@ -13,7 +13,7 @@ ini_set('display_errors', True);
 
 session_start();
 $cookie_name = 'dandelionrememt'; // Used for login remembering (soon to go away)
-define('D_VERSION', '4.0.0');       // Defines current Dandelion version
+define('D_VERSION', '4.1.1');       // Defines current Dandelion version
  
 /**
   * @brief DB connects to the database and stores the handle in $dbConn.
@@ -33,23 +33,42 @@ class DB
     /** Attempts to start a connection with the database and store it in $dbConn */
     function __construct()
     {
-        if (file_exists('config/config.php')) {
-            include 'config/config.php';
-        }
-        else {
-            include '../config/config.php';
-        }
-
         try {
-            $conn = new PDO('mysql:host='.$CONFIG['db_host'].';dbname='.$CONFIG['db_name'], $CONFIG['db_user'], $CONFIG['db_pass'], array(
+	        if (file_exists('config/config.php')) {
+	            include 'config/config.php';
+	        }
+	        elseif (file_exists('../config/config.php')) {
+	            include '../config/config.php';
+	        }
+	        else {
+	        	throw new Exception('No configuration file found');
+	        }
+	        
+	        switch($CONFIG['db_type']) {
+	        	case 'mysql':
+		            $db_connect = 'mysql:host='.$CONFIG['db_host'].';dbname='.$CONFIG['db_name'];
+		            break;
+		            
+	        	case 'sqlite':
+		            $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database/'.$CONFIG['sqlite_fn'];
+		            $CONFIG['db_user'] = null;
+		            $CONFIG['db_pass'] = null;
+		            break;
+		            
+	        	default:
+	        		throw new Exception('Error: No database driver loaded');
+	        		break;
+	        }
+	        
+            $conn = new PDO($db_connect, $CONFIG['db_user'], $CONFIG['db_pass'], array(
                 PDO::ATTR_PERSISTENT => true
             ));
+	        
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //comment when deployed
             $this->dbConn = $conn;
         }
         catch(PDOException $e) {
             echo 'ERROR: ' . $e->getMessage(); //comment when deployed
-            echo 'Database Status: <span class="bad">Not Connected</span>';
         }
     }
 }
@@ -99,7 +118,7 @@ class dbManage extends DB
             }
             
         } catch(PDOException $e) {
-            echo 'Database error';
+            echo 'Database error: '.$e;
         }
     }
     
