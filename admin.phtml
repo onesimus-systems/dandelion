@@ -36,17 +36,17 @@ else {
             <?php include 'scripts/header.php'; ?>
         </header>
 		
-        <h3>Administration</h3>
+        <h2>Administration</h2>
 		
     	<form name="admin_form" method="post" action="scripts/admin_actions.php">
-			<input type="submit" name="sub_action" value="Set New Features" /><br />
-			<input type="submit" name="sub_action" value="Clear Session Tokens" /><br />
-			<input type="submit" name="sub_action" value="Backup Database" /><br />
-			<input type="submit" name="sub_action" value="Optimize Database" /><br />
+			<input type="submit" class="dButton adminButton" name="sub_action" value="Set New Features" /><br />
+			<input type="button" class="dButton adminButton" value="Edit Users" onClick="window.location='editusers.phtml'" /><br />
+			<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location='categories.phtml'" />
+			<br /><br /><hr width="350" />
+			<h3>Database Administration</h3>
+			<input type="submit" class="dButton adminButton" name="sub_action" value="Clear Session Tokens" /><br />
+			<!-- <input type="submit" class="dButton adminButton" name="sub_action" value="Backup Database" /><br />-->
     	</form>
-
-	    <br /><a href="editusers.phtml">Edit Users</a>
-        <br /><a href="categories.phtml">Manage Categories</a>
 
         <footer>
             <?php include_once 'scripts/footer.php'; ?>

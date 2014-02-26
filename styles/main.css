@@ -110,6 +110,7 @@ a:visited, a:hover, a:link, a:active {
 
 header {
 	margin-bottom: 1.5em;
+	min-width: 35em;
 }
 
 .pagination {
@@ -135,6 +136,10 @@ header {
 	margin: .25em .15em;
 	font-size: 1em;
 	color: white;
+}
+
+.adminButton {
+	width: 15em;
 }
 
 #login_button, .logentry input {
