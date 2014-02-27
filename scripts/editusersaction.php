@@ -247,7 +247,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $add_role = $_POST['add_role'];
                 
                 // Create user in database
-                $stmt = 'INSERT INTO users (username, password, realname, settings_id, role, datecreated) VALUES (:username, :password, :realname, :s_id, :role, :datecreated)';
+                $stmt = 'INSERT INTO users (username, password, realname, settings_id, role, datecreated, theme) VALUES (:username, :password, :realname, :s_id, :role, :datecreated, \'default\')';
                 $params = array(
                     'username' => $add_user,
                     'password' => $add_pass,
@@ -266,7 +266,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $row = $conn->queryDB($stmt, $params);;
                 
                 // Create a Cxeesto ID for the new user
-                $stmt = 'INSERT INTO presence (uid, realname, status, message, return, dmodified) VALUES (:uid, :real, 1, \'\', \'\', :date)';
+                $stmt = 'INSERT INTO `presence` (`uid`, `realname`, `status`, `message`, `return`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
                 $params = array(
                     'uid' => $row[0]['userid'],
                     'real' => $add_real,
