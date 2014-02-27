@@ -263,12 +263,14 @@ var addFun = {
         var add_button = document.createElement("input");
             add_button.type="button";
             add_button.setAttribute('onclick', 'addFun.addlog();');
+            add_button.setAttribute('class', 'dButton');
             add_button.value="Add Log";
             add_form.appendChild(add_button);
             
         var add_button = document.createElement("input");
             add_button.type="button";
             add_button.setAttribute('onclick', 'miscFun.clearaddedit()');
+            add_button.setAttribute('class', 'dButton');
             add_button.value="Cancel";
             add_form.appendChild(add_button);
 
@@ -355,12 +357,14 @@ var editFun = {
         var edit_button = document.createElement("input");
             edit_button.type="button";
             edit_button.setAttribute('onclick', 'editFun.editlogs('+linfo.logid+');');
+            edit_button.setAttribute('class', 'dButton');
             edit_button.value="Save Edit";
             add_form.appendChild(edit_button);
             
         edit_button = document.createElement("input");
             edit_button.type="button";
             edit_button.setAttribute('onclick', 'miscFun.clearaddedit();');
+            edit_button.setAttribute('class', 'dButton');
             edit_button.value="Cancel";
             add_form.appendChild(edit_button);
 

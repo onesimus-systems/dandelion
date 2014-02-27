@@ -1,8 +1,15 @@
+<?php 
+$theme = isset($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
+?>
 <html>
     <head>
         <meta charset="utf-8" />
         <title>Dandelion Presence</title>
-        <link rel="stylesheet" href="styles/presencewin.css" />
+		<link rel="stylesheet" type="text/css" href="styles/presence.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/cheesto.css" />
+        <link rel="stylesheet" type="text/css" href="styles/presencewin.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/presenceWin.css" />
+        <script src="js/mainLib.js"></script>
         <script src="js/presence.js"></script>
     </head>
     
@@ -24,7 +31,7 @@
 	                <option>Out Sick</option>
 	                <option>Vacation</option>
 	            </select>
-	            <input type="button" value="Set" onClick="presence.setStatus(1);" />
+	            <input type="button" value="Set" class="linklike set" onClick="presence.setStatus(1);" />
 	        </form>
 	        <div id="pt">
 	            <?php include 'scripts/presence.php'; ?>

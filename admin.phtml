@@ -18,6 +18,8 @@ if (checkLogIn()) {
 	else {
 		$settings_link = '';
 	}
+	
+	$theme = isset($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
 }
 else {
 	header( 'Location: index.php' );
@@ -29,6 +31,7 @@ else {
 		<meta charset="utf-8" />
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
 		<title>Dandelion Web Log</title>
 	</head>
 	<body>

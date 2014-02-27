@@ -21,7 +21,7 @@ var presence = {
         
         if (newStatus != 1 && newStatus != 0) {
             rtime = "";
-            window.open("scripts/getdate.html","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
+            window.open("scripts/getdate.php","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
             }
         else if (newStatus == 0)
             return false;
@@ -49,4 +49,17 @@ var presence = {
         
         document.getElementById('cstatus').selectedIndex = 0;
     },
+    
+    showHideP: function() {
+    	if (document.getElementById('showHide').innerHTML == "[ - ]") {
+    		document.getElementById('presence').style.minWidth = document.getElementById('mainPresence').offsetWidth+"px";
+    		document.getElementById('mainPresence').style.display = 'none';
+    		document.getElementById('showHide').innerHTML = "[ + ]";
+    	}
+    	else {
+    		document.getElementById('presence').style.minWidth = "0px";
+    		document.getElementById('mainPresence').style.display = '';
+    		document.getElementById('showHide').innerHTML = "[ - ]";
+    	}
+    }
 }

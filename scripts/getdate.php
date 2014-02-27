@@ -1,9 +1,13 @@
+<?php 
+$theme = isset($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
+?>
 <html>
     <head>
         <meta charset="utf-8" />
         <title>Dandelion cxeesto</title>
 		<link rel="stylesheet" type="text/css" href="../jquery/css/smoothness/jquery-ui.min.css" />
         <link rel="stylesheet" href="../styles/presencewin.css" />
+		<link rel="stylesheet" type="text/css" href="../themes/<?php echo $theme;?>/presenceWin.css" />
     </head>
     
     <body>

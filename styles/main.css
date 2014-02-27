@@ -1,7 +1,10 @@
-/* Main Stylesheet for Dandelion Web Log */
+/* Base theme for Dandelion Web Log
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
 
 body {
-	background-color: #6E6E6E;
     margin: 0px auto;
     text-align: center;
     width: 60%;
@@ -30,7 +33,6 @@ a:visited, a:hover, a:link, a:active {
 	margin-top: -7em;
 	margin-left: -15em;
 	border: 1px solid #CCC;
-	background-color: #F3843E;
 	color: black;
 }
 
@@ -84,7 +86,6 @@ a:visited, a:hover, a:link, a:active {
 	border: 0px solid black;
 	text-align: left;
 	font-family: sans-serif;
-    color: black;
 }
 
 .entry {
@@ -93,17 +94,20 @@ a:visited, a:hover, a:link, a:active {
 }
 
 #refreshed_core {
-	background-color: #F3843E;
 	padding: .5em 1.5em;
+	color: black;
 }
 
 #refreshed, #add_edit {
 	margin-top: 1em;
 }
 
-#nav_link a:visited, #nav_link a:link, #nav_link a:hover, #nav_link a:active {
-	background-color: #393939;
-	color: white;
+#refreshed, #controlPanel {
+	min-width: 35em;
+}
+
+#nav_link a:visited, #nav_link a:link, #nav_link a:active {
+	color: black;
 	text-decoration: none;
 	padding: 10px 20px;
 }
@@ -115,13 +119,11 @@ header {
 
 .pagination {
 	display: block;
-	overflow:hidden;
+	overflow: hidden;
 	padding: 0 0;
-	background-color: #393939;
 }
 
 .pagination input, #login_button, .logentry input {
-	background-color: #393939;
 	border: none;
 	padding: 1em 2em;
 	margin: 0;
@@ -130,7 +132,6 @@ header {
 }
 
 .dButton {
-	background-color: #393939;
 	border: none;
 	padding: .25em .5em;
 	margin: .25em .15em;
@@ -148,6 +149,5 @@ header {
 }
 
 .pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
-	background-color: #F90;
 	color: black;
 }
