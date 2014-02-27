@@ -48,8 +48,11 @@ var refreshFun = {
     //This function can also be called on to restart
     //the autorefresh counter
     startrefresh: function() {
-        refreshc = setInterval(refreshLog("update"), 120000);
-        wherearewe = setInterval(presence.checkstat(0), 30000);
+		refreshLog("update");
+		presence.checkstat(0);
+        refreshc = setInterval(function(){refreshLog("update");}, 120000);
+        wherearewe = setInterval(function(){presence.checkstat(0);}, 30000);
+		//test = setInterval(function(){alert("Hey");}, 1000);
         autore = true;
     },
 
