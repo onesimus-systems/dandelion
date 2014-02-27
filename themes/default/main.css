@@ -1,0 +1,48 @@
+/* Default theme for Dandelion Web Log
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
+
+body {
+	background-color: #57CCFF;
+}
+
+#credits {
+	color: black;
+}
+
+#login {
+	background-color: #17739A;
+}
+
+#refreshed_core {
+	background-color: #17739A;
+	color: white;
+}
+
+#nav_link a:visited, #nav_link a:link, #nav_link a:active {
+	background-color: #9A2E15;
+	color: white;
+}
+
+#nav_link a:hover {
+	background-color: #FFA38D;
+	color: black;
+}
+
+.pagination {
+	background-color: #9A2E15;
+}
+
+.pagination input, #login_button, .logentry input {
+	background-color: #9A2E15;
+}
+
+.pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
+	background-color: #FFA38D;
+}
+
+.dButton {
+	background-color: #9A2E15;
+}
