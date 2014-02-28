@@ -1,5 +1,5 @@
 <?php 
-$theme = isset($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
+$theme = getTheme();
 ?>
 <html>
     <head>

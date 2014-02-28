@@ -26,7 +26,7 @@ if (checkLogIn()) {
 		$admin_link = '';
 	}
 	
-	$theme = isset($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
+	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -70,7 +70,7 @@ else {
 	        	echo '<select name="userTheme">';
 	        		while (false !== ($themeName = readdir($handle))) {
 						if ($themeName != '.' && $themeName != '..') {
-							if ($themeName == $_SESSION['userInfo']['theme']) {
+							if ($themeName == $theme) {
 								echo '<option value="'.$themeName.'" selected>'.$themeName.'</option>';
 							}
 							else {

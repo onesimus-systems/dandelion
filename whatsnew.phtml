@@ -42,7 +42,7 @@ if (checkLogIn()) {
         $_SESSION['userInfo']['firsttime'] = 0;
     }
 	
-	$theme = isset($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
+	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );

@@ -38,7 +38,7 @@ else {
         $status = '<span class="bad">Incorrect username or password</span><br />';
     }
 	
-	$theme = isset($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
+	$theme = getTheme();
 }
 ?>
 
