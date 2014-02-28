@@ -54,7 +54,10 @@ function checkLogIn() {
 }
 
 function getTheme() {
+	// If a theme is defined for the user in the database, grab it
 	$theme = !empty($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
-	$theme = is_dir(THEME_DIR.$theme) ? $theme : 'default';
+	
+	// Check to see if the theme exists, if it doesn't fallback to default
+	$theme = is_dir(THEME_DIR.'/'.$theme) ? $theme : 'default';
 	return $theme;
 }
