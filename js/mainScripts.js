@@ -195,8 +195,8 @@ var addFun = {
             
         var entry_text = document.createElement("textarea");
             entry_text.id = "add_entry";
-            entry_text.cols = 60;
-            entry_text.rows = 10;
+            entry_text.cols = 80;
+            entry_text.rows = 15;
             add_form.appendChild(entry_text);
         
         var cat_label = document.createTextNode("Category:");
@@ -264,7 +264,8 @@ var addFun = {
             cat_select.id="cat_5";
             add_form.appendChild(cat_select);
             
-        add_form.appendChild(break_it.cloneNode(true));
+        var space_label = document.createTextNode("\u00a0\u00a0\u00a0");
+            add_form.appendChild(space_label);
             
         var add_button = document.createElement("input");
             add_button.type="button";
@@ -272,6 +273,9 @@ var addFun = {
             add_button.setAttribute('class', 'dButton');
             add_button.value="Add Log";
             add_form.appendChild(add_button);
+            
+        var separator_label = document.createTextNode("\u00a0|\u00a0");
+            add_form.appendChild(separator_label);
             
         var add_button = document.createElement("input");
             add_button.type="button";
@@ -320,6 +324,7 @@ var editFun = {
     showeditinputs: function(log_info) {
 
         var linfo = eval ('(' + log_info.slice(1, -1) + ')');
+        var break_it = document.createElement("br");
         
         miscFun.clearaddedit();
         var add_form = document.createElement("form");
@@ -329,8 +334,9 @@ var editFun = {
             loguid.id="loguid";
             loguid.value="";
             add_form.appendChild(loguid);
-            
-        var break_it = document.createElement("br");
+        
+        var title_label = document.createTextNode("Title:");
+        	add_form.appendChild(title_label);
         
         var title_text = document.createElement("input");
             title_text.id = "edittitle";
@@ -338,18 +344,19 @@ var editFun = {
             title_text.size = 60;
             title_text.value = linfo.title;
             add_form.appendChild(title_text);
+			add_form.appendChild(break_it);
 			
-		add_form.appendChild(break_it);
+		var entry_label = document.createTextNode("Entry:");
+            add_form.appendChild(entry_label);
             
         var entry_text = document.createElement("textarea");
             entry_text.id = "editlog";
-            entry_text.cols = 60;
-            entry_text.rows = 10;
+            entry_text.cols = 80;
+            entry_text.rows = 15;
             var editing_text = document.createTextNode(linfo.entry);
             entry_text.appendChild(editing_text);
             add_form.appendChild(entry_text);
-            
-		add_form.appendChild(break_it.cloneNode(true));
+            add_form.appendChild(break_it.cloneNode(true));
             
         var cat_label = document.createTextNode("Category: ");
             add_form.appendChild(cat_label);
@@ -357,8 +364,8 @@ var editFun = {
         var acat_label = document.createTextNode(linfo.cat);
             add_form.appendChild(acat_label);
             
-        add_form.appendChild(break_it.cloneNode(true));
-        add_form.appendChild(break_it.cloneNode(true));
+        var separator_label = document.createTextNode("\u00a0\u00a0\u00a0");
+            add_form.appendChild(separator_label);
             
         var edit_button = document.createElement("input");
             edit_button.type="button";
@@ -366,6 +373,9 @@ var editFun = {
             edit_button.setAttribute('class', 'dButton');
             edit_button.value="Save Edit";
             add_form.appendChild(edit_button);
+            
+        var separator_label = document.createTextNode("\u00a0|\u00a0");
+            add_form.appendChild(separator_label);
             
         edit_button = document.createElement("input");
             edit_button.type="button";
