@@ -64,22 +64,8 @@ else {
         <form method="post">
         	Current theme:
         	
-        	<?php
-        		$handle = opendir('themes');
-        		
-	        	echo '<select name="userTheme">';
-	        		while (false !== ($themeName = readdir($handle))) {
-						if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
-							if ($themeName == $theme) {
-								echo '<option value="'.$themeName.'" selected>'.$themeName.'</option>';
-							}
-							else {
-								echo '<option value="'.$themeName.'">'.$themeName.'</option>';
-							}
-						}
-					}
-	        	echo '</select>';
-        	?>
+        	<?php getThemeList(); ?>
+        	
             <input type="submit" name="set_action" class="dButton" value="Save Theme" />
         </form>
         

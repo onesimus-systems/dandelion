@@ -120,22 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </select>
                         </td></tr>
                         <tr><td>Theme:</td><td>
-				        	<?php
-				        		$handle = opendir('themes');
-				        		
-					        	echo '<select name="userTheme">';
-					        		while (false !== ($themeName = readdir($handle))) {
-										if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
-											if ($themeName == $edit_user_info['theme']) {
-												echo '<option value="'.$themeName.'" selected>'.$themeName.'</option>';
-											}
-											else {
-												echo '<option value="'.$themeName.'">'.$themeName.'</option>';
-											}
-										}
-									}
-					        	echo '</select>';
-				        	?>
+				        	<?php getThemeList($edit_user_info['theme']); ?>
 			        	</td></tr>
                         <tr><td>Date Created:</td><td><input type="text" name="edit_date" value="<?php echo $edit_user_info['datecreated']; ?>" readonly /></td></tr>
                         <tr><td>First Login:</td><td><input type="text" name="edit_first" value="<?php echo $edit_user_info['firsttime']; ?>" autocomplete="off" /></td></tr>
