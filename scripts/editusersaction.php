@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				        		
 					        	echo '<select name="userTheme">';
 					        		while (false !== ($themeName = readdir($handle))) {
-										if ($themeName != '.' && $themeName != '..') {
+										if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
 											if ($themeName == $edit_user_info['theme']) {
 												echo '<option value="'.$themeName.'" selected>'.$themeName.'</option>';
 											}

@@ -69,7 +69,7 @@ else {
         		
 	        	echo '<select name="userTheme">';
 	        		while (false !== ($themeName = readdir($handle))) {
-						if ($themeName != '.' && $themeName != '..') {
+						if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
 							if ($themeName == $theme) {
 								echo '<option value="'.$themeName.'" selected>'.$themeName.'</option>';
 							}
