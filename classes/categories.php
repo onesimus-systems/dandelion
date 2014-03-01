@@ -8,6 +8,49 @@
  * @author Lee Keitel
  * @date February 11, 2014
  ***/
+
+class Categories
+{
+	private $cat = '';
+	private $depth = 0;
+	
+	function __construct($init = true, $maxdepth = 0) {
+		if ($init) {
+			$this->init($maxdepth);
+		}
+	}
+	
+	private function init($maxdepth) {
+		$conn = new dbManage();
+		$this->depth = $maxdepth;
+		$getCategories = 'SELECT * FROM `category2`';
+		$this->cat = $conn->queryDB($getCategories, NULL);
+	}
+	
+	public function getChildren($parentID) {
+		$parent = explode(':', $parentID);
+
+		$response = '<select name="level'.($parent[1]+1).'" onChange="grabNextLevel(this);">';
+		$response .= '<option value="Select:">Select:</option>';
+		foreach($this->cat as $isChild)
+		{
+			if($isChild['pid'] == $parent[0])
+			{
+				$option = '<option value="'.$isChild['cid'].':'.($parent[1]+1).'">'.$isChild['desc'].'</option>';
+				$response .= $option;
+			}
+		}
+		$response .= '</select>';
+		
+		if (!empty($option)) {
+			// If there are sub categories, echo the selectbox
+			echo $response;
+		}
+	}
+}
+
+
+/*
 class Categories
 {
 	private $cat = '';
@@ -23,14 +66,14 @@ class Categories
 		$conn = new dbManage();
 		$this->depth = $maxdepth;
 		$getCategories = 'SELECT * FROM `category`';
-		$this->cat = $cat = $conn->queryDB($getCategories, NULL);
+		$this->cat = $conn->queryDB($getCategories, NULL);
 	}
 	
 	public function showAllCats() {
-		if ($this->depth==0) {
+		if (!($this->depth)) {
 			$this->largestBranch();
 		}
-		$this->makeArrays();
+		$this->genArrays();
 		$this->popArrays();
 		$this->genSelect();
 		$this->popSelect();
@@ -50,7 +93,7 @@ class Categories
 		}
 	}
 	
-	private function makeArrays() {
+	private function genArrays() {
 		// Create $depth+1 many level arrays
 		for ($i = 0; $i < $this->depth+1; $i++) {
 		    $this->{'cid'.($i)} = array();
@@ -93,12 +136,8 @@ class Categories
 		            }
 		        echo '</select>';
 		    }
-		    elseif ($i < $this->depth+1) {
-		        echo '<select name="cat_'.$i.'" id="cat_'.$i.'" onchange="pop_cat_'.($i+1).'(this)">';
-		        echo '</select>';
-		    }
 		    else {
-		        echo '<select name="cat_'.$i.'" id="cat_'.$i.'">';
+		        echo '<select name="cat_'.$i.'" id="cat_'.$i.'" onchange="pop_cat_'.($i+1).'(this)">';
 		        echo '</select>';
 		    }
 		}
@@ -125,7 +164,7 @@ class Categories
 		        for ($j = 0; $j < count($this->{'desc'.($i+1)}); $j++) { // For each category in level i+1
 		            $item = $this->{'desc'.($i+1)}[$j];
 		            $pid = $this->{'ptree'.($i+1)}[$j];
-		            $pid = array_reverse(explode(":", $pid)); // Separate the parent tree
+		            $pid = explode(":", $pid); // Separate the parent tree
 		            if ($pid[0] == $cid) { // If the parent ID matches the current running level i category, add it to the list
 		                echo ',\''.$item.'\'';
 		            }
@@ -138,6 +177,11 @@ class Categories
 		    echo 'for(var i=0;i<cur.length;i++){d.options[i].text=cur[i];d.options[i].value=cur[i];}';
 		    echo '}';
 		}
+		
+		echo 'function pop_cat_'.($this->depth+2).'(o) {';
+		echo 'currentCats += ":" + document.getElementById(\'cat_'.($this->depth+1).'\').value;';
+		echo 'document.getElementById("tester").innerHTML = currentCats; }';
+		
 		echo '</script>';
 	}
-}
+}*/

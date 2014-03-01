@@ -1,27 +1,17 @@
-function showCats(mD, parent) {
-	address     = 'scripts/categories.php';
-	data        = '';
-	statechange = function()
-    {
-        if (xmlhttp.readyState===4 && xmlhttp.status===200)
-          {                
-              document.getElementById("workArea").innerHTML=xmlhttp.responseText;
-          }
-    }
-	
-	ajax(address, data, statechange);
-}
+var currentID = -1;
 
-function deleteMe() {
-	address     = 'scripts/categories.php';
-	data        = 'action=delete&item=' + currentCats;
-	statechange = function()
-    {
-        if (xmlhttp.readyState===4 && xmlhttp.status===200)
-          {                
-              document.getElementById("message").innerHTML=xmlhttp.responseText;
-          }
+function grabNextLevel(parentID) {
+	if (parentID == "0:0") { pid = "0:0"; }
+	else { pid = parentID.value; }
+	params = new Object;
+	
+	params.address = 'scripts/categories.php';
+	params.data = 'parentID='+pid;
+	params.success = function()
+    {           
+          document.getElementById("workArea").innerHTML+=responseText;
+          currentID = parentID;
     }
 	
-	ajax(address, data, statechange);
+	ajax(params);
 }
