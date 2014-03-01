@@ -71,6 +71,7 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `users` (
 		  `datecreated` date NOT NULL,
 		  `firsttime` tinyint(1) NOT NULL DEFAULT \'2\',
 		  `showlimit` int(3) NOT NULL DEFAULT \'25\',
+  		  `theme` tinytext NOT NULL,
 		  PRIMARY KEY (`userid`)
 		) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2';
 $exec = $dbConn->prepare($stmt);
@@ -83,8 +84,8 @@ $exec = $dbConn->prepare($stmt);
 $exec->execute();
 
 $stmt = 'INSERT INTO `users` (`userid`, `username`, `password`, `realname`,
-			`settings_id`, `role`, `datecreated`, `firsttime`, `showlimit`)
+			`settings_id`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`)
 			VALUES (1, \'admin\', \'$2y$10$sRDlu.F6gPVM4kS/k7ESHO9PF0Z5pXk0J/SpuMa88E31/Lux1mfMy\',
-			\'Admin\', 0, \'admin\', \'2014-02-08\', 2, 25)';
+			\'Admin\', 0, \'admin\', \'2014-02-08\', 2, 25, \'default\')';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();

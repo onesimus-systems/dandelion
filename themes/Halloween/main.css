@@ -1,0 +1,43 @@
+/* Halloween theme for Dandelion Web Log
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
+
+body {
+	background-color: #6E6E6E;
+}
+
+#login {
+	background-color: #F3843E;
+}
+
+#refreshed_core {
+	background-color: #F3843E;
+}
+
+#nav_link a:visited, #nav_link a:link, #nav_link a:active {
+	background-color: #393939;
+	color: white;
+}
+
+#nav_link a:hover {
+	background-color: #F3843E;
+	color: black;
+}
+
+.pagination {
+	background-color: #393939;
+}
+
+.pagination input, #login_button, .logentry input {
+	background-color: #393939;
+}
+
+.dButton {
+	background-color: #393939;
+}
+
+.pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
+	background-color: #FF9900;
+}

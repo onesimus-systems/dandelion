@@ -1,4 +1,8 @@
-/*Stylesheet for Presence Pane*/
+/* Base theme for Cheesto in pane mode
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
 
 body {
     margin: 0px 0px;
@@ -13,7 +17,6 @@ body {
     max-width: 12em;
     border: 1px solid black;
     padding: 5px;
-    background-color: #F39A61;
 	color: black;
 }
 
@@ -21,6 +24,11 @@ body {
     margin: 0px auto;
     text-align: center;
     width: 60%;
+}
+
+#showHide {
+	color: white;
+	text-decoration: none;
 }
 
 h3 {
@@ -67,7 +75,6 @@ thead td {
 .linklike {
     margin-top: .5em;
     cursor: default;
-	background-color: #393939;
 	border: none;
 	padding: .5em 1em;
 	font-size: 1em;
@@ -79,7 +86,6 @@ thead td {
 }
 
 .linklike:hover {
-	background-color: #F90;
 	color: black;
 }
 

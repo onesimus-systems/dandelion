@@ -114,10 +114,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <tr><td>Settings ID:</td><td><input type="text" name="edit_sid" value="<?php echo $edit_user_info['settings_id']; ?>" autocomplete="off" /></td></tr>
                         <tr><td>Role:</td><td>
                             <select name="edit_role">
-                                <option value="user" <?=$edit_user_info['role'] == 'user' ? ' selected="selected"' : '';?>>User</option>
-                                <option value="guest" <?=$edit_user_info['role'] == 'guest' ? ' selected="selected"' : '';?>>Guest</option>
-                                <option value="admin" <?=$edit_user_info['role'] == 'admin' ? ' selected="selected"' : '';?>>Admin</option>
-                            </select></td></tr>
+                                <option value="user" <?php echo $edit_user_info['role'] == 'user' ? ' selected' : '';?>>User</option>
+                                <option value="guest" <?php echo $edit_user_info['role'] == 'guest' ? ' selected' : '';?>>Guest</option>
+                                <option value="admin" <?php echo $edit_user_info['role'] == 'admin' ? ' selected' : '';?>>Admin</option>
+                            </select>
+                        </td></tr>
+                        <tr><td>Theme:</td><td>
+				        	<?php getThemeList($edit_user_info['theme']); ?>
+			        	</td></tr>
                         <tr><td>Date Created:</td><td><input type="text" name="edit_date" value="<?php echo $edit_user_info['datecreated']; ?>" readonly /></td></tr>
                         <tr><td>First Login:</td><td><input type="text" name="edit_first" value="<?php echo $edit_user_info['firsttime']; ?>" autocomplete="off" /></td></tr>
                     </table>
@@ -185,13 +189,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
 		if ($sub_typee == "Save Edit") { // Edit user data
 			// Edit selected users information
-            $stmt = 'UPDATE `users` SET `realname` = :realname, `settings_id` = :s_id, `role` = :role, `firsttime` = :first WHERE `userid` = :userid';
+            $stmt = 'UPDATE `users` SET `realname` = :realname, `settings_id` = :s_id, `role` = :role, `firsttime` = :first, `theme` = :theme WHERE `userid` = :userid';
             $params = array(
                 'realname' => $_POST['edit_real'],
                 's_id' => $_POST['edit_sid'],
                 'role' => $_POST['edit_role'],
                 'first' => $_POST['edit_first'],
-                'userid' => $_POST['edit_uid']
+                'userid' => $_POST['edit_uid'],
+				'theme' => $_POST['userTheme']
             );
             
             $conn->queryDB($stmt, $params);
@@ -227,7 +232,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $add_role = $_POST['add_role'];
                 
                 // Create user in database
-                $stmt = 'INSERT INTO users (username, password, realname, settings_id, role, datecreated) VALUES (:username, :password, :realname, :s_id, :role, :datecreated)';
+                $stmt = 'INSERT INTO users (username, password, realname, settings_id, role, datecreated, theme) VALUES (:username, :password, :realname, :s_id, :role, :datecreated, \'default\')';
                 $params = array(
                     'username' => $add_user,
                     'password' => $add_pass,
@@ -246,7 +251,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $row = $conn->queryDB($stmt, $params);;
                 
                 // Create a Cxeesto ID for the new user
-                $stmt = 'INSERT INTO presence (uid, realname, status, message, return, dmodified) VALUES (:uid, :real, 1, \'\', \'\', :date)';
+                $stmt = 'INSERT INTO `presence` (`uid`, `realname`, `status`, `message`, `return`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
                 $params = array(
                     'uid' => $row[0]['userid'],
                     'real' => $add_real,

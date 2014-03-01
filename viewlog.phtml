@@ -30,6 +30,8 @@ if (checkLogIn()) {
 		$add_link = '';
 		$settings_link = '';
 	}
+	
+	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -45,40 +47,48 @@ else {
 		<meta charset="utf-8" />
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
 		<link rel="stylesheet" type="text/css" href="styles/presence.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/cheesto.css" />
 		<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css" />
 		<title>Dandelion Web Log</title>
 	</head>
     
 	<body onLoad="refreshFun.startrefresh();">
         <div id="presence">
-            <h3>&#264;eesto:</h3>
-            <form method="post">
-                <select id="cstatus">
-                    <option>Set Status:</option>
-                    <option>Available</option>
-                    <option>Away From Desk</option>
-                    <option>At Lunch</option>
-                    <option>Out for Day</option>
-                    <option>Out</option>
-                    <option>Appointment</option>
-                    <option>Do Not Disturb</option>
-                    <option>Meeting</option>
-                    <option>Out Sick</option>
-                    <option>Vacation</option>
-                </select>
-                <input type="button" value="Set" class="linklike set" onClick="presence.setStatus(0);" />
-            </form>
-            <div id="pt"></div>
+	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto:</h3>
+        	<div id="mainPresence">
+	            <form method="post">
+	                <select id="cstatus">
+	                    <option>Set Status:</option>
+	                    <option>Available</option>
+	                    <option>Away From Desk</option>
+	                    <option>At Lunch</option>
+	                    <option>Out for Day</option>
+	                    <option>Out</option>
+	                    <option>Appointment</option>
+	                    <option>Do Not Disturb</option>
+	                    <option>Meeting</option>
+	                    <option>Out Sick</option>
+	                    <option>Vacation</option>
+	                </select>
+	                <input type="button" value="Set" class="linklike set" onClick="presence.setStatus(0);" />
+	            </form>
+	            <div id="pt"></div>
+            </div>
         </div>
     
         <div id="divMain">
+        	<?php //include 'styles/main.php';?>
             <header>
                 <?php include 'scripts/header.php'; ?>
             </header>
 
             <div id="controlPanel">
                 <form id="category" method="post">
+                    <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
+                    <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();" /><br />
+                    
                     <span class="white">Filter: </span>
                     <select name="f_cat_1" id="f_cat_1" onchange="f_pop_cat_2(this)">
                         <option value="select">Select:</option>
@@ -100,13 +110,12 @@ else {
                     <select name="f_cat_5" id="f_cat_5">
                         
                     </select>
-                    <input type="button" value="Filter" onClick="refreshLog('filter');" /><br />
-                    <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
-                    <input type="button" value="Search Log" onClick="searchFun.searchlog();" />
+                    <input type="button" value="Filter" class="dButton" onClick="refreshLog('filter');" />
+                    | <?php echo $add_link; ?>
                 </form>
                 
                 <form>
-                    <?php echo $add_link; ?>
+                    
                 </form>
                 
                 <div id="add_edit"></div>

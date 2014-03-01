@@ -37,6 +37,8 @@ else {
     if ($badlogin) {
         $status = '<span class="bad">Incorrect username or password</span><br />';
     }
+	
+	$theme = getTheme();
 }
 ?>
 
@@ -45,6 +47,7 @@ else {
 		<meta charset="utf-8" />
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
 		<title>Dandelion Web Log</title>
 	</head>
 	<body>

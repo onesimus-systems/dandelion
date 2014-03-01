@@ -1,4 +1,8 @@
-/*Stylesheet for Presence Popout*/
+/* Base theme for Cheesto in windowed mode
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
 
 body {
 	background-color: #6E6E6E;
@@ -15,15 +19,6 @@ body {
 	margin: auto auto;
 	margin-top: 2em;
     word-wrap: break-word;
-}
-
-#presence {
-    position: absolute;
-    float: left;
-    /*max-width: 12em;*/
-    /*border: 1px solid black;*/
-    padding: 5px;
-    background: #ffffff;
 }
 
 h3 {
@@ -59,12 +54,6 @@ thead td {
 
 .red {
     color: red;
-}
-
-.linklike {
-    margin-top: 10px;
-    color: blue;
-    cursor: pointer;
 }
 
 /* css for timepicker */

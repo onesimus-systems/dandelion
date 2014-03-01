@@ -41,6 +41,8 @@ if (checkLogIn()) {
         $conn->queryDB($stmt, $params);
         $_SESSION['userInfo']['firsttime'] = 0;
     }
+	
+	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -51,6 +53,7 @@ else {
 		<meta charset="utf-8" />
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
         <link rel="stylesheet" type="text/css" href="styles/tutorial.css" />
 		<title>Dandelion Web Log - What's New</title>
 	</head>

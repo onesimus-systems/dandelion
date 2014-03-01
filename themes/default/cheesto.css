@@ -1,0 +1,19 @@
+/* Default theme for Cheesto
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
+
+    
+#presence {
+    background-color: #17739A;
+    color: white;
+}
+
+.linklike {
+	background-color: #9A2E15;
+}
+
+.linklike:hover {
+	background-color: #FFA38D;
+}

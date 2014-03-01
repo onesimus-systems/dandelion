@@ -18,6 +18,8 @@ if (checkLogIn()) {
 	else {
 		$settings_link = '';
 	}
+	
+	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -31,6 +33,7 @@ $showList = true;
 		<meta charset="utf-8" />
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
 		<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui.min.css" />
 		<title>Dandelion Web Log</title>
 	</head>
@@ -60,12 +63,12 @@ $showList = true;
                 <table id="main">
                     <tr>
                         <th>&nbsp;</th>
-                        <!--<th>User ID</th>-->
                         <th>Real Name</th>
                         <th>Username</th>
                         <th>Settings ID</th>
                         <th>Role</th>
                         <th>Date Created</th>
+                        <th>Theme</th>
                         <th>First Login</th>
                     </tr>
                     
@@ -75,12 +78,12 @@ $showList = true;
                         foreach ($allUsers as $row) {
                             echo '<tr>';
                             echo '<td><input type="radio" name="the_choosen_one" value="' . $row['userid'] . '" /></td>';
-                            //echo '<td>' . $row['userid'] . '</td>';
                             echo '<td>' . $row['realname'] . '</td>';
                             echo '<td>' . $row['username'] . '</td>';
                             echo '<td>' . $row['settings_id'] . '</td>';
                             echo '<td>' . $row['role'] . '</td>';
                             echo '<td>' . $row['datecreated'] . '</td>';
+                            echo '<td>' . $row['theme'] . '</td>';
                             echo '<td>' . $row['firsttime'] . '</td>';
                             echo '</tr>';
                         }
