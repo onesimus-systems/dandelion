@@ -1,5 +1,5 @@
-Dandelion
-=========
+Dandelion v4.2.0
+================
 
 Dandelion is a web-based entry log application.
 
@@ -9,11 +9,6 @@ Requirements
 * Apache >= 2.4
 * PHP >= 5.5
 * MySQL/Maria DB >= 5.0
-
-Notes
------
-
-This is version 4 and for the time being has the feature set in place. I'm currently working on cleaning up the code and adding database driven category management (instead of the horrendous categories.js script).
 
 Is it any good?
 ---------------
@@ -35,10 +30,26 @@ Install
 
 5. Change the admin password, login again, and see your new empty log.
 
-TODO for Release
-----------------
+Notes for Install
+-----------------
 
-* Continue code clean-up
+Dandelion needs write permissions to the config directory in order to install. If it doesn't have the proper permissions it will give you an error when you go to install.php. The permissions on the directory will be changed to read-only once Dandelion has done its thing.
+
+New Features
+------------
+
+* Themes! - You can now develop and use your own themes. Use the three provided as templates for now. I'm going to write up proper documentation for how to develop and use themes. All themes are in their own directory under the themes directory.
+
+* Improved layout
+    * The control panel has been rearranged to look better.
+    * The refresh timer has been removed (the page still refreshes, it just doesn't count down any more).
+    * The User Management page has been improved as well.
+    * The add/edit entry textbox has been enlarged.
+    
+Known Things That Don't Work
+----------------------------
+
+* Category Management still doesn't work. You will only ever see it if you're an admin because there's a link on the admin portal. But it will only show a blank select box. Don't worry, more will come soon.
 
 Versioning
 ----------

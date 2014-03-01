@@ -3,6 +3,8 @@
 #################
 
 private/
+database/
+config.php
 
 .idea/
 database/
