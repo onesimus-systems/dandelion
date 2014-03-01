@@ -24,7 +24,7 @@ else {
 
 if ($needToInstall) {
 	
-$theme = getTheme();
+$theme = 'default';
 ?>
 <html>
     <head>
