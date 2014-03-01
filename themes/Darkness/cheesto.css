@@ -1,0 +1,21 @@
+/* Darkness theme for Cheesto
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
+    
+#presence {
+    background-color: #F39A61;
+}
+
+.linklike {
+	background-color: #393939;
+}
+
+.linklike:hover {
+	background-color: #FF9900;
+}
+
+#showHide {
+	color: black;
+}

@@ -1,0 +1,14 @@
+/* Sky theme for Cheesto Popout
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
+
+body {
+	background-color: #57CCFF;
+	color: white;
+}
+
+#mainWindow {
+	background-color: #17739A;
+}

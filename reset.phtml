@@ -19,18 +19,20 @@ if (checkLogIn()) {
 	}
 	
 	if ($_SESSION['userInfo']['role'] === "admin") {
-		$admin_link = '| <a href="admin.phtml">Administration</a>';
+		$admin_link = '<a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
 	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '| <a href="settings.phtml">Settings</a>';
+		$settings_link = '<a href="settings.phtml">Settings</a>';
 	}
 	else {
 		$settings_link = '';
 	}
+	
+	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -41,6 +43,7 @@ else {
 		<meta charset="utf-8" />
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
         <link rel="stylesheet" type="text/css" href="styles/tutorial.css" />
 		<title>Dandelion Web Log - Tutorial</title>
 	</head>

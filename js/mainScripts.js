@@ -21,14 +21,6 @@ $(document).ready(function() {
 }); 
     
 var miscFun = {
-    //Gets and formats the current Unix Epoch time and returns value
-    microtime: function(get_as_float) {
-      var now = new Date().getTime() / 1000;
-      var s = parseInt(now, 10);
-
-      return (get_as_float) ? now : (Math.round((now - s) * 1000) / 1000) + ' ' + s;
-    },
-
     //clears the add_edit div element
     clearaddedit: function() {
         document.getElementById("add_edit").innerHTML="";
@@ -56,57 +48,21 @@ var refreshFun = {
     //This function can also be called on to restart
     //the autorefresh counter
     startrefresh: function() {
-        secleft=120;
-        //document.getElementById("rcounter").innerHTML = "2:01";
-        refreshc = setInterval(function() {refreshFun.rcounterc()}, 1000);
-        wherearewe = setInterval(function() {presence.checkstat(0)}, 30000);
+    	// Run first time
+		refreshLog("update");
+		presence.checkstat(0);
+		
+		// Set timers
+        refreshc = setInterval(function(){refreshLog("update");}, 120000);
+        wherearewe = setInterval(function(){presence.checkstat(0);}, 30000);
+
         autore = true;
-        refreshLog("update");
-        refreshFun.refreshb();
-    },
-
-    //This functions shows the refresh clock and initiates a refresh
-    //after 2 minutes.
-    rcounterc: function() {/*
-        if (secleft > 119) {
-            var minutes = 2;
-        }
-        else if (secleft > 59) {
-            var minutes = 1;
-        }
-        else {
-            var minutes = 0;
-        }
-        
-        var seconds = secleft-(60*minutes);
-        
-        if (seconds < 10 || seconds == 0) {
-            seconds = "0"+seconds;
-        }
-        
-        document.getElementById("rcounter").innerHTML = minutes + ":" + seconds;*/
-        
-        if (secleft > 0) {
-            secleft = secleft - 1;
-            }
-        else {
-            secleft=120;
-            refreshLog("update");
-            }
-    },
-
-    //This function displays the appropriate refresh button
-    refreshb: function() {
-
-        document.getElementById("refreshbutton").innerHTML = autore ? '<input type="button" value="Stop Auto Refresh" onClick="refreshFun.stoprefresh();" /> Autorefresh: <span class="good">On</span> ' : '<input type="button" value="Start Auto Refresh" onClick="refreshFun.startrefresh();" /> Autorefresh: <span class="bad">Off</span> ';
     },
 
     //Stops auto refresh
     stoprefresh: function() {
         clearInterval(refreshc);
         autore = false;
-        document.getElementById("rcounter").innerHTML = "";
-        refreshFun.refreshb();
     },
 } //refreshFun
 
@@ -114,44 +70,37 @@ var refreshFun = {
 //If kindof == "update" it shows the recent log entries
 //If kindof == "filter" it sends the filter details to
 //logfilter.php and shows the returned output.
-function refreshLog(kindof) {    
-    var start=miscFun.microtime(true);
-    
-    window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-      
-    xmlhttp.onreadystatechange=function()
-      {
-          if (xmlhttp.readyState===4 && xmlhttp.status===200)
-            {
-                var end=miscFun.microtime(true);
-                var distime=end-start;
-                
-                document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
-                
-                presence.checkstat(0);
-                
-                if (clearinput && !editing) {
-                    document.getElementById("add_edit").innerHTML="";
-                }
-                else {
-                    clearinput = true;
-                }
-                
-                if (filt) {
-                    miscFun.clearfilt();
-                }
-            }
-          else if (xmlhttp.readyState===4 && xmlhttp.status===404)
-            {
-                document.getElementById("refreshed").innerHTML="";
-                document.location.href = 'index.php';
-            }
-      }
+function refreshLog(kindof) {
+	var params = new Object();
+    params.success = function()
+	    {
+		    document.getElementById("refreshed").innerHTML=responseText;
+		    
+		    if (clearinput && !editing) {
+		        document.getElementById("add_edit").innerHTML="";
+		    }
+		    else {
+		        clearinput = true;
+		    }
+		    
+		    if (filt) {
+		        miscFun.clearfilt();
+		    }
+	    }
+    params.failure = function()
+	    {
+	    	if (ready===4 && status===404)
+	        {
+		        document.getElementById("refreshed").innerHTML="";
+		        document.location.href = 'index.php';
+	        }
+	    }
     
     if (kindof==="update" && !filt)
         {
-            xmlhttp.open("POST",'scripts/updatelog.php',true);
-            xmlhttp.send();
+    		params.address = 'scripts/updatelog.php';
+    		params.async = false;
+    		ajax(params);
         }
     else if (kindof==="filter")
         {
@@ -162,9 +111,9 @@ function refreshLog(kindof) {
                 cat3 = document.getElementById("f_cat_3").value;
                 cat4 = document.getElementById("f_cat_4").value;
                 cat5 = document.getElementById("f_cat_5").value;
-                xmlhttp.open("POST",'scripts/logfilter.php',true);
-                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-                xmlhttp.send("f_cat_1=" + cat1 + "&f_cat_2=" + cat2 + "&f_cat_3=" + cat3 + "&f_cat_4=" + cat4 + "&f_cat_5=" + cat5);
+                address = 'scripts/logfilter.php';
+                data="f_cat_1=" + cat1 + "&f_cat_2=" + cat2 + "&f_cat_3=" + cat3 + "&f_cat_4=" + cat4 + "&f_cat_5=" + cat5;
+                ajax(address, data, success, failure);
                 filt=true;
                 refreshFun.stoprefresh();
             }
@@ -175,8 +124,9 @@ function refreshLog(kindof) {
     else if (kindof==="clearf")
         {
             miscFun.clearfilt();
-            xmlhttp.open("POST",'scripts/updatelog.php',true);
-            xmlhttp.send();
+            params.address = 'scripts/updatelog.php';
+    		params.async = false;
+    		ajax(params);
             filt=false;
             document.getElementById('searchterm').value="Keyword";
             document.getElementById('datesearch').value="Date";
@@ -190,36 +140,36 @@ function refreshLog(kindof) {
 // the request to updatelog.php which handles
 // the SELECT limits.
 function pagentation(pageOffset) {
-    window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-      
-    xmlhttp.onreadystatechange=function()
+	var params = new Object;
+    params.success = function()
       {
-          if (xmlhttp.readyState===4 && xmlhttp.status===200)
-            {
-                miscFun.clearaddedit(); // Clear any open add/edit forms
-                
-                document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
-                
-                if (pageOffset <= 0)
-                {
-                    refreshLog('clearf'); // If the page offset returnes to page "1", return to auto refresh
-                }
-                else
-                {
-                    refreshFun.stoprefresh(); // If on pages > 1, stop refresh
-                }
-                
-                document.documentElement.scrollTop = 0;
-            }
-          else if (xmlhttp.readyState===4 && xmlhttp.status===404)
-            {
-                document.getElementById("refreshed").innerHTML="<span class=\"bad\">Error communicating with server. Please <a href=\"index.php\">log in again</a></span>";
-            }
+        miscFun.clearaddedit(); // Clear any open add/edit forms
+        
+        document.getElementById("refreshed").innerHTML=responseText;
+        
+        if (pageOffset <= 0)
+        {
+            refreshLog('clearf'); // If the page offset returnes to page "1", return to auto refresh
+        }
+        else
+        {
+            refreshFun.stoprefresh(); // If on pages > 1, stop refresh
+        }
+        
+        document.documentElement.scrollTop = 0;
       }
-      
-    xmlhttp.open("POST",'scripts/updatelog.php',true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send("pageOffset=" + pageOffset);
+    params.failure = function()
+      {
+    	if (ready===4 && status===404)
+            {
+	            document.getElementById("refreshed").innerHTML="";
+	            document.location.href = 'index.php';
+            }
+      }      
+    params.address = 'scripts/updatelog.php';
+    params.data = 'pageOffset=' + pageOffset;
+    
+    ajax(params);
 }
 
 var addFun = {
@@ -245,8 +195,8 @@ var addFun = {
             
         var entry_text = document.createElement("textarea");
             entry_text.id = "add_entry";
-            entry_text.cols = 60;
-            entry_text.rows = 10;
+            entry_text.cols = 80;
+            entry_text.rows = 15;
             add_form.appendChild(entry_text);
         
         var cat_label = document.createTextNode("Category:");
@@ -314,17 +264,23 @@ var addFun = {
             cat_select.id="cat_5";
             add_form.appendChild(cat_select);
             
-        add_form.appendChild(break_it.cloneNode(true));
+        var space_label = document.createTextNode("\u00a0\u00a0\u00a0");
+            add_form.appendChild(space_label);
             
         var add_button = document.createElement("input");
             add_button.type="button";
             add_button.setAttribute('onclick', 'addFun.addlog();');
+            add_button.setAttribute('class', 'dButton');
             add_button.value="Add Log";
             add_form.appendChild(add_button);
+            
+        var separator_label = document.createTextNode("\u00a0|\u00a0");
+            add_form.appendChild(separator_label);
             
         var add_button = document.createElement("input");
             add_button.type="button";
             add_button.setAttribute('onclick', 'miscFun.clearaddedit()');
+            add_button.setAttribute('class', 'dButton');
             add_button.value="Cancel";
             add_form.appendChild(add_button);
 
@@ -346,24 +302,20 @@ var addFun = {
         cat3 = document.getElementById("cat_3").value;
         cat4 = document.getElementById("cat_4").value;
         cat5 = document.getElementById("cat_5").value;
+        var params = new Object;
         
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
+        params.success=function()
           {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    document.getElementById("add_edit").innerHTML=xmlhttp.responseText;
-                    clearinput = false;
-                    editing = false;
-                    refreshLog("update");
-                    secleft=120;
-                }
-          }
+            document.getElementById("add_edit").innerHTML=responseText;
+            clearinput = false;
+            editing = false;
+            refreshLog("update");
+            secleft=120;
+          }        
+        params.address = 'scripts/add_log.php';
+        params.data = 'cat_1=' + cat1 + '&cat_2=' + cat2 + '&cat_3=' + cat3 + '&cat_4=' + cat4 + '&cat_5=' + cat5 + '&add_title=' + title + '&add_entry=' + entry;
         
-        xmlhttp.open("POST",'scripts/add_log.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("cat_1=" + cat1 + "&cat_2=" + cat2 + "&cat_3=" + cat3 + "&cat_4=" + cat4 + "&cat_5=" + cat5 + "&add_title=" + title + "&add_entry=" + entry);
+        ajax(params);
     },
 } //addFun
 
@@ -372,6 +324,7 @@ var editFun = {
     showeditinputs: function(log_info) {
 
         var linfo = eval ('(' + log_info.slice(1, -1) + ')');
+        var break_it = document.createElement("br");
         
         miscFun.clearaddedit();
         var add_form = document.createElement("form");
@@ -381,8 +334,9 @@ var editFun = {
             loguid.id="loguid";
             loguid.value="";
             add_form.appendChild(loguid);
-            
-        var break_it = document.createElement("br");
+        
+        var title_label = document.createTextNode("Title:");
+        	add_form.appendChild(title_label);
         
         var title_text = document.createElement("input");
             title_text.id = "edittitle";
@@ -390,18 +344,19 @@ var editFun = {
             title_text.size = 60;
             title_text.value = linfo.title;
             add_form.appendChild(title_text);
+			add_form.appendChild(break_it);
 			
-		add_form.appendChild(break_it);
+		var entry_label = document.createTextNode("Entry:");
+            add_form.appendChild(entry_label);
             
         var entry_text = document.createElement("textarea");
             entry_text.id = "editlog";
-            entry_text.cols = 60;
-            entry_text.rows = 10;
+            entry_text.cols = 80;
+            entry_text.rows = 15;
             var editing_text = document.createTextNode(linfo.entry);
             entry_text.appendChild(editing_text);
             add_form.appendChild(entry_text);
-            
-		add_form.appendChild(break_it.cloneNode(true));
+            add_form.appendChild(break_it.cloneNode(true));
             
         var cat_label = document.createTextNode("Category: ");
             add_form.appendChild(cat_label);
@@ -409,18 +364,23 @@ var editFun = {
         var acat_label = document.createTextNode(linfo.cat);
             add_form.appendChild(acat_label);
             
-        add_form.appendChild(break_it.cloneNode(true));
-        add_form.appendChild(break_it.cloneNode(true));
+        var separator_label = document.createTextNode("\u00a0\u00a0\u00a0");
+            add_form.appendChild(separator_label);
             
         var edit_button = document.createElement("input");
             edit_button.type="button";
             edit_button.setAttribute('onclick', 'editFun.editlogs('+linfo.logid+');');
+            edit_button.setAttribute('class', 'dButton');
             edit_button.value="Save Edit";
             add_form.appendChild(edit_button);
+            
+        var separator_label = document.createTextNode("\u00a0|\u00a0");
+            add_form.appendChild(separator_label);
             
         edit_button = document.createElement("input");
             edit_button.type="button";
             edit_button.setAttribute('onclick', 'miscFun.clearaddedit();');
+            edit_button.setAttribute('class', 'dButton');
             edit_button.value="Cancel";
             add_form.appendChild(edit_button);
 
@@ -434,66 +394,55 @@ var editFun = {
     //It grabs the information about the log entry they
     //want to edit then calls showeditinputs(); to display
     //the fields.
-    grabedit: function(logid) { 
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
-          {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    editFun.showeditinputs(xmlhttp.responseText);
-                }
-          }
+    grabedit: function(logid) {
+    	var params = new Object;
+    	params.address = 'scripts/logeditinfo.php';
+    	params.data = 'loguid=' + logid;
+    	params.success = function()
+	        {
+              editFun.showeditinputs(responseText);
+	        }
         
-        xmlhttp.open("POST",'scripts/logeditinfo.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("loguid=" + logid);
+        ajax(params);
     },
 
     //Sends the finished edited log to a PHP file for processing
     editlogs: function(id) {
-
+    	var params = new Object;
         var editedtitle = document.getElementById("edittitle").value;
         editedtitle = encodeURIComponent(editedtitle);
         var editedlog = document.getElementById("editlog").value;
         editedlog = encodeURIComponent(editedlog);
-        
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
+
+        params.success = function()
           {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    document.getElementById("add_edit").innerHTML=xmlhttp.responseText;
-                    clearinput = false;
-                    editing = false;
-                    refreshLog("update");
-                    secleft=120;
-                }
-          }
+            document.getElementById("add_edit").innerHTML=responseText;
+            clearinput = false;
+            editing = false;
+            refreshLog("update");
+            secleft=120;
+          }        
+        params.address = 'scripts/editlogs.php';
+        params.data = 'editlog=' + editedlog + '&edittitle=' + editedtitle + '&choosen=' + id;
         
-        xmlhttp.open("POST",'scripts/editlogs.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("editlog=" + editedlog + "&edittitle=" + editedtitle + "&choosen=" + id);
+        ajax(params)
     },
 } //editFun
 
-var searchFun = {    
+var searchFun = {
     // Checks if enter key was pressed, if so search
     check: function(e) {
-    
         if (e.keyCode == 13) {
             searchFun.searchlog();
         }
-    
     },
 
     // Actually searches the database
     searchlog :function() {
-    
+    	var params    = new Object();
         var searchfor = document.getElementById('searchterm').value;
-        searchfor = encodeURIComponent(searchfor);
-        var datefor = document.getElementById('datesearch').value;
+        var datefor   = document.getElementById('datesearch').value;
+        searchfor     = encodeURIComponent(searchfor);
 
         if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null && datefor!=="" && datefor!=="Date" && datefor!==null) {
             type="both";
@@ -509,21 +458,16 @@ var searchFun = {
             return false;
         }
         
-        window.XMLHttpRequest ? xmlhttp=new XMLHttpRequest() : xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-          
-        xmlhttp.onreadystatechange=function()
-          {
-              if (xmlhttp.readyState===4 && xmlhttp.status===200)
-                {
-                    miscFun.clearaddedit();
-                    filt=true;
-                    refreshFun.stoprefresh();
-                    document.getElementById("refreshed").innerHTML=xmlhttp.responseText;
-                }
-          }
+        params.address     = 'scripts/logfilter.php';
+        params.data        = 'keyw=' + searchfor + '&dates=' + datefor + '&type=' + type;
+        params.success = function()
+	        {
+              miscFun.clearaddedit();
+              filt=true;
+              refreshFun.stoprefresh();
+              document.getElementById("refreshed").innerHTML=responseText;
+	        }
         
-        xmlhttp.open("POST",'scripts/logfilter.php',true);
-        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xmlhttp.send("keyw=" + searchfor + "&dates=" + datefor + "&type=" + type);
+        ajax(params);
     },
 }

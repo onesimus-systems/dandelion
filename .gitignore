@@ -6,6 +6,10 @@ private/
 database/
 config.php
 
+.idea/
+database/
+config.php
+
 #################
 ## Eclipse
 #################

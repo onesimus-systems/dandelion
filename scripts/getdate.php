@@ -1,9 +1,13 @@
+<?php 
+$theme = getTheme();
+?>
 <html>
     <head>
         <meta charset="utf-8" />
         <title>Dandelion cxeesto</title>
 		<link rel="stylesheet" type="text/css" href="../jquery/css/smoothness/jquery-ui.min.css" />
         <link rel="stylesheet" href="../styles/presencewin.css" />
+		<link rel="stylesheet" type="text/css" href="../themes/<?php echo $theme;?>/presenceWin.css" />
     </head>
     
     <body>
@@ -45,8 +49,8 @@
         </form>
         <script src="../jquery/js/jquery-1.9.1.js"></script>
         <script src="../jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
-        <script src="timepicker.js"></script>
-        <script src="slider.js"></script>
+        <script src="../js/timepicker.js"></script>
+        <script src="../js/slider.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#datepick').datetimepicker({

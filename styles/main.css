@@ -1,16 +1,21 @@
-/* Main Stylesheet for Dandelion Web Log */
+/* Base theme for Dandelion Web Log
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
 
 body {
-	background-color: #DDD;
     margin: 0px auto;
     text-align: center;
     width: 60%;
 	font-family: sans-serif;
 	font-size: 15px;
+	color: white;
 }
 
 h1 {
-    margin-bottom: .25em;
+    margin-bottom: .65em;
+	text-align: center;
 }
 
 a:visited, a:hover, a:link, a:active {
@@ -24,11 +29,11 @@ a:visited, a:hover, a:link, a:active {
 	top: 50%;
 	left: 50%;
 	width: 30em;
-	height: 14em;
+	height: 16em;
 	margin-top: -7em;
 	margin-left: -15em;
 	border: 1px solid #CCC;
-	background-color: #E3E3E3;
+	color: black;
 }
 
 #main {
@@ -43,20 +48,16 @@ a:visited, a:hover, a:link, a:active {
 	text-align: left;
 }
 
-.logentry {
-	margin: 5px;
-	margin-bottom: 50px;
-	border: 0px solid black;
-	text-align: left;
-	font-family: sans-serif;
-}
-
 .good {
     color: green;
 }
 
 .bad {
     color: red;
+}
+
+.white {
+	color: white;
 }
 
 .le {
@@ -79,10 +80,74 @@ a:visited, a:hover, a:link, a:active {
 	margin-left: 15px;
 }
 
-#refreshed {
-    word-wrap: break-word;
+.logentry {
+	margin: 5px;
+	margin-bottom: 50px;
+	border: 0px solid black;
+	text-align: left;
+	font-family: sans-serif;
 }
 
 .entry {
-    max-width: 60em;
+    max-width: 55em;
+    word-wrap: break-word;
+}
+
+#refreshed_core {
+	padding: .5em 1.5em;
+	color: black;
+}
+
+#refreshed, #add_edit {
+	margin-top: 1em;
+}
+
+#refreshed, #controlPanel {
+	min-width: 35em;
+}
+
+#nav_link a:visited, #nav_link a:link, #nav_link a:active {
+	color: black;
+	text-decoration: none;
+	padding: 10px 20px;
+}
+
+header {
+	margin-bottom: 1.5em;
+	min-width: 35em;
+}
+
+.pagination {
+	display: block;
+	overflow: hidden;
+	padding: 0 0;
+}
+
+.pagination input, #login_button, .logentry input {
+	border: none;
+	padding: 1em 2em;
+	margin: 0;
+	font-size: 1em;
+	color: white;
+}
+
+.dButton {
+	border: none;
+	padding: .25em .5em;
+	margin: .25em .15em;
+	font-size: 1em;
+	color: white;
+}
+
+.adminButton {
+	width: 15em;
+}
+
+#login_button, .logentry input {
+	padding: .5em 1.5em;
+	margin-top: .75em;
+}
+
+.pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
+	color: black;
 }

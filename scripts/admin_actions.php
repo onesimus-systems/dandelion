@@ -23,11 +23,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = 'TRUNCATE TABLE session_token';
             $conn->queryDB($stmt, NULL);
 		}
-		elseif ($a_action == "Optimize Database") {
-            // Optimize log table
-            $stmt = 'OPTIMIZE TABLE log';
-            $conn->queryDB($stmt, NULL);
-		}
         
 		elseif ($a_action == "Set New Features") {
             // When the new features page needs to be shown

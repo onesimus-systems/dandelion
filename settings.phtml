@@ -15,20 +15,18 @@ if (checkLogIn()) {
 	if ($_SESSION['userInfo']['role'] == "guest") {
 		header( 'Location: viewlog.phtml' );
 	}
+	else {
+		$settings_link = '<a href="settings.phtml">Settings</a>';
+	}
 	
 	if ($_SESSION['userInfo']['role'] === "admin") {
-		$admin_link = '| <a href="admin.phtml">Administration</a>';
+		$admin_link = '<a href="admin.phtml">Administration</a>';
 	}
 	else {
 		$admin_link = '';
 	}
 	
-	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '| <a href="settings.phtml">Settings</a>';
-	}
-	else {
-		$settings_link = '';
-	}
+	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -40,6 +38,7 @@ else {
 		<meta charset="utf-8" />
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="styles/main.css" />
+		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
 		<title>Dandelion Web Log</title>
 	</head>
 	<body>
@@ -47,99 +46,28 @@ else {
             <?php include 'scripts/header.php'; ?>
         </header>
 		
-		<h3>User Settings</h3>
+		<h2>User Settings</h2>
 		
-		<?php
-        $limit = $_SESSION['userInfo']['showlimit'];
-        
-		if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$u_action = isset($_POST['set_action']) ? $_POST['set_action'] : '';
-				$sub_action = isset($_POST['sub_act']) ? $_POST['sub_act'] : '';
-				
-				if ($u_action == "Reset Password") {
-				
-					//Form to reset user's password
-					?>
-					<div id="editform"><br />
-					<h2>Reset Password for <?php echo $_SESSION['userInfo']['realname']; ?>:</h2>
-					<form name="edit_form" method="post">
-						<table>
-							<tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
-							<tr><td>Repeat Password:</td><td><input type="password" name="reset_2" /></td></tr>
-						</table>
-						<input type="submit" name="sub_act" value="Reset" />
-					</form></div><br />
-					<?php
-				}
-                
-                else if ($u_action == "Save Show Limit") {
-                    $showlimit = $_POST['show_limit'];
-                    
-                    if ($showlimit >= 5 AND $showlimit <= 250) {
-                        // Connect to DB
-                        $conn = new dbManage();
+		<?php require_once 'scripts/saveSettings.php';?>
 
-                        // Update record with new record limit
-                        $stmt = 'UPDATE `users` SET `showlimit` = :newlimit WHERE `userid` = :myID';
-                        $params = array(
-                            'newlimit' => $showlimit,
-                            'myID' => $_SESSION['userInfo']['userid']
-                        );
-                        $conn->queryDB($stmt, $params);
-                        
-                        echo 'Show limit change successful.<br /><br />';
-
-                        $limit = $_SESSION['userInfo']['showlimit'] = $showlimit;
-                    }
-                    else {
-                        echo "Please choose a number between 5-250 for log view limit.<br /><br />";
-                    }
-                }
-				
-                // Check and save new password
-				if ($sub_action == "Reset") {
-					$reset_3 = $_POST['reset_1'];
-					$reset_4 = $_POST['reset_2'];
-					
-					if ($reset_3 == $reset_4) {
-                        $reset_3 = password_hash($reset_3, PASSWORD_BCRYPT); // Hash the password if they match
-                        
-                        // Connect to DB
-                        $conn = new dbManage();
-                        
-                        // Update record with new password
-                        $stmt = 'UPDATE `users` SET `password` = :newpass WHERE `userid` = :myID';
-                        $params = array(
-                            'newpass' => $reset_3,
-                            'myID' => $_SESSION['userInfo']['userid']
-                        );
-                        $conn->queryDB($stmt, $params);
-                        
-                        echo 'Password change successful.<br /><br />';
-
-					}
-					else {
-						echo 'New passwords do not match<br /><br />';
-					}
-				}
-			}
-		?>
+        <form method="post">
+            <input type="submit" name="set_action" class="dButton adminButton" value="Reset Password" />
+            <br /><br /><hr width="350" /><br />
+            
+            How many logs do you want to see on the main page:<br />
+            <input type="text" name="show_limit" size="3" value="<?php echo $limit; ?>" />
+            <input type="submit" name="set_action" class="dButton" value="Save Limit" />
+        </form>
         
-        Your username is <?php echo $_SESSION['userInfo']['username']; ?>.<br /><br />
+        <br /><hr width="350" /><br />
         
-        <?php
-            if ($_SESSION['userInfo']['role'] != "guest") {
-            ?>
-            <form method="post">
-                <input type="submit" name="set_action" value="Reset Password" /><br /><br />
-                <input type="text" name="show_limit" size="3" value="<?php echo $limit; ?>" />
-                <input type="submit" name="set_action" value="Save Show Limit" />
-            </form>
-            <?php
-            }
-        ?>
-        
-        <br />More settings to come as development continues.
+        <form method="post">
+        	Current theme:
+        	
+        	<?php getThemeList(); ?>
+        	
+            <input type="submit" name="set_action" class="dButton" value="Save Theme" />
+        </form>
         
         <footer>
             <?php include_once 'scripts/footer.php'; ?>

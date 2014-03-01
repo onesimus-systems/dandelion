@@ -1,0 +1,17 @@
+/* Darkness theme for Cheesto Popout
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
+
+body {
+	background-color: #6E6E6E;
+}
+
+#mainWindow {
+	background-color: #F3843E;
+}
+
+#presence {
+    background-color: #ffffff;
+}
