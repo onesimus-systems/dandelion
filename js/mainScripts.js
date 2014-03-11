@@ -156,7 +156,7 @@ function pagentation(pageOffset) {
             refreshFun.stoprefresh(); // If on pages > 1, stop refresh
         }
         
-        document.documentElement.scrollTop = 0;
+        window.scrollTo(0,0);
       }
     params.failure = function()
       {
@@ -287,7 +287,7 @@ var addFun = {
         document.getElementById("add_edit").appendChild(add_form);
         
         editing = true;
-        document.documentElement.scrollTop = 0;
+        window.scrollTo(0,0);
     },
 
     //This function sends details for a new log entry to
@@ -387,7 +387,7 @@ var editFun = {
         document.getElementById("add_edit").appendChild(add_form);
         
         editing = true;
-        document.documentElement.scrollTop = 0;
+        window.scrollTo(0,0);
     },
 
     //This function is called when a user clicks edit
