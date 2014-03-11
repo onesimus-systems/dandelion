@@ -1,4 +1,4 @@
-Dandelion v4.2.0
+Dandelion v4.2.1
 ================
 
 Dandelion is a web-based entry log application.
@@ -18,17 +18,18 @@ Is it any good?
 Install
 -------
 
-1. Create a MySQL/Maria database to house Dandelion
-2. Browse to install.php in the root of Dandelion
-3. Fill in the information, check the box, and let it go
-4. The installer will direct you to the index page. Login with:
+1. Decide whether you want to use MySQL/Maria or SQLite
+2. Create a MySQL/Maria database to house Dandelion if you are going that route
+3. Browse to install.php in the root of Dandelion
+4. Choose your database type, for MySQL/Maria type in database address, username, password, and table name
+5. The installer will direct you to the index page. Login with:
 
    ```
    Username: admin
    Password: admin
    ```
 
-5. Change the admin password, login again, and see your new empty log.
+6. Change the admin password, login again, and see your new empty log.
 
 Notes for Install
 -----------------
@@ -46,6 +47,12 @@ New Features
     * The User Management page has been improved as well.
     * The add/edit entry textbox has been enlarged.
     
+Release Notes
+-------------
+
+v4.2.1 - Fixed bug where category filter wasn't using updated AJAX API
+	   - Fixed bug where time and date window for Cheesto wasn't loading
+
 Known Things That Don't Work
 ----------------------------
 
