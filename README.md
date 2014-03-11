@@ -9,6 +9,7 @@ Requirements
 * Apache >= 2.4
 * PHP >= 5.5
 * MySQL/Maria DB >= 5.0
+* PHP SQLite library (php5-sqlite) (if applicable)
 
 Is it any good?
 ---------------
@@ -18,7 +19,7 @@ Is it any good?
 Install
 -------
 
-1. Decide whether you want to use MySQL/Maria or SQLite
+1. Decide whether you want to use MySQL/Maria or SQLite for the database
 2. Create a MySQL/Maria database to house Dandelion if you are going that route
 3. Browse to install.php in the root of Dandelion
 4. Choose your database type, for MySQL/Maria type in database address, username, password, and table name
