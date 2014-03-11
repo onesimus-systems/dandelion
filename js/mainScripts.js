@@ -111,9 +111,9 @@ function refreshLog(kindof) {
                 cat3 = document.getElementById("f_cat_3").value;
                 cat4 = document.getElementById("f_cat_4").value;
                 cat5 = document.getElementById("f_cat_5").value;
-                address = 'scripts/logfilter.php';
-                data="f_cat_1=" + cat1 + "&f_cat_2=" + cat2 + "&f_cat_3=" + cat3 + "&f_cat_4=" + cat4 + "&f_cat_5=" + cat5;
-                ajax(address, data, success, failure);
+                params.address = 'scripts/logfilter.php';
+                params.data="f_cat_1=" + cat1 + "&f_cat_2=" + cat2 + "&f_cat_3=" + cat3 + "&f_cat_4=" + cat4 + "&f_cat_5=" + cat5;
+                ajax(params);
                 filt=true;
                 refreshFun.stoprefresh();
             }
@@ -156,7 +156,7 @@ function pagentation(pageOffset) {
             refreshFun.stoprefresh(); // If on pages > 1, stop refresh
         }
         
-        document.documentElement.scrollTop = 0;
+        window.scrollTo(0,0);
       }
     params.failure = function()
       {
@@ -287,7 +287,7 @@ var addFun = {
         document.getElementById("add_edit").appendChild(add_form);
         
         editing = true;
-        document.documentElement.scrollTop = 0;
+        window.scrollTo(0,0);
     },
 
     //This function sends details for a new log entry to
@@ -387,7 +387,7 @@ var editFun = {
         document.getElementById("add_edit").appendChild(add_form);
         
         editing = true;
-        document.documentElement.scrollTop = 0;
+        window.scrollTo(0,0);
     },
 
     //This function is called when a user clicks edit

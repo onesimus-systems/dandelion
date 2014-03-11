@@ -12,7 +12,7 @@ ini_set('display_errors', True);
 
 session_start();
 $cookie_name = 'dandelionrememt'; // Used for login remembering (soon to go away)
-define('D_VERSION', '4.2.0');     // Defines current Dandelion version
+define('D_VERSION', '4.2.1');     // Defines current Dandelion version
 define('THEME_DIR', 'themes');	  // Defines theme directory
 
 require_once ('miscLib.php');	  // Functions for login and theme name
