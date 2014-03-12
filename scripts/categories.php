@@ -13,8 +13,26 @@ if (!checkLogIn()) {
 	header( 'Location: ../index.php' );
 }
 
-if(isset($_POST['parentID'])) {
-	$displayCats = new Categories();
+if (isset($_POST['action'])) {
+	if($_POST['action'] == 'grabcats') {
+		$past = json_decode($_POST['pastSelections']);
+		
+		$displayCats = new Categories();	
+		$displayCats->getChildren($_POST['parentID'], $past);
+	}
 	
-	$displayCats->getChildren($_POST['parentID']);
+	elseif($_POST['action'] == 'addcat') {
+		$parent = $_POST['parentID'];
+		$desc = $_POST['catDesc'];
+		
+		$createCat = new Categories();
+		$createCat->addCategory($parent, $desc);
+	}
+	
+	elseif($_POST['action'] == 'delcat') {
+		$cat = $_POST['cid'];
+		
+		$deleteCat = new Categories();
+		$deleteCat->delCategory($cat);
+	}
 }

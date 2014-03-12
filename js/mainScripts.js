@@ -28,12 +28,13 @@ var miscFun = {
 
     //clears filter select elements
     clearfilt: function() {
-        document.getElementById("f_cat_1").value = "select";
+        /*document.getElementById("f_cat_1").value = "select";
         cat1 = document.getElementById("f_cat_1");
         f_pop_cat_2(cat1);
         f_pop_cat_3(cat1);
         f_pop_cat_4(cat1);
-        f_pop_cat_5(cat1);
+        f_pop_cat_5(cat1);*/
+    	CategoryManage.grabNextLevel('0:0');
     },
     
     clearval: function(clearme) {
@@ -50,7 +51,7 @@ var refreshFun = {
     startrefresh: function() {
     	// Run first time
 		refreshLog("update");
-		presence.checkstat(0);
+		setTimeout(function(){presence.checkstat(0);}, 1);
 		
 		// Set timers
         refreshc = setInterval(function(){refreshLog("update");}, 120000);
@@ -85,6 +86,8 @@ function refreshLog(kindof) {
 		    
 		    if (filt) {
 		        miscFun.clearfilt();
+		    } else {
+		        CategoryManage.grabNextLevel('0:0');
 		    }
 	    }
     params.failure = function()
@@ -104,15 +107,11 @@ function refreshLog(kindof) {
         }
     else if (kindof==="filter")
         {
-            cat1 = document.getElementById("f_cat_1").value;
+            cat = CategoryManage.getCatString();
             
-            if (cat1 != null && cat1 != "" && cat1 != "select") {
-                cat2 = document.getElementById("f_cat_2").value;
-                cat3 = document.getElementById("f_cat_3").value;
-                cat4 = document.getElementById("f_cat_4").value;
-                cat5 = document.getElementById("f_cat_5").value;
+            if (cat) {
                 params.address = 'scripts/logfilter.php';
-                params.data="f_cat_1=" + cat1 + "&f_cat_2=" + cat2 + "&f_cat_3=" + cat3 + "&f_cat_4=" + cat4 + "&f_cat_5=" + cat5;
+                params.data="filter=" + cat;
                 ajax(params);
                 filt=true;
                 refreshFun.stoprefresh();

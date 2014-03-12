@@ -2,7 +2,6 @@
 
 <?php
 include_once 'scripts/dbconnect.php';
-include_once 'scripts/categories.php';
 
 // Authenticate user, if fail go to login page
 if (checkLogIn()) {
@@ -35,7 +34,7 @@ else {
 		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
 		<title>Dandelion Web Log</title>
 	</head>
-	<body onLoad="grabNextLevel('0:0');">
+	<body onLoad="CategoryManage.grabNextLevel('0:0');">
         <header>
             <?php include 'scripts/header.php'; ?>
         </header>
@@ -45,8 +44,9 @@ else {
         <div id="message"></div>
 
         <form method="post">
-        	<div id="workArea"></div>
-        	<input type="button" onClick="showMe();" value="Show Current ID" />
+        	<div name="categorySelects" id="categorySelects"></div>
+        	<input type="button" onClick="CategoryManage.createNew();" value="Add Category Here">
+        	<input type="button" onClick="CategoryManage.deleteCat();" value="Delete Category">
         </form>
         
         <footer>

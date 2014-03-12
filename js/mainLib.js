@@ -17,7 +17,7 @@
 function ajax(params) {
 	// Validate parameters and set defaults if necassary
 	if (typeof params !== 'object' || typeof params === 'undefined') {
-		return false; // params needs to be an object, it it's not get out!
+		return false; // params needs to be an object, if it's not get out!
 	}	
 	if (typeof params.address === 'undefined' || typeof params.success === 'undefined') {
 		return false; // an address and success function are required
