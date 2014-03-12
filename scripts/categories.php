@@ -35,4 +35,12 @@ if (isset($_POST['action'])) {
 		$deleteCat = new Categories();
 		$deleteCat->delCategory($cat);
 	}
+	
+	elseif($_POST['action'] == 'editcat') {
+		$cid = $_POST['cid'];
+		$desc = $_POST['catDesc'];
+		
+		$editCat = new Categories();
+		$editCat->editCategory($cid, $desc);
+	}
 }

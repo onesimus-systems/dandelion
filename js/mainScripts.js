@@ -25,11 +25,6 @@ var miscFun = {
     clearaddedit: function() {
         document.getElementById("add_edit").innerHTML="";
     },
-
-    //clears filter select elements
-    clearfilt: function() {
-    	CategoryManage.grabNextLevel('0:0');
-    },
     
     clearval: function(clearme) {
         clearme.value="";
@@ -78,11 +73,6 @@ function refreshLog(kindof) {
 		    else {
 		        clearinput = true;
 		    }
-		    
-		    if (filt) {
-		        miscFun.clearfilt();
-		    } else {
-		    }
 	    }
     params.failure = function()
 	    {
@@ -116,7 +106,6 @@ function refreshLog(kindof) {
         }
     else if (kindof==="clearf")
         {
-            miscFun.clearfilt();
             params.address = 'scripts/updatelog.php';
     		params.async = false;
     		ajax(params);

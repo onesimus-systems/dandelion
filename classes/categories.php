@@ -109,4 +109,19 @@ class Categories
 				
 		echo 'Category deleted successfully';
 	}
+	
+	public function editCategory($cid, $desc) {
+		$stmt = 'UPDATE `category` SET `desc` = :desc WHERE `cid` = :cid';
+		$params = array(
+				'desc' => $desc,
+				'cid' => $cid
+		);
+		
+		if ($this->conn->queryDB($stmt, $params)) {
+			echo 'Category updated successfully';
+		}
+		else {
+			echo 'Error saving category';
+		}
+	}
 }

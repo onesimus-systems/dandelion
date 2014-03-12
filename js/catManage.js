@@ -5,7 +5,8 @@ var CategoryManage = {
 	
 	grabNextLevel: function(parentID, container) {
 		if (parentID == "0:0") { pid = "0:0"; }
-		else { pid = parentID.value; }
+		else if (parentID.value) { pid = parentID.value; }
+		else { pid = parentID; };
 		
 		container = (this.addLog) ? 'add_cat' : 'categorySelects';
 		
@@ -75,9 +76,37 @@ var CategoryManage = {
 		var params = new Object;	
 		params.address = 'scripts/categories.php';
 		params.data = 'action=addcat&parentID='+parent+'&catDesc='+newCatDesc;
-		params.success = function(){ };
+		params.success = function()
+			{
+				CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
+			};
 		
 		ajax(params);
+	},
+	
+	editCat: function() {
+		var cid = this.currentSelection[this.currentSelection.length-1].split(':');
+
+		var elt = document.getElementById('level'+cid[1]);
+
+		if (elt.options[elt.selectedIndex].text != 'Select:') {
+			editString = elt.options[elt.selectedIndex].text;
+		}
+		
+		editedCat = window.prompt("Edit Category Description:",editString);
+		
+		if (editedCat != null && editedCat != '') {
+			var params = new Object;	
+			params.address = 'scripts/categories.php';
+			params.data = 'action=editcat&cid='+cid[0]+'&catDesc='+encodeURIComponent(editedCat);
+			params.success = function()
+				{
+					alert(responseText);
+					CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
+				};
+			
+			ajax(params);
+		}
 	},
 	
 	deleteCat: function() {
@@ -94,8 +123,8 @@ var CategoryManage = {
 		params.data = 'action=delcat&cid='+cid;
 		params.success = function()
 	    {
-	          alert(responseText);
-	          CategoryManage.grabNextLevel('0:0');
+			alert(responseText);
+			CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
 	    }
 		
 		ajax(params);
