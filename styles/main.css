@@ -151,3 +151,7 @@ header {
 .pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
 	color: black;
 }
+
+#categorySelects {
+	display: inline;
+}
