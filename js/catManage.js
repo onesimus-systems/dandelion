@@ -40,16 +40,13 @@ var CategoryManage = {
 	
 	createNew: function() {
 		var catString = this.getCatString();
-		var message = 'Add new category\n\n';
-		var newCatDesc = '';
-		var parent = this.currentSelection[this.currentSelection.length-1].split(':');
-		parent = parent[0];
+		var message = 'Add new category (type \'q\' to quit)\n\n';
 		
 		if (this.currentSelection.length == 1) {
 			message = 'Create new root category:';
 			catString = '';
 		}
-	    
+		
 		while (true) {
 			newCatDesc = window.prompt(message+catString);
 			
@@ -59,19 +56,27 @@ var CategoryManage = {
 			else if (newCatDesc == null) {
 				return false;
 			}
-			else {
-				newCatDesc = encodeURIComponent(newCatDesc);
+			else if (newCatDesc == 'q') {
+		        this.grabNextLevel('0:0');
 				break;
 			}
+			else {
+				this.addNew(encodeURIComponent(newCatDesc));
+			}
 		}
+	},
+	
+	addNew: function(catDesc) {
+		var newCatDesc = catDesc;
+		var parent = this.currentSelection[this.currentSelection.length-1].split(':');
+		parent = parent[0];
 		
 		var params = new Object;	
 		params.address = 'scripts/categories.php';
 		params.data = 'action=addcat&parentID='+parent+'&catDesc='+newCatDesc;
 		params.success = function()
 	    {
-	          alert(responseText);
-	          CategoryManage.grabNextLevel('0:0');
+			//if (responseText != '') { alert(responseText) };
 	    }
 		
 		ajax(params);

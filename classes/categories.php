@@ -32,14 +32,27 @@ class Categories
 			$newSel = '<select name="level'.($pastSel[1]+1).'" id="level'.($pastSel[1]+1).'" onChange="CategoryManage.grabNextLevel(this);">';
 			$newSel .= '<option value="Select:">Select:</option>';
 			$option = '';
+			
+			$alphaList = array();
 			foreach($cat as $isChild)
 			{
 				if($isChild['pid'] == $pastSel[0])
 				{
-					$option = '<option value="'.$isChild['cid'].':'.($pastSel[1]+1).'">'.$isChild['desc'].'</option>';
-					$newSel .= $option;
+					$child = array(
+							'cid' =>  $isChild['cid'],
+							'desc' => $isChild['desc']
+					);
+					array_push($alphaList, $child);
 				}
 			}
+			
+			usort($alphaList, "self::cmp");
+			
+			foreach($alphaList as $children) {
+					$option = '<option value="'.$children['cid'].':'.($pastSel[1]+1).'">'.$children['desc'].'</option>';
+					$newSel .= $option;
+			}
+			
 			$newSel .= '</select>';
 		
 			if (!empty($option)) {
@@ -51,6 +64,10 @@ class Categories
 		echo $response;
 	}
 	
+	private function cmp($a, $b) {
+		return strcmp($a['desc'], $b['desc']);
+	}
+	
 	public function addCategory($parent, $description) {
 		$stmt = 'INSERT INTO `category` (`desc`, `pid`) VALUES (:description, :parentid)';
 		$params = array(
@@ -59,7 +76,7 @@ class Categories
 		);
 		
 		if ($this->conn->queryDB($stmt, $params)) {
-			echo 'Category added successfully';
+			echo '';
 		} else {
 			echo 'Error adding category';
 		}
