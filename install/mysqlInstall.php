@@ -53,8 +53,9 @@ $exec->execute();
 
 /** Create settings table */
 $stmt = 'CREATE TABLE IF NOT EXISTS `settings` (
-		  `settings_id` int(255) NOT NULL AUTO_INCREMENT,
-		  `message` varchar(1000) NOT NULL,
+		  `settings_id` mediumint(9) NOT NULL AUTO_INCREMENT,
+		  `name` tinytext NOT NULL,
+		  `value` mediumtext NOT NULL,
 		  PRIMARY KEY (`settings_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
 $exec = $dbConn->prepare($stmt);
@@ -87,5 +88,11 @@ $stmt = 'INSERT INTO `users` (`userid`, `username`, `password`, `realname`,
 			`settings_id`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`)
 			VALUES (1, \'admin\', \'$2y$10$sRDlu.F6gPVM4kS/k7ESHO9PF0Z5pXk0J/SpuMa88E31/Lux1mfMy\',
 			\'Admin\', 0, \'admin\', \'2014-02-08\', 2, 25, \'default\')';
+$exec = $dbConn->prepare($stmt);
+$exec->execute();
+
+/** Create Initial Settings */
+$stmt = 'INSERT INTO `settings` (`settings_id`, `name`, `value`)
+			VALUES (1, \'slogan\', \'Website Slogan\')';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
