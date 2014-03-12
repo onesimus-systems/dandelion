@@ -152,6 +152,6 @@ header {
 	color: black;
 }
 
-#categorySelects {
+#categorySelects, #add_cat {
 	display: inline;
 }

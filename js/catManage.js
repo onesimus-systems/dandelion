@@ -1,12 +1,13 @@
 var CategoryManage = {
 	currentID: -1,
 	currentSelection: [],
+	addLog: false,
 	
 	grabNextLevel: function(parentID, container) {
 		if (parentID == "0:0") { pid = "0:0"; }
 		else { pid = parentID.value; }
 		
-		container = (container == '' || container == null) ? 'categorySelects' : container;
+		container = (this.addLog) ? 'add_cat' : 'categorySelects';
 		
 		var level = pid.split(':');
 		
@@ -25,7 +26,7 @@ var CategoryManage = {
 		params.data = 'action=grabcats&parentID='+pid+'&pastSelections='+JSON.stringify(this.currentSelection);
 		params.success = function()
 	    {
-	          //document.getElementsByName(container).item(0).innerHTML=responseText;
+	          document.getElementById('categorySelects').innerHTML = '';
 			  document.getElementById(container).innerHTML = responseText;
 	          CategoryManage.currentID = pid;
 	          
@@ -74,10 +75,7 @@ var CategoryManage = {
 		var params = new Object;	
 		params.address = 'scripts/categories.php';
 		params.data = 'action=addcat&parentID='+parent+'&catDesc='+newCatDesc;
-		params.success = function()
-	    {
-			//if (responseText != '') { alert(responseText) };
-	    }
+		params.success = function(){ };
 		
 		ajax(params);
 	},
@@ -109,11 +107,7 @@ var CategoryManage = {
 		for (var i=0; i<this.currentSelection.length; i++) {
 			if (document.getElementById('level'+(i+1))) {
 				var elt = document.getElementById('level'+(i+1));
-				//elt = elt.item(0);
-				
-				/*if (elt.item(elt.selectedIndex).text != 'Select:') {
-					catString += elt.item(elt.selectedIndex).text + ':';
-				}*/
+
 				if (elt.options[elt.selectedIndex].text != 'Select:') {
 					catString += elt.options[elt.selectedIndex].text + ':';
 				}
