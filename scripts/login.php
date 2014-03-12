@@ -55,6 +55,10 @@ function isuser($uname, $pword, $conn, $cookie_name) {
 		beginSess($sel_user[0]['userid'], $conn, $cookie_name);
         
 		$_SESSION['userInfo'] = $sel_user[0];
+		
+		$stmt = 'SELECT `value` FROM `settings` WHERE `name` = "slogan"';
+		
+		$_SESSION['settings']['slogan'] = $conn->queryDB($stmt, NULL)[0]['value'];
         
         echo 'Logged in. Please wait as I redirect you...';
         
