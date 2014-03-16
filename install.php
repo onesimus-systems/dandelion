@@ -29,6 +29,7 @@ $theme = 'default';
 <html>
     <head>
         <meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="IE=9">
         <title>Dandelion Web Log - Install Script</title>
         <link rel="stylesheet" href="styles/main.css" />
 		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
