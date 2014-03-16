@@ -32,6 +32,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $conn->queryDB($stmt, NULL);
 		}
 		
+		elseif ($a_action == "slogan") {
+			// Set new slogan
+			$stmt = 'UPDATE `settings` SET `value` = :slogan WHERE `name` = "slogan"';
+			$params = array(
+				'slogan' => $_POST['slogan']		
+			);
+			$conn->queryDB($stmt, $params);
+			
+			$_SESSION['settings']['slogan'] = $_POST['slogan'];
+		}
+		
 		header( 'Location: ../admin.phtml' );
 	}
 	else {

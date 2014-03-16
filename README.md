@@ -1,4 +1,4 @@
-Dandelion v4.2.1
+Dandelion v4.2.2
 ================
 
 Dandelion is a web-based entry log application.
@@ -37,27 +37,22 @@ Notes for Install
 
 Dandelion needs write permissions to the config directory in order to install. If it doesn't have the proper permissions it will give you an error when you go to install.php. The permissions on the directory will be changed to read-only once Dandelion has done its thing.
 
+The easiest way to upgrade from 4.2.1 to 4.2.2 is to backup your database, run the install script again and have it create the new category and settings tables. After it's finished installing, import your backup. I apologize for not creating an upgrade script. I will make sure to do that for the next version.
+
 New Features
 ------------
 
-* Themes! - You can now develop and use your own themes. Use the three provided as templates for now. I'm going to write up proper documentation for how to develop and use themes. All themes are in their own directory under the themes directory.
-
-* Improved layout
-    * The control panel has been rearranged to look better.
-    * The refresh timer has been removed (the page still refreshes, it just doesn't count down any more).
-    * The User Management page has been improved as well.
-    * The add/edit entry textbox has been enlarged.
+* Category Manage is finally here! Admins can create, edit, and delete categories to a truly customized application.
     
 Release Notes
 -------------
 
+v4.2.2 - Fixed compatibility bug with IE on Windows 7 (Dandelion is compatibly with IE9+)
+	   - Added category management
+	   - Other bugs
+
 v4.2.1 - Fixed bug where category filter wasn't using updated AJAX API
 	   - Fixed bug where time and date window for Cheesto wasn't loading
-
-Known Things That Don't Work
-----------------------------
-
-* Category Management still doesn't work. You will only ever see it if you're an admin because there's a link on the admin portal. But it will only show a blank select box. Don't worry, more will come soon.
 
 Versioning
 ----------

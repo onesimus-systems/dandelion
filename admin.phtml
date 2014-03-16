@@ -29,6 +29,7 @@ else {
 <html>
 	<head>
 		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="styles/main.css" />
 		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
@@ -42,17 +43,21 @@ else {
         <h2>Administration</h2>
 		
     	<form name="admin_form" method="post" action="scripts/admin_actions.php">
-			<input type="submit" class="dButton adminButton" name="sub_action" value="Set New Features" /><br />
-			<input type="button" class="dButton adminButton" value="Edit Users" onClick="window.location='editusers.phtml'" /><br />
-			<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location='categories.phtml'" />
+			<input type="submit" class="dButton adminButton" name="sub_action" value="Set New Features"><br>
+			<input type="button" class="dButton adminButton" value="Edit Users" onClick="window.location='editusers.phtml'"><br>
+			<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location='categories.phtml'"><br>
+			<input type="button" class="dButton adminButton" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['settings']['slogan']); ?>');" value="Edit Site Slogan">
 			<br /><br /><hr width="350" />
 			<h3>Database Administration</h3>
-			<input type="submit" class="dButton adminButton" name="sub_action" value="Clear Session Tokens" /><br />
+			<input type="submit" class="dButton adminButton" name="sub_action" value="Clear Session Tokens" /><br>
 			<!-- <input type="submit" class="dButton adminButton" name="sub_action" value="Backup Database" /><br />-->
     	</form>
 
         <footer>
             <?php include_once 'scripts/footer.php'; ?>
         </footer>
+        
+        <script src="js/mainLib.js"></script>
+        <script src="js/admin.js"></script>
 	</body>
 </html>

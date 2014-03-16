@@ -1,7 +1,11 @@
 <?php
 
-/// TODO: Create a better method to check these URLs
-require_once (is_file('scripts/dbconnect.php')) ? 'scripts/dbconnect.php' : 'dbconnect.php';
+// TODO: Create a better method to check these URLs
+// Because this file is called from the root and a subdirectory,
+// a check needs to be done to determine who the required files are
+// included.
+
+require_once (is_file('scripts/dbconnect.php')) ? 'scripts/dbconnect.php' : '../scripts/dbconnect.php';
 require_once (is_file('classes/categories.php')) ? 'classes/categories.php' : '../classes/categories.php';
 
 // Authenticate user, if fail go to login page
@@ -9,13 +13,34 @@ if (!checkLogIn()) {
 	header( 'Location: ../index.php' );
 }
 
-if (empty($_POST['action'])) {
-	$displayCats = new Categories();
-	$displayCats->showAllCats();
-}
-elseif ($_POST['action'] == 'delete') {
-	$deleteCat = new Categories(false);     // create category instance
-	$depth = explode(":", $_POST['item']);  // create array from category tree
-	$empty = array_shift($depth); 			// remove last element of array
-	print_r($depth);
+if (isset($_POST['action'])) {
+	if($_POST['action'] == 'grabcats') {
+		$past = json_decode($_POST['pastSelections']);
+		
+		$displayCats = new Categories();	
+		$displayCats->getChildren($_POST['parentID'], $past);
+	}
+	
+	elseif($_POST['action'] == 'addcat') {
+		$parent = $_POST['parentID'];
+		$desc = $_POST['catDesc'];
+		
+		$createCat = new Categories();
+		$createCat->addCategory($parent, $desc);
+	}
+	
+	elseif($_POST['action'] == 'delcat') {
+		$cat = $_POST['cid'];
+		
+		$deleteCat = new Categories();
+		$deleteCat->delCategory($cat);
+	}
+	
+	elseif($_POST['action'] == 'editcat') {
+		$cid = $_POST['cid'];
+		$desc = $_POST['catDesc'];
+		
+		$editCat = new Categories();
+		$editCat->editCategory($cid, $desc);
+	}
 }
