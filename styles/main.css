@@ -14,6 +14,12 @@ body {
 }
 
 h1 {
+    margin-bottom: 0;
+	text-align: center;
+}
+
+h4 {
+	margin-top: .75em;
     margin-bottom: .65em;
 	text-align: center;
 }
@@ -150,4 +156,8 @@ header {
 
 .pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
 	color: black;
+}
+
+#categorySelects, #add_cat {
+	display: inline;
 }

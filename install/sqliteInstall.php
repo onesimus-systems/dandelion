@@ -65,7 +65,8 @@ $exec->execute();
 /** Create settings table */
 $stmt = 'CREATE TABLE IF NOT EXISTS `settings` (
 		  `settings_id` INTEGER PRIMARY KEY AUTOINCREMENT,
-		  `message` TEXT NOT NULL
+		  `name` TEXT NOT NULL,
+		  `value` TEXT NOT NULL
 		)';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
@@ -79,6 +80,13 @@ $exec->execute();
 
 $stmt = 'INSERT INTO `presence` (`id`, `uid`, `realname`, `status`, `message`, `return`, `dmodified`)
 			VALUES (1, 1, \'Admin\', 1, \'\', \'00:00:00\', \'2014-02-08 10:21:34\'
+		)';
+$exec = $dbConn->prepare($stmt);
+$exec->execute();
+
+/** Create initial settings */
+$stmt = 'INSERT INTO `settings` (`settings_id`, `name`, `value`)
+			VALUES (1, \'slogan\', \'Website Slogan\'
 		)';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();

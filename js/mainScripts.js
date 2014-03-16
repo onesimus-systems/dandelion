@@ -25,16 +25,6 @@ var miscFun = {
     clearaddedit: function() {
         document.getElementById("add_edit").innerHTML="";
     },
-
-    //clears filter select elements
-    clearfilt: function() {
-        document.getElementById("f_cat_1").value = "select";
-        cat1 = document.getElementById("f_cat_1");
-        f_pop_cat_2(cat1);
-        f_pop_cat_3(cat1);
-        f_pop_cat_4(cat1);
-        f_pop_cat_5(cat1);
-    },
     
     clearval: function(clearme) {
         clearme.value="";
@@ -50,7 +40,8 @@ var refreshFun = {
     startrefresh: function() {
     	// Run first time
 		refreshLog("update");
-		presence.checkstat(0);
+		setTimeout(function(){presence.checkstat(0);}, 1);
+        CategoryManage.grabNextLevel('0:0');
 		
 		// Set timers
         refreshc = setInterval(function(){refreshLog("update");}, 120000);
@@ -82,10 +73,6 @@ function refreshLog(kindof) {
 		    else {
 		        clearinput = true;
 		    }
-		    
-		    if (filt) {
-		        miscFun.clearfilt();
-		    }
 	    }
     params.failure = function()
 	    {
@@ -104,15 +91,11 @@ function refreshLog(kindof) {
         }
     else if (kindof==="filter")
         {
-            cat1 = document.getElementById("f_cat_1").value;
+            cat = CategoryManage.getCatString();
             
-            if (cat1 != null && cat1 != "" && cat1 != "select") {
-                cat2 = document.getElementById("f_cat_2").value;
-                cat3 = document.getElementById("f_cat_3").value;
-                cat4 = document.getElementById("f_cat_4").value;
-                cat5 = document.getElementById("f_cat_5").value;
+            if (cat) {
                 params.address = 'scripts/logfilter.php';
-                params.data="f_cat_1=" + cat1 + "&f_cat_2=" + cat2 + "&f_cat_3=" + cat3 + "&f_cat_4=" + cat4 + "&f_cat_5=" + cat5;
+                params.data="filter=" + cat;
                 ajax(params);
                 filt=true;
                 refreshFun.stoprefresh();
@@ -123,7 +106,6 @@ function refreshLog(kindof) {
         }
     else if (kindof==="clearf")
         {
-            miscFun.clearfilt();
             params.address = 'scripts/updatelog.php';
     		params.async = false;
     		ajax(params);
@@ -203,67 +185,10 @@ var addFun = {
             add_form.appendChild(break_it.cloneNode(true));
             add_form.appendChild(cat_label);
             
-        var cat_select = document.createElement("select");
-            cat_select.id="cat_1";
-            cat_select.setAttribute('onchange', 'pop_cat_2(this)');
-            
-            var icat_1 = document.createElement("option");
-                icat_1.value = "select";
-                var cat_text = document.createTextNode("Select:");
-                icat_1.appendChild(cat_text);
-                cat_select.appendChild(icat_1);
-            
-            icat_1 = document.createElement("option");
-                icat_1.value = "Desktop";
-                var cat_text = document.createTextNode("Desktop");
-                icat_1.appendChild(cat_text);
-                cat_select.appendChild(icat_1);
-            
-            icat_1 = document.createElement("option");
-                icat_1.value = "Appliances";
-                var cat_text = document.createTextNode("Appliances");
-                icat_1.appendChild(cat_text);
-                cat_select.appendChild(icat_1);
-            
-            icat_1 = document.createElement("option");
-                icat_1.value = "Network";
-                var cat_text = document.createTextNode("Network");
-                icat_1.appendChild(cat_text);
-                cat_select.appendChild(icat_1);
-            
-            icat_1 = document.createElement("option");
-                icat_1.value = "Servers";
-                var cat_text = document.createTextNode("Servers");
-                icat_1.appendChild(cat_text);
-                cat_select.appendChild(icat_1);
-            
-            icat_1 = document.createElement("option");
-                icat_1.value = "UPS";
-                var cat_text = document.createTextNode("UPS");
-                icat_1.appendChild(cat_text);
-                cat_select.appendChild(icat_1);
-                
-            add_form.appendChild(cat_select);
-            
-        cat_select = document.createElement("select");
-            cat_select.id="cat_2";
-            cat_select.setAttribute('onchange', 'pop_cat_3(this)');
-            add_form.appendChild(cat_select);
-            
-        cat_select = document.createElement("select");
-            cat_select.id="cat_3";
-            cat_select.setAttribute('onchange', 'pop_cat_4(this)');
-            add_form.appendChild(cat_select);
-            
-        cat_select = document.createElement("select");
-            cat_select.id="cat_4";
-            cat_select.setAttribute('onchange', 'pop_cat_5(this)');
-            add_form.appendChild(cat_select);
-            
-        cat_select = document.createElement("select");
-            cat_select.id="cat_5";
-            add_form.appendChild(cat_select);
-            
+        var cat_div = document.createElement("div");
+        	cat_div.setAttribute('id', 'add_cat');
+        	add_form.appendChild(cat_div);
+ 
         var space_label = document.createTextNode("\u00a0\u00a0\u00a0");
             add_form.appendChild(space_label);
             
@@ -285,7 +210,9 @@ var addFun = {
             add_form.appendChild(add_button);
 
         document.getElementById("add_edit").appendChild(add_form);
-        
+
+        CategoryManage.addLog = true;
+        CategoryManage.grabNextLevel('0:0');
         editing = true;
         window.scrollTo(0,0);
     },
@@ -297,11 +224,7 @@ var addFun = {
         title = encodeURIComponent(title);
         entry = document.getElementById("add_entry").value;
         entry = encodeURIComponent(entry);
-        cat1 = document.getElementById("cat_1").value;
-        cat2 = document.getElementById("cat_2").value;
-        cat3 = document.getElementById("cat_3").value;
-        cat4 = document.getElementById("cat_4").value;
-        cat5 = document.getElementById("cat_5").value;
+        cat = CategoryManage.getCatString();
         var params = new Object;
         
         params.success=function()
@@ -311,9 +234,11 @@ var addFun = {
             editing = false;
             refreshLog("update");
             secleft=120;
+            CategoryManage.addLog = false;
+            CategoryManage.grabNextLevel('0:0');
           }        
         params.address = 'scripts/add_log.php';
-        params.data = 'cat_1=' + cat1 + '&cat_2=' + cat2 + '&cat_3=' + cat3 + '&cat_4=' + cat4 + '&cat_5=' + cat5 + '&add_title=' + title + '&add_entry=' + entry;
+        params.data = 'cat=' + cat + '&add_title=' + title + '&add_entry=' + entry;
         
         ajax(params);
     },
