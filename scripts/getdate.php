@@ -1,4 +1,5 @@
-<?php 
+<?php
+require_once 'miscLib.php';
 $theme = getTheme();
 ?>
 <html>
