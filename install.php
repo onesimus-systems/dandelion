@@ -103,6 +103,6 @@ $theme = 'default';
 <?php
 }
 else {
-    header( 'Location: viewlog.phtml' );
+    header( 'Location: index.phtml' );
 }
 ?>

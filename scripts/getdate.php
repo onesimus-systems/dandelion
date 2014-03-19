@@ -1,5 +1,5 @@
 <?php
-require_once 'miscLib.php';
+require_once 'grabber.php';
 $theme = getTheme();
 ?>
 <html>

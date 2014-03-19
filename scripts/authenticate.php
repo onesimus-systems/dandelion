@@ -20,6 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["in_name"])) {
 }
 
 function checkLogIn() {
+	echo 'Please use authenticated().';
+	return authenticated();
+}
+
+function authenticated() {
 	//Check for auth cookie, if set check against session_token table to see it session is still valid
 	global $cookie_name;
 	$loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;

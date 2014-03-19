@@ -13,21 +13,8 @@
 
 include_once 'scripts/grabber.php';
 
-if (checkLogIn()) {
-
-	if ($_SESSION['userInfo']['role'] === "admin") {
-		$admin_link = '<a href="admin.phtml">Administration</a>';
-	}
-	else {
-		$admin_link = '';
-	}
-	
-	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '<a href="settings.phtml">Settings</a>';
-	}
-	else {
-		$settings_link = '';
-	}
+if (authenticated()) {
+	userLinks();
     
     if ($_SESSION['userInfo']['firsttime'] == 3) {        
         // Connect to DB

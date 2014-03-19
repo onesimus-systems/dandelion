@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 
 <?php
-/*
- * Lee Keitel
- * January 27, 2014
- *
+/**
  * This page is the heart of the whole application.
  * This page show the weblog and allows a user to search,
  * filter, add, or edit a log. This page also houses the
  * presence application Cxeesto.
-*/
+ *
+ * This file is a part of Dandelion
+ *
+ * @author Lee Keitel
+ * @date January 27, 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
+
 include_once 'scripts/grabber.php';
 
 //Authenticate user, if fail go to login page
-if (checkLogIn()) {
-
-	if ($_SESSION['userInfo']['role'] == "admin") {
-		$admin_link = '<a href="admin.phtml">Administration</a>';
-	}
-	else {
-		$admin_link = '';
-	}
+if (authenticated()) {	
+	userLinks();
 	
 	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '<a href="settings.phtml">Settings</a>';
 		$add_link = '<input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 	}
 	else {
 		$add_link = '';
-		$settings_link = '';
 	}
 	
 	$theme = getTheme();
@@ -80,7 +77,6 @@ else {
         </div>
     
         <div id="divMain">
-        	<?php //include 'styles/main.php';?>
             <header>
                 <?php include 'scripts/header.php'; ?>
             </header>

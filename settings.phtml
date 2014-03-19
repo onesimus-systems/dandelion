@@ -1,31 +1,27 @@
 <!DOCTYPE html>
 
 <?php
-/*
- * Lee Keitel
- * January 28, 2014
- *
+/**
  * This page allows users to change their password
  * and change the number of logs show on the home page.
-*/
+ *
+ * This file is a part of Dandelion
+ *
+ * @author Lee Keitel
+ * @date January 28, 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
 
 include 'scripts/grabber.php';
 
-if (checkLogIn()) {
+if (authenticated()) {
+	
 	if ($_SESSION['userInfo']['role'] == "guest") {
 		header( 'Location: viewlog.phtml' );
 	}
-	else {
-		$settings_link = '<a href="settings.phtml">Settings</a>';
-	}
 	
-	if ($_SESSION['userInfo']['role'] === "admin") {
-		$admin_link = '<a href="admin.phtml">Administration</a>';
-	}
-	else {
-		$admin_link = '';
-	}
-	
+	userLinks();
 	$theme = getTheme();
 }
 else {

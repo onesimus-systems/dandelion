@@ -1,4 +1,15 @@
 <?php
+/**
+ * Full window for Cxeesto
+ *
+ * This file is a part of Dandelion
+ *
+ * @author Lee Keitel
+ * @date March 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
+
 include_once 'scripts/grabber.php';
 $theme = getTheme();
 ?>
@@ -11,8 +22,6 @@ $theme = getTheme();
 		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/cheesto.css" />
         <link rel="stylesheet" type="text/css" href="styles/presencewin.css" />
 		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/presenceWin.css" />
-        <script src="js/mainLib.js"></script>
-        <script src="js/presence.js"></script>
     </head>
     
     <body onLoad="presence.startR();">
@@ -39,5 +48,8 @@ $theme = getTheme();
 	            <?php include 'scripts/presence.php'; ?>
 	        </div>
         </div>
+        
+		<script src="js/mainLib.js"></script>
+        <script src="js/presence.js"></script>
     </body>
 </html>

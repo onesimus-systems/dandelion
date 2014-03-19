@@ -17,18 +17,20 @@ ini_set('display_errors', True);
 session_start();
 
 // Define constants
-define('D_VERSION', '4.3.1');     	// Defines current Dandelion version
-define('THEME_DIR', 'themes');	  	// Defines theme directory
+if (!defined('D_VERSION')) {
+	define('D_VERSION', '4.3.1');     			// Defines current Dandelion version
+}
+if (!defined('THEME_DIR')) {
+	define('THEME_DIR', 'themes');	 			// Defines theme directory
+}
+if (!defined('ROOT')) {
+	define('ROOT', dirname(dirname(__FILE__)));	// Defines root path of application
+}
 
 // Load config into session variable
 try {
-	// Reduce this with root directory constant
-	if (file_exists('config/config.php')) {
-		include 'config/config.php';
-		$_SESSION['config'] = $CONFIG;
-	}
-	elseif (file_exists('../config/config.php')) {
-		include '../config/config.php';
+	if (file_exists(ROOT . '/config/config.php')) {
+		include ROOT.'/config/config.php';
 		$_SESSION['config'] = $CONFIG;
 	}
 	else {
@@ -38,6 +40,7 @@ try {
 	echo 'Error: '.$e;
 }
 
-require_once 'themes.php';
-require_once (is_file('classes/db_functions.php')) ? 'classes/db_functions.php' : '../classes/db_functions.php';
+require_once ROOT.'/classes/db_functions.php';
 require_once 'authenticate.php';
+require_once 'userRights.php';
+require_once 'themes.php';

@@ -1,37 +1,29 @@
 <!DOCTYPE html>
 
 <?php
-/*
- * Lee Keitel
- * January 27, 2014
- *
+/**
  * This page is seen by a person once after their account
  * is initially created. It updates their record with an Bcrypt
  * encrypted password and changes firsttime to 1 so they
  * are redirected to the tutorial on next login.
-*/
+ *
+ * This file is a part of Dandelion
+ *
+ * @author Lee Keitel
+ * @date January 27, 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
+
 include 'scripts/grabber.php';
 
 // Check whether the user is logged in
-if (checkLogIn()) {
+if (authenticated()) {
 	if ($_SESSION['userInfo']['role'] == "guest") {
 		header( 'Location: viewlog.phtml' );
 	}
 	
-	if ($_SESSION['userInfo']['role'] === "admin") {
-		$admin_link = '<a href="admin.phtml">Administration</a>';
-	}
-	else {
-		$admin_link = '';
-	}
-	
-	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '<a href="settings.phtml">Settings</a>';
-	}
-	else {
-		$settings_link = '';
-	}
-	
+	userLinks();
 	$theme = getTheme();
 }
 else {

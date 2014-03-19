@@ -120,4 +120,16 @@ class dbManage extends DB
             echo 'Database error: ' . $e;
         }
     }
+    
+    /** Selects all rows from $table
+     *
+     * @param table (string) - Table to get rows from
+     *
+     * @return Array containing the results of the query.
+     */
+    public function selectAll($table) {
+    	$stmt = 'SELECT * FROM ' . $table;
+    	
+    	return $this->queryDB($stmt, NULL);
+    }
 }

@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 
 <?php
-/*
- * Lee Keitel
- * January 27, 2014
- *
- * This page is the home page, hence the index filename.
- * When loading it checks to see if there is already a
- * running session for the user and if so, direct them
- * to the log.
-*/
+/**
+  * This is the homepage of Dandelion.
+  * If a user is already logged in it will
+  * redirect them to the viewlog page.
+  *
+  * This file is a part of Dandelion
+  *
+  * @author Lee Keitel
+  * @date March 2014
+  *
+  * @license GNU GPL v3 (see full license in root/LICENSE.md)
+***/
 
 /*! \mainpage Dandelion Weblog
  *
  *  \section intro_sec Introduction
  *
  * Dandelion was conceived after thinking of a way to replace the aging and slow Bloxom-based
- * we were currently using to document change logs. I wanted to keep the web-based system,
+ * log we were currently using to document change logs. I wanted to keep the web-based system,
  * use an SQL database instead of text files, and make every action possible via the browser
  * instead of having to SSH into the Blosxom server.
  *
@@ -25,7 +28,11 @@
 
 include_once 'scripts/grabber.php'; //Required for DB class and DB connection
 
-if (checkLogIn()) {
+if (!$_SESSION['config']['installed']) {
+	header( 'Location: install.php' );
+}
+
+if (authenticated()) {
     header( 'Location: viewlog.phtml' );
 }
 
@@ -35,7 +42,7 @@ else {
     $badlogin = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : false;
     
     if ($badlogin) {
-        $status = '<span class="bad">Incorrect username or password</span><br />';
+        $status = '<span class="bad">Incorrect username or password</span><br>';
     }
 	
 	$theme = getTheme();

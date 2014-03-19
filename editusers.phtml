@@ -3,22 +3,8 @@
 <?php
 include_once 'scripts/grabber.php';
 
-//Authenticate user, if fail go to login page
-if (checkLogIn()) {
-	if ($_SESSION['userInfo']['role'] === "admin") {
-		$admin_link = '<a href="admin.phtml">Administration</a>';
-	}
-	else {
-		$admin_link = '';
-	}
-	
-	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$settings_link = '<a href="settings.phtml">Settings</a>';
-	}
-	else {
-		$settings_link = '';
-	}
-	
+if (authenticated()) {
+	userLinks();
 	$theme = getTheme();
 }
 else {
@@ -74,8 +60,7 @@ $showList = true;
                     </tr>
                     
                     <?php
-                        $stmt = 'SELECT * FROM users';
-                        $allUsers = $conn->queryDB($stmt, NULL);
+                        $allUsers = $conn->selectAll('users');
                         foreach ($allUsers as $row) {
                             echo '<tr>';
                             echo '<td><input type="radio" name="the_choosen_one" value="' . $row['userid'] . '" /></td>';
