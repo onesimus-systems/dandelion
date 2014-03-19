@@ -8,7 +8,7 @@
  * committing status updates for users, etc.
 */
 
-include_once 'dbconnect.php';
+include_once 'grabber.php';
 
 // Authenticate user, if fail go to login page
 if (!checkLogIn()) {

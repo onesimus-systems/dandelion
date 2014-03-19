@@ -5,7 +5,7 @@
 // a check needs to be done to determine who the required files are
 // included.
 
-require_once (is_file('scripts/dbconnect.php')) ? 'scripts/dbconnect.php' : '../scripts/dbconnect.php';
+require_once (is_file('scripts/grabber.php')) ? 'scripts/grabber.php' : '../scripts/grabber.php';
 require_once (is_file('classes/categories.php')) ? 'classes/categories.php' : '../classes/categories.php';
 
 // Authenticate user, if fail go to login page

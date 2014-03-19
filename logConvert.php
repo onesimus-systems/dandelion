@@ -9,7 +9,7 @@
  * This script is only needed once during upgrade.
 */
 
-include_once 'scripts/dbconnect.php';
+include_once 'scripts/grabber.php';
 
 // Connect to DB
 $conn = new dbManage();

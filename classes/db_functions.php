@@ -1,5 +1,4 @@
 <?php
-echo 'Please move to the new database file under classes/db_functions.php';
 /**
   * @brief DB connects to the database and stores the handle in $dbConn.
   *

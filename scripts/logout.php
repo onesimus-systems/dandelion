@@ -7,7 +7,7 @@
  * and the PHP session effectivly logging out the user.
 */
 
-include_once 'dbconnect.php';
+include_once 'grabber.php';
 
 setcookie($cookie_name, "", time()-3600, "/");   // Delete token cookie
 setcookie(session_name(), "", time()-3600, "/"); // Delete Session cookie

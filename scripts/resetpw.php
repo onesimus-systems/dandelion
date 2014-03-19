@@ -1,5 +1,5 @@
 <?php
-include_once 'dbconnect.php';
+include_once 'grabber.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {

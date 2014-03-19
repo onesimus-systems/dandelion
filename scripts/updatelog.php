@@ -7,7 +7,7 @@
  * and then 'sends' them to readlog.php to display them.
 */
 
-include_once 'dbconnect.php'; // Required for accessing the DB
+include_once 'grabber.php'; // Required for accessing the DB
 include_once 'readlog.php';
 
 // Authenticate user, if fail go to login page

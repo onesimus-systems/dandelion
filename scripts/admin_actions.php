@@ -7,7 +7,7 @@
  * admin functions.
 */
 
-include 'dbconnect.php';
+include 'grabber.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $a_action = $_POST["sub_action"];

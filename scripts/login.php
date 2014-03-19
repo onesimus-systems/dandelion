@@ -11,7 +11,7 @@
  * DB and directs the user as needed.
 */
 
-include_once 'dbconnect.php'; // Required for access to DB
+include_once 'grabber.php'; // Required for access to DB
 
 echo "<p>Logging in...</p>"; // In case it take a moment, rarely if ever seen
 

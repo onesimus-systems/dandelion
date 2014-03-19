@@ -23,7 +23,7 @@
  * And that is how Dandelion was born.
  */
 
-include_once 'scripts/dbconnect.php'; //Required for DB class and DB connection
+include_once 'scripts/grabber.php'; //Required for DB class and DB connection
 
 if (checkLogIn()) {
     header( 'Location: viewlog.phtml' );

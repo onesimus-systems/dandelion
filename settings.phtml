@@ -9,7 +9,7 @@
  * and change the number of logs show on the home page.
 */
 
-include 'scripts/dbconnect.php';
+include 'scripts/grabber.php';
 
 if (checkLogIn()) {
 	if ($_SESSION['userInfo']['role'] == "guest") {

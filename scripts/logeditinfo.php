@@ -7,7 +7,7 @@
  * when a use wants to edit a log. It returns the
  * data as a JSON encoded array.
 */
-include 'dbconnect.php';
+include 'grabber.php';
 
 if (checkLogIn()) {
 	if ($_SESSION['userInfo']['role'] == "guest") {

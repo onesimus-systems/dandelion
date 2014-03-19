@@ -1,5 +1,5 @@
 <?php
-include 'dbconnect.php';
+include 'grabber.php';
 
 if (checkLogIn()) {
 	if ($_SESSION['userInfo']['role'] == "guest") {

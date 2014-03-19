@@ -9,7 +9,7 @@
  * disabled in the JS and then this does its magic.
 */
 
-include_once 'dbconnect.php';
+include_once 'grabber.php';
 include_once 'readlog.php';
 
 // Authenticate user, if fail go to login page
