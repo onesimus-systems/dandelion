@@ -12,31 +12,21 @@
 ***/
 class DB
 {
-    protected $dbConn;                  /**< $dbConn is passed to the dbManage extended class and is used to interact with the database. */
+    protected $dbConn;
     
     /** Attempts to start a connection with the database and store it in $dbConn */
     function __construct()
     {
         try {
-	        if (file_exists('config/config.php')) {
-	            include 'config/config.php';
-	        }
-	        elseif (file_exists('../config/config.php')) {
-	            include '../config/config.php';
-	        }
-	        else {
-	        	throw new Exception('No configuration file found');
-	        }
-	        
-	        switch($CONFIG['db_type']) {
+	        switch($_SESSION['config']['db_type']) {
 	        	case 'mysql':
-		            $db_connect = 'mysql:host='.$CONFIG['db_host'].';dbname='.$CONFIG['db_name'];
+		            $db_connect = 'mysql:host='.$_SESSION['config']['db_host'].';dbname='.$_SESSION['config']['db_name'];
 		            break;
 		            
 	        	case 'sqlite':
-		            $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database/'.$CONFIG['sqlite_fn'];
-		            $CONFIG['db_user'] = null;
-		            $CONFIG['db_pass'] = null;
+		            $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database/'.$_SESSION['config']['sqlite_fn'];
+		            $_SESSION['config']['db_user'] = null;
+		            $_SESSION['config']['db_pass'] = null;
 		            break;
 		            
 	        	default:
@@ -44,7 +34,7 @@ class DB
 	        		break;
 	        }
 	        
-            $conn = new PDO($db_connect, $CONFIG['db_user'], $CONFIG['db_pass'], array(
+            $conn = new PDO($db_connect, $_SESSION['config']['db_user'], $_SESSION['config']['db_pass'], array(
                 PDO::ATTR_PERSISTENT => true
             ));
 	        

@@ -57,7 +57,7 @@ else {
             <?php echo $status;
             
             if ($showlogin) {?>
-                <form name="login_form" action="scripts/login.php" method="post">
+                <form name="login_form" action="scripts/authenticate.php" method="post">
                 Username:<br /><input type="text" value="" name="in_name" autocomplete="off" autofocus /><br />
                 Password:<br /><input type="password" value="" name="in_pass" /><br />
                 <input type="submit" value="Login" id="login_button" />
