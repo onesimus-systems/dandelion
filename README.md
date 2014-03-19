@@ -1,4 +1,4 @@
-Dandelion v4.3.0
+Dandelion v4.3.1
 ================
 
 Dandelion is a web-based entry log application.
@@ -37,7 +37,7 @@ Notes for Install
 
 Dandelion needs write permissions to the config directory in order to install. If it doesn't have the proper permissions it will give you an error when you go to install.php. The permissions on the directory will be changed to read-only once Dandelion has done its thing.
 
-The easiest way to upgrade from 4.2.1 to 4.3.0 is to backup your database, run the install script again and have it create the new category and settings tables. After it's finished installing, import your backup. I apologize for not creating an upgrade script. I will make sure to do that for the next version.
+The easiest way to upgrade from 4.2.1 to 4.3.* is to backup your database, run the install script again and have it create the new category and settings tables. After it's finished installing, import your backup. I apologize for not creating an upgrade script. I will make sure to do that for the next version.
 
 New Features
 ------------
@@ -47,12 +47,20 @@ New Features
 Release Notes
 -------------
 
-v4.3.0 - Fixed compatibility bug with IE on Windows 7 (Dandelion is compatibly with IE9+)
-	   - Added category management
-	   - Other bugs
+v4.3.1
 
-v4.2.1 - Fixed bug where category filter wasn't using updated AJAX API
-	   - Fixed bug where time and date window for Cheesto wasn't loading
+- Fixed issue where Cheesto couldn't get a time and message from user
+
+v4.3.0
+
+- Fixed compatibility bug with IE on Windows 7 (Dandelion is compatibly with IE9+)
+- Added category management
+- Other bugs
+
+v4.2.1
+
+- Fixed bug where category filter wasn't using updated AJAX API
+- Fixed bug where time and date window for Cheesto wasn't loading
 
 Versioning
 ----------
