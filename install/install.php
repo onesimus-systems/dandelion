@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     $db_connect = (!empty($CONFIG['db_host']) && !empty($CONFIG['db_name'])) ? 'mysql:host='.$CONFIG['db_host'].';dbname='.$CONFIG['db_name'] : '';
                     $db_user = $CONFIG['db_user'];
                     $db_pass = $CONFIG['db_pass'];
+                    $sqliteFileName = '';
                     break;
                     
                 case 'sqlite':

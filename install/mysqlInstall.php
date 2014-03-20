@@ -4,7 +4,7 @@
 $stmt = 'CREATE TABLE IF NOT EXISTS `category` (
 		  `cid` int(11) NOT NULL AUTO_INCREMENT,
 		  `desc` varchar(255) NOT NULL,
-		  `ptree` varchar(11) NOT NULL,
+		  `pid` int(11) NOT NULL,
 		  PRIMARY KEY (`cid`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
 $exec = $dbConn->prepare($stmt);
@@ -18,7 +18,7 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `log` (
 		  `title` varchar(300) NOT NULL,
 		  `entry` longtext NOT NULL,
 		  `usercreated` varchar(255) NOT NULL,
-		  `cat` varchar(3000) NOT NULL,
+		  `cat` text NOT NULL,
 		  `edited` tinyint(1) NOT NULL DEFAULT \'0\',
 		  PRIMARY KEY (`logid`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
@@ -53,7 +53,7 @@ $exec->execute();
 
 /** Create settings table */
 $stmt = 'CREATE TABLE IF NOT EXISTS `settings` (
-		  `settings_id` mediumint(9) NOT NULL AUTO_INCREMENT,
+		  `settings_id` smallint(9) NOT NULL AUTO_INCREMENT,
 		  `name` tinytext NOT NULL,
 		  `value` mediumtext NOT NULL,
 		  PRIMARY KEY (`settings_id`)
@@ -63,7 +63,7 @@ $exec->execute();
 
 /** Create users table */
 $stmt = 'CREATE TABLE IF NOT EXISTS `users` (
-		  `userid` int(255) NOT NULL AUTO_INCREMENT,
+		  `userid` smallint(6) NOT NULL AUTO_INCREMENT,
 		  `username` varchar(255) NOT NULL,
 		  `password` varchar(255) NOT NULL,
 		  `realname` varchar(255) NOT NULL,
