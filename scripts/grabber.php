@@ -9,11 +9,6 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
-
-// Set error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', True);
-
 session_start();
 
 // Define constants
@@ -40,6 +35,13 @@ try {
 	echo 'Error: '.$e;
 }
 
+// Set error reporting if in debug mode
+if ($_SESSION['config']['debug']) {
+	error_reporting(E_ALL);
+	ini_set('display_errors', True);
+}
+
+// Load other scripts
 require_once ROOT.'/classes/db_functions.php';
 require_once 'authenticate.php';
 require_once 'userRights.php';

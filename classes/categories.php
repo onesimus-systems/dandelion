@@ -8,7 +8,6 @@
  * @author Lee Keitel
  * @date February 11, 2014
  ***/
-
 class Categories
 {
 	private $conn;

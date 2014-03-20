@@ -38,11 +38,18 @@ class DB
                 PDO::ATTR_PERSISTENT => true
             ));
 	        
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //comment when deployed
+            if ($_SESSION['config']['debug']) {
+            	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            }
+            
             $this->dbConn = $conn;
         }
         catch(PDOException $e) {
-            echo 'ERROR: ' . $e->getMessage(); //comment when deployed
+        	if ($_SESSION['config']['debug']) {
+            	echo 'ERROR: ' . $e->getMessage();
+        	} else {
+        		echo 'Error 0x000185: Can\'t connect to database';
+        	}
         }
     }
 }
@@ -91,8 +98,13 @@ class dbManage extends DB
                 return true;
             }
             
-        } catch(PDOException $e) {
-            echo 'Database error: '.$e;
+        }
+        catch(PDOException $e) {
+        	if ($_SESSION['config']['debug']) {
+            	echo 'ERROR: ' . $e->getMessage();
+        	} else {
+        		echo 'Error 0x000186: Error processing query';
+        	}
         }
     }
     
@@ -116,8 +128,13 @@ class dbManage extends DB
             
             return $query->fetchall(PDO::FETCH_ASSOC);
             
-        } catch(PDOException $e) {
-            echo 'Database error: ' . $e;
+        }
+        catch(PDOException $e) {
+        	if ($_SESSION['config']['debug']) {
+            	echo 'ERROR: ' . $e->getMessage();
+        	} else {
+        		echo 'Error 0x000186: Error processing query';
+        	}
         }
     }
     

@@ -6,5 +6,6 @@ $CONFIG = array(
     'db_host' => '',
     'db_user' => '',
     'db_pass' => '',
-    'installed' => false
+    'installed' => false,
+	'debug' => false
 );
