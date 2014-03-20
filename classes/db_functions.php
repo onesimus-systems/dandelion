@@ -149,4 +149,8 @@ class dbManage extends DB
     	
     	return $this->queryDB($stmt, NULL);
     }
+    
+    public function lastInsertId() {
+    	return $this->dbConn->lastInsertId();
+    }
 }

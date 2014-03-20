@@ -14,5 +14,5 @@
 $conn = new dbManage();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-	require_once ROOT.'/classes/users.php';
+	require_once ROOT.'/classes/usersTemp.php';
 }
