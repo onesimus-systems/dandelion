@@ -1,4 +1,16 @@
 <?php
+/**
+ * Here be the install page for Dandelion.
+ * Here is were the admin will enter database
+ * type and credentials.
+ *
+ * This file is a part of Dandelion
+ *
+ * @author Lee Keitel
+ * @date March, 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
 session_start();
 
 if (file_exists('config/config.php')) {
@@ -7,7 +19,7 @@ if (file_exists('config/config.php')) {
     if (!$CONFIG['installed']) {
         $needToInstall = true;
         
-        if (!is_writable('config/')) { // Is it possible to write the config file?
+        if (!is_writable('config/')) {
             $message = 'Dandelion does not have sufficient write permissions to create configuration.<br />Please make the ./config directory writeable to Dandelion and try again.';
         }
     }
@@ -17,7 +29,7 @@ if (file_exists('config/config.php')) {
 }
 else {
     $needToInstall = true;
-    if (!is_writable('config/')) { // Is it possible to write the config file?
+    if (!is_writable('config/')) {
         $message = 'Dandelion does not have sufficient write permissions to create configuration.<br />Please make the ./config directory writeable to Dandelion and try again.';
     }
 }
