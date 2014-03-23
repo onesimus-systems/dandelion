@@ -3,30 +3,29 @@
  * Lee Keitel
  * January 27, 2014
  *
- * This file is goes to the database and grabs the list of recent logs
- * and then 'sends' them to readlog.php to display them.
+ * This file goes to the database and grabs the list of recent logs
+ * and then sends them to readlog.php to display them.
 */
 
 include_once 'grabber.php'; // Required for accessing the DB
 include_once 'readlog.php';
 
 // Authenticate user, if fail go to login page
-if (!checkLogIn()) {
+if (!authenticated()) {
     header( 'Location: index.php' );
 }
+
+$conn = new dbManage;
 
 // Initialize Variables
 $pageOffset = isset($_POST['pageOffset']) ? $_POST['pageOffset'] : '0'; // Supplied via AJAX
 
 // For later use to specify a page number instead of offset ;)
 if (isset($_POST['page'])) {
-    $pageOffset = $_POST['page'] * $_SESSION['userInfo'][8];
+    $pageOffset = ($_POST['page'] * $_SESSION['userInfo']['showlimit']) - $_SESSION['userInfo']['showlimit'];
 }
 
 $pageOffset = $pageOffset<0 ? '0' : $pageOffset; // If somehow the offset is < 0, make it 0
-
-// Connect to DB
-$conn = new dbManage;
 
 // Grab row count of log table to determine offset
 $stmt = 'SELECT COUNT(*) FROM `log`';
@@ -39,16 +38,15 @@ if ($pageOffset > $logSize[0]['COUNT(*)']) {
     $pageOffset = $pageOffset - $_SESSION['userInfo']['showlimit'];
 }
 
-// When using a LIMIT, the parameter MUST be an integer.
-// To accomplish this the bindValue method was needed while parsing
-// the user setting as an integer.
+// When using a SQL LIMIT, the parameter MUST be an integer.
+// To accomplish this the PDO constant PARAM_INT was passed
 $stmt = 'SELECT * FROM `log` ORDER BY `logid` DESC LIMIT :pO,:lim';
 $params = array(
-    ':lim' => ((int) trim($_SESSION['userInfo']['showlimit'])),
-    ':pO' => ((int) trim($pageOffset))
+    'lim' => ((int) trim($_SESSION['userInfo']['showlimit'])),
+    'pO' => ((int) trim($pageOffset))
 );
     
-$grab_logs = $conn->queryDBbind($stmt, $params);
+$grab_logs = $conn->queryDB($stmt, $params, PDO::PARAM_INT);
 
 $isFiltered = false; // Show paging controls
 

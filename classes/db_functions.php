@@ -71,62 +71,34 @@ class dbManage extends DB
         parent::__construct();
     }
 
-    /** Normal database queries will use queryDB
+    /** Queries the database with provided statement
       *
       * @param stmt - Query statement as a string
-      * @param paramArray - Array of variables that need to be send to PDO
+      * @param paramArray - Array of variables that need to be binded to PDO
+      * @param type - PDO value type (default: PDO::PARAM_STR)
       *
       * @return Array containing the results of the query. Typically rows of data.
+      * @return true when updating or inserting
       */
-    public function queryDB($stmt, $paramArray)
+    public function queryDB($stmt, $paramArray, $type = PDO::PARAM_STR)
     {
         try {
             $query = $this->dbConn->prepare($stmt);
             if (isset($paramArray)) {
-                $query->execute($paramArray);
+	            foreach ($paramArray as $key => $value) {
+	                $query->bindValue(':'.$key, $value, $type);
+            	}
             }
-            else {
-                $query->execute();
-            }
+            $query->execute();
             
-            $command = substr($stmt, 0, 3); /**< This variable holds the first 3 characters of the query statement **/
+			$command = substr($stmt, 0, 3);
             
-            // If the statement was to update or insert, do not perform a fetchall
+            // If the statement was a SELECT, return a fetchAll
             if ($command == "SEL") {
                 return $query->fetchall(PDO::FETCH_ASSOC);
             } else {
                 return true;
             }
-            
-        }
-        catch(PDOException $e) {
-        	if ($_SESSION['config']['debug']) {
-            	echo 'ERROR: ' . $e->getMessage();
-        	} else {
-        		echo 'Error 0x000186: Error processing query';
-        	}
-        }
-    }
-    
-    /** Queries that require binding of integers use this.<br />
-      * TODO: <br />-Create a one-stop function that  binds all values to the statement
-      *       <br />-Find a way to pass-along the PARAM_INT argument
-      *
-      * @param stmt - Query statement as a string
-      * @param paramArray - Array of variables that need to be binded to PDO
-      *
-      * @return Array containing the results of the query. Typically rows of data.
-      */
-    public function queryDBbind($stmt, $paramArray)
-    {
-        try {
-            $query = $this->dbConn->prepare($stmt);
-            foreach ($paramArray as $key => $value) {
-                $query->bindValue($key, $value, PDO::PARAM_INT);  // bind the value to the statement
-            }
-            $query->execute();
-            
-            return $query->fetchall(PDO::FETCH_ASSOC);
             
         }
         catch(PDOException $e) {
@@ -150,6 +122,10 @@ class dbManage extends DB
     	return $this->queryDB($stmt, NULL);
     }
     
+    /** Gets last inserted id number
+     *
+     * @return Last inserted ID
+     */
     public function lastInsertId() {
     	return $this->dbConn->lastInsertId();
     }
