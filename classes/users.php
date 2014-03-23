@@ -107,7 +107,7 @@ class User
 	 *
 	 * @return Success message
 	 */
-	public function resetUserPw($pass, $uid) {
+	public function resetUserPw($uid, $pass) {
 		if (is_numeric($uid)) {
 			$pass = password_hash($pass, PASSWORD_BCRYPT);
 	
