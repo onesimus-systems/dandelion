@@ -1,15 +1,19 @@
 <?php
-backup_tables('localhost','username','password','blog');
+/**
+ * This script creates a backup file of the current database
+ *
+ * @author Original author unknown, edited by Lee Keitel for Dandelion
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
 
-
-/* backup the db OR just a table */
 function backup_tables($host,$user,$pass,$name,$tables = '*')
 {
 	
 	$link = mysql_connect($host,$user,$pass);
 	mysql_select_db($name,$link);
 	
-	//get all of the tables
+	// Get all of the tables
 	if($tables == '*')
 	{
 		$tables = array();
@@ -24,7 +28,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 		$tables = is_array($tables) ? $tables : explode(',',$tables);
 	}
 	
-	//cycle through
+	// Cycle through
 	foreach($tables as $table)
 	{
 		$result = mysql_query('SELECT * FROM '.$table);
@@ -52,7 +56,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 		$return.="\n\n\n";
 	}
 	
-	//save file
+	// Save file
 	$handle = fopen('db-backup-'.time().'-'.(md5(implode(',',$tables))).'.sql','w+');
 	fwrite($handle,$return);
 	fclose($handle);
