@@ -9,7 +9,7 @@ require_once (is_file('scripts/grabber.php')) ? 'scripts/grabber.php' : '../scri
 require_once (is_file('classes/categories.php')) ? 'classes/categories.php' : '../classes/categories.php';
 
 // Authenticate user, if fail go to login page
-if (!checkLogIn()) {
+if (!authenticated()) {
 	header( 'Location: ../index.php' );
 }
 

@@ -1,7 +1,7 @@
 <?php
 include 'grabber.php';
 
-if (checkLogIn()) {
+if (authenticated()) {
 	if ($_SESSION['userInfo']['role'] == "guest") {
 		header( 'Location: viewlog.phtml' );
 	}

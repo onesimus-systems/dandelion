@@ -13,7 +13,7 @@ include_once 'grabber.php';
 include_once 'readlog.php';
 
 // Authenticate user, if fail go to login page
-if (!checkLogIn()) {
+if (!authenticated()) {
     header( 'Location: index.php' );
 }
 
