@@ -1,30 +1,21 @@
 <?php
-/*
- * Lee Keitel
- * January 28, 2014
+/**
+ * This script contains any non-user related admin functions.
  *
- * This script contains any non-user related
- * admin functions.
-*/
+ * @author Lee Keitel
+ * @date January 28, 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
 
 include 'grabber.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $a_action = $_POST["sub_action"];
-        
-        // Connect to DB
+
         $conn = new dbManage();
-		
-		if ($a_action == "Clear Session Tokens") {
-            // Clear session token table
-            // This will not log people out
-            // until their PHP session expires.
-            // TODO: Create a force logout system
-            $stmt = 'TRUNCATE TABLE session_token';
-            $conn->queryDB($stmt, NULL);
-		}
         
-		elseif ($a_action == "Set New Features") {
+		if ($a_action == "Set New Features") {
             // When the new features page needs to be shown
             // Or a splash screen needs to be shown, set the
             // firsttime column of all non-guest accounts to 3

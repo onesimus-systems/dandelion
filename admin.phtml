@@ -33,9 +33,8 @@ else {
 			<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location='editusers.phtml'"><br>
 			<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location='categories.phtml'"><br>
 			<input type="button" class="dButton adminButton" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['settings']['slogan']); ?>');" value="Edit Site Slogan">
-			<br /><br /><hr width="350" />
+			<!-- <br /><br /><hr width="350" />
 			<h3>Database Administration</h3>
-			<input type="submit" class="dButton adminButton" name="sub_action" value="Clear Session Tokens" /><br>
 			<!-- <input type="submit" class="dButton adminButton" name="sub_action" value="Backup Database" /><br />-->
     	</form>
 
