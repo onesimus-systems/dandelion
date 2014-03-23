@@ -128,7 +128,8 @@ function isuser($uname, $pword, $conn, $cookie_name) {
 			header ( 'Location: ../whatsnew.phtml' );
 		}
 		else {
-			header( 'Location: ../viewlog.phtml' );
+			//header( 'Location: ../viewlog.phtml' );
+			header( 'Location: ../' );
 		}
 	}
 	else { // Sadly they have failed. Walk the plank!

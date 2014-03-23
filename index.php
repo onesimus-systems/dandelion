@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 <?php
 /**
   * This is the homepage of Dandelion.
@@ -26,14 +24,14 @@
  * And that is how Dandelion was born.
  */
 
-include_once 'scripts/grabber.php'; //Required for DB class and DB connection
+include_once 'scripts/grabber.php';
 
 if (!$_SESSION['config']['installed']) {
 	header( 'Location: install.php' );
 }
 
 if (authenticated()) {
-    header( 'Location: viewlog.phtml' );
+    include 'viewlog.phtml';
 }
 
 else {
@@ -46,31 +44,5 @@ else {
     }
 	
 	$theme = getTheme();
+	include 'loginbox.php';
 }
-?>
-
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="x-ua-compatible" content="IE=9">
-        <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
-		<title>Dandelion Web Log</title>
-	</head>
-	<body>
-		<div id="login">
-			<h1>Dandelion Web Log</h1>
-            <?php echo $status;
-            
-            if ($showlogin) {?>
-                <form name="login_form" action="scripts/authenticate.php" method="post">
-                Username:<br /><input type="text" value="" name="in_name" autocomplete="off" autofocus /><br />
-                Password:<br /><input type="password" value="" name="in_pass" /><br />
-                <input type="submit" value="Login" id="login_button" />
-                </form>
-            <?php }
-            ?>
-			</div>
-	</body>
-</html>
