@@ -74,11 +74,11 @@ class dbManage extends DB
     /** Queries the database with provided statement
       *
       * @param stmt - Query statement as a string
-      * @param paramArray - Array of variables that need to be binded to PDO
+      * @param paramArray - Array of variables that need to be bound to PDO
       * @param type - PDO value type (default: PDO::PARAM_STR)
       *
-      * @return Array containing the results of the query. Typically rows of data.
-      * @return true when updating or inserting
+      * @return Array containing the results of a SELECT query.
+      * 		True when performing any other query type.
       */
     public function queryDB($stmt, $paramArray, $type = PDO::PARAM_STR)
     {

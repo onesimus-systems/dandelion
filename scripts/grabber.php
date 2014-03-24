@@ -43,6 +43,6 @@ if ($_SESSION['config']['debug']) {
 
 // Load other scripts
 require_once ROOT.'/classes/db_functions.php';
-require_once 'authenticate.php';
-require_once 'userRights.php';
-require_once 'themes.php';
+require_once ROOT.'/scripts/authenticate.php';
+require_once ROOT.'/scripts/userRights.php';
+require_once ROOT.'/scripts/themes.php';
