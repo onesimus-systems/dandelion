@@ -8,6 +8,7 @@ $theme = getTheme();
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <title>Dandelion cxeesto</title>
 		<link rel="stylesheet" type="text/css" href="../jquery/css/smoothness/jquery-ui.min.css" />
+        <link rel="stylesheet" href="../styles/datetimepicker.css">
         <link rel="stylesheet" href="../styles/presencewin.css" />
 		<link rel="stylesheet" type="text/css" href="../themes/<?php echo $theme;?>/presenceWin.css" />
     </head>
@@ -49,8 +50,8 @@ $theme = getTheme();
             <textarea id="messagetext" cols="25" rows="10"></textarea><br />
             <input type="button" onclick="giveTime();" value="Done" />
         </form>
-        <script src="../jquery/js/jquery-1.9.1.js"></script>
-        <script src="../jquery/js/jquery-ui-1.10.3.custom.min.js"></script>
+        <script src="../jquery/js/jquery-2.1.0.min.js"></script>
+        <script src="../jquery/js/jquery-ui-1.10.4.custom.min.js"></script>
         <script src="../js/timepicker.js"></script>
         <script src="../js/slider.js"></script>
         <script type="text/javascript">

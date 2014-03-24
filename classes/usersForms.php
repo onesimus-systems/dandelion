@@ -57,11 +57,21 @@ class UserForms
 							<option>Vacation</option>
 						</select></td></tr>
 					<tr><td>Message:</td><td><textarea cols="30" rows="5" name="status_message"><?php echo $row['message']; ?></textarea></td></tr>
-					<tr><td>Return:</td><td><input type="text" name="status_return" id="datepick" value="<?php echo $row['return']; ?>" /> Format: MM/DD/YYYY 13:00</td></tr>
+					<tr><td>Return:</td><td><input type="text" name="status_return" id="datepick" value="<?php echo $row['return']; ?>" /></td></tr>
 				</table>
 				<input type="submit" name="sub_type" value="Set Status" />
 				<input type="submit" name="sub_type" value="Cancel" />
 			</form>
+
+			<script type="text/javascript">
+            $(document).ready(function() {
+                $('#datepick').datetimepicker({
+                        timeFormat: "HH:mm",
+                        controlType: 'select',
+                        stepMinute: 10,
+                    });
+            	});
+			</script>
 		</div><br />
 	<?php
 	}
