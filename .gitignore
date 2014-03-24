@@ -5,10 +5,7 @@
 private/
 database/
 config.php
-
-.idea/
-database/
-config.php
+docs/
 
 #################
 ## Eclipse
