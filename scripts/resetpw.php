@@ -10,31 +10,28 @@
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
 
-include_once 'grabber.php';
+require_once 'grabber.php';
+require_once ROOT.'/classes/users.php';
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
-    $reset_3 = isset($_POST['reset_1']) ? $_POST['reset_1'] : ''; // Password 1
-    $reset_4 = isset($_POST['reset_2']) ? $_POST['reset_2'] : ''; // Password 2
+    $reset_3 = isset($_POST['reset_1']) ? $_POST['reset_1'] : '';
+    $reset_4 = isset($_POST['reset_2']) ? $_POST['reset_2'] : '';
     
     if ($reset_3 == $reset_4) {
-        $reset_3 = password_hash($reset_3, PASSWORD_BCRYPT);
-
         $conn = new dbManage();
+        $useractions = new User($conn);
+        $useractions->resetUserPw($_SESSION['userInfo']['userid'], $reset_3);
         
-        // Update record with new password and change firsttime
-        $stmt = 'UPDATE `users` SET `password` = :newpass, `firsttime` = 1 WHERE `userid` = :myID';
-        $params = array(
-            'newpass' => $reset_3,
-            'myID' => $_SESSION['userInfo']['userid']
-        );
+        $stmt = 'UPDATE `users` SET `firsttime` = 1 WHERE `userid` = :id';
+        $params = array('id'=>$_SESSION['userInfo']['userid']);
         $conn->queryDB($stmt, $params);
         
-        echo 'Password Reset<br /><br />';
         header( 'Location: logout.php' );
     }
     else {
-        $_SESSION['errors'] = '<br /><span class="bad">Entered passwords do not match. Please try again.</span><br /><br />';
+        $_SESSION['errors'] = '<br><span class="bad">Entered passwords do not match. Please try again.</span><br><br>';
         header( 'Location: ../reset.phtml' );
     }
 }
