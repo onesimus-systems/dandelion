@@ -32,16 +32,14 @@ function ajax(params) {
 		params.type = 'POST'; // If type isn't defined, set it as POST
 	}
 	
-	requestID = "1"; // Set name of the request (I'm too lazy to remove it now, it was part of troubleshooting)
-
-    requestID = new XMLHttpRequest(); // Create the request object
+    AjaxRequest = new XMLHttpRequest(); // Create the request object
       
-    requestID.onreadystatechange=function() // Assign the statechange function to handle success and failure
+    AjaxRequest.onreadystatechange=function() // Assign the statechange function to handle success and failure
 	    {
     		// Prepare variables available to calling functions
-    		responseText = requestID.responseText;
-    		ready 		 = requestID.readyState;
-    		status 		 = requestID.status;
+    		responseText = AjaxRequest.responseText;
+    		ready 		 = AjaxRequest.readyState;
+    		status 		 = AjaxRequest.status;
 	        if (parseInt(ready)===4 && parseInt(status)===200) // Check if page load was success
 	          {
         		params.success(); // Execute the passed success function
@@ -54,9 +52,9 @@ function ajax(params) {
 	          }
 	    }
       
-    requestID.open(params.type, params.address, params.async); // Open a request with the defined type, address, and async setting
-    requestID.setRequestHeader("Content-type","application/x-www-form-urlencoded"); // Declare header type for requests
-    requestID.send(params.data); // Send the request!
+    AjaxRequest.open(params.type, params.address, params.async); // Open a request with the defined type, address, and async setting
+    AjaxRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded"); // Declare header type for requests
+    AjaxRequest.send(params.data); // Send the request!
 }
 
 function getRandomInt(min, max) {
