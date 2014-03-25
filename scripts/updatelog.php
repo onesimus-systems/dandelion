@@ -1,11 +1,15 @@
 <?php
-/*
- * Lee Keitel
- * January 27, 2014
- *
+/**
  * This file goes to the database and grabs the list of recent logs
  * and then sends them to readlog.php to display them.
-*/
+ *
+ * This file is a part of Dandelion
+ *
+ * @author Lee Keitel
+ * @date January 27, 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
 
 include_once 'grabber.php'; // Required for accessing the DB
 include_once 'readlog.php';

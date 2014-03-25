@@ -1,12 +1,17 @@
 <?php
-/*
- * Lee Keitel
- * January 28, 2014
- *
+/**
  * This script is called via AJAX to grab log data
  * when a use wants to edit a log. It returns the
  * data as a JSON encoded array.
-*/
+ *
+ * This file is a part of Dandelion
+ *
+ * @author Lee Keitel
+ * @date January 28, 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
+
 include 'grabber.php';
 
 if (authenticated()) {

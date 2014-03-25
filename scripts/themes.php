@@ -1,4 +1,15 @@
 <?php
+/**
+  * Themes functions
+  *
+  * This file is a part of Dandelion
+  * 
+  * @author Lee Keitel
+  * @date March 2014
+  *
+  * @license GNU GPL v3 (see full license in root/LICENSE.md)
+***/
+
 function getTheme() {
 	// If a theme is defined for the user in the database, grab it
 	$theme = !empty($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';

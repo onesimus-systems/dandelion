@@ -1,13 +1,17 @@
 <?php
-/*
- * Lee Keitel
- * January 27, 2014
- *
+/**
  * This page is responsible for filtering the log.
  * Users may filter by keyword or date or both.
  * When this page is called the autorefresh is
  * disabled in the JS and then this does its magic.
-*/
+ *
+ * This file is a part of Dandelion
+ *
+ * @author Lee Keitel
+ * @date January 27, 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+ ***/
 
 include_once 'grabber.php';
 include_once 'readlog.php';
