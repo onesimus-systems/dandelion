@@ -24,22 +24,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		<h2>Reset Password for <?php echo $_SESSION['userInfo']['realname']; ?>:</h2>
 		<form name="edit_form" method="post">
 			<table>
-				<tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
-				<tr><td>Repeat Password:</td><td><input type="password" name="reset_2" /></td></tr>
+				<tr><td>New Password:</td><td><input type="password" name="reset_1"></td></tr>
+				<tr><td>Repeat Password:</td><td><input type="password" name="reset_2"></td></tr>
 			</table>
-			<input type="submit" name="sub_act" value="Reset" />
-		</form></div><br />
+			<input type="submit" name="sub_act" value="Reset">
+		</form></div><br>
 		<?php
 	}
 
 	else if ($u_action == "Save Limit") {
 	    $showlimit = $_POST['show_limit'];
 	    
-	    if ($showlimit >= 5 AND $showlimit <= 250) {
-			// Connect to DB
+	    if ($showlimit >= 5 AND $showlimit <= 500) {
 			$conn = new dbManage();
-			
-			// Update record with new record limit
+
 			$stmt = 'UPDATE `users` SET `showlimit` = :newlimit WHERE `userid` = :myID';
 			$params = array(
 			    'newlimit' => $showlimit,
@@ -47,12 +45,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			);
 			$conn->queryDB($stmt, $params);
 			
-			echo 'Show limit change successful.<br /><br />';
+			echo 'Show limit change successful.<br><br>';
 			
 			$limit = $_SESSION['userInfo']['showlimit'] = $showlimit;
 	    }
 	    else {
-			echo "Please choose a number between 5-250 for log view limit.<br /><br />";
+			echo "Please choose a number between 5-500 for log view limit.<br><br>";
 	    }
 	}
 	
@@ -70,33 +68,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		
 		$_SESSION['userInfo']['theme'] = $newTheme;
 		
+		// Reload page to show new theme
 		header('Location: settings.phtml');
 	}
-					
-	// Check and save new password
+
 	if ($sub_action == "Reset") {
 		$reset_3 = $_POST['reset_1'];
 		$reset_4 = $_POST['reset_2'];
 		
 		if ($reset_3 == $reset_4) {
-			$reset_3 = password_hash($reset_3, PASSWORD_BCRYPT); // Hash the password if they match
+			require_once ROOT.'/classes/users.php';
+			$useractions = new User(new dbManage());
+			$useractions->resetUserPw($_SESSION['userInfo']['userid'], $reset_3);
 			
-			// Connect to DB
-			$conn = new dbManage();
-			
-			// Update record with new password
-			$stmt = 'UPDATE `users` SET `password` = :newpass WHERE `userid` = :myID';
-			$params = array(
-			    'newpass' => $reset_3,
-			    'myID' => $_SESSION['userInfo']['userid']
-			);
-			$conn->queryDB($stmt, $params);
-			
-			echo 'Password change successful.<br /><br />';
-	
+			echo 'Password change successful.<br><br>';
 		}
 		else {
-			echo 'New passwords do not match<br /><br />';
+			echo 'New passwords do not match<br><br>';
 		}
 	}
 }
