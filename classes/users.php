@@ -31,13 +31,11 @@ class User
 			!empty($userInfoArray['theme']) &&
 			!empty($userInfoArray['role']) &&
 			!empty($userInfoArray['first']) &&
-			!empty($userInfoArray['uid']) &&
-			$userInfoArray['sid'] >= 0)
+			!empty($userInfoArray['uid']))
 		{
-			$stmt = 'UPDATE `users` SET `realname` = :realname, `settings_id` = :sid, `role` = :role, `firsttime` = :first, `theme` = :theme WHERE `userid` = :userid';
+			$stmt = 'UPDATE `users` SET `realname` = :realname, `role` = :role, `firsttime` = :first, `theme` = :theme WHERE `userid` = :userid';
 			$params = array(
 				'realname' => $userInfoArray['realname'],
-				'sid' => $userInfoArray['sid'],
 				'role' => $userInfoArray['role'],
 				'first' => $userInfoArray['first'],
 				'userid' => $userInfoArray['uid'],
@@ -72,8 +70,7 @@ class User
 		if (!empty($userInfoArray['username']) &&
 			!empty($userInfoArray['password']) &&
 			!empty($userInfoArray['realname']) &&
-			!empty($userInfoArray['role']) &&
-			$userInfoArray['sid'] >= 0)
+			!empty($userInfoArray['role']))
 		{
 			$stmt = 'SELECT * FROM `users` WHERE `username` = :username';
 			$params = array(
@@ -86,15 +83,13 @@ class User
 				$add_user = $userInfoArray['username'];
 				$add_pass = password_hash($userInfoArray['password'], PASSWORD_BCRYPT);
 				$add_real = $userInfoArray['realname'];
-				$add_sid = $userInfoArray['sid'];
 				$add_role = $userInfoArray['role'];
 	
-				$stmt = 'INSERT INTO users (username, password, realname, settings_id, role, datecreated, theme) VALUES (:username, :password, :realname, :s_id, :role, :datecreated, \'default\')';
+				$stmt = 'INSERT INTO users (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'default\')';
 				$params = array(
 					'username' => $add_user,
 					'password' => $add_pass,
 					'realname' => $add_real,
-					's_id' => $add_sid,
 					'role' => $add_role,
 					'datecreated' => $date->format('Y-m-d')
 				);    

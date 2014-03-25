@@ -20,7 +20,6 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `users` (
 		  `username` TEXT NOT NULL,
 		  `password` TEXT NOT NULL,
 		  `realname` TEXT NOT NULL,
-		  `settings_id` INT NOT NULL,
 		  `role` TEXT NOT NULL,
 		  `datecreated` DATE NOT NULL,
 		  `firsttime` INT DEFAULT 2,
@@ -72,8 +71,8 @@ $exec = $dbConn->prepare($stmt);
 $exec->execute();
 
 /** Create admin user */
-$stmt = 'INSERT INTO `users` (`userid`, `username`, `password`, `realname`, `settings_id`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`)
-			VALUES (1, \'admin\', \'$2y$10$sRDlu.F6gPVM4kS/k7ESHO9PF0Z5pXk0J/SpuMa88E31/Lux1mfMy\', \'Admin\', 0, \'admin\', \'2014-02-08\', 2, 25, \'default\'
+$stmt = 'INSERT INTO `users` (`userid`, `username`, `password`, `realname`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`)
+			VALUES (1, \'admin\', \'$2y$10$sRDlu.F6gPVM4kS/k7ESHO9PF0Z5pXk0J/SpuMa88E31/Lux1mfMy\', \'Admin\', \'admin\', \'2014-02-08\', 2, 25, \'default\'
 		)';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
