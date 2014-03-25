@@ -91,7 +91,6 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 		if ($second_tier == "Save Edit") { // Edit user data
 			$edit = array(
 				'realname' => $_POST['edit_real'],
-				'sid' => $_POST['edit_sid'],
 				'role' => $_POST['edit_role'],
 				'first' => $_POST['edit_first'],
 				'uid' => $_POST['edit_uid'],
@@ -106,7 +105,6 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 				'username' => $_POST['add_user'],
 				'password' => $_POST['add_pass'],
 				'realname' => $_POST['add_real'],
-				'sid' => $_POST['add_sid'],
 				'role' => $_POST['add_role']
 			);
 			
