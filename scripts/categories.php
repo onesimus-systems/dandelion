@@ -2,7 +2,7 @@
 
 // TODO: Create a better method to check these URLs
 // Because this file is called from the root and a subdirectory,
-// a check needs to be done to determine who the required files are
+// a check needs to be done to determine how the required files are
 // included.
 
 require_once (is_file('scripts/grabber.php')) ? 'scripts/grabber.php' : '../scripts/grabber.php';
