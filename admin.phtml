@@ -29,7 +29,6 @@ else {
         <h2>Administration</h2>
 		
     	<form name="admin_form" method="post" action="scripts/admin_actions.php">
-			<input type="submit" class="dButton adminButton" name="sub_action" value="Set New Features"><br>
 			<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location='editusers.phtml'"><br>
 			<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location='categories.phtml'"><br>
 			<input type="button" class="dButton adminButton" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['settings']['slogan']); ?>');" value="Edit Site Slogan">

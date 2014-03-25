@@ -112,20 +112,17 @@ function isuser($uname, $pword, $conn, $cookie_name) {
 		$_SESSION['userInfo'] = $sel_user[0];
 
 		echo 'Logged in. Please wait as I redirect you...';
-
-		// Make this into switch statement
-		if ($sel_user[0]['firsttime'] == 1) {
-			header ( 'Location: ../tutorial.phtml' );
-		}
-		elseif ($sel_user[0]['firsttime'] == 2) {
-			header ( 'Location: ../reset.phtml' );
-		}
-		elseif ($sel_user[0]['firsttime'] == 3) {
-			header ( 'Location: ../whatsnew.phtml' );
-		}
-		else {
-			//header( 'Location: ../viewlog.phtml' );
-			header( 'Location: ../' );
+		
+		switch($sel_user[0]['firsttime']) {
+			case 1:
+				header ( 'Location: ../tutorial.phtml' );
+				break;
+			case 2:
+				header ( 'Location: ../reset.phtml' );
+				break;
+			default:
+				header( 'Location: ../' );
+				break;
 		}
 	}
 	else { // Sadly they have failed. Walk the plank!
