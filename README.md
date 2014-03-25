@@ -1,4 +1,4 @@
-Dandelion v4.3.1
+Dandelion v4.4.0
 ================
 
 Dandelion is a web-based entry log application.
@@ -37,15 +37,15 @@ Notes for Install
 
 Dandelion needs write permissions to the config directory in order to install. If it doesn't have the proper permissions it will give you an error when you go to install.php. The permissions on the directory will be changed to read-only once Dandelion has done its thing.
 
-The easiest way to upgrade from 4.2.1 to 4.3.* is to backup your database, run the install script again and have it create the new category and settings tables. After it's finished installing, import your backup. I apologize for not creating an upgrade script. I will make sure to do that for the next version.
+The easiest way to upgrade from 4.2/3.* to 4.4.* is to backup your database, run the install script again and have it create the new category and settings tables. After it's finished installing, import your backup. I apologize for not creating an upgrade script. I will make sure to do that for the next version.
 
-New Features
-------------
-
-* Category Manage is finally here! Admins can create, edit, and delete categories to a truly customized application.
-    
 Release Notes
 -------------
+
+v4.4.0
+
+- Lots of under the hood changes
+- Mainly bug fix and optimazation
 
 v4.3.1
 
