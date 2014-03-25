@@ -63,8 +63,8 @@ $theme = getTheme();
         </form>
         <script src="../jquery/js/jquery-2.1.0.min.js"></script>
         <script src="../jquery/js/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="../js/timepicker.js"></script>
-        <script src="../js/slider.js"></script>
+        <script src="../jquery/js/timepicker.js"></script>
+        <script src="../jquery/js/slider.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#datepick').datetimepicker({

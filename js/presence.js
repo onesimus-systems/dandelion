@@ -7,7 +7,7 @@ var presence = {
     	var params = new Object;
     	params.success = function()
 	      	{
-	    	  document.getElementById("pt").innerHTML=requestID.responseText;
+	    	  document.getElementById("pt").innerHTML=responseText;
 	        }
         
     	params.address= 'scripts/presence.php';
