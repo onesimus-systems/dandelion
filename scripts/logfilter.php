@@ -14,7 +14,7 @@
  ***/
 
 include_once 'grabber.php';
-include_once 'readlog.php';
+include_once '../classes/DisplayLogs.php';
 
 // Authenticate user, if fail go to login page
 if (authenticated()) {
