@@ -16,26 +16,30 @@
 if (!defined('ROOT')) {
 	define('ROOT', dirname(dirname(__FILE__)));	
 }
+
+require_once ROOT.'/scripts/grabber.php';
 require_once ROOT.'/classes/cxeesto.php';
 
-/* $windowed is defined in presenceWindow.php before this is called,
- * so this variable is already set as 1 when the windows opens.
- * This tells us that the user is looking at the windowed version.
-**/
-$windowed = isset($windowed) ? $windowed : '0';
-$windowedt = isset($_POST['windowedt']) ? $_POST['windowedt'] : '0';
-$setorno = isset($_POST['setorno']) ? $_POST['setorno'] : '';
-
-$updateCxeesto = new cxeesto;
-
-if ($setorno == '') {
-    $updateCxeesto->refreshStatus($windowed, $windowedt);
-}
-else {
-	$returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
-	$message = isset($_POST['message']) ? $_POST['message'] : '';
+if(authenticated()) {
+	/* $windowed is defined in presenceWindow.php before this is called,
+	 * so this variable is already set as 1 when the windows opens.
+	 * This tells us that the user is looking at the windowed version.
+	**/
+	$windowed = isset($windowed) ? $windowed : '0';
+	$windowedt = isset($_POST['windowedt']) ? $_POST['windowedt'] : '0';
+	$setorno = isset($_POST['setorno']) ? $_POST['setorno'] : '';
 	
-	$updateCxeesto->updateStatus($message, $setorno, $returntime);
-    $updateCxeesto->refreshStatus($windowed, $windowedt);
+	$updateCxeesto = new cxeesto;
+	
+	if ($setorno == '') {
+	    $updateCxeesto->refreshStatus($windowed, $windowedt);
+	}
+	else {
+		$returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
+		$message = isset($_POST['message']) ? $_POST['message'] : '';
+		
+		$updateCxeesto->updateStatus($message, $setorno, $returntime);
+	    $updateCxeesto->refreshStatus($windowed, $windowedt);
+	}
 }
 

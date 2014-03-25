@@ -1,20 +1,5 @@
 <?php
 /**
- * This page handles the Cxeesto platform.
- * It is responsible for updating the status board,
- * committing status updates for users, etc.
- *
- * This file is a part of Dandelion
- *
- * @author Lee Keitel
- * @date March 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
-
-require_once ROOT.'/scripts/grabber.php';
- 
-/**
   * @brief Handles the display of Cxeesto statuses
   *
   * This class is used to update the Cxeesto status board.
@@ -23,6 +8,8 @@ require_once ROOT.'/scripts/grabber.php';
   *
   * @author Lee Keitel
   * @date February 4, 2014
+  * 
+  * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
 class cxeesto extends dbManage
 {
