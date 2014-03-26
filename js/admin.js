@@ -9,7 +9,7 @@ var adminAction = {
 			params.data = 'sub_action=slogan&slogan=' + encodeURIComponent(newSlogan);
 			params.success = function() { };
 			
-			ajax(params);
+			_.ajax(params);
 		}
 	},
 };

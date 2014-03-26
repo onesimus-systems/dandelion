@@ -12,7 +12,7 @@ var presence = {
         
     	params.address= 'scripts/presence.php';
     	params.data = "windowedt=" + isWin;
-        ajax(params);
+        _.ajax(params);
     },
     
     setStatus: function(isWin) {
@@ -45,7 +45,7 @@ var presence = {
         
         params.address = 'scripts/presence.php';
         params.data = "setorno=" + stat + "&returntime=" + rt + "&windowedt=" + isWin + "&message=" + message;
-        ajax(params);
+        _.ajax(params);
         
         document.getElementById('cstatus').selectedIndex = 0;
     },

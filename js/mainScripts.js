@@ -87,7 +87,7 @@ function refreshLog(kindof) {
         {
     		params.address = 'scripts/updatelog.php';
     		params.async = false;
-    		ajax(params);
+    		_.ajax(params);
         }
     else if (kindof==="filter")
         {
@@ -96,7 +96,7 @@ function refreshLog(kindof) {
             if (cat) {
                 params.address = 'scripts/logfilter.php';
                 params.data="filter=" + cat;
-                ajax(params);
+                _.ajax(params);
                 filt=true;
                 refreshFun.stoprefresh();
             }
@@ -108,7 +108,7 @@ function refreshLog(kindof) {
         {
             params.address = 'scripts/updatelog.php';
     		params.async = false;
-    		ajax(params);
+    		_.ajax(params);
             filt=false;
             document.getElementById('searchterm').value="Keyword";
             document.getElementById('datesearch').value="Date";
@@ -151,7 +151,7 @@ function pagentation(pageOffset) {
     params.address = 'scripts/updatelog.php';
     params.data = 'pageOffset=' + pageOffset;
     
-    ajax(params);
+    _.ajax(params);
 }
 
 var addFun = {
@@ -240,7 +240,7 @@ var addFun = {
         params.address = 'scripts/add_log.php';
         params.data = 'cat=' + cat + '&add_title=' + title + '&add_entry=' + entry;
         
-        ajax(params);
+        _.ajax(params);
     },
 } //addFun
 
@@ -328,7 +328,7 @@ var editFun = {
               editFun.showeditinputs(responseText);
 	        }
         
-        ajax(params);
+        _.ajax(params);
     },
 
     //Sends the finished edited log to a PHP file for processing
@@ -350,7 +350,7 @@ var editFun = {
         params.address = 'scripts/editlogs.php';
         params.data = 'editlog=' + editedlog + '&edittitle=' + editedtitle + '&choosen=' + id;
         
-        ajax(params)
+        _.ajax(params)
     },
 } //editFun
 
@@ -393,6 +393,6 @@ var searchFun = {
               document.getElementById("refreshed").innerHTML=responseText;
 	        }
         
-        ajax(params);
+        _.ajax(params);
     },
 }

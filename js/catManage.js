@@ -37,7 +37,7 @@ var CategoryManage = {
 	    }
 		params.async = false;
 		
-		ajax(params);
+		_.ajax(params);
 	},
 	
 	createNew: function() {
@@ -81,7 +81,7 @@ var CategoryManage = {
 				CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
 			};
 		
-		ajax(params);
+		_.ajax(params);
 	},
 	
 	editCat: function() {
@@ -105,7 +105,7 @@ var CategoryManage = {
 					CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
 				};
 			
-			ajax(params);
+			_.ajax(params);
 		}
 	},
 	
@@ -127,7 +127,7 @@ var CategoryManage = {
 			CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
 	    }
 		
-		ajax(params);
+		_.ajax(params);
 	},
 	
 	getCatString: function() {
