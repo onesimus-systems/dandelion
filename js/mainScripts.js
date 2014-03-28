@@ -59,7 +59,6 @@ var refreshFun = {
 
 //This function updates the live feed.
 //If kindof == "update" it shows the recent log entries
-//If kindof == "filter" it sends the filter details to
 //logfilter.php and shows the returned output.
 function refreshLog(kindof) {
 	var params = new Object();
@@ -88,21 +87,6 @@ function refreshLog(kindof) {
     		params.address = 'scripts/updatelog.php';
     		params.async = false;
     		_.ajax(params);
-        }
-    else if (kindof==="filter")
-        {
-            cat = CategoryManage.getCatString();
-            
-            if (cat) {
-                params.address = 'scripts/logfilter.php';
-                params.data="filter=" + cat;
-                _.ajax(params);
-                filt=true;
-                refreshFun.stoprefresh();
-            }
-            else {
-                alert("Please select a valid filter.");
-            }
         }
     else if (kindof==="clearf")
         {
@@ -394,5 +378,41 @@ var searchFun = {
 	        }
         
         _.ajax(params);
+    },
+    
+    filter: function(cat) {
+    	if (cat == '') { cat = CategoryManage.getCatString(); }
+        if (cat) {
+	    	var params = new Object();
+	        params.success = function()
+    	    {
+    		    document.getElementById("refreshed").innerHTML=responseText;
+    		    
+    		    if (clearinput && !editing) {
+    		        document.getElementById("add_edit").innerHTML="";
+    		    }
+    		    else {
+    		        clearinput = true;
+    		    }
+    	    }
+	        
+	        params.failure = function()
+    	    {
+    	    	if (ready===4 && status===404)
+    	        {
+    		        document.getElementById("refreshed").innerHTML="";
+    		        document.location.href = 'index.php';
+    	        }
+    	    }
+
+            params.address = 'scripts/logfilter.php';
+            params.data="filter=" + cat;
+            _.ajax(params);
+            filt=true;
+            refreshFun.stoprefresh();
+        }
+        else {
+            alert("Please select a valid filter.");
+        }
     },
 }

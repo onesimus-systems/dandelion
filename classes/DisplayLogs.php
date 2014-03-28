@@ -89,6 +89,7 @@ class DisplayLogs {
             echo '<p class="entrymeta">Created by ' . $creator . ' on ' . $row['datec'] . ' @ ' . $row['timec'] . '. ';
             if ($row['edited']) { echo '(Edited)'; }
             echo '<br />Categorized as ' . $row['cat'] . '.';
+            echo '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
             
             if ($_SESSION['userInfo']['userid'] == $row['usercreated'] OR $_SESSION['userInfo']['role'] == 'admin') {
                 ?>
