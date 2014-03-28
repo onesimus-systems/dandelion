@@ -80,6 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             $newFile .= "'db_host' => '".$CONFIG['db_host']."',\n";
             $newFile .= "'db_user' => '".$CONFIG['db_user']."',\n";
             $newFile .= "'db_pass' => '".$CONFIG['db_pass']."',\n";
+            $newFile .= "'db_prefix' => 'dan_',\n";
             $newFile .= "'installed' => true,\n";
             $newFile .= "'debug' => false\n";
             $newFile .= ");";

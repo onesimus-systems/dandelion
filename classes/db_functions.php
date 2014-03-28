@@ -129,4 +129,31 @@ class dbManage extends DB
     public function lastInsertId() {
     	return $this->dbConn->lastInsertId();
     }
+    
+    /** Builds a select from statement
+     *
+     * @param cols (string) - Comma delimited list of columns to grab
+     * @param table (string) - Table to get rows from
+     * @param cond (string) - WHERE Condition
+     * @param params (array) - Array of values for statement
+     *
+     * @return Array containing the results of the query.
+     */
+    public function selectFrom($cols, $table, $cond = '', $params = NULL) {
+    	$cols = (strtolower($cols) == 'all') ? '*' : $cols;
+    	
+    	if (is_array($cols)) {
+    		$cols = implode('`,`', $cols);
+    	}
+		
+    	$cols = ($cols != '*') ? '`'.$cols.'`' : '*';
+    	
+    	$stmt = 'SELECT '.$cols.' FROM './*$_SESSION['config']['db_prefix'].*/$table;
+    	
+    	if ($cond != '') {
+    		$stmt .= ' WHERE ' . $cond;
+    	}
+    	
+    	return $this->queryDB($stmt, $params);
+    }
 }
