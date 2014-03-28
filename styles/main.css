@@ -161,3 +161,8 @@ header {
 #categorySelects, #add_cat {
 	display: inline;
 }
+
+.whitelink:visited, .whitelink:hover, .whitelink:link, .whitelink:active {
+	color: white;
+	text-decoration: none;
+}

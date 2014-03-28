@@ -45,7 +45,7 @@ Release Notes
 v4.4.0
 
 - Lots of under the hood changes
-- Mainly bug fix and optimazation
+- Mainly bug fix and optimization
 
 v4.3.1
 
