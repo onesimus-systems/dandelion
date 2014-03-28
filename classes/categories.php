@@ -19,8 +19,7 @@ class Categories
 	}
 	
 	public function getChildren($parentID, $past) {
-		$getCategories = 'SELECT * FROM `category`';
-		$cat = $this->conn->queryDB($getCategories, NULL);
+		$cat = $this->conn->selectFrom(NULL, 'category');
 		
 		$parent = explode(':', $parentID);
 		$response = '';
@@ -83,20 +82,18 @@ class Categories
 	
 	public function delCategory($cid) {
 		// Get the category's current parent to reassign children
-		$stmt = 'SELECT `pid` FROM `category` WHERE `cid` = :catid';
 		$params = array(
 			'catid' => $cid
 		);
 		
-		$newParent = $this->conn->queryDB($stmt, $params);
+		$newParent = $this->conn->selectFrom('pid', 'category', '`cid` = :catid', $params);
 		$newParent = $newParent[0]['pid'];
 		
 		// Delete category from DB
-		$stmt = 'DELETE FROM `category` WHERE `cid` = :catid';
 		$params = array(
 			'catid' => $cid
 		);
-		$this->conn->queryDB($stmt, $params);
+		$this->conn->deleteFrom('category', '`cid` = :catid', $params);
 		
 		// Reassign children
 		$stmt = 'UPDATE `category` SET `pid` = :newp WHERE `pid` = :oldp';

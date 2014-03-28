@@ -51,7 +51,7 @@ function isuser($uname, $pword, $conn) {
 
 	// First, is this person even a user?
 	$param = array('user' => $uname);
-	$sel_user = $conn->selectFrom('*','users','`username` = :user',$param);
+	$sel_user = $conn->selectFrom(NULL,'users','`username` = :user',$param);
 
 	if ($sel_user[0]['password']) { // Check if password is correct
 		$goodToGo = password_verify($pword, $sel_user[0]['password']);

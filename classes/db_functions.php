@@ -132,7 +132,7 @@ class dbManage extends DB
     
     /** Builds a select from statement
      *
-     * @param cols (string) - Comma delimited list of columns to grab
+     * @param cols (string) - Comma delimited list of columns to grab.
      * @param table (string) - Table to get rows from
      * @param cond (string) - WHERE Condition
      * @param params (array) - Array of values for statement
@@ -140,7 +140,16 @@ class dbManage extends DB
      * @return Array containing the results of the query.
      */
     public function selectFrom($cols, $table, $cond = '', $params = NULL) {
-    	$cols = (strtolower($cols) == 'all') ? '*' : $cols;
+    	/* To specify select all '*', a user may use:
+    	 * 'all' or '*' (string)
+    	 * An integer
+    	 * TRUE
+    	 * NULL
+    	 */
+    	$cols = (strtolower($cols) == 'all' ||
+    			 is_int($cols) ||
+    			 $cols === true ||
+    			 $cols === NULL) ? '*' : $cols;
     	
     	if (is_array($cols)) {
     		$cols = implode('`,`', $cols);
@@ -155,5 +164,24 @@ class dbManage extends DB
     	}
     	
     	return $this->queryDB($stmt, $params);
+    }
+    
+    /** Builds a select from statement
+     *
+     * @param cols (string) - Comma delimited list of columns to grab.
+     * @param table (string) - Table to get rows from
+     * @param cond (string) - WHERE Condition
+     * @param params (array) - Array of values for statement
+     *
+     * @return Array containing the results of the query.
+     */
+    public function deleteFrom($table, $cond = '', $params = NULL) {
+    	$stmt = 'DELETE FROM './*$_SESSION['config']['db_prefix'].*/$table;
+    	
+    	if ($cond != '') {
+    		$stmt .= ' WHERE ' . $cond;
+    	}
+    	
+    	$this->queryDB($stmt, $params);
     }
 }
