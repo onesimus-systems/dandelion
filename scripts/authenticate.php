@@ -68,6 +68,10 @@ function isuser($uname, $pword, $conn) {
 		$_SESSION['loggedin'] = true;
 
 		$_SESSION['userInfo'] = $sel_user[0];
+		
+		if ($_POST['rememberMe'] == 'remember') {
+			setcookie('dan_username', $_SESSION['userInfo']['username'], time()+60*60*24*30, '/');
+		}
 
 		echo 'Logged in. Please wait as I redirect you...';
 		
@@ -84,7 +88,7 @@ function isuser($uname, $pword, $conn) {
 		}
 	}
 	else { // Sadly they have failed. Walk the plank!
-		$_SESSION['badlogin'] = true; // Used to display a message to the user
+		$_SESSION['badlogin'] = '<span class="bad">Incorrect username or password</span><br>'; // Used to display a message to the user
 		header( 'Location: ../' );
 	}
 }

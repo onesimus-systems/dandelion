@@ -35,13 +35,8 @@ if (authenticated()) {
 }
 
 else {
-    $status = '';
     $showlogin = true;
-    $badlogin = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : false;
-    
-    if ($badlogin) {
-        $status = '<span class="bad">Incorrect username or password</span><br>';
-    }
+    $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
 	
 	$theme = getTheme();
 	include 'loginbox.php';
