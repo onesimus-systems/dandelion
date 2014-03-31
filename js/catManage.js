@@ -42,7 +42,7 @@ var CategoryManage = {
 	
 	createNew: function() {
 		var catString = this.getCatString();
-		var message = 'Add new category (type \'q\' to quit)\n\n';
+		var message = 'Add new category\n\n';
 		
 		if (this.currentSelection.length == 1) {
 			message = 'Create new root category:';
@@ -60,10 +60,11 @@ var CategoryManage = {
 			}
 			else if (newCatDesc == 'q') {
 		        this.grabNextLevel('0:0');
-				break;
+				return false;
 			}
 			else {
 				this.addNew(encodeURIComponent(newCatDesc));
+				break;
 			}
 		}
 	},
@@ -78,6 +79,7 @@ var CategoryManage = {
 		params.data = 'action=addcat&parentID='+parent+'&catDesc='+newCatDesc;
 		params.success = function()
 			{
+				alert(responseText);
 				CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
 			};
 		

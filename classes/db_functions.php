@@ -151,13 +151,18 @@ class dbManage extends DB
     			 $cols === true ||
     			 $cols === NULL) ? '*' : $cols;
     	
-    	if (is_array($cols)) {
+    	$cols = explode(',', $cols);
+    	
+    	if (count($cols) > 1) {
     		$cols = implode('`,`', $cols);
+    	}
+    	else {
+    		$cols = $cols[0];
     	}
 		
     	$cols = ($cols != '*') ? '`'.$cols.'`' : '*';
     	
-    	$stmt = 'SELECT '.$cols.' FROM './*$_SESSION['config']['db_prefix'].*/$table;
+    	$stmt = 'SELECT '.$cols.' FROM `'./*$_SESSION['config']['db_prefix'].*/$table.'`';
     	
     	if ($cond != '') {
     		$stmt .= ' WHERE ' . $cond;
@@ -173,15 +178,44 @@ class dbManage extends DB
      * @param cond (string) - WHERE Condition
      * @param params (array) - Array of values for statement
      *
-     * @return Array containing the results of the query.
+     * @return Returns true for successful query
      */
     public function deleteFrom($table, $cond = '', $params = NULL) {
-    	$stmt = 'DELETE FROM './*$_SESSION['config']['db_prefix'].*/$table;
+    	$stmt = 'DELETE FROM `'./*$_SESSION['config']['db_prefix'].*/$table.'`';
     	
     	if ($cond != '') {
     		$stmt .= ' WHERE ' . $cond;
     	}
     	
-    	$this->queryDB($stmt, $params);
+    	return $this->queryDB($stmt, $params);
+    }
+    
+    /** Builds an INSERT statement
+     *
+     * @param table (string) - Table to insert rows
+     * @param cols (string) - Comma delimited list of columns to insert
+     * @param values (string) - Insert values in PDO colon format ':value'
+     * @param params (array) - Array of values for insert (PDO)
+     *
+     * @return Returns true for successful query
+     */
+    public function insert($table, $cols, $values, $params = NULL) {    	
+    	$cols = explode(',', $cols);
+    	
+    	if (count($cols) > 1) {
+    		foreach ($cols as $sKey => $sValue) {
+    			$cols[$sKey] = trim($sValue);
+    		}
+    		$cols = implode('`,`', $cols);
+    	}
+    	else {
+    		$cols = $cols[0];
+    	}
+		
+    	$cols = ($cols != '*') ? '`'.$cols.'`' : '*';
+    	
+    	$stmt = 'INSERT INTO `'./*$_SESSION['config']['db_prefix'].*/$table . '` (' . $cols.') VALUES (' . $values.')';
+
+    	return $this->queryDB($stmt, $params);
     }
 }

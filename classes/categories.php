@@ -19,7 +19,7 @@ class Categories
 	}
 	
 	public function getChildren($parentID, $past) {
-		$cat = $this->conn->selectFrom(NULL, 'category');
+		$cat = $this->conn->selectAll('category');
 		
 		$parent = explode(':', $parentID);
 		$response = '';
@@ -67,14 +67,13 @@ class Categories
 	}
 	
 	public function addCategory($parent, $description) {
-		$stmt = 'INSERT INTO `category` (`desc`, `pid`) VALUES (:description, :parentid)';
 		$params = array(
 			'description' => $description,
 			'parentid'	  => $parent
 		);
 		
-		if ($this->conn->queryDB($stmt, $params)) {
-			echo '';
+		if ($this->conn->insert('category', 'desc, pid', ':description, :parentid', $params)) {
+			echo 'Category added successfully';
 		} else {
 			echo 'Error adding category';
 		}
