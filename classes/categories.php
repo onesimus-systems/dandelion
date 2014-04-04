@@ -67,12 +67,13 @@ class Categories
 	}
 	
 	public function addCategory($parent, $description) {
+		$stmt = 'INSERT INTO `category` (`desc`, `pid`) VALUES (:description, :parentid)';
 		$params = array(
 			'description' => $description,
 			'parentid'	  => $parent
 		);
 		
-		if ($this->conn->insert('category', 'desc, pid', ':description, :parentid', $params)) {
+		if ($this->conn->queryDB($stmt, $params)) {
 			echo 'Category added successfully';
 		} else {
 			echo 'Error adding category';
@@ -81,18 +82,20 @@ class Categories
 	
 	public function delCategory($cid) {
 		// Get the category's current parent to reassign children
+		$stmt = 'SELECT `pid` FROM `category` WHERE `cid` = :catid';
 		$params = array(
 			'catid' => $cid
 		);
 		
-		$newParent = $this->conn->selectFrom('pid', 'category', '`cid` = :catid', $params);
+		$newParent = $this->conn->queryDB($stmt, $params);
 		$newParent = $newParent[0]['pid'];
 		
 		// Delete category from DB
+		$stmt = 'DELETE FROM `category` WHERE `cid` = :catid';
 		$params = array(
 			'catid' => $cid
 		);
-		$this->conn->deleteFrom('category', '`cid` = :catid', $params);
+		$this->conn->queryDB($stmt, $params);
 		
 		// Reassign children
 		$stmt = 'UPDATE `category` SET `pid` = :newp WHERE `pid` = :oldp';

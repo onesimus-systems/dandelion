@@ -50,9 +50,11 @@ function login() {
 function isuser($uname, $pword, $conn) {
 
 	// First, is this person even a user?
+	$stmt = 'SELECT * FROM users WHERE username = :user';
 	$param = array('user' => $uname);
-	$sel_user = $conn->selectFrom(NULL,'users','`username` = :user',$param);
-
+	
+	$sel_user = $conn->queryDB($stmt, $param);
+	
 	if ($sel_user[0]['password']) { // Check if password is correct
 		$goodToGo = password_verify($pword, $sel_user[0]['password']);
 	}
