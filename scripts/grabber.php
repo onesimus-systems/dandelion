@@ -31,16 +31,14 @@ require_once ROOT.'/scripts/logging.php';
 
 // Load config into session variable
 if(!isset($_SESSION['config'])) {
-	try {
-		if (file_exists(ROOT . '/config/config.php')) {
-			include ROOT.'/config/config.php';
-			$_SESSION['config'] = $CONFIG;
-		}
-		else {
-			throw new Exception('No configuration file found');
-		}            
-	} catch(Exception $e) {
-		echo 'Error: '.$e;
+	if (file_exists(ROOT . '/config/config.php')) {
+		include ROOT.'/config/config.php';
+		$_SESSION['config'] = $CONFIG;
+	}
+	else {
+		trigger_error('No configuration file found. Please create ROOT/config/config.php.', E_USER_ERROR);
+		echo 'No configuration file found.  Please create ROOT/config/config.php.';
+		exit;
 	}
 }
 
@@ -48,9 +46,10 @@ if (!defined('DB_PREFIX')) {
 	define('DB_PREFIX', $_SESSION['config']['db_prefix']);	// DB table prefix as a constant
 }
 
-// Set error reporting if in debug mode
+error_reporting(E_ALL);
+
+// Display errors if in debug mode
 if ($_SESSION['config']['debug']) {
-	error_reporting(E_ALL);
 	ini_set('display_errors', True);
 }
 

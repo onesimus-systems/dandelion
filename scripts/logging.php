@@ -76,6 +76,9 @@ function shutdownHandler()
 
 function logToFile($error, $errlvl)
 {
+	if (!is_dir(ROOT.'/logs')) {
+		mkdir(ROOT.'/logs', 0740);
+	}
 	$logpath = ROOT.'/logs/'.$errlvl.'.log';
 	file_put_contents($logpath, $error.PHP_EOL, FILE_APPEND | LOCK_EX);
 }
