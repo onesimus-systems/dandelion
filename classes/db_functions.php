@@ -94,7 +94,7 @@ class dbManage extends DB
 			$command = substr($stmt, 0, 3);
             
             // If the statement was a SELECT, return a fetchAll
-            if ($command != 'UPD' || $command != 'INS' || $command != 'DEL') {
+            if ($command != 'UPD' && $command != 'INS' && $command != 'DEL') {
                 return $query->fetchall(PDO::FETCH_ASSOC);
             } else {
                 return true;
