@@ -38,7 +38,7 @@ class Categories
 				{
 					$child = array(
 							'cid' =>  $isChild['cid'],
-							'desc' => $isChild['desc']
+							'description' => $isChild['description']
 					);
 					array_push($alphaList, $child);
 				}
@@ -47,7 +47,7 @@ class Categories
 			usort($alphaList, "self::cmp");
 			
 			foreach($alphaList as $children) {
-					$option = '<option value="'.$children['cid'].':'.($pastSel[1]+1).'">'.$children['desc'].'</option>';
+					$option = '<option value="'.$children['cid'].':'.($pastSel[1]+1).'">'.$children['description'].'</option>';
 					$newSel .= $option;
 			}
 			
@@ -63,11 +63,11 @@ class Categories
 	}
 	
 	private function cmp($a, $b) {
-		return strcmp($a['desc'], $b['desc']);
+		return strcmp($a['description'], $b['description']);
 	}
 	
 	public function addCategory($parent, $description) {
-		$stmt = 'INSERT INTO `'.DB_PREFIX.'category` (`desc`, `pid`) VALUES (:description, :parentid)';
+		$stmt = 'INSERT INTO `'.DB_PREFIX.'category` (`description`, `pid`) VALUES (:description, :parentid)';
 		$params = array(
 			'description' => $description,
 			'parentid'	  => $parent
@@ -109,7 +109,7 @@ class Categories
 	}
 	
 	public function editCategory($cid, $desc) {
-		$stmt = 'UPDATE `'.DB_PREFIX.'category` SET `desc` = :desc WHERE `cid` = :cid';
+		$stmt = 'UPDATE `'.DB_PREFIX.'category` SET `description` = :desc WHERE `cid` = :cid';
 		$params = array(
 				'desc' => $desc,
 				'cid' => $cid

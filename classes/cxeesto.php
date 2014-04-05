@@ -34,7 +34,7 @@ class cxeesto extends dbManage
                 echo '<tr>';
                 echo '<td><span title="' . $row['message'] . '" class="message">' . $row['realname'] . '</span></td>';
                 
-                $statusProps = $this->statusType($row['status'], ' | ', $row['return']);
+                $statusProps = $this->statusType($row['status'], ' | ', $row['returntime']);
                 
                 echo '<td class="statusi"><span title="' . $statusProps[0] . '" class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td></tr>';
             }
@@ -53,7 +53,7 @@ class cxeesto extends dbManage
                 echo '<tr>';
                 echo '<td>' . $row['realname'] . '</td><td>' . $row['message'] . '</td>';
                 
-                $statusProps = $this->statusType($row['status'], '<br />', $row['return']);
+                $statusProps = $this->statusType($row['status'], '<br />', $row['returntime']);
                 
                 echo '<td class="statusi"><span class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td><td>' . $statusProps[0] . '</td><td>' . $row['dmodified'] . '</td></tr>';
             }
@@ -147,7 +147,7 @@ class cxeesto extends dbManage
 	    $date = new DateTime();
 	    $date = $date->format('Y-m-d H:i:s');
 	    
-	    $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `return` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
+	    $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
 	    $params = array(
 	        'message' => $message,
 	        'setorno' => $status,

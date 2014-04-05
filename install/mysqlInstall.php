@@ -3,7 +3,7 @@
 /** Create category table */
 $stmt = 'CREATE TABLE IF NOT EXISTS `dan_category` (
 		  `cid` int(11) NOT NULL AUTO_INCREMENT,
-		  `desc` varchar(255) NOT NULL,
+		  `description` varchar(255) NOT NULL,
 		  `pid` int(11) NOT NULL,
 		  PRIMARY KEY (`cid`)
 		) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
@@ -32,7 +32,7 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `dan_presence` (
 		  `realname` text NOT NULL,
 		  `status` tinyint(2) NOT NULL,
 		  `message` text NOT NULL,
-		  `return` text NOT NULL,
+		  `returntime` text NOT NULL,
 		  `dmodified` datetime NOT NULL,
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY `User_ID` (`uid`)

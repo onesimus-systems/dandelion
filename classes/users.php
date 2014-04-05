@@ -225,7 +225,7 @@ class User
 					break;
 			}
 	
-			$stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :status, `return` = :return, `dmodified` = :date WHERE `uid` = :userid';
+			$stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :status, `returntime` = :return, `dmodified` = :date WHERE `uid` = :userid';
 			$params = array(
 				'message' => $message,
 				'status' => $status_id,
