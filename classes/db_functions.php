@@ -80,7 +80,7 @@ class dbManage extends DB
       * @return Array containing the results of a SELECT query.
       * 		True when performing any other query type.
       */
-    public function queryDB($stmt, $paramArray, $type = PDO::PARAM_STR)
+    public function queryDB($stmt, $paramArray = NULL, $type = PDO::PARAM_STR)
     {
         try {
             $query = $this->dbConn->prepare($stmt);
@@ -94,7 +94,7 @@ class dbManage extends DB
 			$command = substr($stmt, 0, 3);
             
             // If the statement was a SELECT, return a fetchAll
-            if ($command == "SEL") {
+            if ($command != 'UPD' || $command != 'INS' || $command != 'DEL') {
                 return $query->fetchall(PDO::FETCH_ASSOC);
             } else {
                 return true;
@@ -128,5 +128,13 @@ class dbManage extends DB
      */
     public function lastInsertId() {
     	return $this->dbConn->lastInsertId();
+    }
+    
+    /** Gets row count from last query
+     *
+     * @return Row count of last query
+     */
+    public function rowCount() {
+    	return $this->dbConn->rowCount();
     }
 }

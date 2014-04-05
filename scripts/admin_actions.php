@@ -25,6 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			
 			$_SESSION['app_settings']['slogan'] = $_POST['slogan'];
 		}
+		
+		elseif ($a_action == 'backupdb') {
+			include 'backupdb.php';
+			backupDB();
+		}
 	}
 	else {
 		header( 'Location: ../admin.phtml' );
