@@ -39,7 +39,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 		require_once ROOT.'/classes/usersForms.php';
 		$userforms = new UserForms();
 
-		if ($u_action != 'add' && !empty($choosen)) {
+		if ($u_action != 'add' && !empty($choosen) && $edit_user_info !== '') {
 			if ($u_action == 'delete') { // Confirm user delete
 				$userforms->confirmDelete($edit_user_info['realname'], $choosen);
 			}
@@ -71,13 +71,17 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 			}
 		}
 		
-		elseif ($u_action == 'add') { // Show create user form		
+		elseif ($u_action == 'add' && $edit_user_info !== '') { // Show create user form		
 			$userforms->addUser();
 			$showList = false;
 		}
 		
 		elseif ($u_action != 'none' && empty($choosen)) {
 			echo 'ERROR: No user was selected.<br><br>';
+		}
+		
+		elseif ($edit_user_info === '') {
+			echo 'Error getting information from database.<br><br>';
 		}
 	}
 

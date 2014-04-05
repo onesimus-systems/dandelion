@@ -30,7 +30,7 @@ class User
 		if (!empty($userInfoArray['realname']) &&
 			!empty($userInfoArray['theme']) &&
 			!empty($userInfoArray['role']) &&
-			!empty($userInfoArray['first']) &&
+			is_numeric($userInfoArray['first']) &&
 			!empty($userInfoArray['uid']))
 		{
 			$stmt = 'UPDATE `'.DB_PREFIX.'users` SET `realname` = :realname, `role` = :role, `firsttime` = :first, `theme` = :theme WHERE `userid` = :userid';
