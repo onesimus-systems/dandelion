@@ -29,7 +29,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 			echo 'ERROR: No action selected.<br><br>';
 		}
 		
-		$stmt = 'SELECT * FROM `users` WHERE `userid` = :userid';
+		$stmt = 'SELECT * FROM `'.DB_PREFIX.'users` WHERE `userid` = :userid';
 		$params = array(
 				'userid' => $choosen
 		);
@@ -45,7 +45,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 			}
 			        
 			elseif ($u_action == 'cxeesto') { // Show status update form
-				$stmt = 'SELECT * FROM `presence` WHERE `uid` = :userid';
+				$stmt = 'SELECT * FROM `'.DB_PREFIX.'presence` WHERE `uid` = :userid';
 				$params = array(
 						'userid' => $choosen
 				);

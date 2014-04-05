@@ -62,7 +62,7 @@ class DisplayLogs {
     private function showLogs($grab_logs) {
         // Grab a list of all current users and put them in an array
         $conn = new dbManage;
-        $stmt = 'SELECT `userid`,`realname` FROM users';
+        $stmt = 'SELECT `userid`,`realname` FROM `'.DB_PREFIX.'users`';
         $userArray = $conn->queryDB($stmt, NULL);
 		echo '<div id="refreshed_core">';
         

@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         $useractions = new User($conn);
         $useractions->resetUserPw($_SESSION['userInfo']['userid'], $reset_3);
         
-        $stmt = 'UPDATE `users` SET `firsttime` = 1 WHERE `userid` = :id';
+        $stmt = 'UPDATE `'.DB_PREFIX.'users` SET `firsttime` = 1 WHERE `userid` = :id';
         $params = array('id'=>$_SESSION['userInfo']['userid']);
         $conn->queryDB($stmt, $params);
         

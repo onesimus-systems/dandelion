@@ -14,19 +14,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $a_action = $_POST["sub_action"];
 
         $conn = new dbManage();
-		
+
 		if ($a_action == "slogan") {
 			// Set new slogan
-			$stmt = 'UPDATE `settings` SET `value` = :slogan WHERE `name` = "slogan"';
+			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :slogan WHERE `name` = "slogan"';
 			$params = array(
 				'slogan' => $_POST['slogan']		
 			);
 			$conn->queryDB($stmt, $params);
 			
-			$_SESSION['settings']['slogan'] = $_POST['slogan'];
+			$_SESSION['app_settings']['slogan'] = $_POST['slogan'];
 		}
-		
-		header( 'Location: ../admin.phtml' );
 	}
 	else {
 		header( 'Location: ../admin.phtml' );

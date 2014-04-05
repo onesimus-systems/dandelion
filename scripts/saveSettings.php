@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	    if ($showlimit >= 5 AND $showlimit <= 500) {
 			$conn = new dbManage();
 
-			$stmt = 'UPDATE `users` SET `showlimit` = :newlimit WHERE `userid` = :myID';
+			$stmt = 'UPDATE `'.DB_PREFIX.'users` SET `showlimit` = :newlimit WHERE `userid` = :myID';
 			$params = array(
 			    'newlimit' => $showlimit,
 			    'myID' => $_SESSION['userInfo']['userid']
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		
 		$conn = new dbManage();
 		
-		$stmt = 'UPDATE `users` SET `theme` = :theme WHERE `userid` = :myID';
+		$stmt = 'UPDATE `'.DB_PREFIX.'users` SET `theme` = :theme WHERE `userid` = :myID';
 		$params = array(
 		    'theme' => $newTheme,
 		    'myID' => $_SESSION['userInfo']['userid']

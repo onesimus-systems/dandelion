@@ -50,7 +50,7 @@ function login() {
 function isuser($uname, $pword, $conn) {
 
 	// First, is this person even a user?
-	$stmt = 'SELECT * FROM users WHERE username = :user';
+	$stmt = 'SELECT * FROM `'.DB_PREFIX.'users` WHERE `username` = :user';
 	$param = array('user' => $uname);
 	
 	$sel_user = $conn->queryDB($stmt, $param);

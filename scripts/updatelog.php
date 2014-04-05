@@ -29,7 +29,7 @@ if (authenticated()) {
 	$pageOffset = $pageOffset<0 ? '0' : $pageOffset; // If somehow the offset is < 0, make it 0
 	
 	// Grab row count of log table to determine offset
-	$stmt = 'SELECT COUNT(*) FROM `log`';
+	$stmt = 'SELECT COUNT(*) FROM `'.DB_PREFIX.'log`';
 	$logSize = $conn->queryDB($stmt, NULL);
 	
 	// If the next page offset is > than the row count (which shouldn't happen
@@ -41,7 +41,7 @@ if (authenticated()) {
 	
 	// When using a SQL LIMIT, the parameter MUST be an integer.
 	// To accomplish this the PDO constant PARAM_INT is passed
-	$stmt = 'SELECT * FROM `log` ORDER BY `logid` DESC LIMIT :pO,:lim';
+	$stmt = 'SELECT * FROM `'.DB_PREFIX.'log` ORDER BY `logid` DESC LIMIT :pO,:lim';
 	$params = array(
 	    'lim' => ((int) trim($_SESSION['userInfo']['showlimit'])),
 	    'pO' => ((int) trim($pageOffset))

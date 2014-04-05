@@ -33,7 +33,7 @@ class User
 			!empty($userInfoArray['first']) &&
 			!empty($userInfoArray['uid']))
 		{
-			$stmt = 'UPDATE `users` SET `realname` = :realname, `role` = :role, `firsttime` = :first, `theme` = :theme WHERE `userid` = :userid';
+			$stmt = 'UPDATE `'.DB_PREFIX.'users` SET `realname` = :realname, `role` = :role, `firsttime` = :first, `theme` = :theme WHERE `userid` = :userid';
 			$params = array(
 				'realname' => $userInfoArray['realname'],
 				'role' => $userInfoArray['role'],
@@ -44,7 +44,7 @@ class User
 	
 			$this->conn->queryDB($stmt, $params);
 	
-			$stmt = 'UPDATE `presence` SET `realname` = :realname WHERE `uid` = :userid';
+			$stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `realname` = :realname WHERE `uid` = :userid';
 			$params = array(
 				'realname' => $userInfoArray['realname'],
 				'userid' => $userInfoArray['uid']
@@ -72,7 +72,7 @@ class User
 			!empty($userInfoArray['realname']) &&
 			!empty($userInfoArray['role']))
 		{
-			$stmt = 'SELECT * FROM `users` WHERE `username` = :username';
+			$stmt = 'SELECT * FROM `'.DB_PREFIX.'users` WHERE `username` = :username';
 			$params = array(
 				'username' => $userInfoArray['username']
 			);
@@ -85,7 +85,7 @@ class User
 				$add_real = $userInfoArray['realname'];
 				$add_role = $userInfoArray['role'];
 	
-				$stmt = 'INSERT INTO users (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'default\')';
+				$stmt = 'INSERT INTO `'.DB_PREFIX.'users` (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'default\')';
 				$params = array(
 					'username' => $add_user,
 					'password' => $add_pass,
@@ -97,7 +97,7 @@ class User
 	
 				$lastID = $this->conn->lastInsertId();
 	
-				$stmt = 'INSERT INTO `presence` (`uid`, `realname`, `status`, `message`, `return`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
+				$stmt = 'INSERT INTO `'.DB_PREFIX.'presence` (`uid`, `realname`, `status`, `message`, `return`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
 				$params = array(
 					'uid' => $lastID,
 					'real' => $add_real,
@@ -128,7 +128,7 @@ class User
 			if (is_numeric($uid)) {
 				$pass = password_hash($pass, PASSWORD_BCRYPT);
 		
-				$stmt = 'UPDATE `users` SET `password` = :newpass WHERE `userid` = :myID';
+				$stmt = 'UPDATE `'.DB_PREFIX.'users` SET `password` = :newpass WHERE `userid` = :myID';
 				$params = array(
 					'newpass' => $pass,
 					'myID' => $uid
@@ -154,8 +154,8 @@ class User
 	 */
 	public function deleteUser($uid = null) {
 		if (!empty($uid)) {
-			$stmt = 'DELETE FROM `users` WHERE `userid` = :userid';
-			$stmt2 = 'DELETE FROM `presence` WHERE `uid` = :userid';
+			$stmt = 'DELETE FROM `'.DB_PREFIX.'users` WHERE `userid` = :userid';
+			$stmt2 = 'DELETE FROM `'.DB_PREFIX.'presence` WHERE `uid` = :userid';
 			$params = array(
 				'userid' => $uid
 			);
@@ -225,7 +225,7 @@ class User
 					break;
 			}
 	
-			$stmt = 'UPDATE `presence` SET `message` = :message, `status` = :status, `return` = :return, `dmodified` = :date WHERE `uid` = :userid';
+			$stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :status, `return` = :return, `dmodified` = :date WHERE `uid` = :userid';
 			$params = array(
 				'message' => $message,
 				'status' => $status_id,

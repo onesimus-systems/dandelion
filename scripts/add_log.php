@@ -33,7 +33,7 @@ if (in_array($_SESSION['userInfo']['username'], $blacklist)) { // This is the sk
         $conn = new dbManage();
         
         // Add new entry
-        $stmt = 'INSERT INTO `log` (datec, timec, title, entry, usercreated, cat)  VALUES (:datec, :timec, :title, :entry, :usercreated, :cat)';
+        $stmt = 'INSERT INTO `'.DB_PREFIX.'log` (datec, timec, title, entry, usercreated, cat)  VALUES (:datec, :timec, :title, :entry, :usercreated, :cat)';
         $params = array(
             'datec' => $new_date,
             'timec' => $new_time,

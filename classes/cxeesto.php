@@ -147,7 +147,7 @@ class cxeesto extends dbManage
 	    $date = new DateTime();
 	    $date = $date->format('Y-m-d H:i:s');
 	    
-	    $stmt = 'UPDATE `presence` SET `message` = :message, `status` = :setorno, `return` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
+	    $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `return` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
 	    $params = array(
 	        'message' => $message,
 	        'setorno' => $status,

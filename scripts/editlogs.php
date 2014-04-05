@@ -23,7 +23,7 @@ $logid  = isset($_POST['choosen']) ? $_POST['choosen'] : '';
 if (!empty($editedlog) && !empty($editedtitle) && !empty($logid)) {
 	$conn = new dbManage();
 
-	$stmt = 'UPDATE `log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :logid';
+	$stmt = 'UPDATE `'.DB_PREFIX.'log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :logid';
 	$params = array(
 	    'eTitle' => $editedtitle,
 	    'eEntry' => $editedlog,

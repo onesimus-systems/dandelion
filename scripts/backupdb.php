@@ -31,7 +31,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 	// Cycle through
 	foreach($tables as $table)
 	{
-		$result = mysql_query('SELECT * FROM '.$table);
+		$result = mysql_query('SELECT * FROM `'.DB_PREFIX.$table.'`');
 		$num_fields = mysql_num_fields($result);
 		
 		$return.= 'DROP TABLE '.$table.';';
@@ -42,7 +42,7 @@ function backup_tables($host,$user,$pass,$name,$tables = '*')
 		{
 			while($row = mysql_fetch_row($result))
 			{
-				$return.= 'INSERT INTO '.$table.' VALUES(';
+				$return.= 'INSERT INTO `'.DB_PREFIX.$table.'` VALUES(';
 				for($j=0; $j<$num_fields; $j++) 
 				{
 					$row[$j] = addslashes($row[$j]);

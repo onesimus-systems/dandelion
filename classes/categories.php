@@ -67,7 +67,7 @@ class Categories
 	}
 	
 	public function addCategory($parent, $description) {
-		$stmt = 'INSERT INTO `category` (`desc`, `pid`) VALUES (:description, :parentid)';
+		$stmt = 'INSERT INTO `'.DB_PREFIX.'category` (`desc`, `pid`) VALUES (:description, :parentid)';
 		$params = array(
 			'description' => $description,
 			'parentid'	  => $parent
@@ -82,7 +82,7 @@ class Categories
 	
 	public function delCategory($cid) {
 		// Get the category's current parent to reassign children
-		$stmt = 'SELECT `pid` FROM `category` WHERE `cid` = :catid';
+		$stmt = 'SELECT `pid` FROM `'.DB_PREFIX.'category` WHERE `cid` = :catid';
 		$params = array(
 			'catid' => $cid
 		);
@@ -91,14 +91,14 @@ class Categories
 		$newParent = $newParent[0]['pid'];
 		
 		// Delete category from DB
-		$stmt = 'DELETE FROM `category` WHERE `cid` = :catid';
+		$stmt = 'DELETE FROM `'.DB_PREFIX.'category` WHERE `cid` = :catid';
 		$params = array(
 			'catid' => $cid
 		);
 		$this->conn->queryDB($stmt, $params);
 		
 		// Reassign children
-		$stmt = 'UPDATE `category` SET `pid` = :newp WHERE `pid` = :oldp';
+		$stmt = 'UPDATE `'.DB_PREFIX.'category` SET `pid` = :newp WHERE `pid` = :oldp';
 		$params = array(
 			'newp' => $newParent,
 			'oldp' => $cid
@@ -109,7 +109,7 @@ class Categories
 	}
 	
 	public function editCategory($cid, $desc) {
-		$stmt = 'UPDATE `category` SET `desc` = :desc WHERE `cid` = :cid';
+		$stmt = 'UPDATE `'.DB_PREFIX.'category` SET `desc` = :desc WHERE `cid` = :cid';
 		$params = array(
 				'desc' => $desc,
 				'cid' => $cid

@@ -19,7 +19,7 @@ if (authenticated()) {
 
 	$conn = new dbManage();
 
-	$stmt = 'SELECT * FROM `log` WHERE `logid` = :logid';
+	$stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `logid` = :logid';
 	$params = array(
 	    'logid' => $loguid
 	);

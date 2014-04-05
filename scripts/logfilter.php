@@ -33,7 +33,7 @@ if (authenticated()) {
 		        <input type="button" value="Clear Filter" onClick="refreshLog('clearf')" />
 		    </form>
 	    <?php
-	    $stmt = 'SELECT * FROM `log` WHERE `cat` LIKE :filter ORDER BY `logid` DESC';
+	    $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `cat` LIKE :filter ORDER BY `logid` DESC';
 	    $params = array(
 	        'filter' => "%".$filter."%"
 	    );
@@ -45,7 +45,7 @@ if (authenticated()) {
 	    if ($type == "keyw") {
 	        $message = $keyw;
 	        
-	        $stmt = 'SELECT * FROM `log` WHERE `title` LIKE :keyw or `entry` LIKE :keyw ORDER BY `logid` DESC';
+	        $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `title` LIKE :keyw or `entry` LIKE :keyw ORDER BY `logid` DESC';
 	        $params = array(
 	            'keyw' => "%".$keyw."%"
 	        );
@@ -55,7 +55,7 @@ if (authenticated()) {
 	    else if ($type == "dates") {
 	        $message = $dates;
 	        
-	        $stmt = 'SELECT * FROM `log` WHERE `datec`=:dates ORDER BY `logid` DESC';
+	        $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `datec`=:dates ORDER BY `logid` DESC';
 	        $params = array(
 	            'dates' => $dates
 	        );
@@ -65,7 +65,7 @@ if (authenticated()) {
 	    else {
 	        $message = $keyw.' on '.$dates;
 	
-	        $stmt = 'SELECT * FROM `log` WHERE (`title` LIKE :keyw or `entry` LIKE :keyw) and `datec`=:dates ORDER BY `logid` DESC';
+	        $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE (`title` LIKE :keyw or `entry` LIKE :keyw) and `datec`=:dates ORDER BY `logid` DESC';
 	        $params = array(
 	            'keyw' => "%".$keyw."%",
 	            'dates' => $dates

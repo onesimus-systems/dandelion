@@ -117,7 +117,7 @@ class dbManage extends DB
      * @return Array containing the results of the query.
      */
     public function selectAll($table) {
-    	$stmt = 'SELECT * FROM ' . $table;
+    	$stmt = 'SELECT * FROM `'.DB_PREFIX.$table.'`';
     	
     	return $this->queryDB($stmt, NULL);
     }
