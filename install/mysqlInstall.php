@@ -95,3 +95,8 @@ $stmt = 'INSERT INTO `dan_settings` (`settings_id`, `name`, `value`)
 			VALUES (1, \'slogan\', \'Website Slogan\')';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
+
+$stmt = 'INSERT INTO `dan_settings` (`settings_id`, `name`, `value`)
+			VALUES (2, \'app_title\', \'Dandelion Web Log\')';
+$exec = $dbConn->prepare($stmt);
+$exec->execute();
