@@ -22,6 +22,13 @@ if (!defined('ROOT')) {
 	define('ROOT', dirname(dirname(__FILE__)));	// Defines root path of application
 }
 
+// Load other scripts
+require_once ROOT.'/classes/db_functions.php';
+require_once ROOT.'/scripts/authenticate.php';
+require_once ROOT.'/scripts/userRights.php';
+require_once ROOT.'/scripts/themes.php';
+require_once ROOT.'/scripts/logging.php';
+
 // Load config into session variable
 if(!isset($_SESSION['config'])) {
 	try {
@@ -46,12 +53,6 @@ if ($_SESSION['config']['debug']) {
 	error_reporting(E_ALL);
 	ini_set('display_errors', True);
 }
-
-// Load other scripts
-require_once ROOT.'/classes/db_functions.php';
-require_once ROOT.'/scripts/authenticate.php';
-require_once ROOT.'/scripts/userRights.php';
-require_once ROOT.'/scripts/themes.php';
 
 // Load application settings
 if(!isset($_SESSION['app_settings'])) {

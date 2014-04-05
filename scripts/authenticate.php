@@ -71,10 +71,12 @@ function isuser($uname, $pword, $conn) {
 
 		$_SESSION['userInfo'] = $sel_user[0];
 		
-		if ($_POST['rememberMe'] == 'remember') {
+		if (isset($_POST['rememberMe']) && $_POST['rememberMe'] == 'remember') {
 			setcookie('dan_username', $_SESSION['userInfo']['username'], time()+60*60*24*30, '/');
 		}
 
+		trigger_error($uname.' logged in at ' . date("Y-m-d H:i:s"), E_USER_NOTICE);
+		
 		echo 'Logged in. Please wait as I redirect you...';
 		
 		switch($sel_user[0]['firsttime']) {
@@ -90,6 +92,7 @@ function isuser($uname, $pword, $conn) {
 		}
 	}
 	else { // Sadly they have failed. Walk the plank!
+		trigger_error('Failed login attempt for '.$uname.' at ' . date("Y-m-d H:i:s"), E_USER_WARNING);
 		$_SESSION['badlogin'] = '<span class="bad">Incorrect username or password</span><br>'; // Used to display a message to the user
 		header( 'Location: ../' );
 	}

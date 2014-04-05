@@ -6,6 +6,7 @@ private/
 database/
 config.php
 docs/
+logs/
 
 #################
 ## Eclipse
