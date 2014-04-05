@@ -34,7 +34,7 @@ class cxeesto extends dbManage
                 echo '<tr>';
                 echo '<td><span title="' . $row['message'] . '" class="message">' . $row['realname'] . '</span></td>';
                 
-                $statusProps = $this->statusType($row['status'], ' | ', $row['returntime']);
+                $statusProps = $this->statusType($row['status'], '&#013;', $row['returntime']);
                 
                 echo '<td class="statusi"><span title="' . $statusProps[0] . '" class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td></tr>';
             }
@@ -53,7 +53,7 @@ class cxeesto extends dbManage
                 echo '<tr>';
                 echo '<td>' . $row['realname'] . '</td><td>' . $row['message'] . '</td>';
                 
-                $statusProps = $this->statusType($row['status'], '<br />', $row['returntime']);
+                $statusProps = $this->statusType($row['status'], '<br>', $row['returntime']);
                 
                 echo '<td class="statusi"><span class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td><td>' . $statusProps[0] . '</td><td>' . $row['dmodified'] . '</td></tr>';
             }
