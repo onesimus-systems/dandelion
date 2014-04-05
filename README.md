@@ -1,4 +1,4 @@
-Dandelion v4.4.0
+Dandelion v4.5.0
 ================
 
 Dandelion is a web-based entry log application.
@@ -22,7 +22,7 @@ Install
 1. Decide whether you want to use MySQL/Maria or SQLite for the database
 2. Create a MySQL/Maria database to house Dandelion if you are going that route
 3. Browse to install.php in the root of Dandelion
-4. Choose your database type, for MySQL/Maria type in database address, username, password, and table name
+4. Choose your database type, for MySQL/Maria type in database address, username, password, and database name
 5. The installer will direct you to the index page. Login with:
 
    ```
@@ -37,10 +37,15 @@ Notes for Install
 
 Dandelion needs write permissions to the config directory in order to install. If it doesn't have the proper permissions it will give you an error when you go to install.php. The permissions on the directory will be changed to read-only once Dandelion has done its thing.
 
-The easiest way to upgrade from 4.2/3.* to 4.4.* is to backup your database, run the install script again and have it create the new category and settings tables. After it's finished installing, import your backup. I apologize for not creating an upgrade script. I will make sure to do that for the next version.
-
 Release Notes
 -------------
+
+v4.5.0
+
+- Filter by category from each log entry
+- Admin ability to backup database
+- Database prefix so Dandelion doesn't conflict for other apps
+- Bug fixes
 
 v4.4.0
 

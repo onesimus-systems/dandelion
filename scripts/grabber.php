@@ -13,7 +13,7 @@ session_start();
 
 // Define constants
 if (!defined('D_VERSION')) {
-	define('D_VERSION', '4.4.0');     			// Defines current Dandelion version
+	define('D_VERSION', '4.5.0');     			// Defines current Dandelion version
 }
 if (!defined('THEME_DIR')) {
 	define('THEME_DIR', 'themes');	 			// Defines theme directory
