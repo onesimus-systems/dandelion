@@ -38,7 +38,7 @@ if(!isset($_SESSION['config'])) {
 }
 
 if (!defined('DB_PREFIX')) {
-	define('DB_PREFIX', $_SESSION['config']['db_prefix']);	// Defines root path of application
+	define('DB_PREFIX', $_SESSION['config']['db_prefix']);	// DB table prefix as a constant
 }
 
 // Set error reporting if in debug mode
