@@ -84,7 +84,7 @@ class User
 				$add_pass = password_hash($userInfoArray['password'], PASSWORD_BCRYPT);
 				$add_real = $userInfoArray['realname'];
 				$add_role = $userInfoArray['role'];
-	
+
 				$stmt = 'INSERT INTO `'.DB_PREFIX.'users` (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'default\')';
 				$params = array(
 					'username' => $add_user,
@@ -94,17 +94,20 @@ class User
 					'datecreated' => $date->format('Y-m-d')
 				);    
 				$this->conn->queryDB($stmt, $params);
-	
-				$lastID = $this->conn->lastInsertId();
-	
-				$stmt = 'INSERT INTO `'.DB_PREFIX.'presence` (`uid`, `realname`, `status`, `message`, `return`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
-				$params = array(
-					'uid' => $lastID,
-					'real' => $add_real,
-					'date' => $date->format('Y-m-d H:i:s')
-				);    
-				$this->conn->queryDB($stmt, $params);
-	
+
+				if ($add_role != 'guest') {
+					$lastID = $this->conn->lastInsertId();
+		
+					$stmt = 'INSERT INTO `'.DB_PREFIX.'presence` (`uid`, `realname`, `status`, `message`, `returntime`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
+					$params = array(
+						'uid' => $lastID,
+						'real' => $add_real,
+						'date' => $date->format('Y-m-d H:i:s')
+					);
+
+					$this->conn->queryDB($stmt, $params);
+				}
+				
 				return 'User Added<br><br>';
 			}
 			else {

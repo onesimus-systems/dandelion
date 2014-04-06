@@ -29,7 +29,6 @@ function authenticated() {
 }
 
 function login() {
-	echo "<p>Logging in...</p>";
 	
 	// Declare and clear variables for login info
 	$username = $plain_word = "";
@@ -77,8 +76,6 @@ function isuser($uname, $pword, $conn) {
 
 		trigger_error($uname.' logged in at ' . date("Y-m-d H:i:s"), E_USER_NOTICE);
 		
-		echo 'Logged in. Please wait as I redirect you...';
-		
 		switch($sel_user[0]['firsttime']) {
 			case 1:
 				header ( 'Location: ../tutorial.phtml' );
@@ -109,6 +106,5 @@ function logout() {
 	}
 	session_destroy();
 	
-	echo 'You are now logged out!';     // Little message in case it takes a moment
 	header( 'Location: ../' ); // To the login page with you!
 }
