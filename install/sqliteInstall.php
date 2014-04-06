@@ -77,7 +77,7 @@ $stmt = 'INSERT INTO `dan_users` (`userid`, `username`, `password`, `realname`, 
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
 
-$stmt = 'INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `return`, `dmodified`)
+$stmt = 'INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `returntime`, `dmodified`)
 			VALUES (1, 1, \'Admin\', 1, \'\', \'00:00:00\', \'2014-02-08 10:21:34\'
 		)';
 $exec = $dbConn->prepare($stmt);

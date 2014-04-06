@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         }
 	}
 	catch(PDOException $e) {
-		echo 'Error setting up database.';
+		echo 'Error setting up database: '.$e;
 	}
 }
 else {
