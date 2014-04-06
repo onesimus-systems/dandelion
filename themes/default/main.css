@@ -41,3 +41,8 @@ body {
 .pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
 	background-color: #FF9900;
 }
+
+
+.white {
+	color: white;
+}
