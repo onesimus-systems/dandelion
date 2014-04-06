@@ -71,7 +71,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 			}
 		}
 		
-		elseif ($u_action == 'add' && $edit_user_info !== '') { // Show create user form		
+		elseif ($u_action == 'add') { // Show create user form		
 			$userforms->addUser();
 			$showList = false;
 		}

@@ -1,4 +1,4 @@
-Dandelion v4.5.0
+Dandelion v4.5.1
 ================
 
 Dandelion is a web-based entry log application.
@@ -7,7 +7,7 @@ Requirements
 ------------
 
 * Apache >= 2.4
-* PHP >= 5.5
+* PHP >= 5.4.0
 * MySQL/Maria DB >= 5.0
 * PHP SQLite library (php5-sqlite) (if applicable)
 
@@ -40,6 +40,18 @@ Dandelion needs write permissions to the config directory in order to install. I
 Release Notes
 -------------
 
+v4.5.1
+
+- Added compatibility libraries for older PHP versions
+	- password_combat for PHP 5.5 password_* functions
+	- file_put_contents functions for PHP 5.5 same function
+	
+- Major bug fixes
+	- JSON syntax error for category display
+	- Incorrect boolean value for add logs
+	- Old column name for presence table when adding user
+	- Incorrect file names
+
 v4.5.0
 
 - Filter by category from each log entry
@@ -66,6 +78,13 @@ v4.2.1
 
 - Fixed bug where category filter wasn't using updated AJAX API
 - Fixed bug where time and date window for Cheesto wasn't loading
+
+Third-Party Libraries
+---------------------
+
+Dandelion utilizes the following third-party libraries:
+
+[password-compat](https://github.com/ircmaxell/password_compat) - Provides PHP 5.3 compatibility with the new PHP 5.5 password functions. License can be found in ROOT/scripts/password_combat/LICENSE.md
 
 Versioning
 ----------

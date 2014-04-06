@@ -13,7 +13,7 @@ session_start();
 
 // Define constants
 if (!defined('D_VERSION')) {
-	define('D_VERSION', '4.5.0');     			// Defines current Dandelion version
+	define('D_VERSION', '4.5.1');     			// Defines current Dandelion version
 }
 if (!defined('THEME_DIR')) {
 	define('THEME_DIR', 'themes');	 			// Defines theme directory
@@ -28,6 +28,8 @@ require_once ROOT.'/scripts/authenticate.php';
 require_once ROOT.'/scripts/userRights.php';
 require_once ROOT.'/scripts/themes.php';
 require_once ROOT.'/scripts/logging.php';
+require_once ROOT.'/scripts/password_compat/password.php';
+require_once ROOT.'/scripts/compatibility.php';
 
 // Load config into session variable
 if(!isset($_SESSION['config'])) {
