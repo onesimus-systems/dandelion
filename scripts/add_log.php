@@ -18,7 +18,7 @@ if (!authenticated()) {
 
 $blacklist = array('ajmartin');
 
-if (in_array($_SESSION['userInfo']['username'], $blacklist)) { // This is the skeleton of an eventual blacklist/rights management
+if (!in_array($_SESSION['userInfo']['username'], $blacklist)) { // This is the skeleton of an eventual blacklist/rights management
     // Grab all the variables from the POST array
     $new_title = isset($_POST['add_title']) ? $_POST['add_title'] : '';
     $new_entry = isset($_POST['add_entry']) ? $_POST['add_entry'] : '';
