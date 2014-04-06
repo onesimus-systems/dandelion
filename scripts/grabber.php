@@ -28,6 +28,7 @@ require_once ROOT.'/scripts/authenticate.php';
 require_once ROOT.'/scripts/userRights.php';
 require_once ROOT.'/scripts/themes.php';
 require_once ROOT.'/scripts/logging.php';
+require_once ROOT.'/scripts/password_compat/password.php';
 
 // Load config into session variable
 if(!isset($_SESSION['config'])) {

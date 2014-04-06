@@ -67,6 +67,13 @@ v4.2.1
 - Fixed bug where category filter wasn't using updated AJAX API
 - Fixed bug where time and date window for Cheesto wasn't loading
 
+Third-Party Libraries
+---------------------
+
+Dandelion utilizes the following third-party libraries:
+
+[password-compat](https://github.com/ircmaxell/password_compat) - Provides PHP 5.3 compatibility with the new PHP 5.5 password functions. License can be found in ROOT/scripts/password_combat/LICENSE.md
+
 Versioning
 ----------
 
