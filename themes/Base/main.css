@@ -1,0 +1,105 @@
+/* Shell theme for Dandelion Web Log
+ *
+ * @author Lee Keitel
+ * @date April 2014 
+**/
+
+body {
+}
+
+h1 {
+}
+
+h4 {
+}
+
+a:visited, a:hover, a:link, a:active {
+}
+
+#login {
+}
+
+#login h1 {
+}
+
+#login_form {
+}
+
+#main {
+}
+
+#editform {
+}
+
+.good {
+    color: green;
+}
+
+.bad {
+    color: red;
+}
+
+.le {
+    text-align: left;
+    text-indent: 30px;
+}
+
+#credits {
+}
+
+.flri {
+	float: right;
+	margin-right: 15px;
+}
+
+.flle {
+	float: left;
+	margin-left: 15px;
+}
+
+.logentry {
+}
+
+.entry {
+    max-width: 55em;
+    word-wrap: break-word;
+}
+
+#refreshed_core {
+}
+
+#refreshed, #add_edit {
+}
+
+#refreshed, #controlPanel {
+}
+
+#nav_link a:visited, #nav_link a:link, #nav_link a:active {
+}
+
+header {
+}
+
+.pagination {
+}
+
+.pagination input, #login_button, .logentry input {
+}
+
+.dButton {
+}
+
+.adminButton {
+}
+
+#login_button, .logentry input {
+}
+
+.pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
+}
+
+#categorySelects, #add_cat {
+}
+
+.whitelink:visited, .whitelink:hover, .whitelink:link, .whitelink:active {
+}

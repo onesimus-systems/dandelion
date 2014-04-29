@@ -60,6 +60,7 @@ class DisplayLogs {
       * @return Nothing. All information is echoed
       */
     private function showLogs($grab_logs) {
+    	global $isFiltered;
         // Grab a list of all current users and put them in an array
         $conn = new dbManage;
         $stmt = 'SELECT `userid`,`realname` FROM `'.DB_PREFIX.'users`';
@@ -89,7 +90,10 @@ class DisplayLogs {
             echo '<p class="entrymeta">Created by ' . $creator . ' on ' . $row['datec'] . ' @ ' . $row['timec'] . '. ';
             if ($row['edited']) { echo '(Edited)'; }
             echo '<br />Categorized as ' . $row['cat'] . '.';
-            echo '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
+            
+            if (!$isFiltered) {
+            	echo '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
+            }
             
             if ($_SESSION['userInfo']['userid'] == $row['usercreated'] OR $_SESSION['userInfo']['role'] == 'admin') {
                 ?>

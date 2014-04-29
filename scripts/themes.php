@@ -12,7 +12,7 @@
 
 function getTheme() {
 	$theme = !empty($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
-	$theme = is_dir(THEME_DIR.'/'.$theme) ? $theme : 'default';
+	$theme = is_dir(ROOT.'/'.THEME_DIR.'/'.$theme) ? $theme : 'default';
 	return $theme;
 }
 

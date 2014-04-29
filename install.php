@@ -115,6 +115,6 @@ $theme = 'default';
 <?php
 }
 else {
-    header( 'Location: index.phtml' );
+    header( 'Location: index.php' );
 }
 ?>
