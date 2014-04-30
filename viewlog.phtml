@@ -25,8 +25,6 @@ if (authenticated()) {
 	else {
 		$add_link = '';
 	}
-	
-	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -43,11 +41,7 @@ else {
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
-		<link rel="stylesheet" type="text/css" href="styles/presence.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/cheesto.css" />
-		<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css" />
+		<?php printCssSheets(array("cheesto","jquery")); ?>
 		<title>Dandelion Web Log</title>
 	</head>
     

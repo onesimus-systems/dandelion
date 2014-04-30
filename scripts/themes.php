@@ -35,3 +35,47 @@ function getThemeList($theme = null) {
 	}
 	echo '</select>';
 }
+
+function printCssSheets($optional = array(), $mainBool = true) {
+	$optionalSheets = array();
+	$theme = getTheme();
+	foreach ($optional as $temp) {
+		$optionalSheets[] = strtolower($temp);
+	}
+	
+	// Base/main CSS
+	if ($mainBool) {
+		echo '<link rel="stylesheet" type="text/css" href="styles/main.css">';
+		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/main.css">';
+	}
+	
+	// CSS for Cheesto presence system
+	if (in_array("cheesto", $optionalSheets)) {
+		echo '<link rel="stylesheet" type="text/css" href="styles/presence.css">';
+		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/cheesto.css">';
+	}
+	
+	// CSS for Cheesto presence system (windowed)
+	if (in_array("cheestowin", $optionalSheets)) {
+		echo '<link rel="stylesheet" type="text/css" href="styles/presenceWin.css">';
+		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/presenceWin.css">';
+	}
+	
+	// CSS for jQueryUI
+	if (in_array("jquery", $optionalSheets)) {
+		echo '<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+	}
+	
+	// CSS for Tutorial
+	if (in_array("tutorial", $optionalSheets)) {
+        echo '<link rel="stylesheet" type="text/css" href="styles/tutorial.css">';
+		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/tutorial.css">';
+	}
+	
+	// Any manual CSS
+	foreach ($optionalSheets as $manualSheet) {
+		if (substr($manualSheet, -4) == ".css") {
+			echo '<link rel="stylesheet" type="text/css" href="styles/'.$manualSheet.'">';
+		}
+	}
+}

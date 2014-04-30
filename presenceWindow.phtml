@@ -12,10 +12,7 @@
 
 include_once 'scripts/grabber.php';
 
-if (authenticated()) {
-	$theme = getTheme();
-}
-else {
+if (!authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>
@@ -24,12 +21,9 @@ else {
     <head>
         <meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-        <title>Dandelion Presence</title>
-		<link rel="stylesheet" type="text/css" href="styles/presence.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/cheesto.css" />
-        <link rel="stylesheet" type="text/css" href="styles/presenceWin.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/presenceWin.css" />
-    </head>
+		<?php printCssSheets(array("cheesto","cheestoWin")); ?>
+		<title>Dandelion Presence</title>
+	</head>
     
     <body onLoad="presence.startR();">
         <?php $windowed = 1; ?>

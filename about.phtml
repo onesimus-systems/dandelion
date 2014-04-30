@@ -15,7 +15,6 @@ if (!authenticated()) {
 	header( 'Location: index.php' );
 }
 
-$theme = getTheme();
 userLinks();
 ?>
 <!DOCTYPE html>
@@ -24,10 +23,7 @@ userLinks();
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
-        <link rel="stylesheet" type="text/css" href="styles/tutorial.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/tutorial.css" />
+		<?php printCssSheets(array("tutorial")); ?>
 		<title>Dandelion Web Log - About</title>
 	</head>
 	<body>

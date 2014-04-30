@@ -21,7 +21,7 @@ var presence = {
         
         if (newStatus != 1 && newStatus != 0) {
             rtime = "";
-            window.open("scripts/getdate.php","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
+            window.open("getdate.php","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
             }
         else if (newStatus == 0)
             return false;
