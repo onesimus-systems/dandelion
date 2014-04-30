@@ -36,46 +36,48 @@ function getThemeList($theme = null) {
 	echo '</select>';
 }
 
-function printCssSheets($optional = array(), $mainBool = true) {
-	$optionalSheets = array();
+function loadCssSheets() {
+	$optionalSheets = func_get_args();
 	$theme = getTheme();
-	foreach ($optional as $temp) {
-		$optionalSheets[] = strtolower($temp);
-	}
 	
 	// Base/main CSS
-	if ($mainBool) {
+	if ($optionalSheets[count($optionalSheets)-1] !== false) {
 		echo '<link rel="stylesheet" type="text/css" href="styles/main.css">';
 		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/main.css">';
 	}
 	
-	// CSS for Cheesto presence system
-	if (in_array("cheesto", $optionalSheets)) {
-		echo '<link rel="stylesheet" type="text/css" href="styles/presence.css">';
-		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/cheesto.css">';
-	}
-	
-	// CSS for Cheesto presence system (windowed)
-	if (in_array("cheestowin", $optionalSheets)) {
-		echo '<link rel="stylesheet" type="text/css" href="styles/presenceWin.css">';
-		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/presenceWin.css">';
-	}
-	
-	// CSS for jQueryUI
-	if (in_array("jquery", $optionalSheets)) {
-		echo '<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
-	}
-	
-	// CSS for Tutorial
-	if (in_array("tutorial", $optionalSheets)) {
-        echo '<link rel="stylesheet" type="text/css" href="styles/tutorial.css">';
-		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/tutorial.css">';
-	}
-	
-	// Any manual CSS
-	foreach ($optionalSheets as $manualSheet) {
-		if (substr($manualSheet, -4) == ".css") {
-			echo '<link rel="stylesheet" type="text/css" href="styles/'.$manualSheet.'">';
+	foreach ($optionalSheets as $sheet) {
+		if (substr($sheet, -4) == '.css') {
+			if (is_file('styles/'.$sheet))
+				echo '<link rel="stylesheet" type="text/css" href="styles/'.$sheet.'">';
+			continue;
+		}
+		
+		$sheet = strtolower($sheet);
+
+		switch($sheet) {
+			// CSS for Cheesto presence system
+			case "cheesto":
+				echo '<link rel="stylesheet" type="text/css" href="styles/presence.css">';
+				echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/cheesto.css">';
+				break;
+			
+			// CSS for Cheesto presence system (windowed)
+			case "cheestowin":
+				echo '<link rel="stylesheet" type="text/css" href="styles/presenceWin.css">';
+				echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/presenceWin.css">';
+				break;
+			
+			// CSS for jQueryUI
+			case "jquery":
+				echo '<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+				break;
+			
+			// CSS for Tutorial
+			case "tutorial":
+		        echo '<link rel="stylesheet" type="text/css" href="styles/tutorial.css">';
+				echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/tutorial.css">';
+				break;
 		}
 	}
 }
