@@ -14,7 +14,7 @@ else {
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<?php printCssSheets(); ?>
+		<?php loadCssSheets(); ?>
 		<title>Dandelion Web Log</title>
 	</head>
 	<body onLoad="CategoryManage.grabNextLevel('0:0');">
@@ -38,6 +38,5 @@ else {
         </footer>
 	</body>
     
-    <script type="text/javascript" src="js/catManage.js"></script>
-    <script type="text/javascript" src="js/lQuery.js"></script>
+    <?php loadJS("catmanage","lquery");?>
 </html>

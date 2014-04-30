@@ -21,7 +21,7 @@ if (!authenticated()) {
     <head>
         <meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-		<?php printCssSheets(array("cheesto","cheestoWin")); ?>
+		<?php loadCssSheets("cheesto","cheestoWin"); ?>
 		<title>Dandelion Presence</title>
 	</head>
     
@@ -50,7 +50,6 @@ if (!authenticated()) {
 	        </div>
         </div>
         
-		<script src="js/lQuery.js"></script>
-        <script src="js/presence.js"></script>
+        <?php loadJS("lQuery","cheesto");?>
     </body>
 </html>

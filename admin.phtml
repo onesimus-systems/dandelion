@@ -14,7 +14,7 @@ else {
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<?php printCssSheets(); ?>
+		<?php loadCssSheets(); ?>
 		<title>Dandelion Web Log</title>
 	</head>
 	<body>
@@ -37,7 +37,6 @@ else {
             <?php include_once 'scripts/footer.php'; ?>
         </footer>
         
-        <script src="js/lQuery.js"></script>
-        <script src="js/admin.js"></script>
+        <?php loadJS("lquery","admin.js");?>
 	</body>
 </html>

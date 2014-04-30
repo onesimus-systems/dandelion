@@ -41,7 +41,7 @@ else {
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<?php printCssSheets(array("cheesto","jquery")); ?>
+		<?php loadCssSheets("cheesto","jquery"); ?>
 		<title>Dandelion Web Log</title>
 	</head>
     
@@ -95,12 +95,7 @@ else {
                 <?php include_once 'scripts/footer.php'; ?>
             </footer>
         </div>
-        
-        <script src="jquery/js/jquery-2.1.0.min.js"></script>
-        <script src="jquery/js/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="js/lQuery.js"></script>
-        <script src="js/catManage.js"></script>
-        <script src="js/mainScripts.js"></script>
-        <script src="js/presence.js"></script>
+
+        <?php loadJS("jquery","jqueryui","lquery","catmanage","main","cheesto")?>
 	</body>
 </html>
