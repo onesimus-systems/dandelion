@@ -10,6 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		'db_name' => $_POST['dbname']
 	);
 	
+	$hostname = rtrim($_POST['danPath'], "/");
+	
 	try {
         if (is_writable('../config')) { // Is it possible to write the config file?
 
@@ -83,6 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             $newFile .= "'db_prefix' => 'dan_',\n";
             $newFile .= "'installed' => true,\n";
             $newFile .= "'debug' => false\n";
+            $newFile .= "'hostname' => '".$hostname."',\n";
             $newFile .= ");";
             
             fwrite($handle, $newFile);

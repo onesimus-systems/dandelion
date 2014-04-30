@@ -43,7 +43,7 @@ function loadCssSheets() {
 	// Base/main CSS
 	if ($optionalSheets[count($optionalSheets)-1] !== false) {
 		echo '<link rel="stylesheet" type="text/css" href="styles/main.css">';
-		echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/main.css">';
+		echo '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/main.css">';
 	}
 	
 	foreach ($optionalSheets as $sheet) {
@@ -59,13 +59,13 @@ function loadCssSheets() {
 			// CSS for Cheesto presence system
 			case "cheesto":
 				echo '<link rel="stylesheet" type="text/css" href="styles/presence.css">';
-				echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/cheesto.css">';
+				echo '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
 				break;
 			
 			// CSS for Cheesto presence system (windowed)
 			case "cheestowin":
 				echo '<link rel="stylesheet" type="text/css" href="styles/presenceWin.css">';
-				echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/presenceWin.css">';
+				echo '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
 				break;
 			
 			// CSS for jQueryUI
@@ -76,7 +76,7 @@ function loadCssSheets() {
 			// CSS for Tutorial
 			case "tutorial":
 		        echo '<link rel="stylesheet" type="text/css" href="styles/tutorial.css">';
-				echo '<link rel="stylesheet" type="text/css" href="themes/'.$theme.'/tutorial.css">';
+				echo '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/tutorial.css">';
 				break;
 		}
 	}

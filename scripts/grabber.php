@@ -48,6 +48,10 @@ if (!defined('DB_PREFIX')) {
 	define('DB_PREFIX', $_SESSION['config']['db_prefix']);	// DB table prefix as a constant
 }
 
+if (!defined('HOSTNAME')) {
+	define('HOSTNAME', $_SESSION['config']['hostname']);
+}
+
 error_reporting(E_ALL);
 
 // Display errors if in debug mode
