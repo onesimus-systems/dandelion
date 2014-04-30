@@ -3,21 +3,16 @@
  * @author Lee Keitel
  * @date Feb 2014 
 **/
-
-    
 #presence {
-    background-color: #F39A61;
-    color: black;
+  background-color: #f39a61;
+  color: black;
 }
-
 .linklike {
-	background-color: #393939;
+  background-color: #393939;
 }
-
 .linklike:hover {
-	background-color: #FF9900;
+  background-color: #ff9900;
 }
-
 #showHide {
-	color: black;
+  color: black;
 }
