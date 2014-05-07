@@ -169,7 +169,7 @@ header {
 	display: inline;
 }
 
-.whitelink:visited, .whitelink:hover, .whitelink:link, .whitelink:active {
-	color: white;
+.aboutlink:visited, .aboutlink:hover, .aboutlink:link, .aboutlink:active {
+	color: black;
 	text-decoration: none;
 }
