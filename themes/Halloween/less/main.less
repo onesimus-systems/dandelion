@@ -1,7 +1,9 @@
 /* Halloween theme for Dandelion Web Log
  *
  * @author Lee Keitel
- * @date Feb 2014 
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
 **/
 @import "colors";
 
@@ -11,18 +13,17 @@ body {
 }
 
 #login, #refreshed_core {
-	background-color: @orange;
+	background-color: @mainBody;
+	color: @mainText;
 }
 
 #nav_link {
 	a:visited, a:link, a:active {
-		background-color: @button;
-		color: white;
+		.buttonRegular;
 	}
 	
 	a:hover {
-		background-color: @orange;
-		color: black;
+		.buttonHover;
 	}
 }
 
@@ -30,19 +31,19 @@ body {
 	background-color: @button;
 	
 	input {
-		background-color: @button;
+		.buttonRegular;
 	}
 	
 	input:hover {
-		background-color: @buttonHover;
+		.buttonHover;
 	}
 }
 
 .dButton, #login_button, .logentry input {
-	background-color: @button;
+	.buttonRegular;
 	
 	&:hover {
-		background-color: @buttonHover;
+		.buttonHover;
 	}
 }
 
