@@ -1,0 +1,194 @@
+/* Base theme for Dandelion Web Log
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
+
+body {
+    margin: 0px auto;
+    text-align: center;
+    width: 60%;
+	font-family: sans-serif;
+	font-size: 15px;
+	color: black;
+}
+
+h1 {
+    margin-bottom: 0;
+	text-align: center;
+}
+
+h4 {
+	margin-top: .75em;
+    margin-bottom: .65em;
+	text-align: center;
+}
+
+a:visited, a:hover, a:link, a:active {
+	color: blue;
+	text-decoration: none;
+}
+
+/** Login form on index page */
+#login {
+	text-align: left;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 25em;
+	height: 18em;
+	margin-top: -9em;
+	margin-left: -14.5em;
+	border: 1px solid #CCC;
+	color: black;
+	
+	h1 {
+		text-align: left;
+		margin-left: 1em;
+	}
+	
+	#login_form {
+		margin-left: 3em;
+		margin-top: 0em;
+		margin-bottom: 1em;
+	}
+	
+	#login_button {
+		border: none;
+		font-size: 1em;
+		color: white;
+		padding: .5em 1.5em;
+		margin-top: .75em;
+	}
+}
+
+/** Navigation */
+#nav_link a:visited, #nav_link a:link, #nav_link a:active {
+	color: black;
+	text-decoration: none;
+	padding: 10px 20px;
+}
+
+/** Main site content */
+#divMain {
+    margin: 0px auto;
+    text-align: center;
+	
+	header {
+		margin-bottom: 1.5em;
+		min-width: 35em;
+	}
+	
+	#add_edit {
+		margin-top: 1em;
+	}
+	
+	#controlPanel {
+		min-width: 35em;
+	}
+	
+	.pageEntryButtons {
+		border: none;
+		padding: 1em 2em;
+		margin: 0;
+		font-size: 1em;
+		color: white;
+	}
+	
+	.pagination {
+		display: block;
+		overflow: hidden;
+		padding: 0 0;
+		
+		input {
+			.pageEntryButtons;
+		}
+	}
+
+	.logentry {
+		margin: 5px;
+		margin-bottom: 50px;
+		border: 0px solid black;
+		text-align: left;
+		font-family: sans-serif;
+		
+		input {
+			.pageEntryButtons;
+			padding: .5em 1.5em;
+			margin-top: .75em;
+		}
+	}
+
+	.entry {
+		max-width: 55em;
+		word-wrap: break-word;
+	}
+
+	#refreshed_core {
+		padding: .5em 1.5em;
+		color: black;
+	}
+	
+	#refreshed {
+		min-width: 35em;
+		margin-top: 1em;
+	}
+}
+
+/** Edit user accounts */
+#editform {
+	margin-left: 0px;
+	margin-right: 0px;
+	text-align: left;
+}
+
+/** Misc */
+.good {
+    color: green;
+}
+
+.bad {
+    color: red;
+}
+
+.le {
+    text-align: left;
+    text-indent: 30px;
+}
+
+.flri {
+	float: right;
+	margin-right: 15px;
+}
+
+.flle {
+	float: left;
+	margin-left: 15px;
+}
+
+.dButton {
+	border: none;
+	padding: .25em .5em;
+	margin: .25em .15em;
+	font-size: 1em;
+	color: white;
+}
+
+.adminButton {
+	width: 15em;
+}
+
+#categorySelects, #add_cat {
+	display: inline;
+}
+
+/** Footer */
+#credits {
+    font-size: .75em;
+    margin: 20px;
+}
+
+.aboutlink:visited, .aboutlink:hover, .aboutlink:link, .aboutlink:active {
+	color: black;
+	text-decoration: none;
+}
