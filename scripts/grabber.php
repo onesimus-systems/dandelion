@@ -9,6 +9,7 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+session_name('dan_session');
 session_start();
 
 // Define constants
