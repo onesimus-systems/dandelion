@@ -1,21 +1,23 @@
 /* Halloween theme for Cheesto
  *
  * @author Lee Keitel
- * @date Feb 2014 
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
 **/
 @import "colors";
     
 #presence {
-    background-color: @orange + #001623; //#F39A61;
-    color: black;
+    background-color: @mainBody + #001623;
+    color: @mainText;
 }
 
 .linklike {
-	background-color: @button;
+	.buttonRegular;
 }
 
 .linklike:hover {
-	background-color: @buttonHover;
+	.buttonHover;
 }
 
 #showHide {
