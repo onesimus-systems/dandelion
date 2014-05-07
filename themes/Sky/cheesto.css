@@ -1,19 +1,37 @@
 /* Sky theme for Cheesto
  *
  * @author Lee Keitel
- * @date Feb 2014 
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
 **/
-
-    
+/* Colors for Dandelion Sky theme
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
+.buttonRegular {
+  background-color: #9a2e15;
+  color: #ffffff;
+}
+.buttonHover {
+  background-color: #ffa38d;
+  color: #000000;
+}
 #presence {
-    background-color: #17739A;
-    color: white;
+  background-color: #35c9ff;
+  color: #000000;
 }
-
 .linklike {
-	background-color: #9A2E15;
+  background-color: #9a2e15;
+  color: #ffffff;
 }
-
 .linklike:hover {
-	background-color: #FFA38D;
+  background-color: #ffa38d;
+  color: #000000;
+}
+#showHide {
+  color: #000000;
 }
