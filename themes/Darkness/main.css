@@ -1,47 +1,45 @@
-/* Darkness theme for Dandelion Web Log
+/* Halloween theme for Dandelion Web Log
  *
  * @author Lee Keitel
  * @date Feb 2014 
 **/
-
 body {
-	background-color: black;
+  background-color: #6e6e6e;
+  color: white;
 }
-
-#login {
-	background-color: #F3843E;
-}
-
+#login,
 #refreshed_core {
-	background-color: #F3843E;
+  background-color: #f3843e;
 }
-
-#nav_link a:visited, #nav_link a:link, #nav_link a:active {
-	background-color: #393939;
-	color: white;
+#nav_link a:visited,
+#nav_link a:link,
+#nav_link a:active {
+  background-color: #393939;
+  color: white;
 }
-
 #nav_link a:hover {
-	background-color: #F3843E;
-	color: black;
+  background-color: #f3843e;
+  color: black;
 }
-
 .pagination {
-	background-color: #393939;
+  background-color: #393939;
 }
-
-.pagination input, #login_button, .logentry input {
-	background-color: #393939;
+.pagination input {
+  background-color: #393939;
 }
-
-.dButton {
-	background-color: #393939;
+.pagination input:hover {
+  background-color: #ff9900;
 }
-
-.pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
-	background-color: #FF9900;
+.dButton,
+#login_button,
+.logentry input {
+  background-color: #393939;
 }
-
+.dButton:hover,
+#login_button:hover,
+.logentry input:hover {
+  background-color: #ff9900;
+}
 .white {
-	color: white;
+  color: white;
 }

@@ -1,17 +1,15 @@
-/* Darkness theme for Cheesto Popout
+/* Halloween theme for Cheesto Popout
  *
  * @author Lee Keitel
  * @date Feb 2014 
 **/
-
 body {
-	background-color: #6E6E6E;
+  background-color: #6e6e6e;
+  color: black;
 }
-
 #mainWindow {
-	background-color: #F3843E;
+  background-color: #f3843e;
 }
-
 #presence {
-    background-color: #ffffff;
+  background-color: #ffffff;
 }
