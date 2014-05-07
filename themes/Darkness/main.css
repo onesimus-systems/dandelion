@@ -62,6 +62,9 @@ body {
   background-color: #111111;
   color: #ffffff;
 }
-.white {
+.aboutlink:visited,
+.aboutlink:hover,
+.aboutlink:link,
+.aboutlink:active {
   color: white;
 }
