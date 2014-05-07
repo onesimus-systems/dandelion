@@ -21,9 +21,28 @@
   color: #000000;
 }
 body {
-  background-color: #93d2ed;
+  background-color: #35c9ff;
   color: #000000;
 }
-#mainWindow {
-  background-color: #35b3e8;
+/* Sky theme for Cheesto
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
+#presence {
+  background-color: #35c9ff;
+  color: #000000;
+}
+#presence #showHide {
+  color: #000000;
+}
+.linklike {
+  background-color: #9a2e15;
+  color: #ffffff;
+}
+.linklike:hover {
+  background-color: #ffa38d;
+  color: #000000;
 }

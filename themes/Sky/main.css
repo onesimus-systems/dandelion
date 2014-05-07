@@ -25,7 +25,7 @@ body {
   color: black;
 }
 #login,
-#refreshed_core {
+#divMain #refreshed_core {
   background-color: #35b3e8;
   color: #000000;
 }

@@ -24,14 +24,14 @@
   background-color: #35c9ff;
   color: #000000;
 }
+#presence #showHide {
+  color: #000000;
+}
 .linklike {
   background-color: #9a2e15;
   color: #ffffff;
 }
 .linklike:hover {
   background-color: #ffa38d;
-  color: #000000;
-}
-#showHide {
   color: #000000;
 }
