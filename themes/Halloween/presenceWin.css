@@ -21,9 +21,28 @@
   color: #000000;
 }
 body {
-  background-color: #6e6e6e;
+  background-color: #f39a61;
   color: #000000;
 }
-#mainWindow {
-  background-color: #f3843e;
+/* Halloween theme for Cheesto
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
+#presence {
+  background-color: #f39a61;
+  color: #000000;
+}
+#presence #showHide {
+  color: #000000;
+}
+.linklike {
+  background-color: #393939;
+  color: #ffffff;
+}
+.linklike:hover {
+  background-color: #ff9900;
+  color: #000000;
 }
