@@ -8,16 +8,12 @@ All themes are in their own folder under the 'themes' folder of the Dandelion ro
 File structure
 --------------
 
-<pre>
-themes
-  |
-  |-Your Theme
-  	  |
-  	  |-cheesto.css - Styles for the mini version of the Cheesto user status module
-  	  |-main.css - The main stylesheet for Dandelion. This file is used on almost every page and dictates background color, button colors, etc.
-  	  |-presenceWin.css - Styles for the windowed version of the Cheesto module
-  	  |-tutorial.css - Styles for the tutorial page
-</pre>
+ROOT/themes/Your Theme/
+
+* cheesto.css - Styles for the mini version of the Cheesto user status module
+* main.css - The main stylesheet for Dandelion. This file is used on almost every page and dictates background color, button colors, etc.
+* presenceWin.css - Styles for the windowed version of the Cheesto module
+* tutorial.css - Styles for the tutorial page
 
 Notes
 -----
