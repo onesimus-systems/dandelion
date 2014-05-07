@@ -23,6 +23,10 @@
 #presence {
   background-color: #242424;
   color: #ffffff;
+  text-align: center;
+}
+#presence #showHide {
+  color: #ffffff;
 }
 .linklike {
   background-color: #858585;
@@ -31,7 +35,4 @@
 .linklike:hover {
   background-color: #111111;
   color: #ffffff;
-}
-#showHide {
-  color: black;
 }
