@@ -11,8 +11,8 @@
 ***/
 
 function getTheme() {
-	$theme = !empty($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : 'default';
-	$theme = is_dir(ROOT.'/'.THEME_DIR.'/'.$theme) ? $theme : 'default';
+	$theme = !empty($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : $_SESSION['app_settings']['default_theme'];
+	$theme = is_dir(ROOT.'/'.THEME_DIR.'/'.$theme) ? $theme : $_SESSION['app_settings']['default_theme'];
 	return $theme;
 }
 
@@ -20,9 +20,14 @@ function getThemeList($theme = null) {
 	// The call can pass the theme currently used,
 	// if one isn't passed, assume the current user's theme
 	$currentTheme = ($theme===null) ? getTheme() : $theme;
+	
+	if ($theme == 'default') {
+		$currentTheme = $_SESSION['app_settings']['default_theme'];
+	}
+	
 	$handle = opendir('themes');
 	
-	echo '<select name="userTheme">';
+	echo '<select name="userTheme" id="userTheme">';
 	while (false !== ($themeName = readdir($handle))) {
 		if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
 			if ($themeName == $currentTheme) {

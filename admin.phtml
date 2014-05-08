@@ -28,7 +28,15 @@ else {
 			<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location='editusers.phtml'"><br>
 			<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location='categories.phtml'"><br>
 			<input type="button" class="dButton adminButton" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['app_settings']['slogan']); ?>');" value="Edit Site Slogan">
-			<br><br><hr width="350">
+			<br><br><hr width="350"><br>
+
+            Default theme:
+        	
+        	<?php getThemeList('default'); ?>
+        	
+            <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme" />
+            
+            <br><br><hr width="350">
 			<h3>Database Administration</h3>
 			<input type="button" class="dButton adminButton" value="Export Database to File" onClick="adminAction.backupDB();" title="Creates a single file backup of the Dandelion database tables.&#013;If you have a lot of log entries, the file will be large."><br>
     	</form>
