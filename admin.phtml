@@ -34,7 +34,15 @@ else {
         	
         	<?php getThemeList('default'); ?>
         	
-            <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme" />
+            <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
+            
+            &#264;eesto:
+            <select id="cheesto_enabled">
+                <option value="true" <?php echo $_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Enabled</option>
+                <option value="false" <?php echo !$_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Disabled</option>
+            </select>
+            
+            <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save">
             
             <br><br><hr width="350">
 			<h3>Database Administration</h3>

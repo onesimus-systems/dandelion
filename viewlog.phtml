@@ -46,6 +46,10 @@ else {
 	</head>
     
 	<body onLoad="refreshFun.startrefresh();">
+	
+		<?php
+		if ($_SESSION['app_settings']['cheesto_enabled']) {
+		?>
         <div id="presence">
 	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto:</h3>
         	<div id="mainPresence">
@@ -68,6 +72,9 @@ else {
 	            <div id="pt"></div>
             </div>
         </div>
+        <?php
+		}
+        ?>
     
         <div id="divMain">
             <header>

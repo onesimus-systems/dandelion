@@ -45,4 +45,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			
 			echo 'Default theme set successfully';
 		}
+		
+		elseif ($a_action == 'cheesto') {
+			// Set cheesto enabled/disabled
+			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :enabled WHERE `name` = "cheesto_enabled"';
+			$enabled = ($_POST['enabled'] == 'true') ? 1 : 0;
+			$params = array(
+				'enabled' => $enabled		
+			);
+			$conn->queryDB($stmt, $params);
+			
+			$_SESSION['app_settings']['cheesto_enabled'] = $enabled;
+			
+			echo 'Settings set successfully';
+		}
 }

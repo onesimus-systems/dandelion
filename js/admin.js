@@ -23,13 +23,25 @@ var adminAction = {
 		_.ajax(params);
 	},
 	
-	saveDefaultTheme: function(defaultTheme) {
+	saveDefaultTheme: function() {
         var newTheme = document.getElementById('userTheme').value;
         
 		var params = new Object;
 		
 		params.address = "scripts/admin_actions.php";
 		params.data = 'sub_action=defaultTheme&theme=' + encodeURIComponent(newTheme);
+		params.success = function() { alert(responseText); };
+		
+		_.ajax(params);
+	},
+	
+	saveCheesto: function() {
+        var cheesto = document.getElementById('cheesto_enabled').value;
+        
+		var params = new Object;
+		
+		params.address = "scripts/admin_actions.php";
+		params.data = 'sub_action=cheesto&enabled=' + encodeURIComponent(cheesto);
 		params.success = function() { alert(responseText); };
 		
 		_.ajax(params);
