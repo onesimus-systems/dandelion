@@ -97,6 +97,9 @@ body {
   text-align: left;
   border: none;
 }
+#getDate {
+  margin-top: 1em;
+}
 #getDate table {
   border-collapse: collapse;
 }
