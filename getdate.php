@@ -25,7 +25,7 @@ if (!authenticated()) {
     </head>
     
     <body>
-        <form>
+        <form id="getDate">
             <table>
                 <thead>
                     <tr><td colspan="2">Quick Set:</td></tr>
