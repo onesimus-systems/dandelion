@@ -47,6 +47,7 @@ v4.6.0
 	- Admins can set a default theme
 - Cheesto can be disabled site-wide
 - Internal APIs for stylesheet and JS loading
+- PHP session cookies are identified with a unique prefix
 - Bug fixes
 - Code refactoring
 
