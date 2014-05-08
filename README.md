@@ -1,4 +1,4 @@
-Dandelion v4.5.1
+Dandelion v4.6.0
 ================
 
 Dandelion is a web-based entry log application.
