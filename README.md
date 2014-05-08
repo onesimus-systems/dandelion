@@ -40,6 +40,16 @@ Dandelion needs write permissions to the config directory in order to install. I
 Release Notes
 -------------
 
+v4.6.0
+
+- Better theme handling
+	- Easier to create themes
+	- Admins can set a default theme
+- Cheesto can be disabled site-wide
+- Internal APIs for stylesheet and JS loading
+- Bug fixes
+- Code refactoring
+
 v4.5.1
 
 - Added compatibility libraries for older PHP versions
