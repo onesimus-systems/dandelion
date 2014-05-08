@@ -1,47 +1,70 @@
 /* Halloween theme for Dandelion Web Log
  *
  * @author Lee Keitel
- * @date Feb 2014 
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
 **/
-
+/* Colors for Dandelion Halloween theme
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
+.buttonRegular {
+  background-color: #393939;
+  color: #ffffff;
+}
+.buttonHover {
+  background-color: #ff9900;
+  color: #000000;
+}
 body {
-	background-color: #6E6E6E;
+  background-color: #6e6e6e;
+  color: white;
 }
-
-#login {
-	background-color: #F3843E;
+#login,
+#divMain #refreshed_core {
+  background-color: #f3843e;
+  color: #000000;
 }
-
-#refreshed_core {
-	background-color: #F3843E;
+#nav_link a:visited,
+#nav_link a:link,
+#nav_link a:active {
+  background-color: #393939;
+  color: #ffffff;
 }
-
-#nav_link a:visited, #nav_link a:link, #nav_link a:active {
-	background-color: #393939;
-	color: white;
-}
-
 #nav_link a:hover {
-	background-color: #F3843E;
-	color: black;
+  background-color: #ff9900;
+  color: #000000;
 }
-
 .pagination {
-	background-color: #393939;
+  background-color: #393939;
 }
-
-.pagination input, #login_button, .logentry input {
-	background-color: #393939;
+.pagination input {
+  background-color: #393939;
+  color: #ffffff;
 }
-
-.dButton {
-	background-color: #393939;
+.pagination input:hover {
+  background-color: #ff9900;
+  color: #000000;
 }
-
-.pagination input:hover, #login_button:hover, .logentry input:hover, .dButton:hover {
-	background-color: #FF9900;
+.dButton,
+#login_button,
+.logentry input {
+  background-color: #393939;
+  color: #ffffff;
 }
-
-.white {
-	color: white;
+.dButton:hover,
+#login_button:hover,
+.logentry input:hover {
+  background-color: #ff9900;
+  color: #000000;
+}
+.aboutlink:visited,
+.aboutlink:hover,
+.aboutlink:link,
+.aboutlink:active {
+  color: white;
 }

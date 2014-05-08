@@ -33,8 +33,6 @@ if (authenticated()) {
         
         $_SESSION['userInfo']['firsttime'] = 0;
     }
-	
-	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -46,10 +44,7 @@ else {
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
-        <link rel="stylesheet" type="text/css" href="styles/tutorial.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/tutorial.css" />
+		<?php loadCssSheets("tutorial"); ?>
 		<title>Dandelion Web Log - Tutorial</title>
 	</head>
 	<body>

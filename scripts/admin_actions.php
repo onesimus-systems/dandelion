@@ -24,13 +24,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$conn->queryDB($stmt, $params);
 			
 			$_SESSION['app_settings']['slogan'] = $_POST['slogan'];
+			
+			echo 'Slogan set successfully';
 		}
 		
 		elseif ($a_action == 'backupdb') {
 			include 'backupdb.php';
 			backupDB();
 		}
-	}
-	else {
-		header( 'Location: ../admin.phtml' );
-	}
+		
+		elseif ($a_action == 'defaultTheme') {
+			// Set new default theme
+			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :theme WHERE `name` = "default_theme"';
+			$params = array(
+				'theme' => $_POST['theme']		
+			);
+			$conn->queryDB($stmt, $params);
+			
+			$_SESSION['app_settings']['default_theme'] = $_POST['theme'];
+			
+			echo 'Default theme set successfully';
+		}
+		
+		elseif ($a_action == 'cheesto') {
+			// Set cheesto enabled/disabled
+			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :enabled WHERE `name` = "cheesto_enabled"';
+			$enabled = ($_POST['enabled'] == 'true') ? 1 : 0;
+			$params = array(
+				'enabled' => $enabled		
+			);
+			$conn->queryDB($stmt, $params);
+			
+			$_SESSION['app_settings']['cheesto_enabled'] = $enabled;
+			
+			echo 'Settings set successfully';
+		}
+}

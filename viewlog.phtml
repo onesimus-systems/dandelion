@@ -25,8 +25,6 @@ if (authenticated()) {
 	else {
 		$add_link = '';
 	}
-	
-	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -43,15 +41,15 @@ else {
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
-		<link rel="stylesheet" type="text/css" href="styles/presence.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/cheesto.css" />
-		<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css" />
+		<?php loadCssSheets("cheesto","jquery"); ?>
 		<title>Dandelion Web Log</title>
 	</head>
     
 	<body onLoad="refreshFun.startrefresh();">
+	
+		<?php
+		if ($_SESSION['app_settings']['cheesto_enabled']) {
+		?>
         <div id="presence">
 	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto:</h3>
         	<div id="mainPresence">
@@ -74,6 +72,9 @@ else {
 	            <div id="pt"></div>
             </div>
         </div>
+        <?php
+		}
+        ?>
     
         <div id="divMain">
             <header>
@@ -85,7 +86,7 @@ else {
                     <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
                     <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();" /><br />
                     
-                    <span class="white">Filter: </span>
+                    Filter: 
                     <div id="categorySelects"></div>
                     
                     <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');" />
@@ -101,12 +102,7 @@ else {
                 <?php include_once 'scripts/footer.php'; ?>
             </footer>
         </div>
-        
-        <script src="jquery/js/jquery-2.1.0.min.js"></script>
-        <script src="jquery/js/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="js/lQuery.js"></script>
-        <script src="js/catManage.js"></script>
-        <script src="js/mainScripts.js"></script>
-        <script src="js/presence.js"></script>
+
+        <?php loadJS("jquery","jqueryui","lquery","catmanage","main","cheesto")?>
 	</body>
 </html>

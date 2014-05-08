@@ -1,17 +1,52 @@
 /* Darkness theme for Cheesto Popout
  *
  * @author Lee Keitel
- * @date Feb 2014 
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
 **/
-
+/* Colors for Dandelion Darkness theme
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
+.buttonRegular {
+  background-color: #858585;
+  color: #ffffff;
+}
+.buttonHover {
+  background-color: #111111;
+  color: #ffffff;
+}
 body {
-	background-color: #6E6E6E;
+  background-color: #242424;
+  color: #ffffff;
 }
-
-#mainWindow {
-	background-color: #F3843E;
-}
-
+/* Darkness theme for Cheesto
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
 #presence {
-    background-color: #ffffff;
+  background-color: #242424;
+  color: #ffffff;
+  text-align: center;
+}
+#presence #showHide {
+  color: #ffffff;
+}
+.linklike {
+  background-color: #858585;
+  color: #ffffff;
+}
+.linklike:hover {
+  background-color: #111111;
+  color: #ffffff;
+}
+#presence {
+  text-align: left;
 }

@@ -94,6 +94,12 @@ $theme = 'default';
                 </tr>
             </table>
             <table>
+            	<tr>
+            		<td>Dandelion Path:</td>
+            		<td><input type="text" name="danPath"> (http://host.com/folder)</td>
+            	</tr>
+            </table>
+            <table>
                 <tr>
                    <td><input type="submit" value="Finish Install" /></td>
                 </tr>

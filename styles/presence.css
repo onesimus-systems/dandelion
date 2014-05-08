@@ -3,93 +3,76 @@
  * @author Lee Keitel
  * @date Feb 2014 
 **/
-
-body {
-    margin: 0px 0px;
-    text-align: left;
-    width: 100%;
-}
-    
 #presence {
-    position: absolute;
-    float: left;
-    left: 1em;
-    max-width: 12em;
-    border: 1px solid black;
-    padding: 5px;
-	color: black;
+  position: absolute;
+  float: left;
+  left: 1em;
+  max-width: 12em;
+  border: 1px solid black;
+  padding: 5px;
+  color: black;
+  text-align: left;
 }
-
-#divMain {
-    margin: 0px auto;
-    text-align: center;
-    width: 60%;
+#presence .linklike {
+  margin-top: .5em;
+  cursor: default;
+  border: none;
+  padding: .5em 1em;
+  font-size: 1em;
+  color: white;
 }
-
-#showHide {
-	color: white;
-	text-decoration: none;
+#presence .linklike:hover {
+  color: black;
 }
-
-h3 {
-    margin: 0px;
-    margin-bottom: 5px;
+#presence .set {
+  padding: .25em .5em;
 }
-
-table {
-    border-collapse: collapse;
+#presence #showHide {
+  color: black;
+  text-decoration: none;
 }
-
-td {
-    border: 1px solid black;
-    padding: 5px;
+#presence h3 {
+  margin: 0;
+  margin-bottom: 5px;
 }
-
-.statusi {
-    text-align: center;
+#presence table,
+#presence .tables {
+  border-collapse: collapse;
 }
-
-thead td {
-    font-weight: bold;
+#presence table thead td,
+#presence .tables thead td {
+  font-weight: bold;
 }
-
-.green {
-    color: green;
-    cursor: help;
+#presence table .statusi,
+#presence .tables .statusi {
+  text-align: center;
 }
-
-.blue {
-    color: blue;
-    cursor: help;
+#presence table td,
+#presence .tables td {
+  border: 1px solid black;
+  padding: 5px;
 }
-
-.red {
-    color: red;
-    cursor: help;
+#presence table td .message,
+#presence .tables td .message {
+  cursor: help;
 }
-
-.message {
-    cursor: help;
+#presence table td .green,
+#presence .tables td .green {
+  color: green;
+  cursor: help;
 }
-
-.linklike {
-    margin-top: .5em;
-    cursor: default;
-	border: none;
-	padding: .5em 1em;
-	font-size: 1em;
-	color: white;
+#presence table td .blue,
+#presence .tables td .blue {
+  color: blue;
+  cursor: help;
 }
-
-.set {
-	padding: .25em .5em;
+#presence table td .red,
+#presence .tables td .red {
+  color: red;
+  cursor: help;
 }
-
-.linklike:hover {
-	color: black;
-}
-
-td.cen {
-	text-align: center;
-	border: none;	
+#presence table td.cen,
+#presence .tables td.cen {
+  text-align: center;
+  border: none;
 }

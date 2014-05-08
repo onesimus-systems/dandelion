@@ -9,6 +9,7 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+session_name('dan_session');
 session_start();
 
 // Define constants
@@ -28,6 +29,7 @@ require_once ROOT.'/scripts/authenticate.php';
 require_once ROOT.'/scripts/userRights.php';
 require_once ROOT.'/scripts/themes.php';
 require_once ROOT.'/scripts/logging.php';
+require_once ROOT.'/scripts/scripts.php';
 require_once ROOT.'/scripts/password_compat/password.php';
 
 // Load config into session variable
@@ -45,6 +47,10 @@ if(!isset($_SESSION['config'])) {
 
 if (!defined('DB_PREFIX')) {
 	define('DB_PREFIX', $_SESSION['config']['db_prefix']);	// DB table prefix as a constant
+}
+
+if (!defined('HOSTNAME')) {
+	define('HOSTNAME', $_SESSION['config']['hostname']);
 }
 
 error_reporting(E_ALL);
