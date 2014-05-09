@@ -16,16 +16,22 @@ class UserForms
 	 *
 	 * @return nothing
 	 */
-	public function confirmDelete($name, $uid) { 
-	?>
-		<br /><hr width="500">
-		Are you sure you want to delete "<?php echo $name; ?>"?<br /><br />
-		<form method="post">
-			<input type="hidden" name="the_choosen_one" value="<?php echo $uid; ?>" />
-			<input type="submit" name="sub_type" value="Yes" />
-			<input type="submit" value="No" />
-		</form><hr width="500"><br />
-	<?php
+	public function confirmDelete($name, $uid) {
+		if ($uid != $_SESSION['userInfo']['userid']) {
+    	?>
+    		<br /><hr width="500">
+    		Are you sure you want to delete "<?php echo $name; ?>"?<br /><br />
+    		<form method="post">
+    			<input type="hidden" name="the_choosen_one" value="<?php echo $uid; ?>" />
+    			<input type="submit" name="sub_type" value="Yes" />
+    			<input type="submit" value="No" />
+    		</form>
+    		<hr width="500"><br />
+    	<?php
+		}
+		else {
+			echo '<br>You can\'t delete yourself.<br><br>';
+		}
 	}
 
 	/** Edit user status form

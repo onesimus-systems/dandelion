@@ -156,7 +156,7 @@ class User
 	 * @return Success message
 	 */
 	public function deleteUser($uid = null) {
-		if (!empty($uid)) {
+		if (!empty($uid) && $uid != $_SESSION['userInfo']['userid']) {
 			$stmt = 'DELETE FROM `'.DB_PREFIX.'users` WHERE `userid` = :userid';
 			$stmt2 = 'DELETE FROM `'.DB_PREFIX.'presence` WHERE `uid` = :userid';
 			$params = array(
