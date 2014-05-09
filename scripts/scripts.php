@@ -47,6 +47,7 @@ function loadJS() {
 				echo '<script src="js/mainScripts.js"></script>';
 				break;
 			case "cheesto":
+			case 'presence':
 				echo '<script src="js/presence.js"></script>';
 				break;
 		}
