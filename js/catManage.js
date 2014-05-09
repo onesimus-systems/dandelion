@@ -53,7 +53,7 @@ var CategoryManage = {
 			newCatDesc = window.prompt(message+catString);
 			
 			if (newCatDesc == '') {
-				alert('Please enter a category description')
+				alert('Please enter a category description');
 			}
 			else if (newCatDesc == null) {
 				return false;
