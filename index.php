@@ -35,7 +35,6 @@ if (authenticated()) {
 }
 
 else {
-    $showlogin = true;
     $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
 	
 	$theme = getTheme();
