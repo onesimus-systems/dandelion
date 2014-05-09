@@ -10,6 +10,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 		'db_name' => $_POST['dbname']
 	);
 	
+	$hostname = rtrim($_POST['danPath'], "/");
+	
 	try {
         if (is_writable('../config')) { // Is it possible to write the config file?
 
@@ -23,6 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     
                 case 'sqlite':
                     $db_unique_filename = mt_rand(1, 100); // To prevent overwriting an old database, generate a random number as a unique identifier
+                    if (!is_dir(dirname(dirname(__FILE__)).'/database')) {
+                        mkdir(dirname(dirname(__FILE__)).'/database');
+                    }
                     $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database/database'.$db_unique_filename.'.sq3';
                     $db_user = null;
                     $db_pass = null;
@@ -50,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 $exec->execute();
                 
                 $allTables = $exec->fetchAll();
-                
+
                 if ($allTables[0]) {
                     $drop = 'DROP TABLES ';
                     
@@ -65,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     $exec->execute();
                 }
             }
-
+            
             include_once $CONFIG['db_type'].'Install.php'; // Load the database specific creation commands
             
             $conn = null;
@@ -82,7 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
             $newFile .= "'db_pass' => '".$CONFIG['db_pass']."',\n";
             $newFile .= "'db_prefix' => 'dan_',\n";
             $newFile .= "'installed' => true,\n";
-            $newFile .= "'debug' => false\n";
+            $newFile .= "'debug' => false,\n";
+            $newFile .= "'hostname' => '".$hostname."',\n";
             $newFile .= ");";
             
             fwrite($handle, $newFile);

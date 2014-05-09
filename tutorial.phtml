@@ -16,25 +16,6 @@ include_once 'scripts/grabber.php';
 if (authenticated()) {
 
 	userLinks();
-    $first = '';
-    
-    if ($_SESSION['userInfo']['firsttime'] == 1) {
-        $first = 'When you\'re ready, click the Homepage link at the top to begin using Dandelion.';
-        
-        // Connect to DB
-        $conn = new dbManage();
-
-        // Update record and change firsttime
-        $stmt = 'UPDATE `'.DB_PREFIX.'users` SET `firsttime` = 0 WHERE `userid` = :myID';
-        $params = array(
-            'myID' => $_SESSION['userInfo']['userid']
-        );
-        $conn->queryDB($stmt, $params);
-        
-        $_SESSION['userInfo']['firsttime'] = 0;
-    }
-	
-	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -46,10 +27,7 @@ else {
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
-        <link rel="stylesheet" type="text/css" href="styles/tutorial.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/tutorial.css" />
+		<?php loadCssSheets("tutorial"); ?>
 		<title>Dandelion Web Log - Tutorial</title>
 	</head>
 	<body>

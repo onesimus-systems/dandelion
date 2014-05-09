@@ -8,5 +8,6 @@ $CONFIG = array(
     'db_pass' => '',
 	'db_prefix' => 'dan_',
     'installed' => true,
-	'debug' => false
+	'debug' => false,
+	'hostname' => ''
 );

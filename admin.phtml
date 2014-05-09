@@ -3,7 +3,6 @@ include_once 'scripts/grabber.php';
 
 if (authenticated()) {
 	userLinks();
-	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -15,8 +14,7 @@ else {
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
+		<?php loadCssSheets(); ?>
 		<title>Dandelion Web Log</title>
 	</head>
 	<body>
@@ -30,7 +28,23 @@ else {
 			<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location='editusers.phtml'"><br>
 			<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location='categories.phtml'"><br>
 			<input type="button" class="dButton adminButton" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['app_settings']['slogan']); ?>');" value="Edit Site Slogan">
-			<br><br><hr width="350">
+			<br><br><hr width="350"><br>
+
+            Default theme:
+        	
+        	<?php getThemeList('default'); ?>
+        	
+            <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
+            
+            &#264;eesto:
+            <select id="cheesto_enabled">
+                <option value="true" <?php echo $_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Enabled</option>
+                <option value="false" <?php echo !$_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Disabled</option>
+            </select>
+            
+            <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save">
+            
+            <br><br><hr width="350">
 			<h3>Database Administration</h3>
 			<input type="button" class="dButton adminButton" value="Export Database to File" onClick="adminAction.backupDB();" title="Creates a single file backup of the Dandelion database tables.&#013;If you have a lot of log entries, the file will be large."><br>
     	</form>
@@ -39,7 +53,6 @@ else {
             <?php include_once 'scripts/footer.php'; ?>
         </footer>
         
-        <script src="js/lQuery.js"></script>
-        <script src="js/admin.js"></script>
+        <?php loadJS("lquery","admin.js");?>
 	</body>
 </html>

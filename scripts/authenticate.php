@@ -77,9 +77,6 @@ function isuser($uname, $pword, $conn) {
 		trigger_error($uname.' logged in at ' . date("Y-m-d H:i:s"), E_USER_NOTICE);
 		
 		switch($sel_user[0]['firsttime']) {
-			case 1:
-				header ( 'Location: ../tutorial.phtml' );
-				break;
 			case 2:
 				header ( 'Location: ../reset.phtml' );
 				break;

@@ -9,11 +9,12 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+session_name('dan_session');
 session_start();
 
 // Define constants
 if (!defined('D_VERSION')) {
-	define('D_VERSION', '4.5.1');     			// Defines current Dandelion version
+	define('D_VERSION', '4.6.0');     			// Defines current Dandelion version
 }
 if (!defined('THEME_DIR')) {
 	define('THEME_DIR', 'themes');	 			// Defines theme directory
@@ -28,8 +29,8 @@ require_once ROOT.'/scripts/authenticate.php';
 require_once ROOT.'/scripts/userRights.php';
 require_once ROOT.'/scripts/themes.php';
 require_once ROOT.'/scripts/logging.php';
+require_once ROOT.'/scripts/scripts.php';
 require_once ROOT.'/scripts/password_compat/password.php';
-require_once ROOT.'/scripts/compatibility.php';
 
 // Load config into session variable
 if(!isset($_SESSION['config'])) {
@@ -39,13 +40,17 @@ if(!isset($_SESSION['config'])) {
 	}
 	else {
 		trigger_error('No configuration file found. Please create ROOT/config/config.php.', E_USER_ERROR);
-		echo 'No configuration file found.  Please create ROOT/config/config.php.';
+		echo 'No configuration file found.  Please create ROOT/config/config.php or <a href="./install">Start the Installer</a>.';
 		exit;
 	}
 }
 
 if (!defined('DB_PREFIX')) {
 	define('DB_PREFIX', $_SESSION['config']['db_prefix']);	// DB table prefix as a constant
+}
+
+if (!defined('HOSTNAME')) {
+	define('HOSTNAME', $_SESSION['config']['hostname']);
 }
 
 error_reporting(E_ALL);

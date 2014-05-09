@@ -3,7 +3,6 @@ include_once 'scripts/grabber.php';
 
 if (authenticated()) {
 	userLinks();
-	$theme = getTheme();
 }
 else {
 	header( 'Location: index.php' );
@@ -17,15 +16,9 @@ $showList = true;
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico">
-		<link rel="stylesheet" type="text/css" href="styles/main.css">
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css">
-		<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">
-		<link rel="stylesheet" type="text/css" href="styles/datetimepicker.css">
+		<?php loadCssSheets("jquery","datetimepicker.css"); ?>
 		<title>Dandelion Web Log</title>
-        <script src="jquery/js/jquery-2.1.0.min.js"></script>
-        <script src="jquery/js/jquery-ui-1.10.4.custom.min.js"></script>
-        <script src="jquery/js/timepicker.js"></script>
-        <script src="jquery/js/slider.js"></script>
+        <?php loadJS("jquery","jqueryui","timepicker.js","slider.js");?>
 	</head>
 	<body>
         <header>

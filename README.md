@@ -1,4 +1,4 @@
-Dandelion v4.5.1
+Dandelion v4.6.0
 ================
 
 Dandelion is a web-based entry log application.
@@ -39,6 +39,18 @@ Dandelion needs write permissions to the config directory in order to install. I
 
 Release Notes
 -------------
+
+v4.6.0
+
+- Better theme handling
+	- Easier to create themes
+	- Admins can set a default theme
+- Cheesto can be disabled site-wide
+- Internal APIs for stylesheet and JS loading
+- PHP session cookies are identified with a unique prefix
+- Tutorial no longer show for new users, it's still available in the menu
+- Bug fixes
+- Code refactoring
 
 v4.5.1
 

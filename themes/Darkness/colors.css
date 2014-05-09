@@ -1,0 +1,15 @@
+/* Colors for Dandelion Darkness theme
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
+.buttonRegular {
+  background-color: #858585;
+  color: #ffffff;
+}
+.buttonHover {
+  background-color: #111111;
+  color: #ffffff;
+}

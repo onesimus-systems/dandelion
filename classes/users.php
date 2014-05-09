@@ -85,7 +85,7 @@ class User
 				$add_real = $userInfoArray['realname'];
 				$add_role = $userInfoArray['role'];
 
-				$stmt = 'INSERT INTO `'.DB_PREFIX.'users` (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'default\')';
+				$stmt = 'INSERT INTO `'.DB_PREFIX.'users` (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'\')';
 				$params = array(
 					'username' => $add_user,
 					'password' => $add_pass,
@@ -156,7 +156,7 @@ class User
 	 * @return Success message
 	 */
 	public function deleteUser($uid = null) {
-		if (!empty($uid)) {
+		if (!empty($uid) && $uid != $_SESSION['userInfo']['userid']) {
 			$stmt = 'DELETE FROM `'.DB_PREFIX.'users` WHERE `userid` = :userid';
 			$stmt2 = 'DELETE FROM `'.DB_PREFIX.'presence` WHERE `uid` = :userid';
 			$params = array(

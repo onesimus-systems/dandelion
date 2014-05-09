@@ -27,7 +27,7 @@
 include_once 'scripts/grabber.php';
 
 if (!$_SESSION['config']['installed']) {
-	header( 'Location: install.php' );
+	header( 'Location: ./install' );
 }
 
 if (authenticated()) {
@@ -35,7 +35,6 @@ if (authenticated()) {
 }
 
 else {
-    $showlogin = true;
     $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
 	
 	$theme = getTheme();

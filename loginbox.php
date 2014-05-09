@@ -4,8 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico">
-		<link rel="stylesheet" type="text/css" href="styles/main.css">
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css">
+		<?php loadCssSheets(); ?>
 		<title>Dandelion Web Log</title>
 	</head>
 	<body>
