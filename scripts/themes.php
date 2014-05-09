@@ -63,6 +63,7 @@ function loadCssSheets() {
 		switch($sheet) {
 			// CSS for Cheesto presence system
 			case "cheesto":
+			case 'presence':
 				echo '<link rel="stylesheet" type="text/css" href="styles/presence.css">';
 				echo '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
 				break;
