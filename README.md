@@ -21,7 +21,7 @@ Install
 
 1. Decide whether you want to use MySQL/Maria or SQLite for the database
 2. Create a MySQL/Maria database to house Dandelion if you are going that route
-3. Browse to install.php in the root of Dandelion
+3. Browse to [server hostname/IP]/install
 4. Choose your database type, for MySQL/Maria type in database address, username, password, and database name
 5. The installer will direct you to the index page. Login with:
 
@@ -35,7 +35,7 @@ Install
 Notes for Install
 -----------------
 
-Dandelion needs write permissions to the config directory in order to install. If it doesn't have the proper permissions it will give you an error when you go to install.php. The permissions on the directory will be changed to read-only once Dandelion has done its thing.
+Dandelion needs write permissions to the config directory in order to install. If it doesn't have the proper permissions it will give you an error when you go to the installer. The permissions on the directory will be changed to read-only once Dandelion has done its thing.
 
 Release Notes
 -------------
@@ -56,7 +56,6 @@ v4.5.1
 
 - Added compatibility libraries for older PHP versions
 	- password_combat for PHP 5.5 password_* functions
-	- file_put_contents functions for PHP 5.5 same function
 	
 - Major bug fixes
 	- JSON syntax error for category display
@@ -89,14 +88,14 @@ v4.3.0
 v4.2.1
 
 - Fixed bug where category filter wasn't using updated AJAX API
-- Fixed bug where time and date window for Cheesto wasn't loading
 
 Third-Party Libraries
 ---------------------
 
 Dandelion utilizes the following third-party libraries:
 
-[password-compat](https://github.com/ircmaxell/password_compat) - Provides PHP 5.3 compatibility with the new PHP 5.5 password functions. License can be found in ROOT/scripts/password_combat/LICENSE.md
+* [password-compat](https://github.com/ircmaxell/password_compat) - Provides PHP 5.3 compatibility with the new PHP 5.5 password functions. Released under the MIT license which can be found in ROOT/scripts/password_combat/LICENSE.md.
+* jQuery and jQuery UI - Released under the MIT license. See jquery.org/license for more details.
 
 Versioning
 ----------
