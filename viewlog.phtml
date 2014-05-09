@@ -20,7 +20,7 @@ if (authenticated()) {
 	userLinks();
 	
 	if ($_SESSION['userInfo']['role'] !== "guest") {
-		$add_link = '<input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
+		$add_link = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 	}
 	else {
 		$add_link = '';
@@ -90,7 +90,7 @@ else {
                     <div id="categorySelects"></div>
                     
                     <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');" />
-                    | <?php echo $add_link; ?>
+                    <?php echo $add_link; ?>
                 </form>
                 
                 <div id="add_edit"></div>
