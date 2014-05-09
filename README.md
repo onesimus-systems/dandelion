@@ -48,6 +48,7 @@ v4.6.0
 - Cheesto can be disabled site-wide
 - Internal APIs for stylesheet and JS loading
 - PHP session cookies are identified with a unique prefix
+- Tutorial no longer show for new users, it's still available in the menu
 - Bug fixes
 - Code refactoring
 
