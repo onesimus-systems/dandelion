@@ -85,7 +85,7 @@ class User
 				$add_real = $userInfoArray['realname'];
 				$add_role = $userInfoArray['role'];
 
-				$stmt = 'INSERT INTO `'.DB_PREFIX.'users` (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'default\')';
+				$stmt = 'INSERT INTO `'.DB_PREFIX.'users` (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'\')';
 				$params = array(
 					'username' => $add_user,
 					'password' => $add_pass,
