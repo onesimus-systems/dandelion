@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 $exec->execute();
                 
                 $allTables = $exec->fetchAll();
-                print_r($allTables);
+
                 if ($allTables[0]) {
                     $drop = 'DROP TABLES ';
                     
