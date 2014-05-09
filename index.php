@@ -27,7 +27,7 @@
 include_once 'scripts/grabber.php';
 
 if (!$_SESSION['config']['installed']) {
-	header( 'Location: install.php' );
+	header( 'Location: ./install' );
 }
 
 if (authenticated()) {

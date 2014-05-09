@@ -40,7 +40,7 @@ if(!isset($_SESSION['config'])) {
 	}
 	else {
 		trigger_error('No configuration file found. Please create ROOT/config/config.php.', E_USER_ERROR);
-		echo 'No configuration file found.  Please create ROOT/config/config.php.';
+		echo 'No configuration file found.  Please create ROOT/config/config.php or <a href="./install">Start the Installer</a>.';
 		exit;
 	}
 }
