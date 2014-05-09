@@ -13,7 +13,7 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `dan_log`(
 		)';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
-
+          
 /** Create users table */
 $stmt = 'CREATE TABLE IF NOT EXISTS `dan_users` (
 		  `userid` INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +24,7 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `dan_users` (
 		  `datecreated` DATE NOT NULL,
 		  `firsttime` INT DEFAULT 2,
 		  `showlimit` INT DEFAULT 25,
-		  `theme` TEXT NOT NULL DEFAULT \'default\'
+		  `theme` TEXT NOT NULL
 		)';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
@@ -36,7 +36,7 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `dan_presence` (
 		  `realname` TEXT NOT NULL,
 		  `status` INT NOT NULL,
 		  `message` TEXT NOT NULL,
-		  `return` TEXT NOT NULL,
+		  `returntime` TEXT NOT NULL,
 		  `dmodified` DATETIME NOT NULL
 		)';
 $exec = $dbConn->prepare($stmt);
@@ -46,17 +46,7 @@ $exec->execute();
 $stmt = 'CREATE TABLE IF NOT EXISTS `dan_category` (
 		  `cid` INTEGER PRIMARY KEY AUTOINCREMENT,
 		  `desc` TEXT NOT NULL,
-		  `ptree` TEXT NOT NULL
-		)';
-$exec = $dbConn->prepare($stmt);
-$exec->execute();
-
-/** Create session_tokens table */
-$stmt = 'CREATE TABLE IF NOT EXISTS `dan_session_token` (
-		  `session_id` INTEGER PRIMARY KEY AUTOINCREMENT,
-		  `token` TEXT NOT NULL,
-		  `userid` INT NOT NULL,
-		  `expire` INT NOT NULL
+		  `pid` INTEGER NOT NULL
 		)';
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
@@ -71,27 +61,33 @@ $exec = $dbConn->prepare($stmt);
 $exec->execute();
 
 /** Create admin user */
-$stmt = 'INSERT INTO `dan_users` (`userid`, `username`, `password`, `realname`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`)
-			VALUES (1, \'admin\', \'$2y$10$sRDlu.F6gPVM4kS/k7ESHO9PF0Z5pXk0J/SpuMa88E31/Lux1mfMy\', \'Admin\', \'admin\', \'2014-02-08\', 2, 25, \'default\'
-		)';
+$stmt = "INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `returntime`, `dmodified`)
+        VALUES (1, 1, 'Admin', 1, '', '', '2014-01-01 00:00:00')";
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
 
-$stmt = 'INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `returntime`, `dmodified`)
-			VALUES (1, 1, \'Admin\', 1, \'\', \'00:00:00\', \'2014-02-08 10:21:34\'
-		)';
+$stmt = "INSERT INTO `dan_users` (`userid`, `username`, `password`, `realname`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`) VALUES
+        (1, 'admin', '\$2y\$10\$iMkjkCcdztMxamIul6sP2ur8IZJpNrJWYSXC6jsvl4vENwf2Vw1du', 'Admin', 'admin', '2014-01-01', 2, 25, '')";
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
 
-/** Create initial settings */
-$stmt = 'INSERT INTO `dan_settings` (`settings_id`, `name`, `value`)
-			VALUES (1, \'slogan\', \'Website Slogan\'
-		)';
+/** Create Initial Settings */
+$stmt = "INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
+        (1, 'app_title', 'Dandelion Web Log')";
 $exec = $dbConn->prepare($stmt);
 $exec->execute();
 
-$stmt = 'INSERT INTO `dan_settings` (`settings_id`, `name`, `value`)
-			VALUES (2, \'app_title\', \'Dandelion Web Log\'
-		)';
+$stmt = "INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
+        (2, 'slogan', 'Website tagline')";
+$exec = $dbConn->prepare($stmt);
+$exec->execute();
+
+$stmt = "INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
+        (3, 'default_theme', 'Halloween')";
+$exec = $dbConn->prepare($stmt);
+$exec->execute();
+
+$stmt = "INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
+        (4, 'cheesto_enabled', '1')";
 $exec = $dbConn->prepare($stmt);
 $exec->execute();

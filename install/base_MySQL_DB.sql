@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 05, 2014 at 09:13 AM
--- Server version: 5.5.36-MariaDB-1~precise-log
--- PHP Version: 5.5.10-1+deb.sury.org~precise+1
+-- Generation Time: May 08, 2014 at 05:54 PM
+-- Server version: 5.5.37-MariaDB-1~precise-log
+-- PHP Version: 5.5.11-3+deb.sury.org~precise+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `gardenerBase`
+-- Database: `dandyBase`
 --
 
 -- --------------------------------------------------------
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `dan_log` (
   `edited` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`logid`),
   UNIQUE KEY `logid` (`logid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -68,28 +68,14 @@ CREATE TABLE IF NOT EXISTS `dan_presence` (
   `returntime` text NOT NULL,
   `dmodified` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `dan_presence`
 --
 
 INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `returntime`, `dmodified`) VALUES
-(1, 1, 'Admin', 1, '', '', '0000-00-00 00:00:00');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `dan_session_token`
---
-
-CREATE TABLE IF NOT EXISTS `dan_session_token` (
-  `session_id` int(255) NOT NULL AUTO_INCREMENT,
-  `token` varchar(256) NOT NULL,
-  `userid` int(10) NOT NULL,
-  `expire` int(255) NOT NULL,
-  PRIMARY KEY (`session_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+(1, 1, 'Admin', 1, '', '', '2014-01-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -102,15 +88,17 @@ CREATE TABLE IF NOT EXISTS `dan_settings` (
   `name` tinytext NOT NULL,
   `value` mediumtext NOT NULL,
   PRIMARY KEY (`settings_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `dan_settings`
 --
 
 INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
-(1, 'slogan', ''),
-(2, 'app_title', 'Dandelion Web Log');
+(1, 'app_title', 'Dandelion Web Log'),
+(2, 'slogan', 'Website tagline'),
+(3, 'default_theme', 'Halloween'),
+(4, 'cheesto_enabled', '1');
 
 -- --------------------------------------------------------
 
@@ -130,14 +118,14 @@ CREATE TABLE IF NOT EXISTS `dan_users` (
   `theme` tinytext NOT NULL,
   PRIMARY KEY (`userid`),
   UNIQUE KEY `userid` (`userid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Dumping data for table `dan_users`
 --
 
 INSERT INTO `dan_users` (`userid`, `username`, `password`, `realname`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`) VALUES
-(1, 'admin', '$2y$10$sRDlu.F6gPVM4kS/k7ESHO9PF0Z5pXk0J/SpuMa88E31/Lux1mfMy', 'Admin', 'admin', '2014-02-08', 2, 25, '');
+(1, 'admin', '$2y$10$h0eBfRKZyyfOiEGd4F/Fa.luM3VdF3RU2285jgyGp6cGGdaa.21FO', 'Admin', 'admin', '2014-01-01', 0, 25, '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
