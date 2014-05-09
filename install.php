@@ -35,8 +35,7 @@ else {
 }
 
 if ($needToInstall) {
-	
-$theme = 'default';
+
 ?>
 <html>
     <head>
@@ -44,7 +43,7 @@ $theme = 'default';
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <title>Dandelion Web Log - Install Script</title>
         <link rel="stylesheet" href="styles/main.css" />
-		<link rel="stylesheet" type="text/css" href="themes/<?php echo $theme;?>/main.css" />
+		<link rel="stylesheet" type="text/css" href="themes/Halloween/main.css" />
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
     </head>
         
