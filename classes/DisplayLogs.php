@@ -19,8 +19,7 @@ class DisplayLogs {
       */
     public function display($grab_logs) {
         // TODO: Create a blacklist feature
-        if ($_SESSION['userInfo']['username'] != "ajmartin") {
- 
+        if ($_SESSION['rights']['viewlog']) {
             $this->pageing(); // Show page controls
             
             $this->showLogs($grab_logs); // Display log entries
@@ -28,7 +27,7 @@ class DisplayLogs {
             $this->pageing(); // Show page controls
         }
         else {
-            echo "This account does not have permission to view the activity log."; // Angie
+            echo "This account does not have permission to view the activity log.";
         }
     }
 
