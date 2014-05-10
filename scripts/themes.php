@@ -28,6 +28,7 @@ function getThemeList($theme = null) {
 	$handle = opendir('themes');
 	
 	echo '<select name="userTheme" id="userTheme">';
+	echo '<option value="default">Default</option>';
 	while (false !== ($themeName = readdir($handle))) {
 		if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
 			if ($themeName == $currentTheme) {
