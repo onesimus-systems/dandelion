@@ -1,10 +1,7 @@
 <?php
 include_once 'scripts/grabber.php';
 
-if (authenticated()) {
-	userLinks();
-}
-else {
+if (!authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>
@@ -28,9 +25,20 @@ else {
 
         <form method="post">
         	<div name="categorySelects" id="categorySelects"></div><br><br>
-        	<input type="button" class="dButton" onClick="CategoryManage.createNew();" value="Add Category">
-        	<input type="button" class="dButton" onClick="CategoryManage.deleteCat();" value="Delete Category">
-        	<input type="button" class="dButton" onClick="CategoryManage.editCat();" value="Edit Category">
+        	
+        	<?php
+        	if ($_SESSION['rights']['addcat']) {
+				echo '<input type="button" class="dButton" onClick="CategoryManage.createNew();" value="Add Category">';
+			}
+			
+			if ($_SESSION['rights']['editcat']) {
+				echo '<input type="button" class="dButton" onClick="CategoryManage.editCat();" value="Edit Category">';
+			}
+			
+			if ($_SESSION['rights']['deletecat']) {
+				echo '<input type="button" class="dButton" onClick="CategoryManage.deleteCat();" value="Delete Category">';
+			}
+        	?>
         </form>
         
         <footer>
@@ -38,5 +46,5 @@ else {
         </footer>
 	</body>
     
-    <?php loadJS("catmanage","lquery");?>
+    <?php loadJS("jquery", "catmanage","lquery");?>
 </html>
