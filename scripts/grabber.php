@@ -25,6 +25,7 @@ if (!defined('ROOT')) {
 
 // Load other scripts
 require_once ROOT.'/classes/db_functions.php';
+require_once ROOT.'/classes/permissions.php';
 require_once ROOT.'/scripts/authenticate.php';
 require_once ROOT.'/scripts/userRights.php';
 require_once ROOT.'/scripts/themes.php';
@@ -32,8 +33,11 @@ require_once ROOT.'/scripts/logging.php';
 require_once ROOT.'/scripts/scripts.php';
 require_once ROOT.'/scripts/password_compat/password.php';
 
+// Utilized in development to, well, force the config to reload without relogin.
+$forceConfigLoad = true;
+
 // Load config into session variable
-if(!isset($_SESSION['config'])) {
+if(!isset($_SESSION['config']) || $forceConfigLoad) {
 	if (file_exists(ROOT . '/config/config.php')) {
 		include ROOT.'/config/config.php';
 		$_SESSION['config'] = $CONFIG;
