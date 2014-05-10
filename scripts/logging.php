@@ -26,7 +26,7 @@ function errorHandler($error_level, $error_message, $error_file, $error_line, $e
 			E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
 	);
 	
-	$error = $errortype[$error_level] . ' | Message: ' . $error_message . ' | File: ' . $error_file . ' | Ln: ' . $error_line;
+	$error = date("Y-m-d H:i:s") . ' | ' . $errortype[$error_level] . ' | Message: ' . $error_message . ' | File: ' . $error_file . ' | Ln: ' . $error_line;
 	switch ($error_level) {
 	    case E_ERROR:
 	    case E_CORE_ERROR:
