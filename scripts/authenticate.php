@@ -70,6 +70,9 @@ function isuser($uname, $pword, $conn) {
 
 		$_SESSION['userInfo'] = $sel_user[0];
 		
+		$myPermissions = new Permissions();
+		$_SESSION['rights'] = (array) $myPermissions->loadRights($_SESSION['userInfo']['role']);
+		
 		if (isset($_POST['rememberMe']) && $_POST['rememberMe'] == 'remember') {
 			setcookie('dan_username', $_SESSION['userInfo']['username'], time()+60*60*24*30, '/');
 		}

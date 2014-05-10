@@ -55,4 +55,13 @@ class Permissions
 	function checkRights() {
 		
 	}
+	
+	function loadRights($userrole) {
+	   $stmt = 'SELECT `permissions` FROM '.DB_PREFIX.'rights WHERE `role` = :userrole';
+	   $params = array(
+	        'userrole' => $userrole
+	   );
+	   
+	   return unserialize($this->conn->queryDB($stmt, $params)[0]['permissions']);
+	}
 }
