@@ -1,19 +1,19 @@
 <?php
 include_once 'scripts/grabber.php';
 
-if (authenticated()) {
-	userLinks();
-}
-else {
+if (!authenticated()) {
 	header( 'Location: index.php' );
 }
+
+// Stays false unless a button or admin control is shown
+$content = false;
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8" />
+		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-        <link rel="icon" type="image/ico" href="images/favicon.ico" />
+        <link rel="icon" type="image/ico" href="images/favicon.ico">
 		<?php loadCssSheets(); ?>
 		<title>Dandelion Web Log</title>
 	</head>
@@ -25,30 +25,53 @@ else {
         <h2>Administration</h2>
 		
     	<form name="admin_form" method="post" action="scripts/admin_actions.php">
-			<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location='editusers.phtml'"><br>
-			<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location='editgroups.php'"><br>
-			<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location='categories.phtml'"><br>
-			<input type="button" class="dButton adminButton" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['app_settings']['slogan']); ?>');" value="Edit Site Slogan">
-			<br><br><hr width="350"><br>
-
-            Default theme:
-        	
-        	<?php getThemeList('default'); ?>
-        	
-            <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
-            
-            &#264;eesto:
-            <select id="cheesto_enabled">
-                <option value="true" <?php echo $_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Enabled</option>
-                <option value="false" <?php echo !$_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Disabled</option>
-            </select>
-            
-            <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save">
-            
-            <br><br><hr width="350">
-			<h3>Database Administration</h3>
-			<input type="button" class="dButton adminButton" value="Export Database to File" onClick="adminAction.backupDB();" title="Creates a single file backup of the Dandelion database tables.&#013;If you have a lot of log entries, the file will be large."><br>
+			<?php
+			if ($_SESSION['rights']['adduser'] || $_SESSION['rights']['edituser'] || $_SESSION['rights']['deleteuser']) {
+				echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers.phtml\'"><br>';
+				$content = true;
+			}
+			
+			if ($_SESSION['rights']['addgroup'] || $_SESSION['rights']['editgroup'] || $_SESSION['rights']['deletegroup']) {
+				echo '<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location=\'editgroups.php\'"><br>';
+				$content = true;
+			}
+			
+			if ($_SESSION['rights']['addcat'] || $_SESSION['rights']['editcat'] || $_SESSION['rights']['deletecat']) {
+				echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories.phtml\'"><br>';
+				$content = true;
+			}
+			
+			if ($_SESSION['rights']['admin']) {
+				$content = true;
+			?>
+				<input type="button" class="dButton adminButton" value="Edit Site Slogan" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['app_settings']['slogan']); ?>');">
+				<br><br><hr width="350"><br>
+	
+	            Default theme:
+	        	
+	        	<?php getThemeList('default'); ?>
+	        	
+	            <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
+	            
+	            &#264;eesto:
+	            <select id="cheesto_enabled">
+	                <option value="true" <?php echo $_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Enabled</option>
+	                <option value="false" <?php echo !$_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Disabled</option>
+	            </select>
+	            
+	            <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save">
+	            
+	            <br><br><hr width="350">
+				<h3>Database Administration</h3>
+				<input type="button" class="dButton adminButton" value="Export Database to File" onClick="adminAction.backupDB();" title="Creates a single file backup of the Dandelion database tables.&#013;If you have a lot of log entries, the file will be large."><br>
+			<?php } ?>
     	</form>
+    	
+    	<?php
+    	if (!$content) {
+    		echo 'Your account doesn\'t have rights to administrative controls.';
+    	}
+    	?>
 
         <footer>
             <?php include_once 'scripts/footer.php'; ?>

@@ -13,5 +13,5 @@
 <h1 class="t_cen"><?php echo $_SESSION['app_settings']['app_title']; ?></h1>
 <h4 class="t_cen"><?php echo $_SESSION['app_settings']['slogan']; ?></h4>
 <p class="t_cen" id="nav_link">
-<a href="index.php">View Log</a><a href="settings.phtml">Settings</a><?php echo ($_SESSION['rights']['admin']) ? '<a href="admin.phtml">Administration</a>' : ''; ?><a href="tutorial.phtml">Tutorial</a><a href="scripts/logout.php">Logout</a>
+<a href="index.php">View Log</a><a href="settings.phtml">Settings</a><a href="admin.phtml">Administration</a><a href="tutorial.phtml">Tutorial</a><a href="scripts/logout.php">Logout</a>
 </p>

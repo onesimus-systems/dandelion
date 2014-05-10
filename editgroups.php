@@ -12,10 +12,7 @@
 
 include_once 'scripts/grabber.php';
 
-if (authenticated()) {
-	userLinks();
-}
-else {
+if (!authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>

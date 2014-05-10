@@ -13,15 +13,7 @@
 
 include 'scripts/grabber.php';
 
-if (authenticated()) {
-	
-	if ($_SESSION['userInfo']['role'] == "guest") {
-		header( 'Location: viewlog.phtml' );
-	}
-	
-	userLinks();
-}
-else {
+if (!authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>
