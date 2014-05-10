@@ -24,16 +24,27 @@ $showList = true;
         
 		<?php include 'scripts/editusersaction.php'; ?>
 		
-        <?php if ($showList) {?>
+        <?php if ($showList) {?><br>
             <form method="post">
                 Action: 
-                <select name="user_action2">
+                <select name="user_action">
                     <option value="none">Select:</option>
-                    <option value="cxeesto">Change &#264;eesto</option>
-                    <option value="delete">Delete</option>
-                    <option value="edit">Edit</option>
-                    <option value="reset">Reset Password</option>
-                    <option value="add">Add User</option>
+                    
+                    <?php
+                    if ($_SESSION['rights']['adduser']) {
+                        echo '<option value="add">Add User</option>';
+                    }
+                    
+                    if ($_SESSION['rights']['deleteuser']) {
+                        echo '<option value="delete">Delete</option>';
+                    }
+                    
+                    if ($_SESSION['rights']['edituser']) {
+                        echo '<option value="edit">Edit</option>';
+                        echo '<option value="reset">Reset Password</option>';
+                        echo '<option value="cxeesto">Change &#264;eesto</option>';
+                    }
+                    ?>
                 </select>
                 
                 <input type="submit" name="sub_type" value="Go">
@@ -69,13 +80,24 @@ $showList = true;
                 <br>
                 
                 Action: 
-                <select name="user_action">
+                <select name="user_action2">
                     <option value="none">Select:</option>
-                    <option value="cxeesto">Change &#264;eesto</option>
-                    <option value="delete">Delete</option>
-                    <option value="edit">Edit</option>
-                    <option value="reset">Reset Password</option>
-                    <option value="add">Add User</option>
+                    
+                    <?php
+                    if ($_SESSION['rights']['adduser']) {
+                        echo '<option value="add">Add User</option>';
+                    }
+                    
+                    if ($_SESSION['rights']['deleteuser']) {
+                        echo '<option value="delete">Delete</option>';
+                    }
+                    
+                    if ($_SESSION['rights']['edituser']) {
+                        echo '<option value="edit">Edit</option>';
+                        echo '<option value="reset">Reset Password</option>';
+                        echo '<option value="cxeesto">Change &#264;eesto</option>';
+                    }
+                    ?>
                 </select>
                 
                 <input type="submit" name="sub_type" value="Go">
