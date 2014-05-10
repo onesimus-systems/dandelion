@@ -36,7 +36,9 @@ var permissions = {
           });
     },
     
-    getPermissions: function(group) {
+    getPermissions: function(gid) {
+        var group = typeof gid !== 'undefined' ? gid : $("#groupList")[0].value;
+        
         $.ajax({
             url: "scripts/editgroups.php",
             data: { action: "getpermissions", groups: group }
@@ -127,6 +129,107 @@ var permissions = {
 		this.drawGrid(this.currentPermissions);
     },
     
+    createNew: function() {
+        $( "#add-form" ).dialog({
+          height: 225,
+          width: 350,
+          modal: true,
+          buttons: {
+            "Create Group": function() {
+                permissions.sendNew();
+                $( this ).dialog( "close" );
+            },
+            Cancel: function() {
+              $( this ).dialog( "close" );
+            }
+          }
+        });
+    },
+    
+    sendNew: function() {
+        $.ajax({
+          type: "POST",
+          url: "scripts/editgroups.php",
+          data: { action: "create", name: $("#name").val(), rights: JSON.stringify(permissions.allPermissions) }
+        })
+          .done(function( msg ) {
+              
+              $( "#dialog" )[0].innerHTML = "<p>Rights Group Created Successfully</p>";
+              $( "#dialog" ).dialog({
+                  modal: true,
+                  width: 400,
+                  show: {
+                    effect: "fade",
+                    duration: 500
+                  },
+                  hide: {
+                    effect: "fade",
+                    duration: 500
+                  },
+                  buttons: {
+                    Ok: function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                });
+              
+                $("#permissionsForm")[0].reset();
+                $("#permissionsBlock").css( "display", "none" );
+                permissions.getList();
+          });
+    },
+    
+    deleteGroup: function() {
+        var delGroup = $("#groupList")[0].selectedOptions[0].innerText;
+        
+        $( "#dialog" )[0].innerHTML = "<p>Do you really want to delete the group '"+delGroup+"'?</p>";
+        $( "#dialog" ).dialog({
+          resizable: false,
+          modal: true,
+          buttons: {
+            "Delete Group": function() {
+                $( this ).dialog( "close" );
+              
+                var group = $("#groupList")[0].value;
+            
+                $.ajax({
+                    type: "POST",
+                    url: "scripts/editgroups.php",
+                    data: { action: "delete", groups: group }
+                })
+                  .done(function( msg ) {
+                      
+                      $( "#dialog" )[0].innerHTML = "<p>"+msg+"</p>";
+                      $( "#dialog" ).dialog({
+                          modal: true,
+                          width: 400,
+                          show: {
+                            effect: "fade",
+                            duration: 500
+                          },
+                          hide: {
+                            effect: "fade",
+                            duration: 500
+                          },
+                          buttons: {
+                            Ok: function() {
+                              $( this ).dialog( "close" );
+                            }
+                          }
+                        });
+                        
+    					$("#permissionsForm")[0].reset();
+    					$("#permissionsBlock").css( "display", "none" );
+                        permissions.getList();
+                  });
+            },
+            Cancel: function() {
+              $( this ).dialog( "close" );
+            }
+          }
+        });
+    },
+    
     drawGrid: function(object) {
 		for (var key in object) {
            if (object.hasOwnProperty(key)) {
@@ -151,5 +254,14 @@ var permissions = {
 		}
 		
 		return theGrid;
-    }
+    },
+    
+    // Checks if enter key was pressed, if so search
+    check: function(e) {
+        if (e.keyCode == 13) {
+            $( "#add-form" ).dialog( "close" );
+            this.sendNew();
+            e.preventDefault();
+        }
+    },
 };

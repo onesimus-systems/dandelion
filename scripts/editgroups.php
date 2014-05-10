@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     if ($action == 'getlist') {
         $list = $permissions->getGroupList();
         
-        echo '<select id="groupList" onChange="permissions.getPermissions(this.value);">';
+        echo '<select id="groupList">';
         echo '<option value="0">Select:</option>';
         foreach ($list as $group) {
             echo '<option value="'.$group['id'].'">'.ucfirst($group['role']).'</option>';
@@ -39,7 +39,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$action = $_POST['action'];
 	$permissions = new Permissions();
 	
-	if ($action == 'save') {
+	if ($action == 'save' && $_SESSION['rights']['editgroup']) {
     	$newPermissions = json_decode($_POST['permissions']);
     	$gid = $_POST['gid'];
     	
@@ -49,5 +49,25 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     	else {
     		echo 'An error occured';
     	}
+    }
+    
+    elseif ($action == 'create' && $_SESSION['rights']['addgroup']) {
+        $name = $_POST['name'];
+        $rights = (array) json_decode($_POST['rights']);
+        echo $permissions->createGroup($name, $rights);
+    }
+    
+    elseif ($action == 'delete' && $_SESSION['rights']['deletegroup']) {
+        $gid = $_POST['groups'];
+        
+        $users = $permissions->usersInGroup($gid);
+        
+        if ($users[0]) {
+            echo 'This group is assigned to users.<br>Can not delete this group.';
+        }
+        else {
+            $permissions->deleteGroup($gid);
+            echo 'Group deleted successfully.';
+        }
     }
 }

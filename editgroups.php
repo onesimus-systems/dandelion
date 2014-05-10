@@ -23,18 +23,45 @@ if (!authenticated()) {
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico">
-		<?php loadCssSheets('permissions.css'); ?>
+		<?php loadCssSheets('permissions.css','jquery'); ?>
 		<title>Dandelion Web Log</title>
-        <?php loadJS('permissions.js','jquery'); ?>
 	</head>
 	<body onLoad="permissions.getList();">
         <header>
             <?php include 'scripts/header.php'; ?>
         </header>
         
+        <div id="dialog" title="Alert"></div>
+        <div id="add-form" title="Create Rights Group" style="display: none;">
+            <form>
+                <fieldset style="border: none;">
+                    <label for="name">Group Name:</label>
+                    <input type="text" name="name" id="name" onKeyPress="permissions.check(event);" class="text ui-widget-content ui-corner-all" autocomplete="off">
+                </fieldset>
+            </form>
+        </div>
+        
 		<h2>Group Management</h2>
 		
 		<div id="groups"></div>
+		
+		<form>
+        	<div name="categorySelects" id="categorySelects"></div><br><br>
+        	
+        	<?php
+        	if ($_SESSION['rights']['addgroup']) {
+				echo '<input type="button" class="dButton" onClick="permissions.createNew();" value="Add Group">';
+			}
+			
+			if ($_SESSION['rights']['editgroup']) {
+				echo '<input type="button" class="dButton" onClick="permissions.getPermissions();" value="Edit Group">';
+			}
+			
+			if ($_SESSION['rights']['deletegroup']) {
+				echo '<input type="button" class="dButton" onClick="permissions.deleteGroup();" value="Delete Group">';
+			}
+        	?>
+        </form>
 		
 		<div id="permissionsBlock">
 		    <form id="permissionsForm">
@@ -97,4 +124,6 @@ if (!authenticated()) {
             <?php include_once 'scripts/footer.php'; ?>
         </footer>
 	</body>
+	
+	<?php loadJS('permissions.js','jquery','jqueryui'); ?>
 </html>
