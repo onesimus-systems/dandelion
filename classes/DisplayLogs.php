@@ -18,17 +18,11 @@ class DisplayLogs {
       * @return Nothing. All information is echoed
       */
     public function display($grab_logs) {
-        // TODO: Create a blacklist feature
-        if ($_SESSION['rights']['viewlog']) {
-            $this->pageing(); // Show page controls
-            
-            $this->showLogs($grab_logs); // Display log entries
-            
-            $this->pageing(); // Show page controls
-        }
-        else {
-            echo "This account does not have permission to view the activity log.";
-        }
+        $this->pageing(); // Show page controls
+        
+        $this->showLogs($grab_logs); // Display log entries
+        
+        $this->pageing(); // Show page controls
     }
 
     /** Displays pagintation controls
