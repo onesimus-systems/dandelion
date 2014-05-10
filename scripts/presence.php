@@ -35,11 +35,14 @@ if(authenticated()) {
 	    $updateCxeesto->refreshStatus($windowed, $windowedt);
 	}
 	else {
-		$returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
-		$message = isset($_POST['message']) ? $_POST['message'] : '';
-		
-		$updateCxeesto->updateStatus($message, $setorno, $returntime);
-	    $updateCxeesto->refreshStatus($windowed, $windowedt);
+	    if ($_SESSION['rights']['updatecheesto']) {
+    		$returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
+    		$message = isset($_POST['message']) ? $_POST['message'] : '';
+    		
+    		$updateCxeesto->updateStatus($message, $setorno, $returntime);
+	    }
+    	
+    	$updateCxeesto->refreshStatus($windowed, $windowedt);
 	}
 }
 

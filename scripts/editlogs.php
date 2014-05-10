@@ -16,18 +16,27 @@ if (!authenticated()) {
 	header( 'Location: index.php' );
 }
 
-$editedlog = isset($_POST['editlog']) ? $_POST['editlog'] : '';
-$editedtitle = isset($_POST['edittitle']) ? $_POST['edittitle'] : '';
-$logid  = isset($_POST['choosen']) ? $_POST['choosen'] : '';
+if ($_SESSION['rights']['editlog']) {
+    $editedlog = isset($_POST['editlog']) ? $_POST['editlog'] : '';
+    $editedtitle = isset($_POST['edittitle']) ? $_POST['edittitle'] : '';
+    $logid  = isset($_POST['choosen']) ? $_POST['choosen'] : '';
+    
+    if (!empty($editedlog) && !empty($editedtitle) && !empty($logid)) {
+    	$conn = new dbManage();
+    
+    	$stmt = 'UPDATE `'.DB_PREFIX.'log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :logid';
+    	$params = array(
+    	    'eTitle' => $editedtitle,
+    	    'eEntry' => $editedlog,
+    	    'logid' => $logid
+    	);
+    	$conn->queryDB($stmt, $params);
+    }
+    else {
+        echo '<span class="bad">Log entries must have a title, category, and entry text.</span>';
+    }
+}
 
-if (!empty($editedlog) && !empty($editedtitle) && !empty($logid)) {
-	$conn = new dbManage();
-
-	$stmt = 'UPDATE `'.DB_PREFIX.'log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :logid';
-	$params = array(
-	    'eTitle' => $editedtitle,
-	    'eEntry' => $editedlog,
-	    'logid' => $logid
-	);
-	$conn->queryDB($stmt, $params);
+else {
+    echo 'This account can\'t edit logs';
 }

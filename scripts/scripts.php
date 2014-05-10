@@ -48,7 +48,9 @@ function loadJS() {
 				break;
 			case "cheesto":
 			case 'presence':
-				echo '<script src="js/presence.js"></script>';
+			    if ($_SESSION['rights']['viewcheesto']) {
+				    echo '<script src="js/presence.js"></script>';
+			    }
 				break;
 		}
 	}

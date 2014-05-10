@@ -88,7 +88,7 @@ class DisplayLogs {
             	echo '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
             }
             
-            if ($_SESSION['userInfo']['userid'] == $row['usercreated'] OR $_SESSION['userInfo']['role'] == 'admin') {
+            if (($_SESSION['userInfo']['userid'] == $row['usercreated'] && $_SESSION['rights']['editlog']) OR $_SESSION['rights']['admin']) {
                 ?>
                     <input type="button" value="Edit" onClick="editFun.grabedit(<?php echo $row['logid']; ?>);" class="flri" />
                 <?php
