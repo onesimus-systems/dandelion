@@ -27,7 +27,6 @@ if (!defined('ROOT')) {
 require_once ROOT.'/classes/db_functions.php';
 require_once ROOT.'/classes/permissions.php';
 require_once ROOT.'/scripts/authenticate.php';
-require_once ROOT.'/scripts/userRights.php';
 require_once ROOT.'/scripts/themes.php';
 require_once ROOT.'/scripts/logging.php';
 require_once ROOT.'/scripts/scripts.php';
