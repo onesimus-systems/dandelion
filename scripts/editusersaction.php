@@ -41,11 +41,11 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 
 		if ($u_action != 'add' && !empty($choosen) && $edit_user_info !== '') {
 		    
-			if ($u_action == 'delete' && $_SESSION['rights']['deleteuser']) { // Confirm user delete
+			if ($u_action == 'delete' && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Confirm user delete
 				$userforms->confirmDelete($edit_user_info['realname'], $choosen);
 			}
 			        
-			elseif ($u_action == 'cxeesto' && $_SESSION['rights']['edituser']) { // Show status update form
+			elseif ($u_action == 'cxeesto' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show status update form
 				$stmt = 'SELECT * FROM `'.DB_PREFIX.'presence` WHERE `uid` = :userid';
 				$params = array(
 						'userid' => $choosen
@@ -61,18 +61,18 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 				}
 			}
 			        
-			elseif ($u_action == 'edit' && $_SESSION['rights']['edituser']) { // Show edit user form
+			elseif ($u_action == 'edit' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show edit user form
 				$userforms->editUser($edit_user_info);
 				$showList = false;
 			}
 			        
-			elseif ($u_action == 'reset' && $_SESSION['rights']['edituser']) { // Show password reset form
+			elseif ($u_action == 'reset' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show password reset form
 				$userforms->resetPassword($choosen, $edit_user_info['username'], $edit_user_info['realname']);
 				$showList = false;
 			}
 		}
 		
-		elseif ($u_action == 'add' && $_SESSION['rights']['adduser']) { // Show create user form		
+		elseif ($u_action == 'add' && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Show create user form		
 			$userforms->addUser();
 			$showList = false;
 		}
@@ -93,7 +93,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 		require_once ROOT.'/classes/users.php';
 		$useractions = new User($conn);
 		
-		if ($second_tier == "Save Edit" && $_SESSION['rights']['edituser']) { // Edit user data
+		if ($second_tier == "Save Edit" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Edit user data
 			$edit = array(
 				'realname' => $_POST['edit_real'],
 				'role' => $_POST['edit_role'],
@@ -105,7 +105,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 			echo $useractions->editUser($edit);
 		}
 		        
-		elseif ($second_tier == "Add" && $_SESSION['rights']['adduser']) { // Create new user
+		elseif ($second_tier == "Add" && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Create new user
 			$add = array(
 				'username' => $_POST['add_user'],
 				'password' => $_POST['add_pass'],
@@ -116,7 +116,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 			echo $useractions->addUser($add);
 		}
 		        
-		elseif ($second_tier == "Reset" && $_SESSION['rights']['edituser']) { // Reset user password
+		elseif ($second_tier == "Reset" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Reset user password
 			$reset_3 = $_POST['reset_1'];
 			$reset_4 = $_POST['reset_2'];
 					
@@ -128,11 +128,11 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
 			}
 		}
 		        
-		elseif ($second_tier == "Yes" && $_SESSION['rights']['deleteuser']) { // Delete user
+		elseif ($second_tier == "Yes" && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Delete user
 			echo empty($choosen) ? 'Delete failed, no user selected.' : $useractions->deleteUser($choosen);
 		}
 		        
-		elseif ($second_tier == "Set Status" && $_SESSION['rights']['edituser']) { // Change user Cxeesto status
+		elseif ($second_tier == "Set Status" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Change user Cxeesto status
 			$date = new DateTime();
 			$date = $date->format('Y-m-d H:i:s');
 			

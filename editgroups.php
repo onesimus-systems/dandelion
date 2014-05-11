@@ -46,7 +46,7 @@ if (!authenticated()) {
 		<div id="groups"></div>
 		
 		<form>
-        	<div name="categorySelects" id="categorySelects"></div><br><br>
+        	<div name="categorySelects" id="categorySelects"></div><br>
         	
         	<?php
         	if ($_SESSION['rights']['addgroup']) {
