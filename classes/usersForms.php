@@ -103,7 +103,12 @@ class UserForms
                         
                         echo '<select name="edit_role">';
                         foreach ($list as $group) {
-                            echo '<option value="'.$group['role'].'">'.ucfirst($group['role']).'</option>';
+                            if ($group['role'] == $userInfo['role'])
+                                $selected = 'selected';
+                            else
+                                $selected = '';
+                                
+                            echo '<option value="'.$group['role'].'" '.$selected.'>'.ucfirst($group['role']).'</option>';
                         }
                         echo '</select>';
 						?>
