@@ -62,7 +62,7 @@ var permissions = {
     savePermissions: function() {
         // Copy allPermissions
         var newPermissions = this.getGrid();
-        var group = $("#groupList")[0].value;
+        var group = $("#groupList").val();
         
         if (group !== 0) {
 			var newPermissionsJson = JSON.stringify(newPermissions);
@@ -76,7 +76,7 @@ var permissions = {
 					alert(msg);
 					$("#permissionsForm")[0].reset();
 					$("#permissionsBlock").css( "display", "none" );
-					$("#groupList")[0].value = 0;
+					$("#groupList").val( 0 );
 				});
         }
     },
@@ -87,7 +87,7 @@ var permissions = {
 		var changed;
 		
 		if (permission == 'admin') {
-			if ($(theID)[0].checked) {
+			if ($(theID).is( ":checked" )) {
 				// An admin user has full permissions, basically a select all
 				for (var key in newGrid) {
 					if (newGrid.hasOwnProperty(key)) {
@@ -107,7 +107,7 @@ var permissions = {
 		
 		else if (permission == 'createlog' || permission == 'editlog') {
 			// Creating and editing a log inherently means the user can view logs
-			if ($(theID)[0].checked) {
+			if ($(theID).is( ":checked" )) {
 				changed = this.getGrid();
 				changed.viewlog = true;
 				changed[permission] = true;
@@ -116,7 +116,7 @@ var permissions = {
 		}
 		
 		else if (permission == 'updatecheesto') {
-			if ($(theID)[0].checked) {
+			if ($(theID).is( ":checked" )) {
 				changed = this.getGrid();
 				changed.viewcheesto = true;
 				changed[permission] = true;
@@ -154,7 +154,7 @@ var permissions = {
         })
           .done(function( msg ) {
               
-              $( "#dialog" )[0].innerHTML = "<p>Rights Group Created Successfully</p>";
+              $( "#dialog" ).html( "<p>Rights Group Created Successfully</p>" );
               $( "#dialog" ).dialog({
                   modal: true,
                   width: 400,
@@ -180,9 +180,9 @@ var permissions = {
     },
     
     deleteGroup: function() {
-        var delGroup = $("#groupList")[0].selectedOptions[0].innerText;
+        var delGroup = $("#groupList option:selected").text();
         
-        $( "#dialog" )[0].innerHTML = "<p>Do you really want to delete the group '"+delGroup+"'?</p>";
+        $( "#dialog" ).html( "<p>Do you really want to delete the group '"+delGroup+"'?</p>" );
         $( "#dialog" ).dialog({
           resizable: false,
           modal: true,
@@ -190,7 +190,7 @@ var permissions = {
             "Delete Group": function() {
                 $( this ).dialog( "close" );
               
-                var group = $("#groupList")[0].value;
+                var group = $("#groupList").val();
             
                 $.ajax({
                     type: "POST",
@@ -199,7 +199,7 @@ var permissions = {
                 })
                   .done(function( msg ) {
                       
-                      $( "#dialog" )[0].innerHTML = "<p>"+msg+"</p>";
+                      $( "#dialog" ).html( "<p>"+msg+"</p>" );
                       $( "#dialog" ).dialog({
                           modal: true,
                           width: 400,
@@ -218,8 +218,8 @@ var permissions = {
                           }
                         });
                         
-    					$("#permissionsForm")[0].reset();
-    					$("#permissionsBlock").css( "display", "none" );
+						$("#permissionsForm")[0].reset();
+						$("#permissionsBlock").css( "display", "none" );
                         permissions.getList();
                   });
             },
@@ -235,7 +235,7 @@ var permissions = {
            if (object.hasOwnProperty(key)) {
               var getID = "#"+key;
 
-              $(getID)[0].checked = object[key];
+              $(getID).prop( "checked", object[key] );
            }
         }
         
@@ -249,14 +249,14 @@ var permissions = {
 			if (theGrid.hasOwnProperty(key)) {
 				var getID = "#"+key;
 
-				theGrid[key] = $(getID)[0].checked;
+				theGrid[key] = $(getID).prop( "checked" );
 			}
 		}
 		
 		return theGrid;
     },
     
-    // Checks if enter key was pressed, if so search
+    // Checks if enter key was pressed, if so submit the form
     check: function(e) {
         if (e.keyCode == 13) {
             $( "#add-form" ).dialog( "close" );
