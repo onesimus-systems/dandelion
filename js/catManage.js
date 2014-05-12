@@ -27,6 +27,7 @@ var CategoryManage = {
 		params.data = 'action=grabcats&parentID='+pid+'&pastSelections='+JSON.stringify(this.currentSelection);
 		params.success = function()
 	    {
+	        if (typeof $("#categorySelects")[0] !== 'undefined') {
 	          document.getElementById('categorySelects').innerHTML = '';
 			  document.getElementById(container).innerHTML = responseText;
 	          CategoryManage.currentID = pid;
@@ -34,6 +35,7 @@ var CategoryManage = {
 	          for (var i=1; i<CategoryManage.currentSelection.length; i++) {
 				  document.getElementById('level'+i).value = CategoryManage.currentSelection[i];
 			  }
+	        }
 	    }
 		params.async = false;
 		
@@ -53,7 +55,7 @@ var CategoryManage = {
 			newCatDesc = window.prompt(message+catString);
 			
 			if (newCatDesc == '') {
-				alert('Please enter a category description')
+				alert('Please enter a category description');
 			}
 			else if (newCatDesc == null) {
 				return false;

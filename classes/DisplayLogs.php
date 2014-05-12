@@ -18,18 +18,11 @@ class DisplayLogs {
       * @return Nothing. All information is echoed
       */
     public function display($grab_logs) {
-        // TODO: Create a blacklist feature
-        if ($_SESSION['userInfo']['username'] != "ajmartin") {
- 
-            $this->pageing(); // Show page controls
-            
-            $this->showLogs($grab_logs); // Display log entries
-            
-            $this->pageing(); // Show page controls
-        }
-        else {
-            echo "This account does not have permission to view the activity log."; // Angie
-        }
+        $this->pageing(); // Show page controls
+        
+        $this->showLogs($grab_logs); // Display log entries
+        
+        $this->pageing(); // Show page controls
     }
 
     /** Displays pagintation controls
@@ -95,7 +88,7 @@ class DisplayLogs {
             	echo '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
             }
             
-            if ($_SESSION['userInfo']['userid'] == $row['usercreated'] OR $_SESSION['userInfo']['role'] == 'admin') {
+            if (($_SESSION['userInfo']['userid'] == $row['usercreated'] && $_SESSION['rights']['editlog']) OR $_SESSION['rights']['admin']) {
                 ?>
                     <input type="button" value="Edit" onClick="editFun.grabedit(<?php echo $row['logid']; ?>);" class="flri" />
                 <?php

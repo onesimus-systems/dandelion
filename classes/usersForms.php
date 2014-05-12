@@ -97,11 +97,21 @@ class UserForms
 					<tr><td>User ID:</td><td><input type="text" name="edit_uid" value="<?php echo $userInfo['userid']; ?>" readonly></td></tr>
 					<tr><td>Real Name:</td><td><input type="text" name="edit_real" value="<?php echo $userInfo['realname']; ?>" autocomplete="off"></td></tr>
 					<tr><td>Role:</td><td>
-						<select name="edit_role">
-							<option value="user" <?php echo $userInfo['role'] == 'user' ? ' selected' : '';?>>User</option>
-							<option value="guest" <?php echo $userInfo['role'] == 'guest' ? ' selected' : '';?>>Guest</option>
-							<option value="admin" <?php echo $userInfo['role'] == 'admin' ? ' selected' : '';?>>Admin</option>
-						</select>
+					<?php
+                        $permissions = new Permissions();
+                        $list = $permissions->getGroupList();
+                        
+                        echo '<select name="edit_role">';
+                        foreach ($list as $group) {
+                            if ($group['role'] == $userInfo['role'])
+                                $selected = 'selected';
+                            else
+                                $selected = '';
+                                
+                            echo '<option value="'.$group['role'].'" '.$selected.'>'.ucfirst($group['role']).'</option>';
+                        }
+                        echo '</select>';
+						?>
 					</td></tr>
 					<tr><td>Theme:</td><td>
 						<?php getThemeList($userInfo['theme']); ?>
@@ -129,7 +139,18 @@ class UserForms
 						<tr><td>Username:</td><td><input type="text" name="add_user" autocomplete="off" /></td></tr>
 						<tr><td>Password:</td><td><input type="password" name="add_pass" /></td></tr>
 						<tr><td>Real Name:</td><td><input type="text" name="add_real" autocomplete="off" /></td></tr>
-						<tr><td>Role:</td><td><select name="add_role"><option value="user">User</option><option value="guest">Guest</option><option value="admin">Admin</option></select></td></tr>
+						<tr><td>Role:</td><td>
+						<?php
+                        $permissions = new Permissions();
+                        $list = $permissions->getGroupList();
+                        
+                        echo '<select name="add_role">';
+                        foreach ($list as $group) {
+                            echo '<option value="'.$group['role'].'">'.ucfirst($group['role']).'</option>';
+                        }
+                        echo '</select>';
+						?>
+						</td></tr>
 					</table>
 					<input type="submit" name="sub_type" value="Add">
 					<input type="submit" name="sub_type" value="Cancel">

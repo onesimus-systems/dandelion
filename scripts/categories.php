@@ -31,25 +31,43 @@ if (isset($_POST['action'])) {
 	}
 	
 	elseif($_POST['action'] == 'addcat') {
-		$parent = $_POST['parentID'];
-		$desc = $_POST['catDesc'];
-		
-		$createCat = new Categories();
-		$createCat->addCategory($parent, $desc);
+	    if ($_SESSION['rights']['addcat']) {
+    		$parent = $_POST['parentID'];
+    		$desc = $_POST['catDesc'];
+    		
+    		$createCat = new Categories();
+    		$createCat->addCategory($parent, $desc);
+	    }
+	    
+	    else {
+	        echo 'Your account doesn\'t have permissions to add a category.';
+	    }
 	}
 	
 	elseif($_POST['action'] == 'delcat') {
-		$cat = $_POST['cid'];
-		
-		$deleteCat = new Categories();
-		$deleteCat->delCategory($cat);
+	    if ($_SESSION['rights']['deletecat']) {
+    		$cat = $_POST['cid'];
+    		
+    		$deleteCat = new Categories();
+    		$deleteCat->delCategory($cat);
+	    }
+	    
+	    else {
+	        echo 'Your account doesn\'t have permissions to delete a category.';
+	    }
 	}
 	
 	elseif($_POST['action'] == 'editcat') {
-		$cid = $_POST['cid'];
-		$desc = $_POST['catDesc'];
-		
-		$editCat = new Categories();
-		$editCat->editCategory($cid, $desc);
+	    if ($_SESSION['rights']['editcat']) {
+    		$cid = $_POST['cid'];
+    		$desc = $_POST['catDesc'];
+    		
+    		$editCat = new Categories();
+    		$editCat->editCategory($cid, $desc);
+	    }
+	    
+	    else {
+	        echo 'Your account doesn\'t have permissions to edit a category.';
+	    }
 	}
 }

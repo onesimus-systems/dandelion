@@ -28,6 +28,7 @@ function getThemeList($theme = null) {
 	$handle = opendir('themes');
 	
 	echo '<select name="userTheme" id="userTheme">';
+	echo '<option value="default">Default</option>';
 	while (false !== ($themeName = readdir($handle))) {
 		if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
 			if ($themeName == $currentTheme) {
@@ -63,6 +64,7 @@ function loadCssSheets() {
 		switch($sheet) {
 			// CSS for Cheesto presence system
 			case "cheesto":
+			case 'presence':
 				echo '<link rel="stylesheet" type="text/css" href="styles/presence.css">';
 				echo '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
 				break;

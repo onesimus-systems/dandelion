@@ -156,17 +156,59 @@ class User
 	 * @return Success message
 	 */
 	public function deleteUser($uid = null) {
+		// To ensure at least one admin account is available,
+		// some checks are performed to verify rights of accounts
 		if (!empty($uid) && $uid != $_SESSION['userInfo']['userid']) {
-			$stmt = 'DELETE FROM `'.DB_PREFIX.'users` WHERE `userid` = :userid';
-			$stmt2 = 'DELETE FROM `'.DB_PREFIX.'presence` WHERE `uid` = :userid';
+			$delete = false;
+			
+			$stmt = 'SELECT `role` FROM `'.DB_PREFIX.'users` WHERE `userid` = :userid';
 			$params = array(
-				'userid' => $uid
+					'userid' => $uid
 			);
-		
-			$this->conn->queryDB($stmt, $params);
-			$this->conn->queryDB($stmt2, $params);
-		
-			return "Action Taken: User Deleted<br><br>";
+			$user = $this->conn->queryDB($stmt, $params)[0]['role'];
+			
+			$perms = new Permissions();
+			$isAdmin = (array) $perms->loadRights($user);
+			
+			if (!$isAdmin['admin']) {
+				// If the account being deleted isn't an admin, then there's nothing to worry about
+				$delete = true;
+			}
+			else {
+				// If the account IS and admin, check all other users to make sure
+				// there's at least one other user with the admin rights flag
+				$stmt = 'SELECT `role` FROM `'.DB_PREFIX.'users` WHERE `userid` != :userid';
+				$params = array(
+						'userid' => $uid
+				);
+				$otherUsers = $this->conn->queryDB($stmt, $params);
+				
+				foreach ($otherUsers as $areTheyAdmin) {
+					$isAdmin = (array) $perms->loadRights($areTheyAdmin['role']);
+					
+					if ($isAdmin['admin']) {
+						// If one is found, stop for loop and allow the delete
+						$delete = true;
+						break;
+					}
+				}
+			}
+			
+			if ($delete) {
+				$stmt = 'DELETE FROM `'.DB_PREFIX.'users` WHERE `userid` = :userid';
+				$stmt2 = 'DELETE FROM `'.DB_PREFIX.'presence` WHERE `uid` = :userid';
+				$params = array(
+					'userid' => $uid
+				);
+			
+				$this->conn->queryDB($stmt, $params);
+				$this->conn->queryDB($stmt2, $params);
+			
+				return "Action Taken: User Deleted<br><br>";
+			}
+			else {
+				return '<br>There must be at least one account with the \'admin\' rights flag.<br>';
+			}
 		}
 		else {
 			return 'Error 0x1c2u3d';

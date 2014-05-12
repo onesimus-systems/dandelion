@@ -16,9 +16,7 @@ if (!authenticated()) {
 	header( 'Location: index.php' );
 }
 
-$blacklist = array('ajmartin');
-
-if (!in_array($_SESSION['userInfo']['username'], $blacklist)) { // This is the skeleton of an eventual blacklist/rights management
+if ($_SESSION['rights']['createlog']) {
     // Grab all the variables from the POST array
     $new_title = isset($_POST['add_title']) ? $_POST['add_title'] : '';
     $new_entry = isset($_POST['add_entry']) ? $_POST['add_entry'] : '';
@@ -49,4 +47,8 @@ if (!in_array($_SESSION['userInfo']['username'], $blacklist)) { // This is the s
     else {
         echo '<span class="bad">Log entries must have a title, category, and entry text.</span>';
     }
+}
+
+else {
+    echo 'This account can\'t create logs.';
 }

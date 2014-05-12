@@ -16,15 +16,7 @@
 include 'scripts/grabber.php';
 
 // Check whether the user is logged in
-if (authenticated()) {
-	if ($_SESSION['userInfo']['role'] == "guest") {
-		header( 'Location: viewlog.phtml' );
-	}
-	
-	userLinks();
-	$theme = getTheme();
-}
-else {
+if (!authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>
