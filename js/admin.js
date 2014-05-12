@@ -8,14 +8,10 @@ var adminAction =
 	},
 	
 	backupDB: function() {
-		$.ajax({
-                type: "POST",
-                url: "scripts/admin_actions.php",
-                data: { sub_action: "backupdb" }
-			})
-                .done(function( msg ) {
-                    alert(msg);
-                });
+		$.post("scripts/admin_actions.php", { sub_action: "backupdb" })
+            .done(function( msg ) {
+                alert(msg);
+            });
 	},
 	
 	saveDefaultTheme: function() {
@@ -29,13 +25,9 @@ var adminAction =
 	},
 	
 	performAction: function(action, data) {
-        $.ajax({
-                type: "POST",
-                url: "scripts/admin_actions.php",
-                data: { sub_action: action, data: encodeURIComponent(data) }
-			})
-                .done(function( msg ) {
-                    alert(msg);
-                });
+        $.post("scripts/admin_actions.php", { sub_action: action, data: encodeURIComponent(data) })
+            .done(function( msg ) {
+                alert(msg);
+            });
 	}
 };

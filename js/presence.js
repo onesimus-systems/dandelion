@@ -5,10 +5,7 @@ var presence =
     },
     
     checkstat: function(isWin) {
-        $.ajax({
-			url: "scripts/presence.php",
-			data: { windowedt: isWin }
-        })
+        $.get("scripts/presence.php", { windowedt: isWin })
 			.done(function( html ) {
 				$("#pt").html( html );
 			});
@@ -39,11 +36,7 @@ var presence =
     },
     
     sendNewStatus: function(stat, rt, isWin, message) {
-        $.ajax({
-			type: "POST",
-			url: "scripts/presence.php",
-			data: { setorno: stat, returntime: rt, windowedt: isWin, message: message }
-        })
+        $.post("scripts/presence.php", { setorno: stat, returntime: rt, windowedt: isWin, message: message })
 			.done(function( html ){
 				$("#pt").html( html );
 			});

@@ -27,10 +27,7 @@ var permissions = {
     },
     
     getList: function() {
-        $.ajax({
-          url: "scripts/editgroups.php",
-          data: { action: "getlist" }
-        })
+        $.get("scripts/editgroups.php", { action: "getlist" })
           .done(function( msg ) {
             $("#groups").html(msg);
           });
@@ -39,10 +36,7 @@ var permissions = {
     getPermissions: function(gid) {
         var group = typeof gid !== 'undefined' ? gid : $("#groupList")[0].value;
         
-        $.ajax({
-            url: "scripts/editgroups.php",
-            data: { action: "getpermissions", groups: group }
-        })
+        $.get("scripts/editgroups.php", { action: "getpermissions", groups: group })
           .done(function( html ) {
               permissions.showPermissions(html);
           });
@@ -67,11 +61,7 @@ var permissions = {
         if (group !== 0) {
 			var newPermissionsJson = JSON.stringify(newPermissions);
 
-			$.ajax({
-				type: "POST",
-				url: "scripts/editgroups.php",
-				data: { action: "save", permissions: newPermissionsJson, gid: group }
-			})
+			$.post("scripts/editgroups.php", { action: "save", permissions: newPermissionsJson, gid: group })
 				.done(function( msg ) {
 					alert(msg);
 					$("#permissionsForm")[0].reset();
@@ -147,11 +137,9 @@ var permissions = {
     },
     
     sendNew: function() {
-        $.ajax({
-          type: "POST",
-          url: "scripts/editgroups.php",
-          data: { action: "create", name: $("#name").val(), rights: JSON.stringify(permissions.allPermissions) }
-        })
+        $.post("scripts/editgroups.php",
+			{ action: "create", name: $("#name").val(), rights: JSON.stringify(permissions.allPermissions) }
+          )
           .done(function( msg ) {
               
               $( "#dialog" ).html( "<p>Rights Group Created Successfully</p>" );
@@ -192,11 +180,7 @@ var permissions = {
               
                 var group = $("#groupList").val();
             
-                $.ajax({
-                    type: "POST",
-                    url: "scripts/editgroups.php",
-                    data: { action: "delete", groups: group }
-                })
+                $.post("scripts/editgroups.php", { action: "delete", groups: group })
                   .done(function( msg ) {
                       
                       $( "#dialog" ).html( "<p>"+msg+"</p>" );
