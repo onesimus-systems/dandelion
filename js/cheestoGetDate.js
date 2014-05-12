@@ -7,10 +7,12 @@ $(document).ready(function() {
 });
 
 function giveTime() {
-    newStatus = window.opener.newStatus;
-    rtime = document.getElementById('datepick').value;
-    isWin = window.opener.isWind;
-    message = encodeURIComponent(document.getElementById('messagetext').value);
+    var newStatus = window.opener.newStatus,
+		rtime = $("#datepick").val(),
+		isWin = window.opener.isWind,
+		message = $("#messagetext").val();
+		
+    message = encodeURIComponent(message);
     
     window.opener.presence.sendNewStatus(newStatus, rtime, isWin, message);
     window.close();
@@ -34,5 +36,5 @@ function setDateTime(timeAdd) {
                    + ('0'  + hours).slice(-2) + ":"  
                    + ('0'  + minutes).slice(-2);
                    
-    document.getElementById("datepick").value = datetime;
+    $("#datepick").val( datetime );
 }
