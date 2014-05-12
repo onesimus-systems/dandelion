@@ -27,10 +27,7 @@ var permissions = {
     },
     
     getList: function() {
-        $.get("scripts/editgroups.php", { action: "getlist" })
-          .done(function( msg ) {
-            $("#groups").html(msg);
-          });
+        $("#groups").load("scripts/editgroups.php", "action=getlist");
     },
     
     getPermissions: function(gid) {

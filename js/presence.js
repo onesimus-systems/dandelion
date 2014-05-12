@@ -5,10 +5,7 @@ var presence =
     },
     
     checkstat: function(isWin) {
-        $.get("scripts/presence.php", { windowedt: isWin })
-			.done(function( html ) {
-				$("#pt").html( html );
-			});
+		$("#pt").load("scripts/presence.php", "windowedt="+isWin);
     },
     
     setStatus: function(isWin) {
@@ -36,10 +33,7 @@ var presence =
     },
     
     sendNewStatus: function(stat, rt, isWin, message) {
-        $.post("scripts/presence.php", { setorno: stat, returntime: rt, windowedt: isWin, message: message })
-			.done(function( html ){
-				$("#pt").html( html );
-			});
+		$("#pt").load("scripts/presence.php", { setorno: stat, returntime: rt, windowedt: isWin, message: message });
         
         $("select#cstatus").prop("selectedIndex", 0);
     },
