@@ -32,10 +32,10 @@ function loadJS() {
 		
 		switch($file) {
 			case "jquery":
-				echo '<script src="jquery/js/jquery.min.js"></script>';
+				echo '<script src="jquery/js/jquery-2.1.1.min.js"></script>';
 				break;
 			case "jqueryui":
-				echo '<script src="jquery/js/jquery-ui.min.js"></script>';
+				echo '<script src="jquery/js/jquery-ui-1.10.4.min.js"></script>';
 				break;
 			case "lquery":
 				echo '<script src="js/lQuery.js"></script>';
