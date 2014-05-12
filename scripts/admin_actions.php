@@ -19,11 +19,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			// Set new slogan
 			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :slogan WHERE `name` = "slogan"';
 			$params = array(
-				'slogan' => $_POST['slogan']		
+				'slogan' => urldecode($_POST['data'])
 			);
 			$conn->queryDB($stmt, $params);
 			
-			$_SESSION['app_settings']['slogan'] = $_POST['slogan'];
+			$_SESSION['app_settings']['slogan'] = urldecode($_POST['data']);
 			
 			echo 'Slogan set successfully';
 		}
@@ -37,11 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			// Set new default theme
 			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :theme WHERE `name` = "default_theme"';
 			$params = array(
-				'theme' => $_POST['theme']		
+				'theme' => $_POST['data']		
 			);
 			$conn->queryDB($stmt, $params);
 			
-			$_SESSION['app_settings']['default_theme'] = $_POST['theme'];
+			$_SESSION['app_settings']['default_theme'] = $_POST['data'];
 			
 			echo 'Default theme set successfully';
 		}
@@ -49,9 +49,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		elseif ($a_action == 'cheesto') {
 			// Set cheesto enabled/disabled
 			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :enabled WHERE `name` = "cheesto_enabled"';
-			$enabled = ($_POST['enabled'] == 'true') ? 1 : 0;
+			$enabled = ($_POST['data'] == 'true') ? 1 : 0;
 			$params = array(
-				'enabled' => $enabled		
+				'enabled' => $enabled
 			);
 			$conn->queryDB($stmt, $params);
 			
