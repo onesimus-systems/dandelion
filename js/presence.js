@@ -1,34 +1,37 @@
-var presence = {
+var presence =
+{
     startR: function() {
         wherearewe = setInterval(function() {presence.checkstat(1)}, 30000);
     },
     
     checkstat: function(isWin) {
-    	var params = new Object;
-    	params.success = function()
-	      	{
-	    	  document.getElementById("pt").innerHTML=responseText;
-	        }
-        
-    	params.address= 'scripts/presence.php';
-    	params.data = "windowedt=" + isWin;
-        _.ajax(params);
+        $.ajax({
+			url: "scripts/presence.php",
+			data: { windowedt: isWin }
+        })
+			.done(function( html ) {
+				$("#pt").html( html );
+			});
     },
     
     setStatus: function(isWin) {
-        newStatus = document.getElementById('cstatus').selectedIndex;
+        newStatus = $("select#cstatus").prop("selectedIndex");
         isWind = isWin;
         
-        if (newStatus != 1 && newStatus != 0) {
+        if (newStatus > 1)
+        {
             rtime = "";
             window.open("getdate.php","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
-            }
-        else if (newStatus == 0)
+        }
+		else if (newStatus === 0)
+		{
             return false;
-        else {
+		}
+        else
+        {
             rtime = "00:00:00";
             presence.sendNewStatus(newStatus, rtime, isWin, "");
-            }
+        }
     },
     
     popOut: function() {
@@ -36,30 +39,28 @@ var presence = {
     },
     
     sendNewStatus: function(stat, rt, isWin, message) {
-        var params = new Object();
-          
-        params.success = function()
-	        {
-	            document.getElementById("pt").innerHTML=responseText;
-	        }
+        $.ajax({
+			type: "POST",
+			url: "scripts/presence.php",
+			data: { setorno: stat, returntime: rt, windowedt: isWin, message: message }
+        })
+			.done(function( html ){
+				$("#pt").html( html );
+			});
         
-        params.address = 'scripts/presence.php';
-        params.data = "setorno=" + stat + "&returntime=" + rt + "&windowedt=" + isWin + "&message=" + message;
-        _.ajax(params);
-        
-        document.getElementById('cstatus').selectedIndex = 0;
+        $("select#cstatus").prop("selectedIndex", 0);
     },
     
     showHideP: function() {
-    	if (document.getElementById('showHide').innerHTML == "[ - ]") {
-    		document.getElementById('presence').style.minWidth = document.getElementById('mainPresence').offsetWidth+"px";
-    		document.getElementById('mainPresence').style.display = 'none';
-    		document.getElementById('showHide').innerHTML = "[ + ]";
-    	}
-    	else {
-    		document.getElementById('presence').style.minWidth = "0px";
-    		document.getElementById('mainPresence').style.display = '';
-    		document.getElementById('showHide').innerHTML = "[ - ]";
-    	}
+		if ($("#showHide").html() == "[ - ]") {
+			$("#presence").css("minWidth", $("#mainPresence").prop("offsetWidth")+"px");
+			$("#mainPresence").css("display", "none");
+			$("#showHide").html( "[ + ]" );
+		}
+		else {
+			$("#presence").css("minWidth", "0px");
+			$("#mainPresence").css("display", "");
+			$("#showHide").html( "[ - ]" );
+		}
     }
-}
+};
