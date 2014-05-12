@@ -1,7 +1,7 @@
 <?php
 /**
   * This file is a global file which is included on every page.
-  * This script is used define any global aspects of Dandelion
+  * This script is used to define any global aspects of Dandelion
   * and include other needed PHP scripts.
   *
   * @author Lee Keitel
@@ -9,8 +9,24 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+
+/* 
+ * This block checks the time of the current session and if it has been
+ * in active for $timeout seconds long, destroy the session and start again
+ */
+$timeout = 21600; // 6 hours
+ini_set('session.gc_maxlifetime', $timeout);
 session_name('dan_session');
 session_start();
+
+if (isset($_SESSION['timeout_idle']) && $_SESSION['timeout_idle'] < time()) {
+    session_destroy();
+    session_start();
+    session_regenerate_id();
+    $_SESSION = array();
+}
+
+$_SESSION['timeout_idle'] = time() + $timeout;
 
 // Define constants
 if (!defined('D_VERSION')) {
@@ -49,16 +65,15 @@ if(!isset($_SESSION['config']) || $forceConfigLoad) {
 }
 
 if (!defined('DB_PREFIX')) {
-	define('DB_PREFIX', $_SESSION['config']['db_prefix']);	// DB table prefix as a constant
+	define('DB_PREFIX', $_SESSION['config']['db_prefix']);
 }
 
 if (!defined('HOSTNAME')) {
 	define('HOSTNAME', $_SESSION['config']['hostname']);
 }
 
-error_reporting(E_ALL);
-
 // Display errors if in debug mode
+error_reporting(E_ALL);
 if ($_SESSION['config']['debug']) {
 	ini_set('display_errors', True);
 }
