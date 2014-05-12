@@ -32,7 +32,9 @@ if(authenticated()) {
 	$updateCxeesto = new cxeesto;
 	
 	if ($setorno == '') {
-	    $updateCxeesto->refreshStatus($windowed, $windowedt);
+	    if ($_SESSION['rights']['viewcheesto']) {
+	        $updateCxeesto->refreshStatus($windowed, $windowedt);
+	    }
 	}
 	else {
 	    if ($_SESSION['rights']['updatecheesto']) {
@@ -42,7 +44,9 @@ if(authenticated()) {
     		$updateCxeesto->updateStatus($message, $setorno, $returntime);
 	    }
     	
-    	$updateCxeesto->refreshStatus($windowed, $windowedt);
+	    if ($_SESSION['rights']['viewcheesto']) {
+	        $updateCxeesto->refreshStatus($windowed, $windowedt);
+	    }
 	}
 }
 

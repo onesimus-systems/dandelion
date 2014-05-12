@@ -149,7 +149,7 @@ class cxeesto extends dbManage
 	    
 	    $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
 	    $params = array(
-	        'message' => $message,
+	        'message' => urldecode($message),
 	        'setorno' => $status,
 	        'returntime' => $return,
 	        'dmodified' => $date,
