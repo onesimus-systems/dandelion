@@ -67,6 +67,8 @@
 			    if (parseInt(ready)===4 && parseInt(status)===200) // Check if page load was success
 			      {
 		    		params.success(); // Execute the passed success function
+		    		// Help show where this function is being used.
+		    		console.log("The lQuery library is depreciated. Please use the jQuery .ajax() method instead.")
 			      }
 			    else
 			      {
