@@ -8,7 +8,7 @@ var CategoryManage = {
 		else if (parentID.value) { pid = parentID.value; }
 		else { pid = parentID; };
 		
-		container = (this.addLog) ? 'add_cat' : 'categorySelects';
+		container = (this.addLog) ? 'catSpace' : 'categorySelects';
 		
 		var level = pid.split(':');
 		

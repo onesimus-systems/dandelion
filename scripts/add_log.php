@@ -35,10 +35,10 @@ if ($_SESSION['rights']['createlog']) {
         $params = array(
             'datec' => $new_date,
             'timec' => $new_time,
-            'title' => $new_title,
-            'entry' => $new_entry,
+            'title' => urldecode($new_title),
+            'entry' => urldecode($new_entry),
             'usercreated' => $_SESSION['userInfo']['userid'],
-            'cat' => $new_category,
+            'cat' => urldecode($new_category),
         );
         $conn->queryDB($stmt, $params);
         

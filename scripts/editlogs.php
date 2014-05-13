@@ -26,8 +26,8 @@ if ($_SESSION['rights']['editlog']) {
     
     	$stmt = 'UPDATE `'.DB_PREFIX.'log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :logid';
     	$params = array(
-    	    'eTitle' => $editedtitle,
-    	    'eEntry' => $editedlog,
+    	    'eTitle' => urldecode($editedtitle),
+    	    'eEntry' => urldecode($editedlog),
     	    'logid' => $logid
     	);
     	$conn->queryDB($stmt, $params);

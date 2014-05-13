@@ -99,7 +99,13 @@ else {
                         <?php echo $add_link; ?>
                     </form>
                     
-                    <div id="add_edit"></div>
+                    <div id="add_edit" title="">
+                        <form id="add_edit_form">
+                            Title: <input type="text" id="logTitle" name="logTitle" value="" size="60"><br>
+                            Entry: <textarea id="logEntry" name="logEntry" cols="80" rows="15"></textarea><br>
+                            Category: <span id="catSpace"></span>
+                        </form>
+                    </div>
                 </div>
             <?php } ?>
             

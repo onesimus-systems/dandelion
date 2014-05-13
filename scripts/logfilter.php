@@ -18,8 +18,8 @@ include_once '../classes/DisplayLogs.php';
 
 // Authenticate user, if fail go to login page
 if (authenticated()) {
-	$filter = isset($_POST['filter']) ? $_POST['filter'] : '';
-	$keyw = isset($_POST['keyw']) ? $_POST['keyw'] : '';
+	$filter = isset($_POST['filter']) ? urldecode($_POST['filter']) : '';
+	$keyw = isset($_POST['keyw']) ? urldecode($_POST['keyw']) : '';
 	$dates = isset($_POST['dates']) ? $_POST['dates'] : '';
 	$type = isset($_POST['type']) ? $_POST['type'] : '';
 	

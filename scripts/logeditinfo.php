@@ -25,5 +25,5 @@ if (authenticated()) {
 	);
 	$edit_log_info = $conn->queryDB($stmt, $params);
 
-	echo json_encode($edit_log_info);
+	echo json_encode($edit_log_info[0]);
 }
