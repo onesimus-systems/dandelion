@@ -6,9 +6,9 @@ var CategoryManage = {
 	grabNextLevel: function(parentID, container) {
 		if (parentID == "0:0") { pid = "0:0"; }
 		else if (parentID.value) { pid = parentID.value; }
-		else { pid = parentID; };
+		else { pid = parentID; }
 		
-		container = (this.addLog) ? 'catSpace' : 'categorySelects';
+		container = (this.addLog) ? '#catSpace' : '#categorySelects';
 		
 		var level = pid.split(':');
 		
@@ -18,28 +18,27 @@ var CategoryManage = {
 		
 		this.currentSelection[level[1]] = pid;
 		
-		if (this.currentSelection.length == 0) {
+        if (this.currentSelection.length === 0) {
 			this.currentSelection[0] = '0:0';
 		}
-	
-		var params = new Object;	
-		params.address = 'scripts/categories.php';
-		params.data = 'action=grabcats&parentID='+pid+'&pastSelections='+JSON.stringify(this.currentSelection);
-		params.success = function()
-	    {
-	        if (typeof $("#categorySelects")[0] !== 'undefined') {
-	          document.getElementById('categorySelects').innerHTML = '';
-			  document.getElementById(container).innerHTML = responseText;
-	          CategoryManage.currentID = pid;
-	          
-	          for (var i=1; i<CategoryManage.currentSelection.length; i++) {
-				  document.getElementById('level'+i).value = CategoryManage.currentSelection[i];
-			  }
-	        }
-	    }
-		params.async = false;
 		
-		_.ajax(params);
+		$.ajax({
+            type: "POST",
+            url: "scripts/categories.php",
+            data: { action: "grabcats", parentID: pid, pastSelections: JSON.stringify(this.currentSelection)},
+            async: false
+        })
+            .done(function( html ) {
+                if (typeof $("#categorySelects")[0] !== 'undefined') {
+                    $("#categorySelects").html("");
+                    $(container).html( html );
+                    CategoryManage.currentID = pid;
+                    
+                    for (var i=1; i<CategoryManage.currentSelection.length; i++) {
+                        $("#level"+i).val( CategoryManage.currentSelection[i] );
+                    }
+                }
+            });
 	},
 	
 	createNew: function() {
@@ -54,14 +53,10 @@ var CategoryManage = {
 		while (true) {
 			newCatDesc = window.prompt(message+catString);
 			
-			if (newCatDesc == '') {
+			if (newCatDesc === '') {
 				alert('Please enter a category description');
 			}
-			else if (newCatDesc == null) {
-				return false;
-			}
-			else if (newCatDesc == 'q') {
-		        this.grabNextLevel('0:0');
+			else if (newCatDesc === null) {
 				return false;
 			}
 			else {
@@ -76,40 +71,30 @@ var CategoryManage = {
 		var parent = this.currentSelection[this.currentSelection.length-1].split(':');
 		parent = parent[0];
 		
-		var params = new Object;	
-		params.address = 'scripts/categories.php';
-		params.data = 'action=addcat&parentID='+parent+'&catDesc='+newCatDesc;
-		params.success = function()
-			{
-				alert(responseText);
+		$.post("scripts/categories.php", { action: "addcat", parentID: parent, catDesc: newCatDesc })
+            .done(function( html ) {
+                alert( html );
 				CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
-			};
-		
-		_.ajax(params);
+            });
 	},
 	
 	editCat: function() {
 		var cid = this.currentSelection[this.currentSelection.length-1].split(':');
-
-		var elt = document.getElementById('level'+cid[1]);
-
-		if (elt.options[elt.selectedIndex].text != 'Select:') {
-			editString = elt.options[elt.selectedIndex].text;
-		}
 		
-		editedCat = window.prompt("Edit Category Description:",editString);
-		
-		if (editedCat != null && editedCat != '') {
-			var params = new Object;	
-			params.address = 'scripts/categories.php';
-			params.data = 'action=editcat&cid='+cid[0]+'&catDesc='+encodeURIComponent(editedCat);
-			params.success = function()
-				{
-					alert(responseText);
-					CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
-				};
+		var elt = $("#level"+cid[1]+" option:selected");
+
+		if (typeof elt.val() !== 'undefined') {
+			editString = elt.text();
 			
-			_.ajax(params);
+            editedCat = window.prompt("Edit Category Description:",editString);
+
+            if (editedCat !== null && editedCat !== '') {
+                $.post("scripts/categories.php", { action: "editcat", cid: cid[0], catDesc: encodeURIComponent(editedCat) })
+                    .done(function( html ) {
+                        alert( html );
+                        CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
+                    });
+            }
 		}
 	},
 	
@@ -122,27 +107,22 @@ var CategoryManage = {
 			return false;
 		}
 		
-		var params = new Object;	
-		params.address = 'scripts/categories.php';
-		params.data = 'action=delcat&cid='+cid;
-		params.success = function()
-	    {
-			alert(responseText);
-			CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
-	    }
-		
-		_.ajax(params);
+        $.post("scripts/categories.php", { action: "delcat", cid: cid })
+            .done(function( html ) {
+                alert( html );
+                CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
+            });
 	},
 	
 	getCatString: function() {
 		var catString = '';
 		
 		for (var i=0; i<this.currentSelection.length; i++) {
-			if (document.getElementById('level'+(i+1))) {
-				var elt = document.getElementById('level'+(i+1));
+			if ($("#level"+(i+1))) {
+				var elt = $("#level"+(i+1)+" option:selected");
 
-				if (elt.options[elt.selectedIndex].text != 'Select:') {
-					catString += elt.options[elt.selectedIndex].text + ':';
+				if (elt.text() != 'Select:') {
+					catString += elt.text() + ':';
 				}
 			}
 		}
