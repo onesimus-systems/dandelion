@@ -31,6 +31,8 @@ if ($_SESSION['rights']['editlog']) {
     	    'logid' => $logid
     	);
     	$conn->queryDB($stmt, $params);
+    	
+    	echo '"'.urldecode($editedtitle).'" edited successfully.';
     }
     else {
         echo '<span class="bad">Log entries must have a title, category, and entry text.</span>';

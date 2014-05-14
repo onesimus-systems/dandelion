@@ -13,7 +13,13 @@ $(document).ready(function() {
         });
         
     $("#add_edit").css("display", "none");
-}); 
+});
+
+$(document).on("focusin", function(e) {
+	if ($(event.target).closest(".mce-window").length) {
+		e.stopImmediatePropagation();
+	}
+});
     
 var miscFun = {
     clearval: function(clearme) {
@@ -117,22 +123,44 @@ function pagentation(pageOffset) {
 
 var addFun =
 {
-    showaddinputs: function() {
+    showaddinputs: function(title, entry) {
         $("#add_edit_form")[0].reset();
+        $("textarea#logEntry").html("");
         
         $( "#add_edit" ).dialog({
-          height: 550,
-          width: 800,
-          modal: true,
-          buttons: {
-            "Add Log": function() {
-                addFun.addlog();
-                $( this ).dialog( "close" );
-            },
-            Cancel: function() {
-              $( this ).dialog( "close" );
-            }
-          }
+			height: 575,
+			width: 800,
+			modal: true,
+			show: {
+				effect: "fade",
+				duration: 500
+			},
+			hide: {
+				effect: "fade",
+				duration: 500
+			},
+			buttons: {
+				"Add Log": function() {
+					addFun.addlog();
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+					CategoryManage.addLog = false;
+					CategoryManage.grabNextLevel('0:0');
+				}
+			}
+        });
+        
+        $("textarea#logEntry").tinymce({
+			forced_root_block: false,
+			resize: false,
+			menubar: "edit format view insert tools",
+			toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
+			plugins: [
+				"autolink link lists hr anchor pagebreak spellchecker",
+				"searchreplace wordcount code insertdatetime",
+				"contextmenu template paste textcolor"
+				]
         });
 
         CategoryManage.addLog = true;
@@ -149,13 +177,27 @@ var addFun =
         entry = encodeURIComponent(entry);
         cat = CategoryManage.getCatString();
         
-        $.post("scripts/add_log.php", { cat: cat, add_title: title, add_entry: entry })
-            .done(function( html ) {
-                refreshLog();
-                secleft=120;
-                CategoryManage.addLog = false;
-                CategoryManage.grabNextLevel('0:0');
-            });
+		if (title != "" && entry != "" && cat != "") {
+			$( "#add_edit" ).dialog( "close" );
+			$("#messages").fadeOut();
+
+			$.post("scripts/add_log.php", { cat: cat, add_title: title, add_entry: entry })
+				.done(function( html ) {
+					refreshLog();
+					secleft=120;
+					CategoryManage.addLog = false;
+					CategoryManage.grabNextLevel('0:0');
+					showDialog(html);
+				});
+        }
+        else {
+			$("input#logTitle").val( decodeURIComponent(title) );
+			$("textarea#logEntry").html( decodeURIComponent(entry) );
+			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
+			CategoryManage.addLog = true;
+			CategoryManage.grabNextLevel('0:0');
+			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
+        }
     },
 }; //addFun
 
@@ -169,18 +211,37 @@ var editFun =
         $("#catSpace").text( linfo.cat );
         
         $( "#add_edit" ).dialog({
-          height: 550,
-          width: 800,
-          modal: true,
-          buttons: {
-            "Save Edit": function() {
-                editFun.editlogs(linfo.logid);
-                $( this ).dialog( "close" );
-            },
-            Cancel: function() {
-              $( this ).dialog( "close" );
-            }
-          }
+			height: 575,
+			width: 800,
+			modal: true,
+			show: {
+				effect: "fade",
+				duration: 500
+			},
+			hide: {
+				effect: "fade",
+				duration: 500
+			},
+			buttons: {
+				"Save Edit": function() {
+					editFun.editlogs(linfo.logid);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+        });
+        
+        $("textarea#logEntry").tinymce({
+			forced_root_block: false,
+			resize: false,
+			menubar: "edit format view insert tools",
+			toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
+			plugins: [
+				"autolink link lists hr anchor pagebreak spellchecker",
+				"searchreplace wordcount code insertdatetime",
+				"contextmenu template paste textcolor"
+				]
         });
         
         editing = true;
@@ -203,13 +264,45 @@ var editFun =
         var editedlog = $("textarea#logEntry").val();
         editedlog = encodeURIComponent(editedlog);
         
-        $.post("scripts/editlogs.php", { editlog: editedlog, edittitle: editedtitle, choosen: id })
-            .done(function( html ) {
-                refreshLog();
-                secleft=120;
-            });
+        if (editedtitle != "" && editedlog != "") {
+			$( "#add_edit" ).dialog( "close" );
+			$("#messages").fadeOut();
+			
+			$.post("scripts/editlogs.php", { editlog: editedlog, edittitle: editedtitle, choosen: id })
+				.done(function( html ) {
+				refreshLog();
+				secleft=120;
+				showDialog(html);
+			});
+		}
+		
+        else {
+			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
+			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
+        }
     },
 }; //editFun
+
+function showDialog( html ) {
+	$( "#dialog" ).html( "<p>"+html+"</p>" );
+	$( "#dialog" ).dialog({
+		modal: true,
+		width: 400,
+		show: {
+			effect: "fade",
+			duration: 500
+		},
+		hide: {
+			effect: "fade",
+			duration: 500
+		},
+		buttons: {
+			Ok: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+}
 
 var searchFun =
 {

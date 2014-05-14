@@ -37,6 +37,9 @@ function loadJS() {
 			case "jqueryui":
 				echo '<script src="jquery/js/jquery-ui-1.10.4.min.js"></script>';
 				break;
+			case "tinymce":
+			    echo '<script src="tinymce/js/jquery.tinymce.min.js"></script>';
+			    echo '<script src="tinymce/js/tinymce.min.js"></script>';
 			case "catmanage":
 				echo '<script src="js/catManage.js"></script>';
 				break;
