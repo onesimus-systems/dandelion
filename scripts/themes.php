@@ -45,9 +45,16 @@ function getThemeList($theme = null) {
 function loadCssSheets() {
 	$optionalSheets = func_get_args();
 	$theme = getTheme();
+	$main = true;
 	
 	// Base/main CSS
-	if ($optionalSheets[count($optionalSheets)-1] !== false) {
+	if (count($optionalSheets) > 0) {
+		if ($optionalSheets[count($optionalSheets)-1] === false) {
+			$main = false;
+		}
+	}
+	
+	if ($main) {
 		echo '<link rel="stylesheet" type="text/css" href="styles/main.css">';
 		echo '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/main.css">';
 	}
@@ -71,12 +78,14 @@ function loadCssSheets() {
 			
 			// CSS for Cheesto presence system (windowed)
 			case "cheestowin":
+			case "presencewin":
 				echo '<link rel="stylesheet" type="text/css" href="styles/presenceWin.css">';
 				echo '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
 				break;
 			
 			// CSS for jQueryUI
 			case "jquery":
+			case "jqueryui":
 				echo '<link rel="stylesheet" type="text/css" href="jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
 				break;
 			

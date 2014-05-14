@@ -37,9 +37,6 @@ function loadJS() {
 			case "jqueryui":
 				echo '<script src="jquery/js/jquery-ui-1.10.4.min.js"></script>';
 				break;
-			case "lquery":
-				echo '<script src="js/lQuery.js"></script>';
-				break;
 			case "catmanage":
 				echo '<script src="js/catManage.js"></script>';
 				break;

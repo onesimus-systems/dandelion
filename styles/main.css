@@ -75,6 +75,7 @@ a:active {
 }
 #divMain #add_edit {
   margin-top: 1em;
+  display: none;
 }
 #divMain #controlPanel {
   min-width: 35em;
