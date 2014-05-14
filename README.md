@@ -6,8 +6,8 @@ Dandelion is a web-based entry log application.
 Requirements
 ------------
 
-* Apache >= 2.4
-* PHP >= 5.4.0
+* Web server
+* PHP >= 5.3.7
 * MySQL/Maria DB >= 5.0
 * PHP SQLite library (php5-sqlite) (if applicable)
 
@@ -96,7 +96,9 @@ Third-Party Libraries
 
 Dandelion utilizes the following third-party libraries:
 
-[password-compat](https://github.com/ircmaxell/password_compat) - Provides PHP 5.3 compatibility with the new PHP 5.5 password functions. License can be found in ROOT/scripts/password_combat/LICENSE.md
+* [password-compat](https://github.com/ircmaxell/password_compat) - Provides PHP 5.3 compatibility with the new PHP 5.5 password functions. Released under the MIT license which can be found in ROOT/scripts/password_combat/LICENSE.md.
+* jQuery and jQuery UI - Released under the MIT license. See jquery.org/license for more details.
+* TinyMCE - Released under the Lesser GPL v2. See ROOT/tinymce/LICENSE.TXT for more details.
 
 Versioning
 ----------
