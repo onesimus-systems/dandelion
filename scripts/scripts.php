@@ -40,6 +40,7 @@ function loadJS() {
 			case "tinymce":
 			    echo '<script src="tinymce/js/jquery.tinymce.min.js"></script>';
 			    echo '<script src="tinymce/js/tinymce.min.js"></script>';
+			    break;
 			case "catmanage":
 				echo '<script src="js/catManage.js"></script>';
 				break;

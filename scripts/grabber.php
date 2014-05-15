@@ -62,7 +62,10 @@ if ($_SESSION['config']['debug']) {
 	require_once ROOT.'/scripts/logging.php';
 }
 
-// The password compatibility library requires PHP version 5.3.7 or above
+/* 
+ * Check running PHP version
+ * The password compatibility library requires PHP version 5.3.7 or above
+ */
 if (version_compare(phpversion(), "5.3.7", "<")) {
 	trigger_error('Dandelion needs at least PHP version 5.3.7 to function.', E_USER_ERROR);
 	echo 'Dandelion needs at least PHP version 5.3.7 to function. You have version '.phpversion().' installed.';
@@ -75,7 +78,7 @@ define('HOSTNAME', $_SESSION['config']['hostname']);
 define('D_VERSION', '4.6.0');
 define('THEME_DIR', 'themes');
 
-// Load other scripts
+// Load helper scripts
 require_once ROOT.'/classes/db_functions.php';
 require_once ROOT.'/classes/permissions.php';
 require_once ROOT.'/scripts/authenticate.php';
