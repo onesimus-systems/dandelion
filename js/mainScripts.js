@@ -204,6 +204,7 @@ var addFun =
 var editFun =
 {
     showeditinputs: function(log_info) {
+        console.log(log_info);
         var linfo = JSON.parse(log_info);
         
         $("input#logTitle").val( linfo.title );
@@ -253,7 +254,7 @@ var editFun =
      * the fields.
      */
     grabedit: function(logid) {
-        $.post("scripts/logeditinfo.php", { loguid: logid })
+        $.post("scripts/logs.php", { action: 'getLogInfo', data: logid })
             .done( editFun.showeditinputs );
     },
 
