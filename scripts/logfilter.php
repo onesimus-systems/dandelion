@@ -14,7 +14,6 @@
  ***/
 
 include_once 'grabber.php';
-include_once '../classes/DisplayLogs.php';
 
 // Authenticate user, if fail go to login page
 if (authenticated()) {
@@ -83,6 +82,5 @@ if (authenticated()) {
 	$isFiltered = true; // Don't show paging controls
 	
 	// Display filtered logs
-	$dis = new DisplayLogs;
-	$dis->display($grab_logs);
+	DisplayLogs::display($grab_logs);
 }

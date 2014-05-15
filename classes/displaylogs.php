@@ -17,19 +17,19 @@ class DisplayLogs {
       *
       * @return Nothing. All information is echoed
       */
-    public function display($grab_logs) {
-        $this->pageing(); // Show page controls
+    public static function display($grab_logs) {
+        SELF::pageing(); // Show page controls
         
-        $this->showLogs($grab_logs); // Display log entries
+        SELF::showLogs($grab_logs); // Display log entries
         
-        $this->pageing(); // Show page controls
+        SELF::pageing(); // Show page controls
     }
 
     /** Displays pagintation controls
       *
       * @return Nothing. All information is echoed
       */
-    private function pageing() {
+    private static function pageing() {
         global $isFiltered, $pageOffset, $logSize; /**< Grab needed variables **/
         
         // If this isn't filtered results, show the page controls
@@ -52,7 +52,7 @@ class DisplayLogs {
       *
       * @return Nothing. All information is echoed
       */
-    private function showLogs($grab_logs) {
+    private static function showLogs($grab_logs) {
     	global $isFiltered;
         // Grab a list of all current users and put them in an array
         $conn = new dbManage;

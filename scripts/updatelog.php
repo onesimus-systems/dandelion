@@ -12,7 +12,6 @@
  ***/
 
 include_once 'grabber.php'; // Required for accessing the DB
-include_once '../classes/DisplayLogs.php';
 
 // Authenticate user, if fail go to login page
 if (authenticated()) {
@@ -52,8 +51,7 @@ if (authenticated()) {
     	
     	$isFiltered = false; // Show paging controls
     	
-    	$dis = new DisplayLogs;
-    	$dis->display($grab_logs);
+    	DisplayLogs::display($grab_logs);
     }
     
     else {
