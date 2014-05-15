@@ -4,11 +4,11 @@ var adminAction =
 		var newSlogan = window.prompt('Website Slogan', current);
 		
 		if (newSlogan !== '' && newSlogan !== null)
-            this.performAction("slogan", newSlogan);
+            this.performAction("saveSlogan", newSlogan);
 	},
 	
 	backupDB: function() {
-		$.post("scripts/admin_actions.php", { sub_action: "backupdb" })
+		$.post("scripts/admin_actions.php", { action: "backupDB" })
             .done(function( msg ) {
                 alert(msg);
             });
@@ -16,16 +16,16 @@ var adminAction =
 	
 	saveDefaultTheme: function() {
         var newTheme = $("#userTheme").val();
-        this.performAction("defaultTheme", newTheme);
+        this.performAction("saveDefaultTheme", newTheme);
 	},
 	
 	saveCheesto: function() {
         var cheesto = $("#cheesto_enabled").val();
-        this.performAction("cheesto", cheesto);
+        this.performAction("saveCheesto", cheesto);
 	},
 	
 	performAction: function(action, data) {
-        $.post("scripts/admin_actions.php", { sub_action: action, data: encodeURIComponent(data) })
+        $.post("scripts/admin_actions.php", { action: action, data: encodeURIComponent(data) })
             .done(function( msg ) {
                 alert(msg);
             });

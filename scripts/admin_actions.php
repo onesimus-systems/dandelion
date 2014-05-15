@@ -1,6 +1,6 @@
 <?php
 /**
- * This script contains any non-user related admin functions.
+ * This script forwards admin actions to adminActions class
  *
  * @author Lee Keitel
  * @date January 28, 2014
@@ -11,52 +11,5 @@
 include 'grabber.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $a_action = $_POST["sub_action"];
-
-        $conn = new dbManage();
-
-		if ($a_action == "slogan") {
-			// Set new slogan
-			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :slogan WHERE `name` = "slogan"';
-			$params = array(
-				'slogan' => urldecode($_POST['data'])
-			);
-			$conn->queryDB($stmt, $params);
-			
-			$_SESSION['app_settings']['slogan'] = urldecode($_POST['data']);
-			
-			echo 'Slogan set successfully';
-		}
-		
-		elseif ($a_action == 'backupdb') {
-			include 'backupdb.php';
-			backupDB();
-		}
-		
-		elseif ($a_action == 'defaultTheme') {
-			// Set new default theme
-			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :theme WHERE `name` = "default_theme"';
-			$params = array(
-				'theme' => $_POST['data']		
-			);
-			$conn->queryDB($stmt, $params);
-			
-			$_SESSION['app_settings']['default_theme'] = $_POST['data'];
-			
-			echo 'Default theme set successfully';
-		}
-		
-		elseif ($a_action == 'cheesto') {
-			// Set cheesto enabled/disabled
-			$stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :enabled WHERE `name` = "cheesto_enabled"';
-			$enabled = ($_POST['data'] == 'true') ? 1 : 0;
-			$params = array(
-				'enabled' => $enabled
-			);
-			$conn->queryDB($stmt, $params);
-			
-			$_SESSION['app_settings']['cheesto_enabled'] = $enabled;
-			
-			echo 'Settings set successfully';
-		}
+    echo adminActions::doAction($_POST);
 }
