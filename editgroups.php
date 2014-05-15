@@ -23,7 +23,7 @@ if (!authenticated()) {
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico">
-		<?php loadCssSheets('permissions.css','jqueryui'); ?>
+		<?php echo loadCssSheets('permissions.css','jqueryui'); ?>
 		<title>Dandelion Web Log</title>
 	</head>
 	<body onLoad="permissions.getList();">

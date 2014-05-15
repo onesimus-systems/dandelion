@@ -20,7 +20,7 @@ if (!authenticated()) {
     <head>
         <meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-		<?php loadCssSheets("cheestoWin","jqueryui","datetimepicker.css",false); ?>
+		<?php echo loadCssSheets("cheestoWin","jqueryui","datetimepicker.css",false); ?>
         <title>Dandelion cxeesto</title>
     </head>
     

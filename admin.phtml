@@ -14,7 +14,7 @@ $content = false;
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico">
-		<?php loadCssSheets(); ?>
+		<?php echo loadCssSheets(); ?>
 		<title>Dandelion Web Log</title>
 	</head>
 	<body>
@@ -49,7 +49,7 @@ $content = false;
 	
 	            Default theme:
 	        	
-	        	<?php getThemeList('default'); ?>
+	        	<?php echo getThemeList('default'); ?>
 	        	
 	            <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
 	            
