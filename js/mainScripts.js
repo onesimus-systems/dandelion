@@ -180,8 +180,14 @@ var addFun =
 		if (title != "" && entry != "" && cat != "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
+			
+			logData = {
+				cat: cat,
+				add_title: title,
+				add_entry: entry
+			};
 
-			$.post("scripts/add_log.php", { cat: cat, add_title: title, add_entry: entry })
+			$.post("scripts/logs.php", { action: "addLog", data: JSON.stringify(logData) })
 				.done(function( html ) {
 					refreshLog();
 					secleft=120;
