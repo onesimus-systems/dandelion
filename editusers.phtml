@@ -15,7 +15,6 @@ $showList = true;
         <link rel="icon" type="image/ico" href="images/favicon.ico">
 		<?php echo loadCssSheets("jqueryui","datetimepicker.css"); ?>
 		<title>Dandelion Web Log</title>
-        <?php loadJS("jquery","jqueryui","timepicker.js","slider.js");?>
 	</head>
 	<body>
         <header>
@@ -107,5 +106,7 @@ $showList = true;
         <footer>
             <?php include_once 'scripts/footer.php'; ?>
         </footer>
+        
+	    <?php echo loadJS("jquery","jqueryui","timepicker.js","slider.js");?>
 	</body>
 </html>

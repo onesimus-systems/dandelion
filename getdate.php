@@ -61,6 +61,7 @@ if (!authenticated()) {
             <textarea id="messagetext" cols="25" rows="10"></textarea><br>
             <input type="button" onclick="giveTime();" value="Done">
         </form>
-        <?php loadJS("jquery","jqueryui","timepicker.js","slider.js","cheestoGetDate.js");?>
+        
+        <?php echo loadJS("jquery","jqueryui","timepicker.js","slider.js","cheestoGetDate.js");?>
     </body>
 </html>

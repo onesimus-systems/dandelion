@@ -12,18 +12,19 @@
 
 function loadJS() {
 	$scripts = func_get_args();
+	$scriptList = '';
 
 	foreach($scripts as $file) {
 		// Check to see if it's a manually supplied JS file
 		if (substr($file, -3) == ".js") {
 			if (is_file('js/'.$file)) {
-				echo '<script src="js/'.$file.'"></script>';
+				$scriptList .= '<script src="js/'.$file.'"></script>';
 			}
 			elseif (is_file('jquery/js/'.$file)) {
-				echo '<script src="jquery/js/'.$file.'"></script>';
+				$scriptList .= '<script src="jquery/js/'.$file.'"></script>';
 			}
 			else {
-				echo $file.' was not found. Error 404.';
+				$scriptList .= "<!-- {$file} was not found. Error 404. -->";
 			}
 			continue;
 		}
@@ -32,27 +33,29 @@ function loadJS() {
 		
 		switch($file) {
 			case "jquery":
-				echo '<script src="jquery/js/jquery-2.1.1.min.js"></script>';
+				$scriptList .= '<script src="jquery/js/jquery-2.1.1.min.js"></script>';
 				break;
 			case "jqueryui":
-				echo '<script src="jquery/js/jquery-ui-1.10.4.min.js"></script>';
+				$scriptList .= '<script src="jquery/js/jquery-ui-1.10.4.min.js"></script>';
 				break;
 			case "tinymce":
-			    echo '<script src="tinymce/js/jquery.tinymce.min.js"></script>';
-			    echo '<script src="tinymce/js/tinymce.min.js"></script>';
+			    $scriptList .= '<script src="tinymce/js/jquery.tinymce.min.js"></script>';
+			    $scriptList .= '<script src="tinymce/js/tinymce.min.js"></script>';
 			    break;
 			case "catmanage":
-				echo '<script src="js/catManage.js"></script>';
+				$scriptList .= '<script src="js/catManage.js"></script>';
 				break;
 			case "main":
-				echo '<script src="js/mainScripts.js"></script>';
+				$scriptList .= '<script src="js/mainScripts.js"></script>';
 				break;
 			case "cheesto":
 			case 'presence':
 			    if ($_SESSION['rights']['viewcheesto']) {
-				    echo '<script src="js/presence.js"></script>';
+				    $scriptList .= '<script src="js/presence.js"></script>';
 			    }
 				break;
 		}
 	}
+	
+	return $scriptList;
 }

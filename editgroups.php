@@ -125,5 +125,5 @@ if (!authenticated()) {
         </footer>
 	</body>
 	
-	<?php loadJS('permissions.js','jquery','jqueryui'); ?>
+	<?php echo loadJS('permissions.js','jquery','jqueryui'); ?>
 </html>
