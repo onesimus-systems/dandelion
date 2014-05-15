@@ -346,7 +346,13 @@ var searchFun =
             return false;
         }
         
-        $.post("scripts/logfilter.php", { keyw: searchfor, dates: datefor, type: type })
+        search = {
+			keyw: searchfor,
+			dates: datefor,
+			type: type
+        };
+        
+        $.post("scripts/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
             .done(function( html ) {
                 filt=true;
                 refreshFun.stoprefresh();
@@ -358,9 +364,14 @@ var searchFun =
     filter: function(cat) {
         if (cat === '') { cat = CategoryManage.getCatString(); }
         
+        filter = {
+			type: '',
+			filter: cat
+        };
+        
         if (cat)
         {
-            $.post("scripts/logfilter.php", { filter: cat})
+            $.post("scripts/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
                 .done(function( html ) {
                     $("#refreshed").html( html );
                     filt=true;

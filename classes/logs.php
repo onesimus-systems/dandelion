@@ -97,4 +97,74 @@ class Logs
             return 'This account can\'t edit logs';
         }
     }
+    
+    public static function filterLogs($conn, $filterQuery) {
+        $query = (array) json_decode($filterQuery);
+    	$type = isset($query['type']) ? $query['type'] : '';
+    	
+    	// Category Search
+    	if ($type == '') {
+            $filter = isset($query['filter']) ? urldecode($query['filter']) : '';
+            $filter = rtrim($filter, ':');
+    	    ?>
+    		    <form>
+    		        <h3>**Filter applied: <?php echo $filter; ?>**</h3>
+    		        <input type="button" value="Clear Filter" onClick="refreshLog('clearf')" />
+    		    </form>
+    	    <?php
+    	    $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `cat` LIKE :filter ORDER BY `logid` DESC';
+    	    $params = array(
+    	        'filter' => "%".$filter."%"
+    	    );
+    	    $grab_logs = $conn->queryDB($stmt, $params);
+    	}
+    	
+    	else {
+        	$keyw = isset($query['keyw']) ? urldecode($query['keyw']) : '';
+        	$dates = isset($query['dates']) ? $query['dates'] : '';
+        	
+    	    // Keyword search
+    	    if ($type == "keyw") {
+    	        $message = $keyw;
+    	        
+    	        $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `title` LIKE :keyw or `entry` LIKE :keyw ORDER BY `logid` DESC';
+    	        $params = array(
+    	            'keyw' => "%".$keyw."%"
+    	        );
+    	        $grab_logs = $conn->queryDB($stmt, $params);
+    	    }
+    	    // Logs made on certain date
+    	    else if ($type == "dates") {
+    	        $message = $dates;
+    	        
+    	        $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `datec`=:dates ORDER BY `logid` DESC';
+    	        $params = array(
+    	            'dates' => $dates
+    	        );
+    	        $grab_logs = $conn->queryDB($stmt, $params);
+    	    }
+    	    // Logs made on certain day containing keyword
+    	    else {
+    	        $message = $keyw.' on '.$dates;
+    	
+    	        $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE (`title` LIKE :keyw or `entry` LIKE :keyw) and `datec`=:dates ORDER BY `logid` DESC';
+    	        $params = array(
+    	            'keyw' => "%".$keyw."%",
+    	            'dates' => $dates
+    	        );
+    	        $grab_logs = $conn->queryDB($stmt, $params);
+    	    }
+    	    ?>
+    		    <form>
+    		        <h3 style="display:inline;">Search results for: <?php echo $message; ?></h3>
+    		        <input type="button" value="Clear Search" onClick="refreshLog('clearf')" />
+    		    </form>
+    	    <?php
+    	}
+    	
+    	$isFiltered = true; // Don't show paging controls
+    	
+    	// Display filtered logs
+    	DisplayLogs::display($grab_logs);
+    }
 }
