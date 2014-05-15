@@ -210,7 +210,7 @@ var addFun =
 var editFun =
 {
     showeditinputs: function(log_info) {
-        console.log(log_info);
+        
         var linfo = JSON.parse(log_info);
         
         $("input#logTitle").val( linfo.title );
@@ -275,7 +275,13 @@ var editFun =
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 			
-			$.post("scripts/editlogs.php", { editlog: editedlog, edittitle: editedtitle, choosen: id })
+			logData = {
+				editlog: editedlog,
+				edittitle: editedtitle,
+				choosen: id
+			};
+			
+			$.post("scripts/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
 				.done(function( html ) {
 				refreshLog();
 				secleft=120;

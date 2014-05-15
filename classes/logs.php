@@ -68,4 +68,33 @@ class Logs
             return 'This account can\'t create logs.';
         }
     }
+    
+    public static function editLog($conn, $logData) {
+        if ($_SESSION['rights']['editlog']) {
+            $logData = (array) json_decode($logData);
+
+            $editedlog = isset($logData['editlog']) ? $logData['editlog'] : '';
+            $editedtitle = isset($logData['edittitle']) ? $logData['edittitle'] : '';
+            $logid  = isset($logData['choosen']) ? $logData['choosen'] : '';
+            
+            if (!empty($editedlog) && !empty($editedtitle) && !empty($logid)) {
+            	$stmt = 'UPDATE `'.DB_PREFIX.'log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :logid';
+            	$params = array(
+            	    'eTitle' => urldecode($editedtitle),
+            	    'eEntry' => urldecode($editedlog),
+            	    'logid' => $logid
+            	);
+            	$conn->queryDB($stmt, $params);
+            	
+            	return '"'.urldecode($editedtitle).'" edited successfully.';
+            }
+            else {
+                return '<span class="bad">Log entries must have a title, category, and entry text.</span>';
+            }
+        }
+        
+        else {
+            return 'This account can\'t edit logs';
+        }
+    }
 }
