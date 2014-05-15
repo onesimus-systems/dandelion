@@ -79,8 +79,7 @@ define('D_VERSION', '4.6.0');
 define('THEME_DIR', 'themes');
 
 // Load helper scripts
-require_once ROOT.'/classes/db_functions.php';
-require_once ROOT.'/classes/permissions.php';
+require_once ROOT.'/scripts/autoloader.php';
 require_once ROOT.'/scripts/authenticate.php';
 require_once ROOT.'/scripts/themes.php';
 require_once ROOT.'/scripts/scripts.php';
