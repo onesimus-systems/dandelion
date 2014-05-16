@@ -25,7 +25,7 @@ var CategoryManage = {
 		$.ajax({
             type: "POST",
             url: "scripts/categories.php",
-            data: { action: "grabcats", parentID: pid, pastSelections: JSON.stringify(this.currentSelection)},
+            data: { action: "grabcats", pastSelections: JSON.stringify(this.currentSelection)},
             async: false
         })
             .done(function( html ) {

@@ -27,7 +27,7 @@ if (isset($_POST['action'])) {
 	if($_POST['action'] == 'grabcats') {
 		$past = json_decode(stripslashes($_POST['pastSelections']));
 		$displayCats = new Categories();	
-		$displayCats->getChildren($_POST['parentID'], $past);
+		$displayCats->getChildren($past);
 	}
 	
 	elseif($_POST['action'] == 'addcat') {
