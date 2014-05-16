@@ -1,21 +1,58 @@
 <?php
 /**
   * Handles all requests pertaining to log entries
+  * 
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  * The full GPLv3 license is available in LICENSE.md in the root.
   *
   * @author Lee Keitel
   * @date May 2014
-  *
-  * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
 
+/**
+ * The Logs class contains all functions pertaining to creating
+ * editing, filtering and initializtion to display logs.
+ * 
+ * Only the doAction() method is publically visiable and it takes
+ * in the POST data from a request, determins the action from the
+ * data and statically calls that function giving it a database
+ * connection class (dbManage), and the 'data' index of the POST
+ * array
+ */
 class Logs
 {
+    /**
+	 * Main function to perform action
+	 *
+	 * @param array $data POST data array
+	 * 
+	 * @return Individual function returns
+	 */
     public static function doAction($data) {
         $conn = new dbManage();
         return self::$data['action']($conn, $data['data']);
     }
     
-    public static function getLogInfo($conn, $logid) {
+    /**
+	 * Get log data from database
+	 *
+	 * @param dbmanage class $conn
+	 * @param int $logid Row id number for desired log
+	 * 
+	 * @return JSON encoded array with log data
+	 */
+    private static function getLogInfo($conn, $logid) {
     	$loguid = isset($loguid) ? $loguid : '';
     
     	$stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `logid` = :logid';
@@ -28,7 +65,15 @@ class Logs
     	return json_encode($edit_log_info[0]);
     }
     
-    public static function addLog($conn, $logData) {
+    /**
+	 * Create a new log in the database
+	 *
+	 * @param dbmanage class $conn
+	 * @param json $logData JSON encoded log title, entry, and category (strings)
+	 * 
+	 * @return string Confirmation message or error message
+	 */
+    private static function addLog($conn, $logData) {
         if ($_SESSION['rights']['createlog']) {
             $logData = (array) json_decode($logData);
             
@@ -37,9 +82,7 @@ class Logs
             $new_category = isset($logData['cat']) ? $logData['cat'] : NULL;
         
             // Check that all required fields have been entered
-            if ($new_title != NULL AND $new_title != '' AND
-                $new_entry != NULL AND $new_entry != '' AND
-                $new_category != NULL AND $new_category != 'Select:' AND $new_category != 'false')
+            if (!empty($new_title) && !empty($new_entry) && !empty($new_category) && $new_category != 'Select:')
             {
                 $datetime = getdate();
                 $new_date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
@@ -57,7 +100,7 @@ class Logs
                 );
                 $conn->queryDB($stmt, $params);
                 
-                return "Log entry created successfully.";
+                return 'Log entry created successfully.';
             }
             else {
                 return '<span class="bad">Log entries must have a title, category, and entry text.</span>';
@@ -69,7 +112,15 @@ class Logs
         }
     }
     
-    public static function editLog($conn, $logData) {
+    /**
+	 * Update log row in database
+	 *
+	 * @param dbmanage class $conn
+	 * @param json $logData JSON encoded log title, entry, and id
+	 * 
+	 * @return string Confirmation message or error message
+	 */
+    private static function editLog($conn, $logData) {
         if ($_SESSION['rights']['editlog']) {
             $logData = (array) json_decode($logData);
 
@@ -98,7 +149,17 @@ class Logs
         }
     }
     
-    public static function filterLogs($conn, $filterQuery) {
+    /**
+	 * Grab logs from database with given criteria
+	 *
+	 * @param dbmanage class $conn
+	 * @param json $filterQuery JSON encoded query parameters
+	 *      (type, keyword, date, category filter string)
+	 * 
+	 * @return string HTML with filtered logs
+	 */
+    private static function filterLogs($conn, $filterQuery) {
+        $notice = '';
         $query = (array) json_decode($filterQuery);
     	$type = isset($query['type']) ? $query['type'] : '';
     	
@@ -106,22 +167,25 @@ class Logs
     	if ($type == '') {
             $filter = isset($query['filter']) ? urldecode($query['filter']) : '';
             $filter = rtrim($filter, ':');
-    	    ?>
+            
+    	    $notice .= <<<HTML
     		    <form>
-    		        <h3>**Filter applied: <?php echo $filter; ?>**</h3>
+    		        <h3>**Filter applied: {$filter}**</h3>
     		        <input type="button" value="Clear Filter" onClick="refreshLog('clearf')" />
-    		    </form>
-    	    <?php
+    		    </form><br>
+HTML;
     	    $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `cat` LIKE :filter ORDER BY `logid` DESC';
     	    $params = array(
     	        'filter' => "%".$filter."%"
     	    );
-    	    $grab_logs = $conn->queryDB($stmt, $params);
+    	    
+    	    $grab_logs = $conn->queryDB($stmt, $params); // Sent to displaylogs function
     	}
     	
     	else {
         	$keyw = isset($query['keyw']) ? urldecode($query['keyw']) : '';
         	$dates = isset($query['dates']) ? $query['dates'] : '';
+        	$message = '';
         	
     	    // Keyword search
     	    if ($type == "keyw") {
@@ -131,8 +195,10 @@ class Logs
     	        $params = array(
     	            'keyw' => "%".$keyw."%"
     	        );
-    	        $grab_logs = $conn->queryDB($stmt, $params);
+    	        
+    	        $grab_logs = $conn->queryDB($stmt, $params); // Sent to displaylogs function
     	    }
+    	    
     	    // Logs made on certain date
     	    else if ($type == "dates") {
     	        $message = $dates;
@@ -141,8 +207,10 @@ class Logs
     	        $params = array(
     	            'dates' => $dates
     	        );
-    	        $grab_logs = $conn->queryDB($stmt, $params);
+    	        
+    	        $grab_logs = $conn->queryDB($stmt, $params); // Sent to displaylogs function
     	    }
+    	    
     	    // Logs made on certain day containing keyword
     	    else {
     	        $message = $keyw.' on '.$dates;
@@ -152,19 +220,69 @@ class Logs
     	            'keyw' => "%".$keyw."%",
     	            'dates' => $dates
     	        );
-    	        $grab_logs = $conn->queryDB($stmt, $params);
+    	        
+    	        $grab_logs = $conn->queryDB($stmt, $params); // Sent to displaylogs function
     	    }
-    	    ?>
+    	    
+    	    $notice .= <<<HTML
     		    <form>
-    		        <h3 style="display:inline;">Search results for: <?php echo $message; ?></h3>
+    		        <h3>Search results for: {$message}</h3>
     		        <input type="button" value="Clear Search" onClick="refreshLog('clearf')" />
-    		    </form>
-    	    <?php
+    		    </form><br>
+HTML;
     	}
     	
-    	$isFiltered = true; // Don't show paging controls
-    	
-    	// Display filtered logs
-    	DisplayLogs::display($grab_logs);
+    	return $notice . DisplayLogs::display($grab_logs, true);
+    }
+    
+    /**
+	 * Grab logs from database
+	 *
+	 * @param dbmanage class $conn
+	 * @param json $data JSON encoded page offset or page number
+	 * 
+	 * @return string Formatted log html
+	 */
+    private static function getLogs($conn, $data) {
+        if ($_SESSION['rights']['viewlog']) {
+            $pageInfo = (array) json_decode($data);
+            
+        	// Initialize Variables
+        	$pageOffset = isset($pageInfo['pageOffset']) ? $pageInfo['pageOffset'] : '0';
+        	
+        	// For later use to specify a page number instead of offset ;)
+        	if (isset($pageInfo['page'])) {
+        	    $pageOffset = ($pageInfo['page'] * $_SESSION['userInfo']['showlimit']) - $_SESSION['userInfo']['showlimit'];
+        	}
+        	
+        	$pageOffset = $pageOffset<0 ? '0' : $pageOffset; // If somehow the offset is < 0, make it 0
+        	
+        	// Grab row count of log table to determine offset
+        	$stmt = 'SELECT COUNT(*) FROM `'.DB_PREFIX.'log`';
+        	$logSize = $conn->queryDB($stmt, NULL);
+        	
+        	// If the next page offset is > than the row count (which shouldn't happen
+        	// any more thanks to some logic in DisplayLogs class), make the offset the last
+        	// offset, (the current offset - the user page show limit).
+        	if ($pageOffset > $logSize[0]['COUNT(*)']) {
+        	    $pageOffset = $pageOffset - $_SESSION['userInfo']['showlimit'];
+        	}
+        	
+        	// When using a SQL LIMIT, the parameter MUST be an integer.
+        	// To accomplish this the PDO constant PARAM_INT is passed
+        	$stmt = 'SELECT * FROM `'.DB_PREFIX.'log` ORDER BY `logid` DESC LIMIT :pO,:lim';
+        	$params = array(
+        	    'lim' => ((int) trim($_SESSION['userInfo']['showlimit'])),
+        	    'pO' => ((int) trim($pageOffset))
+        	);
+        	    
+        	$grab_logs = $conn->queryDB($stmt, $params, PDO::PARAM_INT);
+        	
+        	return DisplayLogs::display($grab_logs, false, $pageOffset, $logSize);
+        }
+        
+        else {
+            return "This account does not have permission to view the activity log.";
+        }
     }
 }

@@ -66,8 +66,10 @@ function refreshLog(kindof) {
     if (!filt)
         {
             $.ajax({
-                url: "scripts/updatelog.php",
-                async: false
+                type: "POST",
+                url: "scripts/logs.php",
+                async: false,
+                data: { action: "getLogs" }
             })
                 .done(function( html ) {
                     $("#refreshed").html( html );
@@ -97,7 +99,11 @@ function refreshLog(kindof) {
  * the SELECT limits.
  */
 function pagentation(pageOffset) {
-    $.post("scripts/updatelog.php", { pageOffset: pageOffset})
+    pages = {
+        pageOffset: pageOffset
+    };
+    
+    $.post("scripts/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
         .done(function( html ) {
             $("#refreshed").html( html );
             
