@@ -55,11 +55,15 @@ if(!isset($_SESSION['config']) || $forceConfigLoad) {
     }
 }
 
+// Setup error logging
+require_once ROOT.'/scripts/logging.php';
+error_reporting(-1);
+ini_set('log_errors', true);
+
 // Display errors if in debug mode
-error_reporting(E_ALL);
 if ($_SESSION['config']['debug']) {
-    ini_set('display_errors', True);
-    require_once ROOT.'/scripts/logging.php';
+    ini_set('display_errors', true);
+    ini_set('display_startup_errors', true);
 }
 
 /*
