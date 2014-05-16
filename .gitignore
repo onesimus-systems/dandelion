@@ -9,6 +9,7 @@ docs/
 logs/
 koala-config*
 backups/
+vendor/
 
 #################
 ## Eclipse

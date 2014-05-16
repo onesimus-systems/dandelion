@@ -33,6 +33,9 @@ $_SESSION['timeout_idle'] = time() + $timeout;
 // Get and define root path of application
 define('ROOT', dirname(dirname(__FILE__)));
 
+// Load Composer dependencies
+require_once ROOT.'/vendor/autoload.php';
+
 // Utilized in development to, well, force the config to reload without relogin.
 $forceConfigLoad = true;
 
@@ -87,7 +90,6 @@ require_once ROOT.'/scripts/autoloader.php';
 require_once ROOT.'/scripts/authenticate.php';
 require_once ROOT.'/scripts/themes.php';
 require_once ROOT.'/scripts/scripts.php';
-require_once ROOT.'/scripts/password_compat/password.php';
 
 // Load application settings
 if(!isset($_SESSION['app_settings'])) {

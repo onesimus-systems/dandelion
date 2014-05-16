@@ -1,0 +1,6 @@
+{
+    "require": {
+        "ircmaxell/password-compat": "dev-master",
+        "php": ">=5.3.7"
+    }
+}
