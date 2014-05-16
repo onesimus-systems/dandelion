@@ -259,12 +259,12 @@ HTML;
         	
         	// Grab row count of log table to determine offset
         	$stmt = 'SELECT COUNT(*) FROM `'.DB_PREFIX.'log`';
-        	$logSize = $conn->queryDB($stmt, NULL);
+        	$logSize = $conn->queryDB($stmt, NULL)[0]['COUNT(*)'];
         	
         	// If the next page offset is > than the row count (which shouldn't happen
         	// any more thanks to some logic in DisplayLogs class), make the offset the last
         	// offset, (the current offset - the user page show limit).
-        	if ($pageOffset > $logSize[0]['COUNT(*)']) {
+        	if ($pageOffset > $logSize) {
         	    $pageOffset = $pageOffset - $_SESSION['userInfo']['showlimit'];
         	}
         	

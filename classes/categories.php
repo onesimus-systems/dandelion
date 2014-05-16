@@ -1,13 +1,29 @@
 <?php
 /**
- * @brief Categories is responsible for displaying and managing categories
- *
+  * Responsible for displaying and managing categories
+  * 
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  * The full GPLv3 license is available in LICENSE.md in the root.
+  *
+  * @author Lee Keitel
+  * @date Feb 2014
+***/
+
+/**
  * This class displays all categories and manages the addition, deletion,
  * and manipulation of the same.
- *
- * @author Lee Keitel
- * @date February 11, 2014
- ***/
+ */
 class Categories
 {
 	private $conn;
@@ -18,10 +34,17 @@ class Categories
 		}
 	}
 	
-	public function getChildren($parentID, $past) {
+	/** 
+     * Get the children of a parent category and generate a <select>
+     * element with the root node and all children
+     *
+     * @param array $past History of category nodes in parentid:level notation
+     *
+     * @return echo
+     */
+	public function getChildren($past) {
 		$cat = $this->conn->selectAll('category');
 		
-		$parent = explode(':', $parentID);
 		$response = '';
 		
 		foreach($past as $pastSel) {
@@ -62,10 +85,21 @@ class Categories
 		echo $response;
 	}
 	
+	/** 
+     * Used with usort() to alphabetize the category lists
+     */
 	private function cmp($a, $b) {
 		return strcmp($a['description'], $b['description']);
 	}
 	
+	/** 
+     * Create a new category
+     *
+     * @param int $parent Parent ID (0 if root)
+     * @param string $description Name of category
+     *
+     * @return echo
+     */
 	public function addCategory($parent, $description) {
 		$stmt = 'INSERT INTO `'.DB_PREFIX.'category` (`description`, `pid`) VALUES (:description, :parentid)';
 		$params = array(
@@ -80,6 +114,13 @@ class Categories
 		}
 	}
 	
+	/** 
+     * Remove category for database
+     *
+     * @param int $cid ID of category to be deleted
+     *
+     * @return echo
+     */
 	public function delCategory($cid) {
 		// Get the category's current parent to reassign children
 		$stmt = 'SELECT `pid` FROM `'.DB_PREFIX.'category` WHERE `cid` = :catid';
@@ -108,6 +149,14 @@ class Categories
 		echo 'Category deleted successfully';
 	}
 	
+	/** 
+     * Update category description
+     *
+     * @param int $cid ID of category to update
+     * @param string $desc Name of category
+     *
+     * @return echo
+     */
 	public function editCategory($cid, $desc) {
 		$stmt = 'UPDATE `'.DB_PREFIX.'category` SET `description` = :desc WHERE `cid` = :cid';
 		$params = array(

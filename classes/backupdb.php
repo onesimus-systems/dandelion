@@ -1,15 +1,33 @@
 <?php
 /**
- * This script creates a backup file of the current database
- *
- * @author Lee Keitel
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
+  * Backsup the database to a file
+  * 
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  * The full GPLv3 license is available in LICENSE.md in the root.
+  *
+  * @author Lee Keitel
+  * @date March 2014
+***/
 
+/**
+ * Not much to say here. It gets a list of all the tables then goes
+ * through each one and gets all the rows of a data then rights it to
+ * a file with the proper SQL instructions to import back to MySQL.
+ */
 class backupDB
 {
-    function doBackup($link)
+    public static function doBackup($link)
     {
     	$return = '';
     	
