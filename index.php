@@ -27,16 +27,14 @@
 include_once 'scripts/grabber.php';
 
 if (!$_SESSION['config']['installed']) {
-	header( 'Location: ./install' );
+    header( 'Location: ./install' );
 }
 
 if (authenticated()) {
     include 'viewlog.phtml';
-}
-
-else {
+} else {
     $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
-	
-	$theme = getTheme();
-	include 'loginbox.php';
+
+    $theme = getTheme();
+    include 'loginbox.php';
 }

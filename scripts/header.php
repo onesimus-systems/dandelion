@@ -3,7 +3,7 @@
   * Global header file
   *
   * This file is a part of Dandelion
-  * 
+  *
   * @author Lee Keitel
   * @date March 2014
   *

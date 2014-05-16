@@ -3,7 +3,7 @@
   * Gets return time and message for user status
   *
   * This file is a part of Dandelion
-  * 
+  *
   * @author Lee Keitel
   * @date March 2014
   *
@@ -13,17 +13,17 @@
 require_once 'scripts/grabber.php';
 
 if (!authenticated()) {
-	header( 'Location: index.php' );
+    header( 'Location: index.php' );
 }
 ?>
 <html>
     <head>
         <meta charset="utf-8">
-		<meta http-equiv="x-ua-compatible" content="IE=9">
-		<?php echo loadCssSheets("cheestoWin","jqueryui","datetimepicker.css",false); ?>
+        <meta http-equiv="x-ua-compatible" content="IE=9">
+        <?php echo loadCssSheets("cheestoWin","jqueryui","datetimepicker.css",false); ?>
         <title>Dandelion cxeesto</title>
     </head>
-    
+
     <body>
         <form id="getDate">
             <table>
@@ -54,14 +54,14 @@ if (!authenticated()) {
                 </tbody>
             </table>
             <br>
-            
+
             Return Time:<br>
             <input type="text" id="datepick" value="Today"><br><br>
             Message:<br>
             <textarea id="messagetext" cols="25" rows="10"></textarea><br>
             <input type="button" onclick="giveTime();" value="Done">
         </form>
-        
+
         <?php echo loadJS("jquery","jqueryui","timepicker.js","slider.js","cheestoGetDate.js");?>
     </body>
 </html>

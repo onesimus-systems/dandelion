@@ -8,7 +8,7 @@
   *
   * @author Lee Keitel
   * @date February 4, 2014
-  * 
+  *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
 class cxeesto extends dbManage
@@ -21,21 +21,21 @@ class cxeesto extends dbManage
       * @author Lee Keitel
       * @date February 4, 2014
     ***/
-    public function refreshStatus($isWin, $isWin2) {
-
+    public function refreshStatus($isWin, $isWin2)
+    {
         $all_users = $this->selectAll('presence');
 
         // If updating for the mini version
         if ($isWin == 0 && $isWin2 == 0) {
-            
+
             echo '<table><thead><tr><td>Name</td><td>Status</td></tr></thead><tbody>';
 
             foreach ($all_users as $row) {
                 echo '<tr>';
                 echo '<td><span title="' . $row['message'] . '" class="message">' . $row['realname'] . '</span></td>';
-                
+
                 $statusProps = $this->statusType($row['status'], '&#013;', $row['returntime']);
-                
+
                 echo '<td class="statusi"><span title="' . $statusProps[0] . '" class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td></tr>';
             }
             //echo '<a role="button" tabindex="0" onClick="presence.popOut();" class="linklike">Popout &#264;eesto</a>';
@@ -43,18 +43,18 @@ class cxeesto extends dbManage
 
             echo '</tbody></table>';
         }
-        
+
         // Updating the windowed version
         elseif ($isWin == 1 || $isWin2 == 1) {
-            
+
             echo '<table><thead><tr><td>Name</td><td>Message</td><td colspan="2">Status</td><td>Last Changed</td></tr></thead><tbody>';
 
             foreach ($all_users as $row) {
                 echo '<tr>';
                 echo '<td>' . $row['realname'] . '</td><td>' . $row['message'] . '</td>';
-                
+
                 $statusProps = $this->statusType($row['status'], '<br>', $row['returntime']);
-                
+
                 echo '<td class="statusi"><span class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td><td>' . $statusProps[0] . '</td><td>' . $row['dmodified'] . '</td></tr>';
             }
             echo '</tbody></table>';
@@ -70,7 +70,8 @@ class cxeesto extends dbManage
       * @author Lee Keitel
       * @date February 4, 2014
     ***/
-    private function statusType($sNum, $lBreak, $returnT) {
+    private function statusType($sNum, $lBreak, $returnT)
+    {
         $statusProps = array();
 
         switch($sNum) {
@@ -130,10 +131,10 @@ class cxeesto extends dbManage
                 $statusProps[2] = 'red';
                 break;
         }
-        
+
         return $statusProps;
     }
-    
+
     /** Updates a user's status
      *
      * @param message - (string) Status message for user
@@ -143,19 +144,20 @@ class cxeesto extends dbManage
      * @author Lee Keitel
      * @date MArch 18, 2014
      ***/
-    public function updateStatus($message, $status, $return) {
-	    $date = new DateTime();
-	    $date = $date->format('Y-m-d H:i:s');
-	    
-	    $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
-	    $params = array(
-	        'message' => urldecode($message),
-	        'setorno' => $status,
-	        'returntime' => $return,
-	        'dmodified' => $date,
-	        'iamaRealBoy' => $_SESSION['userInfo']['userid'] // Don't ask
-	    );
-	    
-	    $this->queryDB($stmt, $params);
+    public function updateStatus($message, $status, $return)
+    {
+        $date = new DateTime();
+        $date = $date->format('Y-m-d H:i:s');
+
+        $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
+        $params = array(
+            'message' => urldecode($message),
+            'setorno' => $status,
+            'returntime' => $return,
+            'dmodified' => $date,
+            'iamaRealBoy' => $_SESSION['userInfo']['userid'] // Don't ask
+        );
+
+        $this->queryDB($stmt, $params);
     }
 }

@@ -3,7 +3,7 @@
   * Global footer
   *
   * This file is a part of Dandelion
-  * 
+  *
   * @author Lee Keitel
   * @date Janurary 2014
   *
