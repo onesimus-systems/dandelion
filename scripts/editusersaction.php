@@ -9,6 +9,8 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
+use Dandelion\Database\dbManage;
 
 $conn = new dbManage();
 

@@ -10,6 +10,8 @@
   * @author Lee Keitel
   * @date February 3, 2014
 ***/
+namespace Dandelion\Database;
+
 class DB
 {
     protected $dbConn;
@@ -34,12 +36,12 @@ class DB
                     break;
             }
 
-            $conn = new PDO($db_connect, $_SESSION['config']['db_user'], $_SESSION['config']['db_pass'], array(
-                PDO::ATTR_PERSISTENT => true
+            $conn = new \PDO($db_connect, $_SESSION['config']['db_user'], $_SESSION['config']['db_pass'], array(
+                \PDO::ATTR_PERSISTENT => true
             ));
 
             if ($_SESSION['config']['debug']) {
-                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             }
 
             $this->dbConn = $conn;
@@ -79,7 +81,7 @@ class dbManage extends DB
       * @return Array containing the results of a SELECT query.
       * 		True when performing any other query type.
       */
-    public function queryDB($stmt, $paramArray = NULL, $type = PDO::PARAM_STR)
+    public function queryDB($stmt, $paramArray = NULL, $type = \PDO::PARAM_STR)
     {
         try {
             $query = $this->dbConn->prepare($stmt);
@@ -94,12 +96,12 @@ class dbManage extends DB
 
             // If the statement was a SELECT, return a fetchAll
             if ($command != 'UPD' && $command != 'INS' && $command != 'DEL') {
-                return $query->fetchall(PDO::FETCH_ASSOC);
+                return $query->fetchall(\PDO::FETCH_ASSOC);
             } else {
                 return true;
             }
 
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             if ($_SESSION['config']['debug']) {
                 echo 'ERROR: ' . $e->getMessage();
             } else {

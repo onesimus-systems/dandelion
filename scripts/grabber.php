@@ -9,6 +9,7 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+namespace Dandelion;
 
 /*
  * This checks the time of the current session and if it has been

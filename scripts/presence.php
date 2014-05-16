@@ -11,6 +11,7 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
 // FIX THIS! ROOT should be defined with grabber, no where else
 if (!defined('ROOT')) {

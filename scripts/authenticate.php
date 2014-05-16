@@ -10,6 +10,9 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+namespace Dandelion;
+
+use Dandelion\Database\dbManage;
 
 require_once (is_file('grabber.php')) ? 'grabber.php' : 'scripts/grabber.php';
 

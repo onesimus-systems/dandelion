@@ -7,6 +7,7 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
 include 'grabber.php';
 

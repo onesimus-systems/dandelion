@@ -11,6 +11,7 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+namespace Dandelion;
 
 /*! \mainpage Dandelion Weblog
  *
@@ -23,7 +24,6 @@
  *
  * And that is how Dandelion was born.
  */
-
 include_once 'scripts/grabber.php';
 
 if (!$_SESSION['config']['installed']) {

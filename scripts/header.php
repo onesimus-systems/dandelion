@@ -9,6 +9,8 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+namespace Dandelion;
+
 ?>
 <h1 class="t_cen"><?php echo $_SESSION['app_settings']['app_title']; ?></h1>
 <h4 class="t_cen"><?php echo $_SESSION['app_settings']['slogan']; ?></h4>

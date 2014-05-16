@@ -9,9 +9,11 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+namespace Dandelion;
+use Dandelion\Database\dbManage;
 
 require_once 'grabber.php';
-require_once ROOT.'/classes/users.php';
+//require_once ROOT.'/classes/users.php';
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

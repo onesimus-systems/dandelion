@@ -1,3 +1,4 @@
+<?php namespace Dandelion; ?>
 <!DOCTYPE html>
 <html>
     <head>

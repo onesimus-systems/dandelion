@@ -8,6 +8,8 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+namespace Dandelion;
+
 function errorHandler($error_level, $error_message, $error_file, $error_line, $error_context)
 {
     $errortype = array (
@@ -82,5 +84,5 @@ function logToFile($error, $errlvl)
     file_put_contents($logpath, $error.PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 
-set_error_handler("errorHandler");
-register_shutdown_function("shutdownHandler");
+set_error_handler('Dandelion\errorHandler');
+register_shutdown_function('Dandelion\shutdownHandler');

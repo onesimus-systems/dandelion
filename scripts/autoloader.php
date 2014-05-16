@@ -7,10 +7,12 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
 function dandy_autoload($className)
 {
-    $className = strtolower($className);
+	$classInfo = array_reverse(explode('\\', $className));
+    $className = strtolower($classInfo[0]);
 
     if (file_exists(ROOT . "/classes/{$className}.php")) {
         require_once(ROOT . "/classes/{$className}.php");
@@ -19,4 +21,4 @@ function dandy_autoload($className)
     }
 }
 
-spl_autoload_register('dandy_autoload');
+spl_autoload_register('Dandelion\dandy_autoload');

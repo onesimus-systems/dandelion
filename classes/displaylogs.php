@@ -19,6 +19,8 @@
   * @author Lee Keitel
   * @date Feb 2014
 ***/
+namespace Dandelion;
+use Dandelion\Database\dbManage;
 
 /**
  * This class is used whenever a script wants to display

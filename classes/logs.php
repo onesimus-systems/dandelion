@@ -19,6 +19,8 @@
   * @author Lee Keitel
   * @date May 2014
 ***/
+namespace Dandelion;
+use Dandelion\Database\dbManage;
 
 /**
  * The Logs class contains all functions pertaining to creating
@@ -273,7 +275,7 @@ HTML;
                 'pO' => ((int) trim($pageOffset))
             );
 
-            $grab_logs = $conn->queryDB($stmt, $params, PDO::PARAM_INT);
+            $grab_logs = $conn->queryDB($stmt, $params, \PDO::PARAM_INT);
 
             return DisplayLogs::display($grab_logs, false, $pageOffset, $logSize);
         } else {

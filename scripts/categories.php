@@ -9,6 +9,7 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
 // TODO: Create a better method to check these URLs
 // Because this file is called from the root and a subdirectory,

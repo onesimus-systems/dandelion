@@ -19,6 +19,8 @@
   * @author Lee Keitel
   * @date Feb 2014
 ***/
+namespace Dandelion;
+use Dandelion\Database\dbManage;
 
 /**
  * This class displays all categories and manages the addition, deletion,

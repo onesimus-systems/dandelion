@@ -19,6 +19,7 @@
   * @author Lee Keitel
   * @date March 2014
 ***/
+namespace Dandelion;
 
 /**
  * Not much to say here. It gets a list of all the tables then goes

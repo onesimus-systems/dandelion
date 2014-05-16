@@ -19,6 +19,8 @@
   * @author Lee Keitel
   * @date May 2014
 ***/
+namespace Dandelion;
+use Dandelion\Database\dbManage;
 
 /**
  * Only the doAction() method is publically visiable and it takes
