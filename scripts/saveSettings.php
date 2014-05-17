@@ -12,18 +12,14 @@
 namespace Dandelion;
 use Dandelion\Database\dbManage;
 
-$limit = $_SESSION['userInfo']['showlimit'];
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $u_action = isset($_POST['set_action']) ? $_POST['set_action'] : '';
     $sub_action = isset($_POST['sub_act']) ? $_POST['sub_act'] : '';
 
     if ($u_action == "Reset Password") {
-
-        //Form to reset user's password
-        ?>
+        echo <<<HTML
         <div id="editform">
-        <h2>Reset Password for <?php echo $_SESSION['userInfo']['realname']; ?>:</h2>
+        <h2>Reset Password for {$_SESSION['userInfo']['realname']}:</h2>
         <form name="edit_form" method="post">
             <table>
                 <tr><td>New Password:</td><td><input type="password" name="reset_1"></td></tr>
@@ -31,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </table>
             <input type="submit" name="sub_act" value="Reset">
         </form></div><br>
-        <?php
+HTML;
     } elseif ($u_action == "Save Limit") {
         $showlimit = $_POST['show_limit'];
 
@@ -47,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             echo 'Show limit change successful.<br><br>';
 
-            $limit = $_SESSION['userInfo']['showlimit'] = $showlimit;
+            $_SESSION['userInfo']['showlimit'] = $showlimit;
         } else {
             echo "Please choose a number between 5-500 for log view limit.<br><br>";
         }
@@ -75,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($reset_3 == $reset_4) {
             require_once ROOT . '/classes/user.php';
-            $useractions = new User(new dbManage());
+            $useractions = new Users\User(new dbManage());
             $useractions->resetUserPw($_SESSION['userInfo']['userid'], $reset_3);
 
             echo 'Password change successful.<br><br>';
