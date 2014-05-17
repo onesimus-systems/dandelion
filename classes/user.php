@@ -11,9 +11,10 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
-namespace Dandelion;
+namespace Dandelion\Users;
+use Dandelion\Database\dbManage;
 
-class User extends Database\dbManage
+class User extends dbManage
 {
     /** Update user information
      *

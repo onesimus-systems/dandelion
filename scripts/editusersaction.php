@@ -11,6 +11,8 @@
  ***/
 namespace Dandelion;
 use Dandelion\Database\dbManage;
+use Dandelion\Users\UserForms;
+use Dandelion\Users\User;
 
 $conn = new dbManage();
 
@@ -36,7 +38,6 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
         $edit_user_info = $conn->queryDB($stmt, $params);
         $edit_user_info = isset($edit_user_info[0]) ? $edit_user_info[0] : '';
 
-        require_once ROOT.'/classes/usersForms.php';
         $userforms = new UserForms();
 
         if ($u_action != 'add' && !empty($choosen) && $edit_user_info !== '') {
@@ -56,15 +57,24 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
                 } else {
                     echo 'ERROR: Selected user doesn\'t have a &#264;eesto account.<br><br>';
                 }
+
+                /** @noinspection PhpUnusedLocalVariableInspection */
+                $showList = false;
             } elseif ($u_action == 'edit' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show edit user form
                 $userforms->editUser($edit_user_info);
+
+                /** @noinspection PhpUnusedLocalVariableInspection */
                 $showList = false;
             } elseif ($u_action == 'reset' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show password reset form
                 $userforms->resetPassword($choosen, $edit_user_info['username'], $edit_user_info['realname']);
+
+                /** @noinspection PhpUnusedLocalVariableInspection */
                 $showList = false;
             }
         } elseif ($u_action == 'add' && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Show create user form
             $userforms->addUser();
+
+            /** @noinspection PhpUnusedLocalVariableInspection */
             $showList = false;
         } elseif ($u_action != 'none' && empty($choosen)) {
             echo 'ERROR: No user was selected.<br><br>';
@@ -77,7 +87,6 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
         $choosen   = isset($_POST['the_choosen_one']) ? $_POST['the_choosen_one'] : '';
         $second_tier = $_POST['sub_type'];
 
-        require_once ROOT.'/classes/users.php';
         $useractions = new User();
 
         if ($second_tier == "Save Edit" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Edit user data
@@ -111,9 +120,6 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
         } elseif ($second_tier == "Yes" && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Delete user
             echo empty($choosen) ? 'Delete failed, no user selected.' : $useractions->deleteUser($choosen);
         } elseif ($second_tier == "Set Status" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Change user Cxeesto status
-            $date = new \DateTime();
-            $date = $date->format('Y-m-d H:i:s');
-
             $user_id = $_POST['status_id'];
             $status = $_POST['status_s'];
             $message = $_POST['status_message'];

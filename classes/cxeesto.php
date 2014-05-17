@@ -148,7 +148,7 @@ class cxeesto extends Database\dbManage
      ***/
     public function updateStatus($message, $status, $return)
     {
-        $date = new DateTime();
+        $date = new \DateTime();
         $date = $date->format('Y-m-d H:i:s');
 
         $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';

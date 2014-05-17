@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $reset_4 = $_POST['reset_2'];
 
         if ($reset_3 == $reset_4) {
-            require_once ROOT.'/classes/users.php';
+            require_once ROOT . '/classes/user.php';
             $useractions = new User(new dbManage());
             $useractions->resetUserPw($_SESSION['userInfo']['userid'], $reset_3);
 

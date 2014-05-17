@@ -7,7 +7,8 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
-namespace Dandelion;
+namespace Dandelion\Users;
+use Dandelion\Permissions;
 
 class UserForms
 {
@@ -44,7 +45,7 @@ HTML;
      */
     public function editCxeesto($row)
     {
-        $scripts = loadJS("jquery","jqueryui","timepicker.js","slider.js");
+        $scripts = \Dandelion\loadJS("jquery","jqueryui","timepicker.js","slider.js");
         
         echo <<<HTML
         <div id="editform">
@@ -97,7 +98,7 @@ HTML;
     {
         $permissions = new Permissions();
         $list = $permissions->getGroupList();
-        $themeList = getThemeList($userInfo['theme']);
+        $themeList = \Dandelion\getThemeList($userInfo['theme']);
 
         echo <<<HTML
         <div id="editform">
