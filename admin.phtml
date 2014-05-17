@@ -1,7 +1,7 @@
 <?php
 namespace Dandelion;
 
-include_once 'scripts/grabber.php';
+include_once 'scripts/bootstrap.php';
 
 if (!authenticated()) {
 	header( 'Location: index.php' );
@@ -23,7 +23,7 @@ $content = false;
         <header>
             <?php include 'scripts/header.php'; ?>
         </header>
-		
+
         <h2>Administration</h2>
 		
     	<form name="admin_form" method="post" action="scripts/admin_actions.php">

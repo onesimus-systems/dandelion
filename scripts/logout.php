@@ -10,5 +10,5 @@
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
 namespace Dandelion;
-include_once 'grabber.php';
+require_once 'bootstrap.php';
 logout();

@@ -13,13 +13,7 @@
  ***/
 namespace Dandelion;
 
-// FIX THIS! ROOT should be defined with grabber, no where else
-if (!defined('ROOT')) {
-    define('ROOT', dirname(dirname(__FILE__)));
-}
-
-require_once ROOT.'/scripts/grabber.php';
-require_once ROOT.'/classes/cxeesto.php';
+require_once 'bootstrap.php';
 
 if(authenticated()) {
     /* $windowed is defined in presenceWindow.php before this is called,

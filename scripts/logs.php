@@ -9,7 +9,7 @@
 ***/
 namespace Dandelion;
 
-require_once 'grabber.php';
+require_once 'bootstrap.php';
 
 if (authenticated()) {
     echo Logs::doAction($_POST);

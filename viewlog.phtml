@@ -14,8 +14,6 @@
  ***/
 namespace Dandelion;
 
-include_once 'scripts/grabber.php';
-
 //Authenticate user, if fail go to login page
 if (authenticated()) {
 	if ($_SESSION['rights']['createlog']) {

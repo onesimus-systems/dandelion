@@ -14,7 +14,7 @@ namespace Dandelion;
 
 use Dandelion\Database\dbManage;
 
-require_once (is_file('grabber.php')) ? 'grabber.php' : 'scripts/grabber.php';
+require_once (is_file('bootstrap.php')) ? 'bootstrap.php' : 'scripts/bootstrap.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["in_name"])) {
     login();

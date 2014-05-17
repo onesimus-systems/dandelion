@@ -24,7 +24,7 @@ namespace Dandelion;
  *
  * And that is how Dandelion was born.
  */
-include_once 'scripts/grabber.php';
+require_once 'scripts/bootstrap.php';
 
 if (!$_SESSION['config']['installed']) {
     header( 'Location: ./install' );

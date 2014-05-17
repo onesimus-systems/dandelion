@@ -11,7 +11,7 @@ $(document).ready(function() {
     $( "#datesearch" ).change(function() {
         $( "#datesearch" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         });
-        
+
     $("#add_edit").css("display", "none");
 });
 
@@ -42,7 +42,7 @@ var refreshFun =
             setTimeout(function(){presence.checkstat(0);}, 1);
 		}
         CategoryManage.grabNextLevel('0:0');
-		
+
 		// Set timers
         refreshc = setInterval(function(){refreshLog("update");}, 120000);
 		if (typeof presence !== 'undefined') {
@@ -69,7 +69,7 @@ function refreshLog(kindof) {
                 type: "POST",
                 url: "scripts/logs.php",
                 async: false,
-                data: { action: "getLogs" }
+                data: { action: "getLogs", data: "" }
             })
                 .done(function( html ) {
                     $("#refreshed").html( html );

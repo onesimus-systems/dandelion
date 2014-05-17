@@ -11,7 +11,7 @@
 ***/
 namespace Dandelion;
 
-require_once 'scripts/grabber.php';
+require_once 'scripts/bootstrap.php';
 
 if (!authenticated()) {
     header( 'Location: index.php' );
