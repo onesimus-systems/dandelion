@@ -73,10 +73,9 @@ if ($_SESSION['config']['debug']) {
  * Check running PHP version
  * The password compatibility library requires PHP version 5.3.7 or above
  */
-if (version_compare(phpversion(), "5.3.7", "<")) {
-    trigger_error('Dandelion needs at least PHP version 5.3.7 to function.', E_USER_ERROR);
-    echo 'Dandelion needs at least PHP version 5.3.7 to function. You have version '.phpversion().' installed.';
-    exit(1);
+if (!function_exists( 'version_compare' ) || version_compare(phpversion(), "5.3.7", "<")) {
+    require 'phpVersionError.php';
+    PHPVersionError( 'site' );
 }
 
 // Define constants
