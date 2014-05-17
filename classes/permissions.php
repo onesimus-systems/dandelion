@@ -8,19 +8,9 @@
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
 namespace Dandelion;
-use Dandelion\Database\dbManage;
 
-class permissions
+class permissions extends Database\dbManage
 {
-    private $conn;
-
-    public function __construct($init = true)
-    {
-        if ($init) {
-            $this->conn = new dbManage();
-        }
-    }
-
     public function getGroupList($groupID = NULL)
     {
         if ($groupID === NULL) {
@@ -33,7 +23,7 @@ class permissions
             );
         }
 
-        return $this->conn->queryDB($stmt, $params);
+        return $this->queryDB($stmt, $params);
     }
 
     public function createGroup($name, $rightsArray)
@@ -44,8 +34,8 @@ class permissions
             'rights' => serialize($rightsArray)
         );
 
-        $this->conn->queryDB($stmt, $params);
-        return $this->conn->lastInsertId();
+        $this->queryDB($stmt, $params);
+        return $this->lastInsertId();
     }
 
     public function deleteGroup($id)
@@ -55,7 +45,7 @@ class permissions
             'id' => $id
         );
 
-        return $this->conn->queryDB($stmt, $params);
+        return $this->queryDB($stmt, $params);
     }
 
     public function editGroup($gid, $rights)
@@ -68,7 +58,7 @@ class permissions
             'newPerm' => $rights
         );
 
-        return $this->conn->queryDB($stmt, $params);
+        return $this->queryDB($stmt, $params);
     }
 
     public function loadRights($userrole)
@@ -78,7 +68,7 @@ class permissions
             'userrole' => $userrole
        );
 
-       return unserialize($this->conn->queryDB($stmt, $params)[0]['permissions']);
+       return unserialize($this->queryDB($stmt, $params)[0]['permissions']);
     }
 
     public function usersInGroup($gid)
@@ -90,6 +80,6 @@ class permissions
             'role' => $groupName
         );
 
-        return $this->conn->queryDB($stmt, $params);
+        return $this->queryDB($stmt, $params);
     }
 }

@@ -13,15 +13,8 @@
 ***/
 namespace Dandelion;
 
-class User
+class User extends Database\dbManage
 {
-    public $conn;
-
-    public function __construct($conn)
-    {
-        $this->conn = $conn;
-    }
-
     /** Update user information
      *
      * @param userInfo (keyed array) - User information in a associative array
@@ -46,7 +39,7 @@ class User
                 'theme' => $userInfoArray['theme']
             );
 
-            $this->conn->queryDB($stmt, $params);
+            $this->queryDB($stmt, $params);
 
             $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `realname` = :realname WHERE `uid` = :userid';
             $params = array(
@@ -54,7 +47,7 @@ class User
                 'userid' => $userInfoArray['uid']
             );
 
-            $this->conn->queryDB($stmt, $params);
+            $this->queryDB($stmt, $params);
 
             return 'User Updated<br><br>';
         } else {
@@ -80,10 +73,10 @@ class User
             $params = array(
                 'username' => $userInfoArray['username']
             );
-            $row = $this->conn->queryDB($stmt, $params);
+            $row = $this->queryDB($stmt, $params);
 
             if ($row == NULL) {
-                $date = new DateTime();
+                $date = new \DateTime();
                 $add_user = $userInfoArray['username'];
                 $add_pass = password_hash($userInfoArray['password'], PASSWORD_BCRYPT);
                 $add_real = $userInfoArray['realname'];
@@ -97,10 +90,10 @@ class User
                     'role' => $add_role,
                     'datecreated' => $date->format('Y-m-d')
                 );
-                $this->conn->queryDB($stmt, $params);
+                $this->queryDB($stmt, $params);
 
                 if ($add_role != 'guest') {
-                    $lastID = $this->conn->lastInsertId();
+                    $lastID = $this->lastInsertId();
 
                     $stmt = 'INSERT INTO `'.DB_PREFIX.'presence` (`uid`, `realname`, `status`, `message`, `returntime`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
                     $params = array(
@@ -109,7 +102,7 @@ class User
                         'date' => $date->format('Y-m-d H:i:s')
                     );
 
-                    $this->conn->queryDB($stmt, $params);
+                    $this->queryDB($stmt, $params);
                 }
 
                 return 'User Added<br><br>';
@@ -139,7 +132,7 @@ class User
                     'newpass' => $pass,
                     'myID' => $uid
                 );
-                $this->conn->queryDB($stmt, $params);
+                $this->queryDB($stmt, $params);
 
                 return 'Password change successful.<br><br>';
             } else {
@@ -167,7 +160,7 @@ class User
             $params = array(
                     'userid' => $uid
             );
-            $user = $this->conn->queryDB($stmt, $params)[0]['role'];
+            $user = $this->queryDB($stmt, $params)[0]['role'];
 
             $perms = new Permissions();
             $isAdmin = (array) $perms->loadRights($user);
@@ -182,7 +175,7 @@ class User
                 $params = array(
                         'userid' => $uid
                 );
-                $otherUsers = $this->conn->queryDB($stmt, $params);
+                $otherUsers = $this->queryDB($stmt, $params);
 
                 foreach ($otherUsers as $areTheyAdmin) {
                     $isAdmin = (array) $perms->loadRights($areTheyAdmin['role']);
@@ -202,8 +195,8 @@ class User
                     'userid' => $uid
                 );
 
-                $this->conn->queryDB($stmt, $params);
-                $this->conn->queryDB($stmt2, $params);
+                $this->queryDB($stmt, $params);
+                $this->queryDB($stmt2, $params);
 
                 return "Action Taken: User Deleted<br><br>";
             } else {
@@ -228,7 +221,7 @@ class User
         if (!empty($uid) &&
             !empty($status_id))
         {
-            $date = new DateTime();
+            $date = new \DateTime();
             $date = $date->format('Y-m-d H:i:s');
 
             switch($status_id) {
@@ -278,7 +271,7 @@ class User
                 'date' => $date,
                 'userid' => $uid
             );
-            $this->conn->queryDB($stmt, $params);
+            $this->queryDB($stmt, $params);
 
             return 'User Status Updated<br><br>';
         } else {

@@ -78,7 +78,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
         $second_tier = $_POST['sub_type'];
 
         require_once ROOT.'/classes/users.php';
-        $useractions = new User($conn);
+        $useractions = new User();
 
         if ($second_tier == "Save Edit" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Edit user data
             $edit = array(
@@ -111,7 +111,7 @@ if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
         } elseif ($second_tier == "Yes" && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Delete user
             echo empty($choosen) ? 'Delete failed, no user selected.' : $useractions->deleteUser($choosen);
         } elseif ($second_tier == "Set Status" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Change user Cxeesto status
-            $date = new DateTime();
+            $date = new \DateTime();
             $date = $date->format('Y-m-d H:i:s');
 
             $user_id = $_POST['status_id'];
