@@ -20,7 +20,6 @@
   * @date Feb 2014
 ***/
 namespace Dandelion;
-use Dandelion\Database\dbManage;
 
 /**
  * This class is used whenever a script wants to display
@@ -34,19 +33,20 @@ class displaylogs
      *
      * @param array $grab_logs Log entries that need to be displayed
      * @param bool $filtered Is this request for filtered logs or not
+     * @param array $users User IDs and real names from database
      * @param int $pageOffset The lower limit used to determine page breaks
      * @param int $logSize Number of total rows of log data
      *
      * @return string HTML of log data and pagination controls
      */
-    public static function display($grab_logs, $filtered, $pageOffset, $logSize)
+    public static function display($grab_logs, $filtered, $users, $pageOffset, $logSize)
     {
         $logHtml = '';
 
         if (!$filtered)
             $logHtml .= SELF::pageing($pageOffset, $logSize); // Show page controls
 
-        $logHtml .= SELF::showLogs($grab_logs, $filtered); // Display log entries
+        $logHtml .= SELF::showLogs($grab_logs, $filtered, $users); // Display log entries
 
         if (!$filtered)
             $logHtml .= SELF::pageing($pageOffset, $logSize); // Show page controls
@@ -84,19 +84,15 @@ class displaylogs
      *
      * @param array $grab_logs Log entries that need to be displayed
      * @param bool $isFiltered Is this request for filtered logs or not
+     * @param array $userArray User IDs and real names from database
      *
      * @return string HTML of log data
      *
      * @TODO Improve attribution of deleted users
      */
-    private static function showLogs($grab_logs, $isFiltered)
+    private static function showLogs($grab_logs, $isFiltered, $userArray)
     {
         $logList = '';
-
-        // Grab a list of all current users and put them in an array
-        $conn = new dbManage;
-        $stmt = 'SELECT `userid`,`realname` FROM `'.DB_PREFIX.'users`';
-        $userArray = $conn->queryDB($stmt, NULL);
 
         $logList .= '<div id="refreshed_core">';
 

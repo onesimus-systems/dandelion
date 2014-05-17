@@ -26,15 +26,15 @@ namespace Dandelion;
  * through each one and gets all the rows of a data then rights it to
  * a file with the proper SQL instructions to import back to MySQL.
  */
-class backupdb
+class backupdb extends Database\dbManage
 {
-    public static function doBackup($link)
+    public function doBackup()
     {
         $return = '';
 
         // Get all of the tables
         $tables = array();
-        $result = $link->queryDB('SHOW TABLES');
+        $result = $this->queryDB('SHOW TABLES');
 
         foreach($result as $table) {
             foreach($table as $tablename) {
@@ -44,13 +44,13 @@ class backupdb
 
         // Cycle through
         foreach($tables as $table) {
-            $result = $link->queryDB('SELECT * FROM `'.$table.'`');
+            $result = $this->queryDB('SELECT * FROM `'.$table.'`');
 
             $stmt = 'SELECT COUNT(*) FROM `'.$table.'`';
-            $num_fields = $link->queryDB($stmt);
+            $num_fields = $this->queryDB($stmt);
 
             $return.= 'DROP TABLE IF EXISTS `'.$table.'`;';
-            $row2 = $link->queryDB('SHOW CREATE TABLE `'.$table.'`');
+            $row2 = $this->queryDB('SHOW CREATE TABLE `'.$table.'`');
             $return.= "\n\n".$row2[0]['Create Table'].";\n\n";
 
             if (isset($result[0])) {

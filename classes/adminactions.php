@@ -20,57 +20,55 @@
   * @date May 2014
 ***/
 namespace Dandelion;
-use Dandelion\Database\dbManage;
 
 /**
  * Only the doAction() method is publically visiable and it takes
  * in the POST data from a request, determins the action from the
- * data and statically calls that function giving it a database
- * connection class (dbManage), and the 'data' index of the POST
- * array
+ * data and calls that function giving it the 'data' index of the
+ * POST array
  */
-class adminactions
+class adminactions extends Database\dbManage
 {
-    public static function doAction($data)
+    public function doAction($data)
     {
-        $conn = new dbManage();
-        return SELF::$data['action']($conn, $data['data']);
+        return $this->$data['action']($data['data']);
     }
 
-    private static function saveSlogan($conn, $data)
+    private function saveSlogan($data)
     {
         // Set new slogan
         $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :slogan WHERE `name` = "slogan"';
         $params = array(
             'slogan' => urldecode($data)
         );
-        $conn->queryDB($stmt, $params);
+        $this->queryDB($stmt, $params);
 
         $_SESSION['app_settings']['slogan'] = urldecode($data);
 
         return 'Slogan set successfully';
     }
 
-    private static function backupDB($conn)
+    private function backupDB()
     {
-        return backupDB::doBackup($conn);
+        $saveMe = new backupDB();
+        return $saveMe->doBackup();
     }
 
-    private static function saveDefaultTheme($conn, $data)
+    private function saveDefaultTheme($data)
     {
         // Set new default theme
         $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :theme WHERE `name` = "default_theme"';
         $params = array(
             'theme' => $data
         );
-        $conn->queryDB($stmt, $params);
+        $this->queryDB($stmt, $params);
 
         $_SESSION['app_settings']['default_theme'] = $data;
 
         return 'Default theme set successfully';
     }
 
-    private static function saveCheesto($conn, $data)
+    private function saveCheesto($data)
     {
         // Set cheesto enabled/disabled
         $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :enabled WHERE `name` = "cheesto_enabled"';
@@ -78,7 +76,7 @@ class adminactions
         $params = array(
             'enabled' => $enabled
         );
-        $conn->queryDB($stmt, $params);
+        $this->queryDB($stmt, $params);
 
         $_SESSION['app_settings']['cheesto_enabled'] = $enabled;
 

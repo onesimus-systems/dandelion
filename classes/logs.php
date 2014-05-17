@@ -20,7 +20,6 @@
   * @date May 2014
 ***/
 namespace Dandelion;
-use Dandelion\Database\dbManage;
 
 /**
  * The Logs class contains all functions pertaining to creating
@@ -28,11 +27,10 @@ use Dandelion\Database\dbManage;
  *
  * Only the doAction() method is publically visiable and it takes
  * in the POST data from a request, determins the action from the
- * data and statically calls that function giving it a database
- * connection class (dbManage), and the 'data' index of the POST
- * array
+ * data and calls that function giving it the 'data' index of the
+ * POST array
  */
-class logs
+class logs extends Database\dbManage
 {
     /**
      * Main function to perform action
@@ -41,21 +39,19 @@ class logs
      *
      * @return Individual function returns
      */
-    public static function doAction($data)
+    public function doAction($data)
     {
-        $conn = new dbManage();
-        return self::$data['action']($conn, $data['data']);
+        return $this->$data['action']($data['data']);
     }
 
     /**
      * Get log data from database
      *
-     * @param dbmanage class $conn
      * @param int $logid Row id number for desired log
      *
      * @return JSON encoded array with log data
      */
-    private static function getLogInfo($conn, $logid)
+    private function getLogInfo($logid)
     {
         $loguid = isset($loguid) ? $loguid : '';
 
@@ -64,7 +60,7 @@ class logs
             'logid' => $logid
         );
 
-        $edit_log_info = $conn->queryDB($stmt, $params);
+        $edit_log_info = $this->queryDB($stmt, $params);
 
         return json_encode($edit_log_info[0]);
     }
@@ -72,12 +68,11 @@ class logs
     /**
      * Create a new log in the database
      *
-     * @param dbmanage class $conn
      * @param json $logData JSON encoded log title, entry, and category (strings)
      *
      * @return string Confirmation message or error message
      */
-    private static function addLog($conn, $logData)
+    private function addLog($logData)
     {
         if ($_SESSION['rights']['createlog']) {
             $logData = (array) json_decode($logData);
@@ -102,7 +97,7 @@ class logs
                     'usercreated' => $_SESSION['userInfo']['userid'],
                     'cat' => urldecode($new_category),
                 );
-                $conn->queryDB($stmt, $params);
+                $this->queryDB($stmt, $params);
 
                 return 'Log entry created successfully.';
             } else {
@@ -116,12 +111,11 @@ class logs
     /**
      * Update log row in database
      *
-     * @param dbmanage class $conn
      * @param json $logData JSON encoded log title, entry, and id
      *
      * @return string Confirmation message or error message
      */
-    private static function editLog($conn, $logData)
+    private function editLog($logData)
     {
         if ($_SESSION['rights']['editlog']) {
             $logData = (array) json_decode($logData);
@@ -137,7 +131,7 @@ class logs
                     'eEntry' => urldecode($editedlog),
                     'logid' => $logid
                 );
-                $conn->queryDB($stmt, $params);
+                $this->queryDB($stmt, $params);
 
                 return '"'.urldecode($editedtitle).'" edited successfully.';
             } else {
@@ -151,13 +145,12 @@ class logs
     /**
      * Grab logs from database with given criteria
      *
-     * @param dbmanage class $conn
      * @param json $filterQuery JSON encoded query parameters
      *      (type, keyword, date, category filter string)
      *
      * @return string HTML with filtered logs
      */
-    private static function filterLogs($conn, $filterQuery)
+    private function filterLogs($filterQuery)
     {
         $notice = '';
         $query = (array) json_decode($filterQuery);
@@ -179,7 +172,7 @@ HTML;
                 'filter' => "%".$filter."%"
             );
 
-            $grab_logs = $conn->queryDB($stmt, $params); // Sent to displaylogs function
+            $grab_logs = $this->queryDB($stmt, $params); // Sent to displaylogs function
         } else {
             $keyw = isset($query['keyw']) ? urldecode($query['keyw']) : '';
             $dates = isset($query['dates']) ? $query['dates'] : '';
@@ -194,7 +187,7 @@ HTML;
                     'keyw' => "%".$keyw."%"
                 );
 
-                $grab_logs = $conn->queryDB($stmt, $params); // Sent to displaylogs function
+                $grab_logs = $this->queryDB($stmt, $params); // Sent to displaylogs function
             }
 
             // Logs made on certain date
@@ -206,7 +199,7 @@ HTML;
                     'dates' => $dates
                 );
 
-                $grab_logs = $conn->queryDB($stmt, $params); // Sent to displaylogs function
+                $grab_logs = $this->queryDB($stmt, $params); // Sent to displaylogs function
             }
 
             // Logs made on certain day containing keyword
@@ -219,7 +212,7 @@ HTML;
                     'dates' => $dates
                 );
 
-                $grab_logs = $conn->queryDB($stmt, $params); // Sent to displaylogs function
+                $grab_logs = $this->queryDB($stmt, $params); // Sent to displaylogs function
             }
 
             $notice .= <<<HTML
@@ -228,20 +221,22 @@ HTML;
                     <input type="button" value="Clear Search" onClick="refreshLog('clearf')" />
                 </form><br>
 HTML;
+            
+            $stmt = 'SELECT `userid`,`realname` FROM `'.DB_PREFIX.'users`';
+            $userArray = $this->queryDB($stmt, NULL);
         }
 
-        return $notice . DisplayLogs::display($grab_logs, true);
+        return $notice . DisplayLogs::display($grab_logs, true, $userArray);
     }
 
     /**
      * Grab logs from database
      *
-     * @param dbmanage class $conn
      * @param json $data JSON encoded page offset or page number
      *
      * @return string Formatted log html
      */
-    private static function getLogs($conn, $data)
+    private function getLogs($data)
     {
         if ($_SESSION['rights']['viewlog']) {
             $pageInfo = (array) json_decode($data);
@@ -258,7 +253,7 @@ HTML;
 
             // Grab row count of log table to determine offset
             $stmt = 'SELECT COUNT(*) FROM `'.DB_PREFIX.'log`';
-            $logSize = $conn->queryDB($stmt, NULL)[0]['COUNT(*)'];
+            $logSize = $this->queryDB($stmt, NULL)[0]['COUNT(*)'];
 
             // If the next page offset is > than the row count (which shouldn't happen
             // any more thanks to some logic in DisplayLogs class), make the offset the last
@@ -275,9 +270,12 @@ HTML;
                 'pO' => ((int) trim($pageOffset))
             );
 
-            $grab_logs = $conn->queryDB($stmt, $params, \PDO::PARAM_INT);
+            $grab_logs = $this->queryDB($stmt, $params, \PDO::PARAM_INT);
+            
+            $stmt = 'SELECT `userid`,`realname` FROM `'.DB_PREFIX.'users`';
+            $userArray = $this->queryDB($stmt, NULL);
 
-            return DisplayLogs::display($grab_logs, false, $pageOffset, $logSize);
+            return DisplayLogs::display($grab_logs, false, $userArray, $pageOffset, $logSize);
         } else {
             return "This account does not have permission to view the activity log.";
         }

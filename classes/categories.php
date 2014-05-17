@@ -20,23 +20,13 @@
   * @date Feb 2014
 ***/
 namespace Dandelion;
-use Dandelion\Database\dbManage;
 
 /**
  * This class displays all categories and manages the addition, deletion,
  * and manipulation of the same.
  */
-class categories
+class categories extends Database\dbManage
 {
-    private $conn;
-
-    public function __construct($init = true)
-    {
-        if ($init) {
-            $this->conn = new dbManage();
-        }
-    }
-
     /**
      * Get the children of a parent category and generate a <select>
      * element with the root node and all children
@@ -47,7 +37,7 @@ class categories
      */
     public function getChildren($past)
     {
-        $cat = $this->conn->selectAll('category');
+        $cat = $this->selectAll('category');
 
         $response = '';
 
@@ -111,7 +101,7 @@ class categories
             'parentid'	  => $parent
         );
 
-        if ($this->conn->queryDB($stmt, $params)) {
+        if ($this->queryDB($stmt, $params)) {
             echo 'Category added successfully';
         } else {
             echo 'Error adding category';
@@ -133,7 +123,7 @@ class categories
             'catid' => $cid
         );
 
-        $newParent = $this->conn->queryDB($stmt, $params);
+        $newParent = $this->queryDB($stmt, $params);
         $newParent = $newParent[0]['pid'];
 
         // Delete category from DB
@@ -141,7 +131,7 @@ class categories
         $params = array(
             'catid' => $cid
         );
-        $this->conn->queryDB($stmt, $params);
+        $this->queryDB($stmt, $params);
 
         // Reassign children
         $stmt = 'UPDATE `'.DB_PREFIX.'category` SET `pid` = :newp WHERE `pid` = :oldp';
@@ -149,7 +139,7 @@ class categories
             'newp' => $newParent,
             'oldp' => $cid
         );
-        $this->conn->queryDB($stmt, $params);
+        $this->queryDB($stmt, $params);
 
         echo 'Category deleted successfully';
     }
@@ -170,7 +160,7 @@ class categories
                 'cid' => $cid
         );
 
-        if ($this->conn->queryDB($stmt, $params)) {
+        if ($this->queryDB($stmt, $params)) {
             echo 'Category updated successfully';
         } else {
             echo 'Error saving category';

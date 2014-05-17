@@ -1,22 +1,20 @@
 <?php
 /**
-  * @brief DB connects to the database and stores the handle in $dbConn.
+  * Connect to database and handle SQL queries
   *
-  * This class can be called when needed to connect to the database
-  * in other scripts. Previously a connection was always made,
-  * now it is on-demand. <br /><br />This class is NOT called directly.
-  * It's only used to define how a database connection is being made.
+  * This class is used whenever a database query
+  * wants to be executed. queryDB is the main function.
   *
   * @author Lee Keitel
   * @date February 3, 2014
 ***/
 namespace Dandelion\Database;
 
-class DB
+class dbManage
 {
     protected $dbConn;
-
-    /** Attempts to start a connection with the database and store it in $dbConn */
+    
+    /** Default constructor starts a connection with the database */
     public function __construct()
     {
         try {
@@ -52,24 +50,6 @@ class DB
                 echo 'Error 0x000185: Can\'t connect to database';
             }
         }
-    }
-}
-
-/**
-  * @brief dbManage is called in Dandelion to handle all database queries.
-  *
-  * This class is used whenever a database query
-  * wants to be executed. queryDB is the main function.
-  *
-  * @author Lee Keitel
-  * @date February 3, 2014
-***/
-class dbManage extends DB
-{
-    /** Default constructor starts a connection with the database */
-    public function __construct()
-    {
-        parent::__construct();
     }
 
     /** Queries the database with provided statement
