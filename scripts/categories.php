@@ -20,7 +20,7 @@ require_once (is_file('scripts/bootstrap.php')) ? 'scripts/bootstrap.php' : '../
 require_once (is_file('classes/categories.php')) ? 'classes/categories.php' : '../classes/categories.php';
 
 // Authenticate user, if fail go to login page
-if (!authenticated()) {
+if (!Gatekeeper\authenticated()) {
     header( 'Location: ../index.php' );
 }
 

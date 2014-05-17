@@ -30,7 +30,7 @@ if (!$_SESSION['config']['installed']) {
     header( 'Location: ./install' );
 }
 
-if (authenticated()) {
+if (Gatekeeper\authenticated()) {
     include 'viewlog.phtml';
 } else {
     $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';

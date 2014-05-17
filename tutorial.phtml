@@ -15,7 +15,7 @@ namespace Dandelion;
 
 require_once 'scripts/bootstrap.php';
 
-if (!authenticated()) {
+if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>

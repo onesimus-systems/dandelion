@@ -10,9 +10,10 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
-namespace Dandelion;
+namespace Dandelion\Gatekeeper;
 
 use Dandelion\Database\dbManage;
+use Dandelion\Permissions;
 
 require_once (is_file('bootstrap.php')) ? 'bootstrap.php' : 'scripts/bootstrap.php';
 

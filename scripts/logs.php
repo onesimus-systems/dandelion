@@ -11,6 +11,6 @@ namespace Dandelion;
 
 require_once 'bootstrap.php';
 
-if (authenticated()) {
+if (Gatekeeper\authenticated()) {
     echo Logs::doAction($_POST);
 }

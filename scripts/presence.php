@@ -15,7 +15,7 @@ namespace Dandelion;
 
 require_once 'bootstrap.php';
 
-if(authenticated()) {
+if(Gatekeeper\authenticated()) {
     /* $windowed is defined in presenceWindow.php before this is called,
      * so this variable is already set as 1 when the windows opens.
      * This tells us that the user is looking at the windowed version.
