@@ -22,14 +22,14 @@ class UserForms
     {
         if ($uid != $_SESSION['userInfo']['userid']) {
             echo <<<HTML
-            <br /><hr width="500">
-            Are you sure you want to delete "<?php echo $name; ?>"?<br /><br />
+            <br><hr width="500">
+            Are you sure you want to delete "{$name}"?<br><br>
             <form method="post">
-                <input type="hidden" name="the_choosen_one" value="<?php echo $uid; ?>" />
-                <input type="submit" name="sub_type" value="Yes" />
-                <input type="submit" value="No" />
+                <input type="hidden" name="the_choosen_one" value="{$uid}">
+                <input type="submit" name="sub_type" value="Yes">
+                <input type="submit" value="No">
             </form>
-            <hr width="500"><br />
+            <hr width="500"><br>
 HTML;
         } else {
             echo '<br>You can\'t delete yourself.<br><br>';
@@ -44,13 +44,15 @@ HTML;
      */
     public function editCxeesto($row)
     {
+        $scripts = loadJS("jquery","jqueryui","timepicker.js","slider.js");
+        
         echo <<<HTML
         <div id="editform">
             <h2>Edit User Status:</h2>
             <form name="edit_form" method="post">
                 <table>
-                    <tr><td>User ID:</td><td><input type="text" name="status_id" value="{$row['uid']}" autocomplete="off" readonly /></td></tr>
-                    <tr><td>Name:</td><td><input type="text" name="status_name" value="{$row['realname']}" autocomplete="off" readonly /></td></tr>
+                    <tr><td>User ID:</td><td><input type="text" name="status_id" value="{$row['uid']}" autocomplete="off" readonly></td></tr>
+                    <tr><td>Name:</td><td><input type="text" name="status_name" value="{$row['realname']}" autocomplete="off" readonly></td></tr>
                     <tr><td>Status:</td><td>
                         <select name="status_s">
                             <option>Set Status:</option>
@@ -66,12 +68,12 @@ HTML;
                             <option>Vacation</option>
                         </select></td></tr>
                     <tr><td>Message:</td><td><textarea cols="30" rows="5" name="status_message">{$row['message']}</textarea></td></tr>
-                    <tr><td>Return:</td><td><input type="text" name="status_return" id="datepick" value="{$row['return']}" /></td></tr>
+                    <tr><td>Return:</td><td><input type="text" name="status_return" id="datepick" value="{$row['return']}"></td></tr>
                 </table>
-                <input type="submit" name="sub_type" value="Set Status" />
-                <input type="submit" name="sub_type" value="Cancel" />
+                <input type="submit" name="sub_type" value="Set Status">
+                <input type="submit" name="sub_type" value="Cancel">
             </form>
-
+            {$scripts}
             <script type="text/javascript">
             $(document).ready(function () {
                 $('#datepick').datetimepicker({
@@ -81,7 +83,7 @@ HTML;
                     });
                 });
             </script>
-        </div><br />
+        </div><br>
 HTML;
     }
 
@@ -144,9 +146,9 @@ HTML;
             <h2>Add a User:</h2>
                 <form name="edit_form" method="post">
                     <table>
-                        <tr><td>Username:</td><td><input type="text" name="add_user" autocomplete="off" /></td></tr>
-                        <tr><td>Password:</td><td><input type="password" name="add_pass" /></td></tr>
-                        <tr><td>Real Name:</td><td><input type="text" name="add_real" autocomplete="off" /></td></tr>
+                        <tr><td>Username:</td><td><input type="text" name="add_user" autocomplete="off"></td></tr>
+                        <tr><td>Password:</td><td><input type="password" name="add_pass"></td></tr>
+                        <tr><td>Real Name:</td><td><input type="text" name="add_real" autocomplete="off"></td></tr>
                         <tr><td>Role:</td><td>
                         <select name="add_role">
 HTML;
@@ -179,15 +181,15 @@ HTML;
             <h2>Reset Password for {$realname}:</h2>
             <form name="edit_form" method="post">
                 <table>
-                    <tr><td>User ID:</td><td><input type="text" name="reset_uid" value="{$uid}" readonly /></td></tr>
-                    <tr><td>Username:</td><td><input type="text" value="{$uname}" readonly /></td></tr>
-                    <tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
-                    <tr><td>Repeat Password:</td><td><input type="password" name="reset_2" /></td></tr>
+                    <tr><td>User ID:</td><td><input type="text" name="reset_uid" value="{$uid}" readonly></td></tr>
+                    <tr><td>Username:</td><td><input type="text" value="{$uname}" readonly></td></tr>
+                    <tr><td>New Password:</td><td><input type="password" name="reset_1"></td></tr>
+                    <tr><td>Repeat Password:</td><td><input type="password" name="reset_2"></td></tr>
                 </table>
-                <input type="submit" name="sub_type" value="Reset" />
-                <input type="submit" name="sub_type" value="Cancel" />
+                <input type="submit" name="sub_type" value="Reset">
+                <input type="submit" name="sub_type" value="Cancel">
             </form>
-        </div><br />
+        </div><br>
 HTML;
     }
 }
