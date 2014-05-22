@@ -251,8 +251,7 @@ HTML;
             $pageOffset = $pageOffset<0 ? '0' : $pageOffset; // If somehow the offset is < 0, make it 0
 
             // Grab row count of log table to determine offset
-            $stmt = 'SELECT COUNT(*) FROM `'.DB_PREFIX.'log`';
-            $logSize = $this->queryDB($stmt, NULL)[0]['COUNT(*)'];
+            $logSize = $this->numOfRows('log');
 
             // If the next page offset is > than the row count (which shouldn't happen
             // any more thanks to some logic in DisplayLogs class), make the offset the last

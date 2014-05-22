@@ -121,4 +121,11 @@ class dbManage
     {
         return $this->dbConn->rowCount();
     }
+    
+    public function numOfRows($table)
+    {
+    	$stmt = 'SELECT COUNT(*) FROM `'.DB_PREFIX.$table.'`';
+    	
+    	return $this->queryDB($stmt, null)[0]['COUNT(*)'];
+    }
 }
