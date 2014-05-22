@@ -35,44 +35,17 @@ function authenticated()
 
 function login()
 {
-    // Declare and clear variables for login info
-    $username = $plain_word = "";
-
-    // Connect to DB
-    $conn = new dbManage();
-
     $username = $_POST["in_name"];
     $plain_word = $_POST["in_pass"];
+    $userInfo = isUser($username, $plain_word);
 
-    // Begin login procedure
-    isuser($username, $plain_word, $conn);
-}
-
-// Determines if the person is a user or not
-// If yes, validates and redirects to viewlog.phtml
-// If no, yells at user, loudly
-function isuser($uname, $pword, $conn)
-{
-    // First, is this person even a user?
-    $stmt = 'SELECT * FROM `'.DB_PREFIX.'users` WHERE `username` = :user';
-    $param = array('user' => $uname);
-
-    $sel_user = $conn->queryDB($stmt, $param);
-
-    if ($sel_user[0]['password']) { // Check if password is correct
-        $goodToGo = password_verify($pword, $sel_user[0]['password']);
-    } else {
-        $goodToGo = false;
-    }
-
-    // So they are!!
-    if ($goodToGo) {
+    if ($userInfo) {
         if (ini_get("session.use_cookies")) {
             setcookie(session_name(), $_COOKIE[session_name()], time()+60*60*22, '/');
         }
         $_SESSION['loggedin'] = true;
 
-        $_SESSION['userInfo'] = $sel_user[0];
+        $_SESSION['userInfo'] = $userInfo;
 
         $myPermissions = new Permissions();
         $_SESSION['rights'] = (array) $myPermissions->loadRights($_SESSION['userInfo']['role']);
@@ -81,9 +54,9 @@ function isuser($uname, $pword, $conn)
             setcookie('dan_username', $_SESSION['userInfo']['username'], time()+60*60*24*30, '/');
         }
 
-        trigger_error($uname.' logged in at ' . date("Y-m-d H:i:s"), E_USER_NOTICE);
+        trigger_error($username.' logged in at ' . date("Y-m-d H:i:s"), E_USER_NOTICE);
 
-        switch($sel_user[0]['firsttime']) {
+        switch($userInfo['firsttime']) {
             case 2:
                 header ( 'Location: ../reset.phtml' );
                 break;
@@ -91,11 +64,30 @@ function isuser($uname, $pword, $conn)
                 header( 'Location: ../' );
                 break;
         }
-    } else { // Sadly they have failed. Walk the plank!
-        trigger_error('Failed login attempt for '.$uname.' at ' . date("Y-m-d H:i:s"), E_USER_WARNING);
+    } else {
+        trigger_error('Failed login attempt for '.$username.' at ' . date("Y-m-d H:i:s"), E_USER_WARNING);
         $_SESSION['badlogin'] = '<span class="bad">Incorrect username or password</span><br>'; // Used to display a message to the user
         header( 'Location: ../' );
     }
+}
+
+// Determines if the person is a user or not
+// If yes, validates and redirects to viewlog.phtml
+// If no, yells at user, loudly
+function isUser($uname, $pword)
+{
+    $conn = new dbManage();
+
+    $stmt = 'SELECT * FROM `'.DB_PREFIX.'users` WHERE `username` = :user';
+    $param = array('user' => $uname);
+    /** @noinspection PhpUndefinedMethodInspection */
+    $user = $conn->queryDB($stmt, $param);
+
+    if ($user[0]['password'] && password_verify($pword, $user[0]['password'])) { // Check if password is correct
+        return $user[0];
+    }
+
+    return false;
 }
 
 function logout()
@@ -110,5 +102,5 @@ function logout()
     }
     session_destroy();
 
-    header( 'Location: ../' ); // To the login page with you!
+    header( 'Location: ../' );
 }

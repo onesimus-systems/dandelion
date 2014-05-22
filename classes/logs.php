@@ -53,7 +53,7 @@ class logs extends Database\dbManage
      */
     private function getLogInfo($logid)
     {
-        $loguid = isset($loguid) ? $loguid : '';
+        $logid = isset($logid) ? $logid : '';
 
         $stmt = 'SELECT * FROM `'.DB_PREFIX.'log` WHERE `logid` = :logid';
         $params = array(
@@ -176,7 +176,6 @@ HTML;
         } else {
             $keyw = isset($query['keyw']) ? urldecode($query['keyw']) : '';
             $dates = isset($query['dates']) ? $query['dates'] : '';
-            $message = '';
 
             // Keyword search
             if ($type == "keyw") {

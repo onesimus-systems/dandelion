@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($reset_3 == $reset_4) {
         $conn = new dbManage();
-        $useractions = new User($conn);
+        $useractions = new Users\User();
         $useractions->resetUserPw($_SESSION['userInfo']['userid'], $reset_3);
 
         $stmt = 'UPDATE `'.DB_PREFIX.'users` SET `firsttime` = 0 WHERE `userid` = :id';

@@ -65,6 +65,7 @@ $showList = true;
                     
                     <?php
                         // Database connection is defined in edituseractions.php
+                        /** @noinspection PhpUndefinedMethodInspection */
                         $allUsers = $conn->selectAll('users');
                         foreach ($allUsers as $row) {
                             echo '<tr>';

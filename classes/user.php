@@ -13,6 +13,7 @@
 ***/
 namespace Dandelion\Users;
 use Dandelion\Database\dbManage;
+use Dandelion\Permissions;
 
 class User extends dbManage
 {

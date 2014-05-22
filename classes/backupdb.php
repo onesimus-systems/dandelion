@@ -46,9 +46,6 @@ class backupdb extends Database\dbManage
         foreach($tables as $table) {
             $result = $this->queryDB('SELECT * FROM `'.$table.'`');
 
-            $stmt = 'SELECT COUNT(*) FROM `'.$table.'`';
-            $num_fields = $this->queryDB($stmt);
-
             $return.= 'DROP TABLE IF EXISTS `'.$table.'`;';
             $row2 = $this->queryDB('SHOW CREATE TABLE `'.$table.'`');
             $return.= "\n\n".$row2[0]['Create Table'].";\n\n";

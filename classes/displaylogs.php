@@ -39,7 +39,7 @@ class displaylogs
      *
      * @return string HTML of log data and pagination controls
      */
-    public static function display($grab_logs, $filtered, $users, $pageOffset, $logSize)
+    public static function display($grab_logs, $filtered, $users, $pageOffset = null, $logSize = null)
     {
         $logHtml = '';
 

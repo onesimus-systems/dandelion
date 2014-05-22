@@ -12,6 +12,7 @@ namespace Dandelion\Database;
 
 class dbManage
 {
+    /** @var $stmt \PDOStatement */
     protected $dbConn;
     
     /** Default constructor starts a connection with the database */

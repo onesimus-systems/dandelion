@@ -33,8 +33,5 @@ if (!$_SESSION['config']['installed']) {
 if (Gatekeeper\authenticated()) {
     include 'viewlog.phtml';
 } else {
-    $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
-
-    $theme = getTheme();
     include 'loginbox.php';
 }

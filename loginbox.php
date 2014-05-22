@@ -1,4 +1,8 @@
-<?php namespace Dandelion; ?>
+<?php
+namespace Dandelion;
+
+$status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
+?>
 <!DOCTYPE html>
 <html>
     <head>
