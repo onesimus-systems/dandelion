@@ -87,15 +87,19 @@ class logs extends Database\dbManage
                 $new_date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
                 $new_time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
 
+                $new_category = rtrim(urldecode($new_category), ':');
+                $new_title = urldecode($new_title);
+                $new_entry = urldecode($new_entry);
+
                 // Add new entry
                 $stmt = 'INSERT INTO `'.DB_PREFIX.'log` (datec, timec, title, entry, usercreated, cat)  VALUES (:datec, :timec, :title, :entry, :usercreated, :cat)';
                 $params = array(
                     'datec' => $new_date,
                     'timec' => $new_time,
-                    'title' => urldecode($new_title),
-                    'entry' => urldecode($new_entry),
+                    'title' => $new_title,
+                    'entry' => $new_entry,
                     'usercreated' => $_SESSION['userInfo']['userid'],
-                    'cat' => urldecode($new_category),
+                    'cat' => $new_category,
                 );
                 $this->queryDB($stmt, $params);
 
