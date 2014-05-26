@@ -22,21 +22,34 @@
 namespace Dandelion;
 
 /**
- * Only the doAction() method is publically visiable and it takes
- * in the POST data from a request, determins the action from the
+ * Only the doAction() method is publicly visible and it takes
+ * in the POST data from a request, determine the action from the
  * data and calls that function giving it the 'data' index of the
  * POST array
  */
 class adminactions extends Database\dbManage
 {
+    /**
+     * Main function to perform action
+     *
+     * @param $data mixed POST data array
+     *
+     * @return string - Function Response
+     */
     public function doAction($data)
     {
         return $this->$data['action']($data['data']);
     }
 
+    /**
+     * Save the website tagline
+     *
+     * @param $data string - Website slogan
+     * @return string
+     */
     private function saveSlogan($data)
     {
-        // Set new slogan
+        // Save new slogan
         $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :slogan WHERE `name` = "slogan"';
         $params = array(
             'slogan' => urldecode($data)
@@ -48,12 +61,23 @@ class adminactions extends Database\dbManage
         return 'Slogan set successfully';
     }
 
+    /**
+     * Call DB backup function
+     *
+     * @return string
+     */
     private function backupDB()
     {
         $saveMe = new backupDB();
         return $saveMe->doBackup();
     }
 
+    /**
+     * Save the default theme for the site
+     *
+     * @param $data string - Theme name
+     * @return string
+     */
     private function saveDefaultTheme($data)
     {
         // Set new default theme
@@ -68,6 +92,12 @@ class adminactions extends Database\dbManage
         return 'Default theme set successfully';
     }
 
+    /**
+     * Save Cheesto enabled state
+     *
+     * @param $data bool - Enabled?
+     * @return string
+     */
     private function saveCheesto($data)
     {
         // Set cheesto enabled/disabled

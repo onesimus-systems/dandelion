@@ -44,12 +44,12 @@ class displaylogs
         $logHtml = '';
 
         if (!$filtered)
-            $logHtml .= SELF::pageing($pageOffset, $logSize); // Show page controls
+            $logHtml .= self::pageing($pageOffset, $logSize); // Show page controls
 
-        $logHtml .= SELF::showLogs($grab_logs, $filtered, $users); // Display log entries
+        $logHtml .= self::showLogs($grab_logs, $filtered, $users); // Display log entries
 
         if (!$filtered)
-            $logHtml .= SELF::pageing($pageOffset, $logSize); // Show page controls
+            $logHtml .= self::pageing($pageOffset, $logSize); // Show page controls
 
         return $logHtml;
     }

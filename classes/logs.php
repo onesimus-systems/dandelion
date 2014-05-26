@@ -23,10 +23,10 @@ namespace Dandelion;
 
 /**
  * The Logs class contains all functions pertaining to creating
- * editing, filtering and initializtion to display logs.
+ * editing, filtering and initialization to display logs.
  *
- * Only the doAction() method is publically visiable and it takes
- * in the POST data from a request, determins the action from the
+ * Only the doAction() method is publicly visible and it takes
+ * in the POST data from a request, determine the action from the
  * data and calls that function giving it the 'data' index of the
  * POST array
  */
@@ -35,9 +35,9 @@ class logs extends Database\dbManage
     /**
      * Main function to perform action
      *
-     * @param array $data POST data array
+     * @param mixed $data POST data
      *
-     * @return Individual function returns
+     * @return string Individual function returns
      */
     public function doAction($data)
     {

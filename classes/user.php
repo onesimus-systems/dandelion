@@ -1,28 +1,37 @@
 <?php
 /**
-  * @brief User handles all user management tasks
-  *
-  * This class can be used to add, edit, and delete a user
-  *
-  * @param conn - database connection object
-  *
-  * @author Lee Keitel
-  * @date March, 2014
-  *
-  * @license GNU GPL v3 (see full license in root/LICENSE.md)
-***/
+ * Handle user management functions
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * The full GPLv3 license is available in LICENSE.md in the root.
+ *
+ * @author Lee Keitel
+ * @date Feb 2014
+ ***/
 namespace Dandelion\Users;
 use Dandelion\Database\dbManage;
 use Dandelion\Permissions;
 
 class User extends dbManage
 {
-    /** Update user information
+    /**
+     * Update user information
      *
-     * @param userInfo (keyed array) - User information in a associative array
+     * @param array $userInfoArray - User information in a associative array
      * 		realname, sid, role, first, uid, theme
      *
-     * @return Success message
+     * @return string - Success message
      */
     public function editUser($userInfoArray = null)
     {
@@ -57,12 +66,13 @@ class User extends dbManage
         }
     }
 
-    /** Create a new user
+    /**
+     * Create a new user
      *
-     * @param userInfo (keyed array) - User information in a associative array
+     * @param array $userInfoArray - User information in a associative array
      * 		username, password, realname, sid, role
      *
-     * @return Success message
+     * @return string - Success message
      */
     public function addUser($userInfoArray = null)
     {
@@ -116,12 +126,13 @@ class User extends dbManage
         }
     }
 
-    /** Reset user password
+    /**
+     * Reset user password
      *
-     * @param pass (string) - New password
-     * @param uid (int) - User's id number
+     * @param string $pass - New password
+     * @param int $uid - User's id number
      *
-     * @return Success message
+     * @return string - Success message
      */
     public function resetUserPw($uid = null, $pass = null)
     {
@@ -145,11 +156,12 @@ class User extends dbManage
         }
     }
 
-    /** Delete user
+    /**
+     * Delete user
      *
-     * @param uid (int) - User's id number
+     * @param int $uid - User's id number
      *
-     * @return Success message
+     * @return string - Success message
      */
     public function deleteUser($uid = null)
     {
@@ -209,14 +221,15 @@ class User extends dbManage
         }
     }
 
-    /** Update user status
+    /**
+     * Update user status
      *
-     * @param uid (int) - User's id number
-     * @param status_id (int) - # for user status type
-     * @param message (string) - User's away message
-     * @param returntime (date/time) - Return time for away user
+     * @param int $uid - User's id number
+     * @param int $status_id - # for user status type
+     * @param string $message - User's away message
+     * @param string $returntime - Return time for away user
      *
-     * @return Success message
+     * @return string - Success message
      */
     public function updateUserStatus($uid = null, $status_id = null, $message = null, $returntime = null)
     {

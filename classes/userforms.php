@@ -1,23 +1,36 @@
 <?php
 /**
-  * @brief Shows forms for user management
-  *
-  * @author Lee Keitel
-  * @date March, 2014
-  *
-  * @license GNU GPL v3 (see full license in root/LICENSE.md)
-***/
+ * Show forms for user management
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * The full GPLv3 license is available in LICENSE.md in the root.
+ *
+ * @author Lee Keitel
+ * @date Feb 2014
+ ***/
 namespace Dandelion\Users;
 use Dandelion\Permissions;
 
 class UserForms
 {
-    /** Confirm user delete form
+    /**
+     * Confirm user delete form
      *
-     * @param name (string) - User's real name
-     * @param uid (int) - User's ID number
+     * @param string $name - User's real name
+     * @param int $uid - User's ID number
      *
-     * @return nothing
+     * @return string
      */
     public function confirmDelete($name, $uid)
     {
@@ -37,11 +50,12 @@ HTML;
         }
     }
 
-    /** Edit user status form
+    /**
+     * Edit user status form
      *
-     * @param row (associative array) - All user information from database for Cxeesto
+     * @param array $row - All user information from database for Cxeesto
      *
-     * @return nothing
+     * @return string
      */
     public function editCxeesto($row)
     {
@@ -80,7 +94,7 @@ HTML;
                 $('#datepick').datetimepicker({
                         timeFormat: "HH:mm",
                         controlType: 'select',
-                        stepMinute: 10,
+                        stepMinute: 10
                     });
                 });
             </script>
@@ -88,11 +102,12 @@ HTML;
 HTML;
     }
 
-    /** Edit user form
+    /**
+     * Edit user form
      *
-     * @param userInfo (keyed array) - All user information from database
+     * @param array $userInfo - All user information from database
      *
-     * @return nothing
+     * @return string
      */
     public function editUser($userInfo)
     {
@@ -134,9 +149,10 @@ HTML;
 HTML;
     }
 
-    /** Add new user form
+    /**
+     * Add new user form
      *
-     * @return nothing
+     * @return string
      */
     public function addUser()
     {
@@ -167,13 +183,14 @@ HTML;
 HTML;
     }
 
-    /** Confirm user delete form
+    /**
+     * Confirm user delete form
      *
-     * @param uid (int) - User's ID number
-     * @param uname (string) - User's username
-     * @param realname (string) - User's name
+     * @param int $uid - User's ID number
+     * @param string $uname - User's username
+     * @param string $realname - User's name
      *
-     * @return nothing
+     * @return string
      */
     public function resetPassword($uid, $uname, $realname)
     {

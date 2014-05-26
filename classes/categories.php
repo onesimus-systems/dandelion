@@ -21,10 +21,6 @@
 ***/
 namespace Dandelion;
 
-/**
- * This class displays all categories and manages the addition, deletion,
- * and manipulation of the same.
- */
 class categories extends Database\dbManage
 {
     /**
@@ -33,7 +29,7 @@ class categories extends Database\dbManage
      *
      * @param array $past History of category nodes in parentid:level notation
      *
-     * @return echo
+     * @return string
      */
     public function getChildren($past)
     {
@@ -91,7 +87,7 @@ class categories extends Database\dbManage
      * @param int $parent Parent ID (0 if root)
      * @param string $description Name of category
      *
-     * @return echo
+     * @return string
      */
     public function addCategory($parent, $description)
     {
@@ -109,11 +105,11 @@ class categories extends Database\dbManage
     }
 
     /**
-     * Remove category for database
+     * Remove category from database
      *
      * @param int $cid ID of category to be deleted
      *
-     * @return echo
+     * @return string
      */
     public function delCategory($cid)
     {
@@ -150,7 +146,7 @@ class categories extends Database\dbManage
      * @param int $cid ID of category to update
      * @param string $desc Name of category
      *
-     * @return echo
+     * @return string
      */
     public function editCategory($cid, $desc)
     {

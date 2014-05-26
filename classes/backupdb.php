@@ -23,11 +23,16 @@ namespace Dandelion;
 
 /**
  * Not much to say here. It gets a list of all the tables then goes
- * through each one and gets all the rows of a data then rights it to
+ * through each one and gets all the rows of data then writes it to
  * a file with the proper SQL instructions to import back to MySQL.
  */
 class backupdb extends Database\dbManage
 {
+    /**
+     * Perform backup
+     *
+     * @return string
+     */
     public function doBackup()
     {
         $return = '';
