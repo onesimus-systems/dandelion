@@ -30,8 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header( 'Location: logout.php' );
     } else {
         $_SESSION['errors'] = '<br><span class="bad">Entered passwords do not match. Please try again.</span><br><br>';
-        header( 'Location: ../reset.phtml' );
+        header( 'Location: ../reset.php' );
     }
 } else {
-    header( 'Location: ../viewlog.phtml' );
+    header( 'Location: ../viewlog.php' );
 }

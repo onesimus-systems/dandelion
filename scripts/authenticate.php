@@ -72,7 +72,7 @@ function login()
 
         switch($userInfo['firsttime']) {
             case 2:
-                header ( 'Location: ../reset.phtml' );
+                header ( 'Location: ../reset.php' );
                 break;
             default:
                 header( 'Location: ../' );

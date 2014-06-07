@@ -29,7 +29,7 @@ $content = false;
     	<form name="admin_form" method="post" action="scripts/admin_actions.php">
 			<?php
 			if ($_SESSION['rights']['adduser'] || $_SESSION['rights']['edituser'] || $_SESSION['rights']['deleteuser']) {
-				echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers.phtml\'"><br>';
+				echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers.php\'"><br>';
 				$content = true;
 			}
 			
@@ -39,7 +39,7 @@ $content = false;
 			}
 			
 			if ($_SESSION['rights']['addcat'] || $_SESSION['rights']['editcat'] || $_SESSION['rights']['deletecat']) {
-				echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories.phtml\'"><br>';
+				echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories.php\'"><br>';
 				$content = true;
 			}
 			

@@ -31,7 +31,7 @@ if (!$_SESSION['config']['installed']) {
 }
 
 if (Gatekeeper\authenticated()) {
-    include 'viewlog.phtml';
+    include 'viewlog.php';
 } else {
     include 'loginbox.php';
 }

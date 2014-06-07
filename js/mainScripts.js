@@ -29,7 +29,7 @@ var miscFun = {
  
 var refreshFun =
 {
-    /* This function is ran onload() of viewlog.phtml
+    /* This function is ran onload() of viewlog.php
      * It refreshes the log and then begins an interval
      * counter for every 2 minutes
      * This function can also be called on to restart
