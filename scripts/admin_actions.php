@@ -7,9 +7,11 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
-include 'grabber.php';
+require_once 'bootstrap.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    echo adminActions::doAction($_POST);
+    $action = new adminActions();
+    echo $action->doAction($_POST);
 }

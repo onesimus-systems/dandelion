@@ -10,10 +10,11 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
-include 'scripts/grabber.php';
+require_once 'scripts/bootstrap.php';
 
-if (!authenticated()) {
+if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>
@@ -40,7 +41,7 @@ if (!authenticated()) {
             <br /><br /><hr width="350" /><br />
             
             How many logs do you want to see on the main page:<br />
-            <input type="text" name="show_limit" size="3" value="<?php echo $limit; ?>" />
+            <input type="text" name="show_limit" size="3" value="<?php echo $_SESSION['userInfo']['showlimit']; ?>" />
             <input type="submit" name="set_action" class="dButton" value="Save Limit" />
         </form>
         

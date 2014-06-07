@@ -1,7 +1,9 @@
 <?php
-include_once 'scripts/grabber.php';
+namespace Dandelion;
 
-if (!authenticated()) {
+include_once 'scripts/bootstrap.php';
+
+if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>

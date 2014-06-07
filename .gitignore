@@ -9,6 +9,8 @@ docs/
 logs/
 koala-config*
 backups/
+vendor/
+*.lock
 
 #################
 ## Eclipse

@@ -1,7 +1,9 @@
 <?php
-include_once 'scripts/grabber.php';
+namespace Dandelion;
 
-if (!authenticated()) {
+include_once 'scripts/bootstrap.php';
+
+if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
 }
 
@@ -62,6 +64,8 @@ $showList = true;
                     </tr>
                     
                     <?php
+                        // Database connection is defined in edituseractions.php
+                        /** @noinspection PhpUndefinedMethodInspection */
                         $allUsers = $conn->selectAll('users');
                         foreach ($allUsers as $row) {
                             echo '<tr>';
@@ -106,7 +110,5 @@ $showList = true;
         <footer>
             <?php include_once 'scripts/footer.php'; ?>
         </footer>
-        
-	    <?php echo loadJS("jquery","jqueryui","timepicker.js","slider.js");?>
 	</body>
 </html>

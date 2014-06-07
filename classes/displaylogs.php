@@ -1,101 +1,136 @@
 <?php
 /**
-  * @brief DisplayLogs shows the log entries provided
+  * Show the logs supplied through the display() method.
   *
-  * This class is used whenever a script wants to display
-  * a collection of log entries. display() is the only
-  * public function.
+  * This program is free software: you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation, either version 3 of the License, or
+  * (at your option) any later version.
+  *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  * The full GPLv3 license is available in LICENSE.md in the root.
   *
   * @author Lee Keitel
-  * @date February 4, 2014
+  * @date Feb 2014
 ***/
-class DisplayLogs {
+namespace Dandelion;
 
-    /** Called to display log entries given as $grab_logs
-      *
-      * @param grab_logs - Array of log entries that need to be displayed
-      *
-      * @return Nothing. All information is echoed
-      */
-    public static function display($grab_logs) {
-        SELF::pageing(); // Show page controls
-        
-        SELF::showLogs($grab_logs); // Display log entries
-        
-        SELF::pageing(); // Show page controls
+/**
+ * This class is used whenever a script wants to display
+ * a collection of log entries. display() is the only
+ * public function.
+ */
+class displaylogs
+{
+    /**
+     * Called to display log entries
+     *
+     * @param array $grab_logs Log entries that need to be displayed
+     * @param bool $filtered Is this request for filtered logs or not
+     * @param array $users User IDs and real names from database
+     * @param int $pageOffset The lower limit used to determine page breaks
+     * @param int $logSize Number of total rows of log data
+     *
+     * @return string HTML of log data and pagination controls
+     */
+    public static function display($grab_logs, $filtered, $users, $pageOffset = null, $logSize = null)
+    {
+        $logHtml = '';
+
+        if (!$filtered)
+            $logHtml .= self::pageing($pageOffset, $logSize); // Show page controls
+
+        $logHtml .= self::showLogs($grab_logs, $filtered, $users); // Display log entries
+
+        if (!$filtered)
+            $logHtml .= self::pageing($pageOffset, $logSize); // Show page controls
+
+        return $logHtml;
     }
 
-    /** Displays pagintation controls
-      *
-      * @return Nothing. All information is echoed
-      */
-    private static function pageing() {
-        global $isFiltered, $pageOffset, $logSize; /**< Grab needed variables **/
-        
-        // If this isn't filtered results, show the page controls
-        if (!$isFiltered) {
-            echo '<div class="pagination">';
-            echo '<form method="post">';
-            if ($pageOffset > 0) {
-                echo '<input type="button" value="Previous '.$_SESSION['userInfo']['showlimit'].'" onClick="pagentation('. ($pageOffset-$_SESSION['userInfo']['showlimit']) .');" class="flle" />';
-            }
-            if ($pageOffset+$_SESSION['userInfo']['showlimit'] < $logSize[0]['COUNT(*)']) {
-                echo '<input type="button" value="Next '.$_SESSION['userInfo']['showlimit'].'" onClick="pagentation('. ($pageOffset+$_SESSION['userInfo']['showlimit']) .');" class="flri" />';
-            }
-            echo '</form></div>';
+    /**
+     * Displays pagination controls
+     *
+     * @param int $pageOffset The lower limit used to determine page breaks
+     * @param int $logSize Number of total rows of log data
+     *
+     * @return string HTML pagination controls
+     */
+    private static function pageing($pageOffset, $logSize)
+    {
+        $pageControls = '';
+
+        $pageControls .= '<div class="pagination">';
+        $pageControls .= '<form method="post">';
+        if ($pageOffset > 0) {
+            $pageControls .= '<input type="button" value="Previous '.$_SESSION['userInfo']['showlimit'].'" onClick="pagentation('. ($pageOffset-$_SESSION['userInfo']['showlimit']) .');" class="flle" />';
         }
+        if ($pageOffset+$_SESSION['userInfo']['showlimit'] < $logSize) {
+            $pageControls .= '<input type="button" value="Next '.$_SESSION['userInfo']['showlimit'].'" onClick="pagentation('. ($pageOffset+$_SESSION['userInfo']['showlimit']) .');" class="flri" />';
+        }
+        $pageControls .= '</form></div>';
+
+        return $pageControls;
     }
 
-    /** Displays log entries
-      *
-      * @param $grab_logs - Array supplied by display() contianing log entries to show
-      *
-      * @return Nothing. All information is echoed
-      */
-    private static function showLogs($grab_logs) {
-    	global $isFiltered;
-        // Grab a list of all current users and put them in an array
-        $conn = new dbManage;
-        $stmt = 'SELECT `userid`,`realname` FROM `'.DB_PREFIX.'users`';
-        $userArray = $conn->queryDB($stmt, NULL);
-		echo '<div id="refreshed_core">';
-        
+    /**
+     * Displays log entries
+     *
+     * @param array $grab_logs Log entries that need to be displayed
+     * @param bool $isFiltered Is this request for filtered logs or not
+     * @param array $userArray User IDs and real names from database
+     *
+     * @return string HTML of log data
+     *
+     * @TODO Improve attribution of deleted users
+     */
+    private static function showLogs($grab_logs, $isFiltered, $userArray)
+    {
+        $logList = '';
+
+        $logList .= '<div id="refreshed_core">';
+
         foreach ($grab_logs as $row) {
-        
             $creator = '';
             // Cycle through all users to find which one the entry belongs to
             foreach ($userArray as $user) {
                 if ($row['usercreated'] == $user['userid']) {
                     $creator = $user['realname'];
-                    break; // If the user is already found why go through the rest?
+                    break;
                 }
             }
-            
-            if ($creator == '') { // If the creator doesn't exist, say something. Need to work on reattribution of deleted users
+
+            if ($creator == '') {
                 $creator = 'Unknown User';
             }
-            
+
             // Display each log entry
-            echo '<form method="post">';
-            echo '<div class="logentry">';
-            echo '<h2>' . $row['title'] . '</h2>';
-            echo '<p class="entry">' . nl2br($row['entry']) . '</p>';
-            echo '<p class="entrymeta">Created by ' . $creator . ' on ' . $row['datec'] . ' @ ' . $row['timec'] . '. ';
-            if ($row['edited']) { echo '(Edited)'; }
-            echo '<br />Categorized as ' . $row['cat'] . '.';
-            
+            $logList .= '<form method="post">';
+            $logList .= '<div class="logentry">';
+            $logList .= '<h2>' . $row['title'] . '</h2>';
+            $logList .= '<p class="entry">' . nl2br($row['entry']) . '</p>';
+            $logList .= '<p class="entrymeta">Created by ' . $creator . ' on ' . $row['datec'] . ' @ ' . $row['timec'] . '. ';
+            if ($row['edited']) { $logList .= '(Edited)'; }
+            $logList .= '<br />Categorized as ' . $row['cat'] . '.';
+
             if (!$isFiltered) {
-            	echo '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
+                $logList .= '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
             }
-            
+
             if (($_SESSION['userInfo']['userid'] == $row['usercreated'] && $_SESSION['rights']['editlog']) OR $_SESSION['rights']['admin']) {
-                ?>
-                    <input type="button" value="Edit" onClick="editFun.grabedit(<?php echo $row['logid']; ?>);" class="flri" />
-                <?php
+                $logList .= "<input type=\"button\" value=\"Edit\" onClick=\"editFun.grabedit({$row['logid']});\" class=\"flri\" />";
             }
-            
-            echo '</p></div></form>';
+
+            $logList .= '</p></div></form>';
         }
-		echo '</div>';
+        $logList .= '</div>';
+
+        return $logList;
     }
 }

@@ -8,7 +8,7 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `dan_category` (
           PRIMARY KEY (`cid`),
           UNIQUE KEY `cid` (`cid`)
         ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
-$exec = $dbConn->prepare($stmt);
+$exec = $conn->prepare($stmt);
 $exec->execute();
 
 /** Create log table */
@@ -24,7 +24,7 @@ $stmt ='CREATE TABLE IF NOT EXISTS `dan_log` (
           PRIMARY KEY (`logid`),
           UNIQUE KEY `logid` (`logid`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
-$exec = $dbConn->prepare($stmt);
+$exec = $conn->prepare($stmt);
 $exec->execute();
 
 /** Create presence (Cxeesto) table */
@@ -38,7 +38,7 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `dan_presence` (
           `dmodified` datetime NOT NULL,
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
-$exec = $dbConn->prepare($stmt);
+$exec = $conn->prepare($stmt);
 $exec->execute();
 
 /** Create settings table */
@@ -48,7 +48,7 @@ $stmt ='CREATE TABLE IF NOT EXISTS `dan_settings` (
       `value` mediumtext NOT NULL,
       PRIMARY KEY (`settings_id`)
     ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
-$exec = $dbConn->prepare($stmt);
+$exec = $conn->prepare($stmt);
 $exec->execute();
 
 /** Create users table */
@@ -65,18 +65,18 @@ $stmt = 'CREATE TABLE IF NOT EXISTS `dan_users` (
           PRIMARY KEY (`userid`),
           UNIQUE KEY `userid` (`userid`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1';
-$exec = $dbConn->prepare($stmt);
+$exec = $conn->prepare($stmt);
 $exec->execute();
 
 /** Create admin user */
 $stmt = "INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `returntime`, `dmodified`)
         VALUES (1, 1, 'Admin', 1, '', '', '2014-01-01 00:00:00')";
-$exec = $dbConn->prepare($stmt);
+$exec = $conn->prepare($stmt);
 $exec->execute();
 
 $stmt = "INSERT INTO `dan_users` (`userid`, `username`, `password`, `realname`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`) VALUES
         (1, 'admin', '\$2y\$10\$iMkjkCcdztMxamIul6sP2ur8IZJpNrJWYSXC6jsvl4vENwf2Vw1du', 'Admin', 'admin', '2014-01-01', 2, 25, '')";
-$exec = $dbConn->prepare($stmt);
+$exec = $conn->prepare($stmt);
 $exec->execute();
 
 /** Create Initial Settings */
@@ -85,5 +85,5 @@ $stmt = "INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
         (2, 'slogan', 'Website tagline'),
         (3, 'default_theme', 'Halloween'),
         (4, 'cheesto_enabled', '1')";
-$exec = $dbConn->prepare($stmt);
+$exec = $conn->prepare($stmt);
 $exec->execute();

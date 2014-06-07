@@ -12,11 +12,10 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
-
-include_once 'scripts/grabber.php';
+namespace Dandelion;
 
 //Authenticate user, if fail go to login page
-if (authenticated()) {
+if (Gatekeeper\authenticated()) {
 	if ($_SESSION['rights']['createlog']) {
 		$add_link = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 	}

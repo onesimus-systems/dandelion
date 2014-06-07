@@ -7,17 +7,18 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
-function dandy_autoload( $className )
+function dandy_autoload($className)
 {
-	$className = strtolower($className);
-	
-	if (file_exists(ROOT . "/classes/{$className}.php")) {
+	$classInfo = array_reverse(explode('\\', $className));
+    $className = strtolower($classInfo[0]);
+
+    if (file_exists(ROOT . "/classes/{$className}.php")) {
         require_once(ROOT . "/classes/{$className}.php");
-	}
-	else {
-		trigger_error("Class '{$className}' was not able to load.", E_USER_ERROR);
-	}
+    } else {
+        trigger_error("Class '{$className}' was not able to load.", E_USER_ERROR);
+    }
 }
 
-spl_autoload_register('dandy_autoload');
+spl_autoload_register('Dandelion\dandy_autoload');

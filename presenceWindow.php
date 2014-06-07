@@ -9,10 +9,11 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
-include_once 'scripts/grabber.php';
+include_once 'scripts/bootstrap.php';
 
-if (!$_SESSION['app_settings']['cheesto_enabled'] || !$_SESSION['rights']['viewcheesto'] || !authenticated()) {
+if (!$_SESSION['app_settings']['cheesto_enabled'] || !$_SESSION['rights']['viewcheesto'] || !Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>
@@ -26,8 +27,9 @@ if (!$_SESSION['app_settings']['cheesto_enabled'] || !$_SESSION['rights']['viewc
 	</head>
     
     <body onLoad="presence.startR();">
-        <?php $windowed = 1; ?>
         <?php
+        // $windowed is used in presence.php to determine the correct HTML rendering
+        $windowed = 1;
 		if ($_SESSION['app_settings']['cheesto_enabled'] && $_SESSION['rights']['viewcheesto']) {
 		?>
         <div id="presence">

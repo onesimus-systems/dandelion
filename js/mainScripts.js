@@ -11,7 +11,7 @@ $(document).ready(function() {
     $( "#datesearch" ).change(function() {
         $( "#datesearch" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         });
-        
+
     $("#add_edit").css("display", "none");
 });
 
@@ -29,7 +29,7 @@ var miscFun = {
  
 var refreshFun =
 {
-    /* This function is ran onload() of viewlog.phtml
+    /* This function is ran onload() of viewlog.php
      * It refreshes the log and then begins an interval
      * counter for every 2 minutes
      * This function can also be called on to restart
@@ -42,7 +42,7 @@ var refreshFun =
             setTimeout(function(){presence.checkstat(0);}, 1);
 		}
         CategoryManage.grabNextLevel('0:0');
-		
+
 		// Set timers
         refreshc = setInterval(function(){refreshLog("update");}, 120000);
 		if (typeof presence !== 'undefined') {
@@ -66,8 +66,10 @@ function refreshLog(kindof) {
     if (!filt)
         {
             $.ajax({
-                url: "scripts/updatelog.php",
-                async: false
+                type: "POST",
+                url: "scripts/logs.php",
+                async: false,
+                data: { action: "getLogs", data: "" }
             })
                 .done(function( html ) {
                     $("#refreshed").html( html );
@@ -97,7 +99,11 @@ function refreshLog(kindof) {
  * the SELECT limits.
  */
 function pagentation(pageOffset) {
-    $.post("scripts/updatelog.php", { pageOffset: pageOffset})
+    pages = {
+        pageOffset: pageOffset
+    };
+    
+    $.post("scripts/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
         .done(function( html ) {
             $("#refreshed").html( html );
             
@@ -180,8 +186,14 @@ var addFun =
 		if (title != "" && entry != "" && cat != "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
+			
+			logData = {
+				cat: cat,
+				add_title: title,
+				add_entry: entry
+			};
 
-			$.post("scripts/add_log.php", { cat: cat, add_title: title, add_entry: entry })
+			$.post("scripts/logs.php", { action: "addLog", data: JSON.stringify(logData) })
 				.done(function( html ) {
 					refreshLog();
 					secleft=120;
@@ -204,6 +216,7 @@ var addFun =
 var editFun =
 {
     showeditinputs: function(log_info) {
+        
         var linfo = JSON.parse(log_info);
         
         $("input#logTitle").val( linfo.title );
@@ -253,7 +266,7 @@ var editFun =
      * the fields.
      */
     grabedit: function(logid) {
-        $.post("scripts/logeditinfo.php", { loguid: logid })
+        $.post("scripts/logs.php", { action: 'getLogInfo', data: logid })
             .done( editFun.showeditinputs );
     },
 
@@ -268,7 +281,13 @@ var editFun =
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 			
-			$.post("scripts/editlogs.php", { editlog: editedlog, edittitle: editedtitle, choosen: id })
+			logData = {
+				editlog: editedlog,
+				edittitle: editedtitle,
+				choosen: id
+			};
+			
+			$.post("scripts/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
 				.done(function( html ) {
 				refreshLog();
 				secleft=120;
@@ -333,7 +352,13 @@ var searchFun =
             return false;
         }
         
-        $.post("scripts/logfilter.php", { keyw: searchfor, dates: datefor, type: type })
+        search = {
+			keyw: searchfor,
+			dates: datefor,
+			type: type
+        };
+        
+        $.post("scripts/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
             .done(function( html ) {
                 filt=true;
                 refreshFun.stoprefresh();
@@ -345,9 +370,14 @@ var searchFun =
     filter: function(cat) {
         if (cat === '') { cat = CategoryManage.getCatString(); }
         
+        filter = {
+			type: '',
+			filter: cat
+        };
+        
         if (cat)
         {
-            $.post("scripts/logfilter.php", { filter: cat})
+            $.post("scripts/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
                 .done(function( html ) {
                     $("#refreshed").html( html );
                     filt=true;

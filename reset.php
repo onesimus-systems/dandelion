@@ -12,11 +12,12 @@
  *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  ***/
+namespace Dandelion;
 
-include 'scripts/grabber.php';
+require_once 'scripts/bootstrap.php';
 
 // Check whether the user is logged in
-if (!authenticated()) {
+if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>
