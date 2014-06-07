@@ -17,22 +17,36 @@ use Dandelion\Permissions;
 
 require_once (is_file('bootstrap.php')) ? 'bootstrap.php' : 'scripts/bootstrap.php';
 
+/**
+ * If this file is called from the login page, it will contain POST data
+ * with a field called in_name.
+ *
+ * If this happens a user is attempting to login.
+ */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["in_name"])) {
     login();
 }
 
+/**
+ * Simple function to determine if a user is logged in or not.
+ *
+ * @return bool
+ */
 function authenticated()
 {
     $loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;
 
-    if ($loggedin) { // If a current PHP session is running, log in
-        return true;
-    }
-
-    // No session and no session token, need to log in
-    return false;
+    return $loggedin;
 }
 
+/**
+ * Perform a user logon.
+ *
+ * Get the username and password provided.
+ * Check to see if the user exists and if the password is correct.
+ * If true, set session variables and route to pages as needed.
+ * If false, display error message.
+ */
 function login()
 {
     $username = $_POST["in_name"];
@@ -71,9 +85,15 @@ function login()
     }
 }
 
-// Determines if the person is a user or not
-// If yes, validates and redirects to viewlog.phtml
-// If no, yells at user, loudly
+/**
+ * Checks if a provided username is an actual user
+ * and if the provided password is correct.
+ *
+ * @param string $uname - Username
+ * @param string $pword - Password
+ *
+ * @return bool or array - Array containing row of user data from database, false on error
+ */
 function isUser($uname, $pword)
 {
     $conn = new dbManage();
@@ -90,6 +110,9 @@ function isUser($uname, $pword)
     return false;
 }
 
+/**
+ * Perform a logout by destroying the session.
+ */
 function logout()
 {
     $_SESSION = array();

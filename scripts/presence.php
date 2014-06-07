@@ -16,10 +16,11 @@ namespace Dandelion;
 require_once 'bootstrap.php';
 
 if(Gatekeeper\authenticated()) {
-    /* $windowed is defined in presenceWindow.php before this is called,
-     * so this variable is already set as 1 when the windows opens.
+    /**
+     * $windowed is defined in presenceWindow.php before this is called,
+     * so this variable is already set as 1 when the window opens.
      * This tells us that the user is looking at the windowed version.
-    **/
+     */
     $windowed = isset($windowed) ? $windowed : '0';
     $windowedt = isset($_POST['windowedt']) ? $_POST['windowedt'] : '0';
     $setorno = isset($_POST['setorno']) ? $_POST['setorno'] : '';

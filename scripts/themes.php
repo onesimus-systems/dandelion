@@ -11,6 +11,11 @@
 ***/
 namespace Dandelion;
 
+/**
+ * Determine the theme to use. Either a user assigned theme or the default.
+ *
+ * @return string - Theme name
+ */
 function getTheme()
 {
     // Check if a theme is given from the user settings session variable
@@ -20,10 +25,18 @@ function getTheme()
     return $theme;
 }
 
+/**
+ * Generate a list of available themes with the current used theme selected
+ *
+ * @param string $theme - Default null - Name of theme to have preselected
+ * @return string - Generated HTML
+ */
 function getThemeList($theme = null)
 {
-    // The call can pass the theme currently used,
-    // if one isn't passed, assume the current user's theme
+    /*
+     * The call can pass the theme currently used,
+     * if one isn't passed, assume the current user's theme
+     */
     $currentTheme = ($theme===null) ? getTheme() : $theme;
     $currentTheme = ($theme=='default') ? $_SESSION['app_settings']['default_theme'] : $currentTheme;
     $themeList = '';
@@ -44,6 +57,13 @@ function getThemeList($theme = null)
     return $themeList;
 }
 
+/**
+ * Generates HTML link tags for given CSS files
+ * Names are given as function arguments which are retrieved
+ * by func_get_args()
+ *
+ * @return string - HTML link tags
+ */
 function loadCssSheets()
 {
     $optionalSheets = func_get_args();
@@ -60,7 +80,7 @@ function loadCssSheets()
 
     if ($main) {
         $cssList .= '<link rel="stylesheet" type="text/css" href="styles/main.css">';
-        $cssList .= '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/main.css">';
+        $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/main.css">';
     }
 
     // Other stylesheets
@@ -80,14 +100,14 @@ function loadCssSheets()
             case "cheesto":
             case 'presence':
                 $cssList .= '<link rel="stylesheet" type="text/css" href="styles/presence.css">';
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/cheesto.css">';
                 break;
 
             // CSS for Cheesto presence system (windowed)
             case "cheestowin":
             case "presencewin":
                 $cssList .= '<link rel="stylesheet" type="text/css" href="styles/presenceWin.css">';
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
                 break;
 
             // CSS for jQueryUI
@@ -99,7 +119,7 @@ function loadCssSheets()
             // CSS for Tutorial
             case "tutorial":
                 $cssList .= '<link rel="stylesheet" type="text/css" href="styles/tutorial.css">';
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.HOSTNAME.'/'.THEME_DIR.'/'.$theme.'/tutorial.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/tutorial.css">';
                 break;
         }
     }

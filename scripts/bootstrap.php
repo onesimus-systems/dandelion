@@ -12,9 +12,9 @@
 namespace Dandelion;
 use Dandelion\Database\dbManage;
 
-/*
+/**
  * This checks the time of the current session and if it has been
- * in active for $timeout seconds long, destroy the session and start again
+ * inactive for $timeout seconds long, destroy the session and start again
  */
 $timeout = 21600; // 6 hours
 ini_set('session.gc_maxlifetime', $timeout);
@@ -69,7 +69,7 @@ if ($_SESSION['config']['debug']) {
     ini_set('display_startup_errors', true);
 }
 
-/*
+/**
  * Check running PHP version
  * The password compatibility library requires PHP version 5.3.7 or above
  */
@@ -81,7 +81,7 @@ if (!function_exists( 'version_compare' ) || version_compare(phpversion(), "5.3.
 // Define constants
 define('DB_PREFIX', $_SESSION['config']['db_prefix']);
 define('HOSTNAME', $_SESSION['config']['hostname']);
-define('D_VERSION', '4.6.0');
+define('D_VERSION', '5.0.0');
 define('THEME_DIR', 'themes');
 
 // Load helper scripts

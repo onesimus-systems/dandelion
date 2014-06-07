@@ -27,10 +27,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if (!is_dir(dirname(dirname(__FILE__)).'/database')) {
                         mkdir(dirname(dirname(__FILE__)).'/database');
                     }
-                    $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database/database'.$db_unique_filename.'.sq3';
+                    $sqliteFileName = 'database'.$db_unique_filename.'.sq3';
+                    $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database/'.$sqliteFileName;
                     $db_user = null;
                     $db_pass = null;
-                    $sqliteFileName = 'database'.$db_unique_filename.'.sq3';
                     break;
 
                 default:
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     break;
             }
 
-            if ($db_connect == '') {
+            if ($db_connect === '') {
                 $_SESSION['error_text'] = 'Please enter MySQL database connection information:';
                 header( 'Location: ../install.php' );
             }
@@ -46,11 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $conn = new PDO($db_connect, $db_user, $db_pass);
 
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $dbConn = $conn;
 
             if ($CONFIG['db_type']=='mysql') {
                 /** Drop any existing tables in the database */
-                $exec = $dbConn->prepare('SHOW TABLES');
+                $exec = $conn->prepare('SHOW TABLES');
                 $exec->execute();
 
                 $allTables = $exec->fetchAll();
@@ -65,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $drop = rtrim($drop, ',');
                     $drop .= ';';
 
-                    $exec = $dbConn->prepare($drop);
+                    $exec = $conn->prepare($drop);
                     $exec->execute();
                 }
             }

@@ -11,6 +11,13 @@
  ***/
 namespace Dandelion;
 
+/**
+ * Generates HTML script tags for given JS files
+ * Names are given as function arguments which are retrieved
+ * by func_get_args()
+ *
+ * @return string - HTML script tags
+ */
 function loadJS()
 {
     $scripts = func_get_args();

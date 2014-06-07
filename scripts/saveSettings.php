@@ -70,8 +70,7 @@ HTML;
         $reset_4 = $_POST['reset_2'];
 
         if ($reset_3 == $reset_4) {
-            require_once ROOT . '/classes/user.php';
-            $useractions = new Users\User(new dbManage());
+            $useractions = new Users\User();
             $useractions->resetUserPw($_SESSION['userInfo']['userid'], $reset_3);
 
             echo 'Password change successful.<br><br>';

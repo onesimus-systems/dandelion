@@ -1,7 +1,7 @@
 <?php
 /**
  * Here be the install page for Dandelion.
- * Here is were the admin will enter database
+ * Here is where the admin will enter database
  * type and credentials.
  *
  * This file is a part of Dandelion
@@ -105,7 +105,7 @@ if ($needToInstall) {
     </body>
 
     <script type="text/javascript">
-    public function showHide(db_type)
+    function showHide(db_type)
     {
         if (db_type == 'sqlite') {
             document.getElementById('mysql_only').style.display = 'none';

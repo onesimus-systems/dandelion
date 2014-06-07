@@ -1,6 +1,6 @@
 <?php
 /**
-  * Handle requests to save edits to log entries
+  * Handle requests to reset user passwords
   *
   * This file is a part of Dandelion
   *

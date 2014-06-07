@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * http://www.gnu.org/copyleft/gpl.html
  *
- * This method was taken from the MediaWiki project.s
+ * This method was taken from the MediaWiki project.
  */
 
 /**
@@ -28,9 +28,7 @@
  * Calling this function kills execution immediately.
  *
  * @param string $type Which entry point we are protecting. One of:
- *   - index.php
- *   - load.php
- *   - api.php
+ *   - site
  *   - cli
  *
  * @note Since we can't rely on anything, the minimum PHP versions and Dandelion current
@@ -54,7 +52,7 @@ function PHPVersionError( $type ) {
             'skins/common/images/mediawiki.png'
         );*/
 
-        header( "$protocol 500 MediaWiki configuration Error" );
+        header( "$protocol 500 Dandelion configuration Error" );
         header( 'Content-type: text/html; charset=UTF-8' );
         // Don't cache error pages!  They cause no end of trouble...
         header( 'Cache-control: none' );
@@ -99,7 +97,7 @@ function PHPVersionError( $type ) {
 	</body>
 </html>
 HTML;
-        // Handle everything that's not index.php
+        // Handle everything that's not site
     } else {
         // So nothing thinks this is JS or CSS
         $finalOutput = ( $type == 'load.php' ) ? "/* $message */" : $message;
