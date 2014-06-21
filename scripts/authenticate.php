@@ -103,7 +103,7 @@ function isUser($uname, $pword)
     /** @noinspection PhpUndefinedMethodInspection */
     $user = $conn->queryDB($stmt, $param);
 
-    if ($user[0]['password'] && password_verify($pword, $user[0]['password'])) { // Check if password is correct
+    if (!empty($user[0]['password']) && password_verify($pword, $user[0]['password'])) { // Check if password is correct
         return $user[0];
     }
 
