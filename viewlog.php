@@ -42,13 +42,14 @@ else {
 		<title>Dandelion Web Log</title>
 	</head>
     
-	<body onLoad="refreshFun.startrefresh();">
+	<body onLoad="refreshFun.startrefresh(); mail.areUnread();">
 	
 		<?php
 		if ($_SESSION['app_settings']['cheesto_enabled'] && $_SESSION['rights']['viewcheesto']) {
 		?>
         <div id="presence">
-	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto:</h3>
+	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mailbox.php"><img id="mailicon" src="images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
+	        
         	<div id="mainPresence">
                 <?php
         		if ($_SESSION['rights']['updatecheesto']) {
@@ -118,6 +119,6 @@ else {
             </footer>
         </div>
 
-        <?php echo loadJS("jquery","jqueryui","tinymce","catmanage","main","cheesto")?>
+        <?php echo loadJS("jquery","jqueryui","tinymce","catmanage","main","cheesto","mail.js")?>
 	</body>
 </html>
