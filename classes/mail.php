@@ -46,7 +46,7 @@ class mail extends Database\dbManage
         $mailCount = -255; // -255 is used to show indication of counter error
         
         if ($forced) {
-            // Get number of mail items from mail table
+            // Get number of unread mail items
             $mailItems = $this->getMailList($sent, true);
             $mailCount = count($mailItems);
             
@@ -74,9 +74,15 @@ class mail extends Database\dbManage
     function getMailList($sent = false, $unread = false)
     {
         $toFrom = ($sent) ? 'fromUser' : 'toUser';
-        $unreadCond = ($unread) ? ' and isRead = 0' : '';
+        $unreadCond = ($unread) ? ' AND isRead = 0' : '';
         
-        $sql = 'SELECT * FROM ' . DB_PREFIX . 'mail WHERE ' . $toFrom . ' = :id'.$unreadCond;
+        $sql = 'SELECT m.id, m.isRead, m.subject, m.fromUser, m.dateSent,
+                    u.realname
+                FROM ' . DB_PREFIX . 'mail AS m
+                LEFT JOIN ' . DB_PREFIX . 'users AS u
+                ON m.fromUser = u.userid
+                WHERE m.' . $toFrom . ' = :id' . $unreadCond;
+        
         $params = array (
             'id' => $_SESSION['userInfo']['userid'] 
         );
@@ -84,6 +90,18 @@ class mail extends Database\dbManage
         return $this->queryDB($sql, $params);
     }
 
+    function getFullMailInfo($mailId) {
+        $sql = 'SELECT m.*, u.realname
+                FROM ' . DB_PREFIX . 'mail AS m
+                LEFT JOIN ' . DB_PREFIX . 'users AS u
+                ON m.fromUser = u.userid
+                WHERE id = :mid';
+        
+        $params = array( 'mid' => $mailId );
+        
+        return $this->queryDB($sql, $params);
+    }
+    
     function getTrashCan()
     {
         $sql = 'SELECT * FROM ' . DB_PREFIX . 'mail WHERE to = :id and deleted = 1';

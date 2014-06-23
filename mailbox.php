@@ -23,7 +23,7 @@ if (!Gatekeeper\authenticated()) {
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="images/favicon.ico" />
-		<?php echo loadCssSheets(); ?>
+		<?php echo loadCssSheets("mail", "jqueryui"); ?>
 		<title>Dandelion Web Log</title>
 	</head>
 	
@@ -31,6 +31,8 @@ if (!Gatekeeper\authenticated()) {
         <header>
             <?php include 'scripts/header.php'; ?>
         </header>
+		
+		<div id="mailDialog" title="View Mail"></div>
 		
 		<h2>Mail Box</h2>
 		
@@ -47,5 +49,5 @@ if (!Gatekeeper\authenticated()) {
         </footer>
 	</body>
 	
-	<?php echo loadJS("jquery", "mail.js");?>
+	<?php echo loadJS("jquery", "jqueryui", "mail.js");?>
 </html>

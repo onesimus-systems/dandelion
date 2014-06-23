@@ -121,6 +121,12 @@ function loadCssSheets()
                 $cssList .= '<link rel="stylesheet" type="text/css" href="styles/tutorial.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/tutorial.css">';
                 break;
+
+            // CSS for MailBox
+            case "mail":
+                $cssList .= '<link rel="stylesheet" type="text/css" href="styles/mail.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/mail.css">';
+                break;
         }
     }
 

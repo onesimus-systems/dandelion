@@ -13,7 +13,7 @@ require_once '../bootstrap.php';
 
 $myMail = new Mail\mail();
 
-$count = $myMail->checkNewMail(true);
+$count = $myMail->checkNewMail();
 
 $count = array( 'count' => $count);
 

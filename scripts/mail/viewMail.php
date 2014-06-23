@@ -1,6 +1,6 @@
 <?php
 /**
- * Get mailbox list of items
+ * Get mail count
  *
  * @author Lee Keitel
  * @date May, 2014
@@ -13,6 +13,6 @@ require_once '../bootstrap.php';
 
 $myMail = new Mail\mail();
 
-$mailItems = $myMail->getMailList();
+$mail = $myMail->getFullMailInfo($_GET['mid']);
 
-echo json_encode($mailItems);
+echo json_encode($mail);
