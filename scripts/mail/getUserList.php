@@ -1,6 +1,6 @@
 <?php
 /**
- * Get mail count
+ * Get mailbox list of items
  *
  * @author Lee Keitel
  * @date May, 2014
@@ -13,8 +13,6 @@ require_once '../bootstrap.php';
 
 $myMail = new Mail\mail();
 
-$count = $myMail->checkNewMail(true);
+$toUsers = $myMail->getUserList();
 
-$count = array( 'count' => $count);
-
-echo json_encode($count);
+echo json_encode($toUsers);

@@ -13,6 +13,7 @@ require_once '../bootstrap.php';
 
 $myMail = new Mail\mail();
 
-$mail = $myMail->getFullMailInfo($_GET['mid']);
+$mail = $myMail->getFullMailInfo($_REQUEST['mid']);
+$myMail->setReadMail($_REQUEST['mid']);
 
 echo json_encode($mail);

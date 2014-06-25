@@ -34,10 +34,24 @@ if (!Gatekeeper\authenticated()) {
 		
 		<div id="mailDialog" title="View Mail"></div>
 		
+		<div id="writeMail" title="">
+            <form id="mailForm">
+                To: <input id="toUsers"><br>
+                Subject: <input type="text" id="mailSubject" name="mailSubject" value="" size="60"><br><br>
+                <textarea id="mailBody" name="mailBody" cols="80" rows="10"></textarea><br>
+                <div id="messages" style="display: none;"></div>
+                <input type="hidden" id="toUsersId" value="">
+            </form>
+        </div>
+		
 		<h2>Mail Box</h2>
 		
 		<div id="mailbox">
 		  <div id="controls">
+		      <a href="#" onClick="mail.writeMailDialog();"><img src="images/newmail.png" width="22" heigh="22" alt="New Mail" title="New Mail"></a>
+		      <a href="#" onClick="mail.getAllMail();"><img src="images/refresh.png" width="22" heigh="22" alt="Refresh" title="Refresh"></a>
+		      <a href="#" onClick="mail.replyToMail();"><img src="images/reply.png" width="22" heigh="22" alt="Reply" title="Reply"></a>
+		      <a href="#" onClick="alert('Forward');"><img src="images/forward.png" width="22" heigh="22" alt="Forward" title="Forward"></a>
 		      <!-- TODO: Create mail controls (delete, reply, forward, new) -->
 		  </div>
 		  
@@ -49,5 +63,5 @@ if (!Gatekeeper\authenticated()) {
         </footer>
 	</body>
 	
-	<?php echo loadJS("jquery", "jqueryui", "mail.js");?>
+	<?php echo loadJS("jquery", "jqueryui", "mail.js", "tinymce");?>
 </html>

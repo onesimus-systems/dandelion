@@ -6,6 +6,9 @@
 #mailDialog {
   text-align: left;
 }
+#writeMail {
+  text-align: left;
+}
 .mailboxCSS {
   border-collapse: collapse;
   width: 100%;
@@ -23,4 +26,11 @@
 }
 .unread {
   font-weight: bold;
+}
+#mailbox #controls {
+  text-align: left;
+  margin-bottom: .5em;
+}
+#mailbox #controls a {
+  margin-right: .5em;
 }

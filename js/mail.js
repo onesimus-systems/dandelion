@@ -1,3 +1,13 @@
+$(document).ready(function() {
+    $("#writeMail").css("display", "none");
+});
+
+$(document).on("focusin", function(e) {
+    if ($(event.target).closest(".mce-window").length) {
+        e.stopImmediatePropagation();
+    }
+});
+
 var mail = {
         areUnread: function() {
             $.getJSON("scripts/mail/getMailCount.php", function(data) {
@@ -12,46 +22,56 @@ var mail = {
         },
 
         getAllMail: function() {
-            $.getJSON("scripts/mail/getAllMail.php", function(data) {
-                console.log(data);
-                var table = $('<table/>').addClass("mailboxCSS");
+            var noCache = new Date().getTime();
 
-                var header = table.append('<tr>\
-                        <th width="2%">&nbsp;</th>\
-                        <th width="15%">From</th>\
-                        <th width="63%">Subject</th>\
-                        <th width="20%">Date</th>\
-                </tr>');
-
-                for(i=0; i<data.length; i++){
-                    html = '<tr>\
-                            <td><input type="checkbox" id="check'+i+'" value='+data[i]['id']+'></td>\
-                            <td>'+data[i]['realname']+'</td>\
-                            <td><a href="#" onClick="mail.viewMail('+data[i]['id']+');">'+data[i]['subject']+'</a></td>\
-                            <td>'+data[i]['dateSent']+'</td>\
-                            </tr>';
-                    
-                    if (data[i]['isRead'] = "0") {
-                        table.append(html).addClass('unread');
-                    }
-                    else {
-                        table.append(html);
-                    }
-                }
-
-                $('#mailList').append(table);
-            });
+            $.getJSON("scripts/mail/getAllMail.php",
+                    function(data){ mail.showMailList(data); });
         },
-        
+
+        showMailList: function(parsed) {
+            var mailItems = parsed.length;
+
+            $('#mailList').html('');
+            var table = $('<table/>').addClass("mailboxCSS");
+
+            table.append('<tr>\
+                    <th width="2%">&nbsp;</th>\
+                    <th width="15%">From</th>\
+                    <th width="63%">Subject</th>\
+                    <th width="20%">Date</th>\
+            </tr>');
+
+            for(i=0; i<mailItems; i++){
+                mailItem = parsed[i];
+
+                html = '<tr>\
+                    <td><input type="checkbox" id="check'+i+'" value='+mailItem['id']+'></td>\
+                    <td>'+mailItem['realname']+'</td>\
+                    <td><a href="#" onClick="mail.viewMail('+mailItem['id']+');">'+mailItem['subject']+'</a></td>\
+                    <td>'+mailItem['dateSent']+'</td>\
+                    </tr>';
+
+                if (mailItem['isItRead'] == "0") {
+                    table.append($(html).addClass('unread'));
+                }
+                else {
+                    table.append(html);
+                }
+            }
+
+            $('#mailList').append(table);
+        },
+
         viewMail: function(id) {
             $.getJSON("scripts/mail/viewMail.php", {mid: id}, function(data) {
-                console.log(data);
-                
+                mail.getAllMail();
+
                 var html = '<h2>'+data[0]['subject']+'</h2>\
-                    To: You<br>\
-                    From: '+data[0]['realname']+'<br>\
-                    <br>'+data[0]['body'];
-                    
+                To: You<br>\
+                From: '+data[0]['realname']+'<br>\
+                Sent: '+data[0]['dateSent']+' '+data[0]['timeSent']+'<br>\
+                <br>'+data[0]['body'];
+
                 $( "#mailDialog" ).html( html );
                 $( "#mailDialog" ).dialog({
                     modal: true,
@@ -71,5 +91,123 @@ var mail = {
                     }
                 });
             });
+        },
+
+        replyToMail: function() {
+            if (this.getSelectedMailIds().length > 1) {
+                console.log("No reply");
+            }
+            else {
+
+            }
+        },
+
+        writeMailDialog: function() {
+            $.getJSON("scripts/mail/getUserList.php", function(data) {
+                $("#mailForm")[0].reset();
+                $("textarea#mailBody").html("");
+                $("#toUsersId").val("");
+
+                $( "#writeMail" ).dialog({
+                    height: 575,
+                    width: 800,
+                    modal: true,
+                    show: {
+                        effect: "fade",
+                        duration: 500
+                    },
+                    hide: {
+                        effect: "fade",
+                        duration: 500
+                    },
+                    buttons: {
+                        "Send Mail": function() {
+                            if (mail.sendMail()) {
+                                $( this ).dialog( "close" );
+                                mail.getAllMail();
+                            }
+                        },
+                        Cancel: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                });
+
+                $("textarea#mailBody").tinymce({
+                    forced_root_block: false,
+                    resize: false,
+                    menubar: "edit format view insert tools",
+                    toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
+                    plugins: [
+                              "autolink link lists hr anchor pagebreak spellchecker",
+                              "searchreplace wordcount code insertdatetime",
+                              "contextmenu template paste textcolor"
+                              ]
+                });
+
+                var users = [];
+
+                $(data).each(function(key, value) {
+                    var user = [];
+                    user.label = value["realname"];
+                    user.value = value["userid"];
+                    users.push(user);
+                });
+
+                console.log(users);
+
+                $("#toUsers").autocomplete({
+                    minLength: 0,
+                    source: users,
+                    focus: function( event, ui ) {
+                        $( "#toUsers" ).val( ui.item.label );
+                        return false;
+                    },
+                    select: function( event, ui ) {
+                        $( "#toUsers" ).val( ui.item.label );
+                        $( "#toUsersId" ).val( ui.item.value );
+
+                        return false;
+                    }
+                })
+                .data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+                    return $( "<li>" )
+                    .append( "<a>" + item.label + "</a>" )
+                    .appendTo( ul );
+                };
+            });
+        },
+
+        sendMail: function() {
+            var mailPiece = {};
+
+            mailPiece["to"] = $("#toUsersId").val();
+            mailPiece["subject"] = $("#mailSubject").val();
+            mailPiece["body"] = $("#mailBody").val();
+
+            if (mailPiece.to != "" && mailPiece.subject != "" && mailPiece.body != "") {
+                mailPiece = JSON.stringify(mailPiece);
+
+                $.post("scripts/mail/sendMail.php", {mail: mailPiece},
+                        function(data) {
+                    alert(data);
+                });
+
+                return true;
+            }
+            else {
+                alert("Error: You need a subject, body, and recipient.");
+                return false;
+            }
+        },
+
+        getSelectedMailIds: function() {
+            var selectedMail = [];
+
+            $("#mailList :checked").each(function() {
+                selectedMail.push($(this).val());
+            });
+
+            return selectedMail;
         }
 };

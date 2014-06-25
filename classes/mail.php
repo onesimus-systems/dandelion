@@ -51,7 +51,9 @@ class mail extends Database\dbManage
             $mailCount = count($mailItems);
             
             // Update user's mail count
-            $sql = 'UPDATE ' . DB_PREFIX . 'users SET mailCount = :mc WHERE userid = :id';
+            $sql = 'UPDATE ' . DB_PREFIX . 'users
+                    SET mailCount = :mc
+                    WHERE userid = :id';
             $params = array (
                 'mc' => $mailCount,
                 'id' => $_SESSION['userInfo']['userid'] 
@@ -60,7 +62,9 @@ class mail extends Database\dbManage
             $this->queryDB($sql, $params);
         }
         else {
-            $sql = 'SELECT mailCount FROM ' . DB_PREFIX . 'users WHERE userid = :id';
+            $sql = 'SELECT mailCount
+                    FROM ' . DB_PREFIX . 'users
+                    WHERE userid = :id';
             $params = array (
                 'id' => $_SESSION['userInfo']['userid'] 
             );
@@ -76,7 +80,7 @@ class mail extends Database\dbManage
         $toFrom = ($sent) ? 'fromUser' : 'toUser';
         $unreadCond = ($unread) ? ' AND isRead = 0' : '';
         
-        $sql = 'SELECT m.id, m.isRead, m.subject, m.fromUser, m.dateSent,
+        $sql = 'SELECT m.id, m.isItRead, m.subject, m.fromUser, m.dateSent,
                     u.realname
                 FROM ' . DB_PREFIX . 'mail AS m
                 LEFT JOIN ' . DB_PREFIX . 'users AS u
@@ -90,21 +94,35 @@ class mail extends Database\dbManage
         return $this->queryDB($sql, $params);
     }
 
-    function getFullMailInfo($mailId) {
+    function getFullMailInfo($mailId)
+    {
         $sql = 'SELECT m.*, u.realname
                 FROM ' . DB_PREFIX . 'mail AS m
                 LEFT JOIN ' . DB_PREFIX . 'users AS u
                 ON m.fromUser = u.userid
                 WHERE id = :mid';
         
-        $params = array( 'mid' => $mailId );
+        $params = array (
+            'mid' => $mailId 
+        );
         
         return $this->queryDB($sql, $params);
     }
-    
+
+    function getUserList()
+    {
+        $sql = 'SELECT userid, realname
+                FROM ' . DB_PREFIX . 'users
+                ORDER BY realname';
+        
+        return $this->queryDB($sql);
+    }
+
     function getTrashCan()
     {
-        $sql = 'SELECT * FROM ' . DB_PREFIX . 'mail WHERE to = :id and deleted = 1';
+        $sql = 'SELECT *
+                FROM ' . DB_PREFIX . 'mail
+                WHERE to = :id and deleted = 1';
         $params = array (
             'id' => $_SESSION['userInfo']['userid'] 
         );
@@ -115,22 +133,44 @@ class mail extends Database\dbManage
     function newMail($subject, $body, $to, $from)
     {
         if (!empty($subject) && !empty($body) && !empty($to) && !empty($from)) {
-            /**
-             * Save mail to _mail table
-             * Increment unread_mail of user $to by 1
-             *
-             * Maybe check to make sure it was saved?
-             */
+            $datetime = getdate();
+            $new_date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
+            $new_time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
+            
+            $sql = 'INSERT INTO ' . DB_PREFIX . 'mail
+                    (subject, body, toUser, fromUser, dateSent, timeSent)
+                    VALUES (:sub, :body, :to, :from, :date, :time)';
+            
+            $params = array (
+                'sub' => $subject,
+                'body' => $body,
+                'to' => $to,
+                'from' => $from,
+                'date' => $new_date,
+                'time' => $new_time 
+            );
+            
+            $this->queryDB($sql, $params);
+            
             $response = 'Mail sent successfully';
         }
         else {
-            // error message requiring subject, body, to, and from
-            // this will be checked on the client side, but we can't
-            // trust user data
-            $response = '';
+            $response = 'Error: You need a subject, body, and recipient.';
         }
         
         return $response;
+    }
+
+    function setReadMail($mid)
+    {
+        $sql = 'UPDATE ' . DB_PREFIX . 'mail
+                SET isItRead = 1
+                WHERE id = :id';
+        $params = array (
+            'id' => $mid 
+        );
+        
+        return $this->queryDB($sql, $params);
     }
 
     function deleteMail($mailId)
