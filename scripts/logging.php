@@ -70,7 +70,7 @@ function shutdownHandler()
         case E_CORE_WARNING:
         case E_COMPILE_WARNING:
         case E_PARSE:
-            $error = "[SHUTDOWN] Level: " . $lasterror['type'] . " | Message: " . $lasterror['message'] . " | File: " . $lasterror['file'] . " | Ln: " . $lasterror['line'];
+            $error = date("Y-m-d H:i:s") . " | [SHUTDOWN] Level: " . $lasterror['type'] . " | Message: " . $lasterror['message'] . " | File: " . $lasterror['file'] . " | Ln: " . $lasterror['line'];
             logToFile($error, "fatal");
     }
 }
