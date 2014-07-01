@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Show forms for user management
  *
@@ -9,27 +10,32 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * The full GPLv3 license is available in LICENSE.md in the root.
  *
  * @author Lee Keitel
- * @date Feb 2014
- ***/
+ *         @date Feb 2014
+ *         *
+ */
 namespace Dandelion\Users;
+
 use Dandelion\Permissions;
 
 class UserForms
 {
+
     /**
      * Confirm user delete form
      *
-     * @param string $name - User's real name
-     * @param int $uid - User's ID number
-     *
+     * @param string $name
+     *            - User's real name
+     * @param int $uid
+     *            - User's ID number
+     *            
      * @return string
      */
     public function confirmDelete($name, $uid)
@@ -45,21 +51,47 @@ class UserForms
             </form>
             <hr width="500"><br>
 HTML;
-        } else {
+        }
+        else {
             echo '<br>You can\'t delete yourself.<br><br>';
         }
     }
 
     /**
+     * Confirm API key revoke
+     *
+     * @param string $name
+     *            - User's real name
+     * @param int $uid
+     *            - User's ID number
+     *            
+     * @return string
+     */
+    public function confirmKeyRevoke($name, $uid)
+    {
+        echo <<<HTML
+        <br><hr width="500">
+        Are you sure you want to revoke the API key for "{$name}"?<br><br>
+        <form method="post">
+            <input type="hidden" name="the_choosen_one" value="{$uid}">
+            <input type="submit" name="sub_type" value="Revoke">
+            <input type="submit" value="No">
+        </form>
+        <hr width="500"><br>
+HTML;
+    }
+
+    /**
      * Edit user status form
      *
-     * @param array $row - All user information from database for Cxeesto
-     *
+     * @param array $row
+     *            - All user information from database for Cxeesto
+     *            
      * @return string
      */
     public function editCxeesto($row)
     {
-        $scripts = \Dandelion\loadJS("jquery","jqueryui","timepicker.js","slider.js");
+        $scripts =\Dandelion\loadJS("jquery", "jqueryui", "timepicker.js", "slider.js");
         
         echo <<<HTML
         <div id="editform">
@@ -105,16 +137,17 @@ HTML;
     /**
      * Edit user form
      *
-     * @param array $userInfo - All user information from database
-     *
+     * @param array $userInfo
+     *            - All user information from database
+     *            
      * @return string
      */
     public function editUser($userInfo)
     {
         $permissions = new Permissions();
         $list = $permissions->getGroupList();
-        $themeList = \Dandelion\getThemeList($userInfo['theme']);
-
+        $themeList =\Dandelion\getThemeList($userInfo['theme']);
+        
         echo <<<HTML
         <div id="editform">
             <h2>Edit User Information:</h2>
@@ -125,14 +158,14 @@ HTML;
                     <tr><td>Role:</td><td>
                     <select name="edit_role">
 HTML;
-                        foreach ($list as $group) {
-                            if ($group['role'] == $userInfo['role'])
-                                $selected = 'selected';
-                            else
-                                $selected = '';
-
-                            echo '<option value="'.$group['role'].'" '.$selected.'>'.ucfirst($group['role']).'</option>';
-                        }
+        foreach ( $list as $group ) {
+            if ($group['role'] == $userInfo['role'])
+                $selected = 'selected';
+            else
+                $selected = '';
+            
+            echo '<option value="' . $group['role'] . '" ' . $selected . '>' . ucfirst($group['role']) . '</option>';
+        }
         echo <<<HTML
                     </select>
                     </td></tr>
@@ -169,9 +202,9 @@ HTML;
                         <tr><td>Role:</td><td>
                         <select name="add_role">
 HTML;
-                        foreach ($list as $group) {
-                            echo '<option value="'.$group['role'].'">'.ucfirst($group['role']).'</option>';
-                        }
+        foreach ( $list as $group ) {
+            echo '<option value="' . $group['role'] . '">' . ucfirst($group['role']) . '</option>';
+        }
         echo <<<HTML
                         </select>
                         </td></tr>
@@ -186,10 +219,13 @@ HTML;
     /**
      * Confirm user delete form
      *
-     * @param int $uid - User's ID number
-     * @param string $uname - User's username
-     * @param string $realname - User's name
-     *
+     * @param int $uid
+     *            - User's ID number
+     * @param string $uname
+     *            - User's username
+     * @param string $realname
+     *            - User's name
+     *            
      * @return string
      */
     public function resetPassword($uid, $uname, $realname)

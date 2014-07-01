@@ -44,6 +44,7 @@ $showList = true;
                         echo '<option value="edit">Edit</option>';
                         echo '<option value="reset">Reset Password</option>';
                         echo '<option value="cxeesto">Change &#264;eesto</option>';
+                        echo '<option value="revokeKey">Revoke API Key</option>';
                     }
                     ?>
                 </select>
@@ -99,6 +100,7 @@ $showList = true;
                         echo '<option value="edit">Edit</option>';
                         echo '<option value="reset">Reset Password</option>';
                         echo '<option value="cxeesto">Change &#264;eesto</option>';
+                        echo '<option value="revokeKey">Revoke API Key</option>';
                     }
                     ?>
                 </select>

@@ -64,6 +64,10 @@ class dbManage
             }
         }
     }
+    
+    public function __destruct() {
+        $this->dbConn = null;
+    }
 
     /**
      * Queries the database with provided statement

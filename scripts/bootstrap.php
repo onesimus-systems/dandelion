@@ -99,3 +99,6 @@ if(!isset($_SESSION['app_settings'])) {
     }
     unset($conn);
 }
+
+// Define request source, used for API check
+$req_source = '';

@@ -61,7 +61,15 @@ $content = false;
 	                <option value="false" <?php echo !$_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Disabled</option>
 	            </select>
 	            
-	            <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save">
+	            <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save"><br><br>
+	            
+	            Public API:
+	            <select id="api_enabled">
+	                <option value="true" <?php echo $_SESSION['app_settings']['public_api'] ? 'selected' : ''; ?>>Enabled</option>
+	                <option value="false" <?php echo !$_SESSION['app_settings']['public_api'] ? 'selected' : ''; ?>>Disabled</option>
+	            </select>
+	            
+	            <input type="button" class="dButton" onClick="adminAction.saveApiSetting();" value="Save">
 	            
 	            <br><br><hr width="350">
 				<h3>Database Administration</h3>

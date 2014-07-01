@@ -55,8 +55,17 @@ if (!Gatekeeper\authenticated()) {
             <input type="submit" name="set_action" class="dButton" value="Save Theme" />
         </form>
         
+        <?php if ($_SESSION['app_settings']['public_api']) { ?>
+        <br /><hr width="350" /><br />
+        
+        API Key: <span id="apiKey"></span>
+        <br><br><input type="button" class="dButton" onClick="api.generateKey();" value="Generate New Key">
+        <?php } ?>
+        
         <footer>
             <?php include_once 'scripts/footer.php'; ?>
         </footer>
 	</body>
+	
+	<?php echo loadJS('jquery','settings.js'); ?>
 </html>
