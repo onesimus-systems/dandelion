@@ -21,6 +21,16 @@ ini_set('session.gc_maxlifetime', $timeout);
 session_name('dan_session');
 session_start();
 
+/*
+TODO: Work on caching
+Header("Cache-Control: must-revalidate");
+Cache-Control: max-age header
+
+$offset = 60 * 60 * 24 * 3;
+$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
+Header($ExpStr);
+*/
+
 if (isset($_SESSION['timeout_idle']) && $_SESSION['timeout_idle'] < time()) {
     session_destroy();
     session_start();
