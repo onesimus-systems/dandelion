@@ -25,6 +25,16 @@ namespace Dandelion;
 
 class cxeesto extends Database\dbManage
 {
+    /**
+     * Returns JSON array of user statuses
+     * 
+     * @return JSON - Users statuses
+     */
+    public function getJson() {
+        $statuses = $this->selectAll('presence');
+        return json_encode($statuses);
+    }
+    
     /** Displays the labels, symbols, return times, and messages of statuses
       *
       * @param int $isWin - Determines if calling function is from the mini or full version of Cxeesto

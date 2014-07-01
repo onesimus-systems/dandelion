@@ -27,5 +27,6 @@ if ($req_source != 'api') {
 }
 
 function readall() {
-    return 'CheestoJSON';
+    $cheesto = new \Dandelion\cxeesto();
+    return $cheesto->getJson();
 }

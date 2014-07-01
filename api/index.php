@@ -28,6 +28,8 @@ use Dandelion\database\dbManage;
 require '../scripts/bootstrap.php';
 
 if ($_SESSION['app_settings']['public_api']) {
+    /* Declare request source as the api
+       Default set to empty in bootstrap.php */
     $req_source = 'api';
     
     $url = isset($_REQUEST['url']) ? $_REQUEST['url'] : '';
@@ -45,14 +47,18 @@ if ($_SESSION['app_settings']['public_api']) {
 function verifyKey($key) {
     $conn = new dbManage();
     
+    // Search for key with case sensitive collation
     $sql = 'SELECT *
             FROM '.DB_PREFIX.'apikeys
-            WHERE keystring = :key';
+            WHERE keystring = :key
+            COLLATE latin1_general_cs';
     $params = array("key"=>$key);
     
     $keyValid = $conn->queryDB($sql, $params);
     
     if (empty($keyValid[0])) {
-        exit('API key is not valid '.print_r($_REQUEST));
+        // No API key is present in the database
+        // matching supplied key
+        exit('API key is not valid');
     }
 }
