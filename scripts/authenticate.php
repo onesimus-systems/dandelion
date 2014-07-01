@@ -15,8 +15,6 @@ namespace Dandelion\Gatekeeper;
 use Dandelion\Database\dbManage;
 use Dandelion\Permissions;
 
-require_once (is_file('bootstrap.php')) ? 'bootstrap.php' : 'scripts/bootstrap.php';
-
 /**
  * If this file is called from the login page, it will contain POST data
  * with a field called in_name.
@@ -24,6 +22,7 @@ require_once (is_file('bootstrap.php')) ? 'bootstrap.php' : 'scripts/bootstrap.p
  * If this happens a user is attempting to login.
  */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["in_name"])) {
+    require_once (is_file('bootstrap.php')) ? 'bootstrap.php' : 'scripts/bootstrap.php';
     login();
 }
 
