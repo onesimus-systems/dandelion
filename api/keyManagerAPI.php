@@ -23,7 +23,7 @@
 use Dandelion\database\dbManage;
 
 if ($req_source != 'api') {
-    exit('This script can only be called by the API.');
+    exit(makeDAPI(2, 'This script can only be called by the API.', 'keyManager'));
 }
 
 function encodeKey($key) {
