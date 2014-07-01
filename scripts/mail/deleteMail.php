@@ -1,6 +1,6 @@
 <?php
 /**
- * Get mailbox list of items
+ * Get mail count
  *
  * @author Lee Keitel
  * @date May, 2014
@@ -13,11 +13,8 @@ require_once '../bootstrap.php';
 
 $myMail = new Mail\mail();
 
-if ($_REQUEST['trash']) {
-    $mailItems = $myMail->getTrashCan();
-}
-else {
-    $mailItems = $myMail->getMailList();
-}
+$perm = ($_REQUEST['permenant'] === 'true');
 
-echo json_encode($mailItems);
+$response = $myMail->deleteMail($_REQUEST['mid'], $perm);
+
+echo $response;

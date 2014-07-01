@@ -1,5 +1,6 @@
 $(document).ready(function() {
     $("#writeMail").css("display", "none");
+    mail.showFolder();
 });
 
 $(document).on("focusin", function(e) {
@@ -20,11 +21,27 @@ var mail = {
 
             setTimeout(function(){ mail.areUnread(); }, 10000);
         },
+        
+        showFolder: function() {
+            var folderName = $("#folder").val();
+            switch (folderName) {
+                case "inbox":
+                    this.getAllMail();
+                    break;
+                    
+                case "trash":
+                    this.getTrashCan();
+                    break;
+            }
+        },
 
         getAllMail: function() {
-            var noCache = new Date().getTime();
-
             $.getJSON("scripts/mail/getAllMail.php",
+                    function(data){ mail.showMailList(data); });
+        },
+        
+        getTrashCan: function() {
+            $.getJSON("scripts/mail/getAllMail.php", {"trash": "true"},
                     function(data){ mail.showMailList(data); });
         },
 
@@ -64,7 +81,7 @@ var mail = {
 
         viewMail: function(id) {
             $.getJSON("scripts/mail/viewMail.php", {mid: id}, function(data) {
-                mail.getAllMail();
+                mail.showFolder();
 
                 var html = '<h2>'+data[0]['subject']+'</h2>\
                 To: You<br>\
@@ -87,6 +104,7 @@ var mail = {
                     buttons: {
                         Ok: function() {
                             $( this ).dialog( "close" );
+                            $( "#mailDialog" ).html( '' );
                         }
                     }
                 });
@@ -94,56 +112,30 @@ var mail = {
         },
 
         replyToMail: function() {
-            if (this.getSelectedMailIds().length > 1) {
-                console.log("No reply");
-            }
-            else {
-
+            var selection = this.getSelectedMailIds();
+            if (selection.length == 1) {
+                $.getJSON("scripts/mail/viewMail.php", {mid: selection[0]}, function(data) {
+                    console.log(data);
+                    $("#mailForm")[0].reset();
+                    $("textarea#mailBody").html(data[0]['body']);
+                    $("#mailSubject").val("RE: " + data[0]['subject']);
+                    $("#toUsersId").val(data[0]['fromUser']);
+                    $("#toUsers").val(data[0]['realname']);
+                    $("#toUsers").prop("readonly", true);
+                    
+                    mail.showWriteDialog();
+                });
             }
         },
 
         writeMailDialog: function() {
             $.getJSON("scripts/mail/getUserList.php", function(data) {
                 $("#mailForm")[0].reset();
+                $("#toUsers").prop("readonly", false);
                 $("textarea#mailBody").html("");
                 $("#toUsersId").val("");
 
-                $( "#writeMail" ).dialog({
-                    height: 575,
-                    width: 800,
-                    modal: true,
-                    show: {
-                        effect: "fade",
-                        duration: 500
-                    },
-                    hide: {
-                        effect: "fade",
-                        duration: 500
-                    },
-                    buttons: {
-                        "Send Mail": function() {
-                            if (mail.sendMail()) {
-                                $( this ).dialog( "close" );
-                                mail.getAllMail();
-                            }
-                        },
-                        Cancel: function() {
-                            $( this ).dialog( "close" );
-                        }
-                    }
-                });
-
-                $("textarea#mailBody").tinymce({
-                    forced_root_block: false,
-                    resize: false,
-                    menubar: "edit format view insert tools",
-                    toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
-                    plugins: [
-                              "autolink link lists hr anchor pagebreak spellchecker",
-                              "searchreplace wordcount code insertdatetime",
-                              "contextmenu template paste textcolor"
-                              ]
-                });
+                mail.showWriteDialog();
 
                 var users = [];
 
@@ -153,8 +145,6 @@ var mail = {
                     user.value = value["userid"];
                     users.push(user);
                 });
-
-                console.log(users);
 
                 $("#toUsers").autocomplete({
                     minLength: 0,
@@ -166,7 +156,6 @@ var mail = {
                     select: function( event, ui ) {
                         $( "#toUsers" ).val( ui.item.label );
                         $( "#toUsersId" ).val( ui.item.value );
-
                         return false;
                     }
                 })
@@ -175,6 +164,45 @@ var mail = {
                     .append( "<a>" + item.label + "</a>" )
                     .appendTo( ul );
                 };
+            });
+        },
+        
+        showWriteDialog: function() {
+            $( "#writeMail" ).dialog({
+                height: 575,
+                width: 800,
+                modal: true,
+                show: {
+                    effect: "fade",
+                    duration: 500
+                },
+                hide: {
+                    effect: "fade",
+                    duration: 500
+                },
+                buttons: {
+                    "Send Mail": function() {
+                        if (mail.sendMail()) {
+                            $( this ).dialog( "close" );
+                            mail.showFolder();
+                        }
+                    },
+                    Cancel: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+
+            $("textarea#mailBody").tinymce({
+                forced_root_block: false,
+                resize: false,
+                menubar: "edit format view insert tools",
+                toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
+                plugins: [
+                          "autolink link lists hr anchor pagebreak spellchecker",
+                          "searchreplace wordcount code insertdatetime",
+                          "contextmenu template paste textcolor"
+                          ]
             });
         },
 
@@ -198,6 +226,24 @@ var mail = {
             else {
                 alert("Error: You need a subject, body, and recipient.");
                 return false;
+            }
+        },
+        
+        deleteMail: function() {
+            var selected = this.getSelectedMailIds();
+
+            if (selected.length == 1 && confirm("Delete Selected Mail?")) {
+                var permenant = false;
+                
+                if ($("#folder").val() == "trash") {
+                    permenant = true;
+                }
+                
+                $.post("scripts/mail/deleteMail.php", {"mid": selected[0], "permenant": permenant},
+                    function(data) { 
+                        mail.showFolder();
+                        alert(data);
+                });
             }
         },
 

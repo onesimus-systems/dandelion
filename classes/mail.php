@@ -43,7 +43,7 @@ class mail extends Database\dbManage
 
     function checkNewMail($forced = false, $sent = false)
     {
-        $mailCount = -255; // -255 is used to show indication of counter error
+        $mailCount = -255;
         
         if ($forced) {
             // Get number of unread mail items
@@ -78,14 +78,14 @@ class mail extends Database\dbManage
     function getMailList($sent = false, $unread = false)
     {
         $toFrom = ($sent) ? 'fromUser' : 'toUser';
-        $unreadCond = ($unread) ? ' AND isRead = 0' : '';
+        $unreadCond = ($unread) ? ' AND isItRead = 0' : '';
         
         $sql = 'SELECT m.id, m.isItRead, m.subject, m.fromUser, m.dateSent,
                     u.realname
                 FROM ' . DB_PREFIX . 'mail AS m
                 LEFT JOIN ' . DB_PREFIX . 'users AS u
                 ON m.fromUser = u.userid
-                WHERE m.' . $toFrom . ' = :id' . $unreadCond;
+                WHERE m.' . $toFrom . ' = :id' . $unreadCond . ' AND deleted = 0';
         
         $params = array (
             'id' => $_SESSION['userInfo']['userid'] 
@@ -120,9 +120,12 @@ class mail extends Database\dbManage
 
     function getTrashCan()
     {
-        $sql = 'SELECT *
-                FROM ' . DB_PREFIX . 'mail
-                WHERE to = :id and deleted = 1';
+        $sql = 'SELECT m.*, u.realname
+                FROM ' . DB_PREFIX . 'mail AS m
+                LEFT JOIN '. DB_PREFIX.'users AS u
+                ON m.fromUser = u.userid
+                WHERE m.toUser = :id AND m.deleted = 1';
+        
         $params = array (
             'id' => $_SESSION['userInfo']['userid'] 
         );
@@ -152,6 +155,14 @@ class mail extends Database\dbManage
             
             $this->queryDB($sql, $params);
             
+            $sql = 'UPDATE ' . DB_PREFIX . 'users
+                    SET mailCount = mailCount + 1
+                    WHERE userid = :id';
+            
+            $params = array( 'id' => $to );
+            
+            $this->queryDB($sql, $params);
+            
             $response = 'Mail sent successfully';
         }
         else {
@@ -173,16 +184,37 @@ class mail extends Database\dbManage
         return $this->queryDB($sql, $params);
     }
 
-    function deleteMail($mailId)
+    function deleteMail($mailId, $trueDelete = false)
     {
         if ($mailId === -1) {
-            // Permanently delete mail
+            // Permanently delete ALL mail
             // Delete all mail for $user from _mail table
             // aka, empty trash
         }
         else {
-            // Move to trashcan
-            // Change deleted field to 1 (true) for id = $mailId
+            $sql = '';
+
+            if ($trueDelete) {
+                // Complete delete
+                $sql = 'DELETE
+                        FROM '. DB_PREFIX.'mail
+                        WHERE id = :mid';
+            }
+            else {
+                // Soft delete
+                $sql = 'UPDATE ' . DB_PREFIX . 'mail
+                        SET deleted = 1
+                        WHERE id = :mid';
+            }
+                
+            $params = array( 'mid' => $mailId );
+            
+            if ($this->queryDB($sql, $params)) {
+                return 'Mail Deleted';
+            }
+            else {
+                return 'An error occured';
+            }
         }
     }
 }

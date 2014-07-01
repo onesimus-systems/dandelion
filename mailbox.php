@@ -27,7 +27,7 @@ if (!Gatekeeper\authenticated()) {
 		<title>Dandelion Web Log</title>
 	</head>
 	
-	<body onload="mail.getAllMail();">
+	<body>
         <header>
             <?php include 'scripts/header.php'; ?>
         </header>
@@ -51,8 +51,14 @@ if (!Gatekeeper\authenticated()) {
 		      <a href="#" onClick="mail.writeMailDialog();"><img src="images/newmail.png" width="22" heigh="22" alt="New Mail" title="New Mail"></a>
 		      <a href="#" onClick="mail.getAllMail();"><img src="images/refresh.png" width="22" heigh="22" alt="Refresh" title="Refresh"></a>
 		      <a href="#" onClick="mail.replyToMail();"><img src="images/reply.png" width="22" heigh="22" alt="Reply" title="Reply"></a>
-		      <a href="#" onClick="alert('Forward');"><img src="images/forward.png" width="22" heigh="22" alt="Forward" title="Forward"></a>
-		      <!-- TODO: Create mail controls (delete, reply, forward, new) -->
+		      <a href="#" onClick="mail.deleteMail();"><img src="images/maildelete.png" width="22" heigh="22" alt="Delete" title="Delete"></a>
+		      
+		      Folder: <select id="folder" onChange="mail.showFolder();">
+		          <option value="inbox">Inbox</option>
+		          <option value="trash">Trash</option>
+		      </select>
+		      
+		      <!--<a href="#" onClick="alert('Forward');"><img src="images/forward.png" width="22" heigh="22" alt="Forward" title="Forward"></a>-->
 		  </div>
 		  
 		  <div id="mailList"></div>
