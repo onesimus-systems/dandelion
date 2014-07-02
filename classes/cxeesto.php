@@ -34,7 +34,7 @@ class cxeesto extends Database\dbManage
         $statuses = $this->selectAll('presence');
         
         foreach ($statuses as &$row) {
-            $row['statusInfo'] = $this->statusType($row['status'], '<br>', $row['returntime']);
+            $row['statusInfo'] = $this->statusType($row['status'], '&#013;', $row['returntime']);
         }
         
         return json_encode($statuses);
