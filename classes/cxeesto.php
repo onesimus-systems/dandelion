@@ -32,6 +32,11 @@ class cxeesto extends Database\dbManage
      */
     public function getJson() {
         $statuses = $this->selectAll('presence');
+        
+        foreach ($statuses as &$row) {
+            $row['statusInfo'] = $this->statusType($row['status'], '<br>', $row['returntime']);
+        }
+        
         return json_encode($statuses);
     }
     
@@ -58,7 +63,7 @@ class cxeesto extends Database\dbManage
 
                 $statusProps = $this->statusType($row['status'], '&#013;', $row['returntime']);
 
-                echo '<td class="statusi"><span title="' . $statusProps[0] . '" class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td></tr>';
+                echo '<td class="statusi"><span title="' . $statusProps['status'] . '" class="' . $statusProps['color'] . '">' . $statusProps['symbol'] . '</span></td></tr>';
             }
             echo '<tr><td colspan="2" class="cen"><form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto" /></form></td></tr>';
 
@@ -76,7 +81,7 @@ class cxeesto extends Database\dbManage
 
                 $statusProps = $this->statusType($row['status'], '<br>', $row['returntime']);
 
-                echo '<td class="statusi"><span class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td><td>' . $statusProps[0] . '</td><td>' . $row['dmodified'] . '</td></tr>';
+                echo '<td class="statusi"><span class="' . $statusProps['color'] . '">' . $statusProps['symbol'] . '</span></td><td>' . $statusProps['status'] . '</td><td>' . $row['dmodified'] . '</td></tr>';
             }
             echo '</tbody></table>';
         }
@@ -97,59 +102,59 @@ class cxeesto extends Database\dbManage
 
         switch($sNum) {
             case 1:
-                $statusProps[0] = 'Available';
-                $statusProps[1] = '&#x2713;';
-                $statusProps[2] = 'green';
+                $statusProps['status'] = 'Available';
+                $statusProps['symbol'] = '&#x2713;';
+                $statusProps['color'] = 'green';
                 break;
             case 2:
-                $statusProps[0] = 'Away From Desk'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#8709;';
-                $statusProps[2] = 'blue';
+                $statusProps['status'] = 'Away From Desk'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#8709;';
+                $statusProps['color'] = 'blue';
                 break;
             case 3:
-                $statusProps[0] = 'At Lunch'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#8709;';
-                $statusProps[2] = 'blue';
+                $statusProps['status'] = 'At Lunch'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#8709;';
+                $statusProps['color'] = 'blue';
                 break;
             case 4:
-                $statusProps[0] = 'Out For Day'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Out For Day'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 5:
-                $statusProps[0] = 'Out'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Out'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 6:
-                $statusProps[0] = 'Appointment'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Appointment'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 7:
-                $statusProps[0] = 'Do Not Disturb'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Do Not Disturb'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 8:
-                $statusProps[0] = 'Meeting'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#8709;';
-                $statusProps[2] = 'blue';
+                $statusProps['status'] = 'Meeting'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#8709;';
+                $statusProps['color'] = 'blue';
                 break;
             case 9:
-                $statusProps[0] = 'Out Sick'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Out Sick'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 10:
-                $statusProps[0] = 'Vacation'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Vacation'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             default:
-                $statusProps[0] = 'Unknown Status'.$lBreak.'Notify Dandelion Admin';
-                $statusProps[1] = '?';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Unknown Status'.$lBreak.'Notify Dandelion Admin';
+                $statusProps['symbol'] = '?';
+                $statusProps['color'] = 'red';
                 break;
         }
 
