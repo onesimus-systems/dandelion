@@ -1,6 +1,7 @@
 <?php
 /**
- * Central entry point for Dandelion API. This script is responsible
+ * Central entry point for Dandelion API.
+ * This script is responsible
  * for directing requests where needed.
  *
  * The DAPI array will always contain an error code. Please refer
@@ -14,77 +15,123 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * The full GPLv3 license is available in LICENSE.md in the root.
  *
  * @author Lee Keitel
  * @date July 2014
- ***/
-
+ */
 namespace Dandelion\API;
 
 use Dandelion\database\dbManage;
 
 require '../scripts/bootstrap.php';
+$loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;
 
-if ($_SESSION['app_settings']['public_api']) {
-    /* Declare request source as the api
-       Default set to empty in bootstrap.php */
-    $req_source = 'api';
-    $apikey = $_REQUEST['apikey'];    
-
+// Allow API requests if the public API is enabled or a user is logged in
+if ($_SESSION['app_settings']['public_api'] || $loggedin) {
+    // Get API key and url for API request
+    $apikey = isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : '';
     $url = isset($_REQUEST['url']) ? $_REQUEST['url'] : '';
     $url = explode('/', $url);
+    
+    echo processRequest($apikey, $loggedin, $url);
+}
 
-    if ($url[0] == 'apitest') {
+/**
+ * Process API request
+ *
+ * @param string $key - API key
+ * @param bool $loggedin - Is a user currently logged in
+ * @param array $request - API subsystem and request
+ *            
+ * @return DAPI object
+ */
+function processRequest($key, $loggedin, $request) {
+    if ($request[0] == 'apitest') {
         // Checks for a good API key and notifies requester
-        echo apitest($apikey);
+        return apitest($key);
     }
     else {
-        if ($url[0] != 'keyManager') {
-            verifyKey($apikey);
+        // Verify api key if not logged in
+        if (!$loggedin) {
+            verifyKey($key);
         }
         
-        include "{$url[0]}API.php";
+        /*
+         * Declare request source as the api Default value is empty in bootstrap.php
+         */
+        define('REQ_SOURCE', 'api');
         
-        $data = $url[1]();
-
-        echo makeDAPI(0, 'Completed', $url[0], json_decode($data));
+        // Call the request function (as defined by the second part of the URL)
+        $data = call_user_func(array (
+            __NAMESPACE__ . '\\' . $request[0] . 'API',
+            $request[1] 
+        ));
+        
+        // Return DAPI object
+        return makeDAPI(0, 'Completed', $request[0], json_decode($data));
     }
 }
 
+/**
+ * Checks database to see if API is present and therefore valid
+ *
+ * @param string $key - API key to verify
+ *            
+ * @return bool true on success, DAPI object on failure
+ */
 function verifyKey($key) {
-    $conn = new dbManage();
-    
-    // Search for key with case sensitive collation
-    $sql = 'SELECT *
-            FROM '.DB_PREFIX.'apikeys
-            WHERE keystring = :key
-            COLLATE latin1_general_cs';
-    $params = array("key"=>$key);
-    
-    $keyValid = $conn->queryDB($sql, $params);
-    
-    if (empty($keyValid[0])) {
-        // No API key is present in the database
-        // matching supplied key
-        exit(makeDAPI(1, 'API key is not valid', 'index'));
-        return false;
+    if (!empty($key)) {
+        $conn = new dbManage();
+        
+        // Search for key with case sensitive collation
+        $sql = 'SELECT *
+                FROM ' . DB_PREFIX . 'apikeys
+                WHERE keystring = :key
+                COLLATE latin1_general_cs';
+        $params = array (
+            "key" => $key 
+        );
+        
+        $keyValid = $conn->queryDB($sql, $params);
+        
+        if (!empty($keyValid[0])) {
+            return true;
+        }
     }
-
-    return true;
+    
+    // If $key is empty or the key isn't in the DB, exit with a DAPI object
+    exit(makeDAPI(1, 'API key is not valid', 'index'));
 }
 
+/**
+ * Test API key, used by extensions to verify key
+ *
+ * @param string $key - API key to test
+ *            
+ * @return DAPI object
+ */
 function apitest($key) {
     if (verifyKey($key)) {
         return makeDAPI(0, 'API key is good', 'index');
     }
 }
 
+/**
+ * Generate and return a JSON encoded 'DAPI' object
+ *
+ * @param int $ecode - Error code
+ * @param string $status - Text status message
+ * @param string $subsystem - API where DAPI was created
+ * @param array $data - Data returned from API
+ *            
+ * @return JSON DAPI object
+ */
 function makeDAPI($ecode, $status, $subsystem, $data = '') {
     /**
      * DAPI array composition:
@@ -99,13 +146,14 @@ function makeDAPI($ecode, $status, $subsystem, $data = '') {
      * 0 - Successful API call
      * 1 - Invalid API key
      * 2 - Calling API support script from outside API
+     * 3 - Action requires active login
      */
-    $response = array(
+    $response = array (
         'errorcode' => $ecode,
         'status' => $status,
         'apisub' => $subsystem,
-        'data' => $data
+        'data' => $data 
     );
-
+    
     return json_encode($response);
 }
