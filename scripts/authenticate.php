@@ -67,8 +67,6 @@ function login()
             setcookie('dan_username', $_SESSION['userInfo']['username'], time()+60*60*24*30, '/');
         }
 
-        trigger_error($username.' logged in at ' . date("Y-m-d H:i:s"), E_USER_NOTICE);
-
         switch($userInfo['firsttime']) {
             case 2:
                 header ( 'Location: ../reset.php' );
