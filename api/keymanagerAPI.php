@@ -9,77 +9,108 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  * The full GPLv3 license is available in LICENSE.md in the root.
  *
  * @author Lee Keitel
  * @date July 2014
- ***/
+ */
+namespace Dandelion\API;
 
-use Dandelion\database\dbManage;
-
-if ($req_source != 'api') {
+if (REQ_SOURCE != 'api') {
     exit(makeDAPI(2, 'This script can only be called by the API.', 'keyManager'));
 }
 
-function encodeKey($key) {
-   return json_encode(array("key" => $key));
-}
-
-function getKey($force = false) {
-    $conn = new dbManage();
-    
-    $sql = 'SELECT keystring
-            FROM '.DB_PREFIX.'apikeys
-            WHERE user = :id';
-    
-    $params = array( "id" => $_SESSION['userInfo']['userid']);
-    
-    $key = $conn->queryDB($sql, $params);
-    
-    if (!empty($key[0]) && !$force) {
-        return encodeKey($key[0]['keystring']);
-    }
-    else {
-        $newKey = generateKey(40);
+class keyManagerAPI
+{
+    /**
+     * Retrieve key from database for current user.
+     * If a key isn't present, create one
+     * 
+     * @param bool $force - Force a new key to be generated
+     * 
+     * @return JSON - API Key or error message
+     */
+    public static function getKey($force = false) {
+        $conn = new \Dandelion\database\dbManage();
         
-        // Clear database of old keys for user
-        $sql = 'DELETE FROM '.DB_PREFIX.'apikeys
+        $sql = 'SELECT keystring
+                FROM ' . DB_PREFIX . 'apikeys
                 WHERE user = :id';
-        $params = array("id"=>$_SESSION['userInfo']['userid']);
-        $conn->queryDB($sql, $params);
         
-        $sql = 'INSERT INTO '. DB_PREFIX.'apikeys
-                (keystring, user)
-                VALUES (:newkey, :uid)';
-        
-        $params = array(
-        	"newkey" => $newKey,
-            "uid" => $_SESSION['userInfo']['userid']
+        $params = array (
+            "id" => $_SESSION['userInfo']['userid'] 
         );
         
-        if ($conn->queryDB($sql, $params)) {
-            return encodeKey($newKey);
+        $key = $conn->queryDB($sql, $params);
+        
+        if (!empty($key[0]) && !$force) {
+            return SELF::encodeKey($key[0]['keystring']);
         }
         else {
-            return encodeKey('Error generating key.');
+            $newKey = SELF::generateKey(40);
+            
+            // Clear database of old keys for user
+            $sql = 'DELETE FROM ' . DB_PREFIX . 'apikeys
+                    WHERE user = :id';
+            $params = array (
+                "id" => $_SESSION['userInfo']['userid'] 
+            );
+            $conn->queryDB($sql, $params);
+            
+            $sql = 'INSERT INTO ' . DB_PREFIX . 'apikeys
+                    (keystring, user)
+                    VALUES (:newkey, :uid)';
+            
+            $params = array (
+                "newkey" => $newKey,
+                "uid" => $_SESSION['userInfo']['userid'] 
+            );
+            
+            if ($conn->queryDB($sql, $params)) {
+                return SELF::encodeKey($newKey);
+            }
+            else {
+                return SELF::encodeKey('Error generating key.');
+            }
         }
     }
-}
 
-function newKey() {
-    return getKey(true);
-}
-
-function generateKey($length = 10) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    /**
+     * Called to force a new key to be generated
+     */
+    public static function newKey() {
+        return SELF::getKey(true);
     }
-    return $randomString;
+
+    /**
+     * Put key into JSON encoded array with 'key' as the name
+     * 
+     * @param string $key - API Key (or error message)
+     */
+    public static function encodeKey($key) {
+        return json_encode(array (
+            "key" => $key 
+        ));
+    }
+
+    /**
+     * Generate a random alphanumeric string
+     * 
+     * @param int $length - Length of generated string
+     * 
+     * @return string
+     */
+    public static function generateKey($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $length; $i ++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $randomString;
+    }
 }
