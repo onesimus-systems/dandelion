@@ -18,8 +18,7 @@
  * The full GPLv3 license is available in LICENSE.md in the root.
  *
  * @author Lee Keitel
- *         @date Feb 2014
- *         *
+ * @date Feb 2014
  */
 namespace Dandelion\Users;
 
@@ -32,14 +31,12 @@ class User extends dbManage
     /**
      * Update user information
      *
-     * @param array $userInfoArray
-     *            - User information in a associative array
-     *            realname, sid, role, first, uid, theme
-     *            
+     * @param array $userInfoArray - User information in a associative array
+     *        realname, sid, role, first, uid, theme
+     *       
      * @return string - Success message
      */
-    public function editUser($userInfoArray = null)
-    {
+    public function editUser($userInfoArray = null) {
         if (!empty($userInfoArray['realname']) && !empty($userInfoArray['theme']) && !empty($userInfoArray['role']) && is_numeric($userInfoArray['first']) && !empty($userInfoArray['uid'])) {
             $stmt = 'UPDATE `' . DB_PREFIX . 'users` SET `realname` = :realname, `role` = :role, `firsttime` = :first, `theme` = :theme WHERE `userid` = :userid';
             $params = array (
@@ -70,14 +67,12 @@ class User extends dbManage
     /**
      * Create a new user
      *
-     * @param array $userInfoArray
-     *            - User information in a associative array
-     *            username, password, realname, sid, role
-     *            
+     * @param array $userInfoArray - User information in a associative array
+     *        username, password, realname, sid, role
+     *       
      * @return string - Success message
      */
-    public function addUser($userInfoArray = null)
-    {
+    public function addUser($userInfoArray = null) {
         if (!empty($userInfoArray['username']) && !empty($userInfoArray['password']) && !empty($userInfoArray['realname']) && !empty($userInfoArray['role'])) {
             $stmt = 'SELECT * FROM `' . DB_PREFIX . 'users` WHERE `username` = :username';
             $params = array (
@@ -129,15 +124,12 @@ class User extends dbManage
     /**
      * Reset user password
      *
-     * @param string $pass
-     *            - New password
-     * @param int $uid
-     *            - User's id number
-     *            
+     * @param string $pass - New password
+     * @param int $uid - User's id number
+     *       
      * @return string - Success message
      */
-    public function resetUserPw($uid = null, $pass = null)
-    {
+    public function resetUserPw($uid = null, $pass = null) {
         if (!empty($uid) && !empty($pass)) {
             if (is_numeric($uid)) {
                 $pass = password_hash($pass, PASSWORD_BCRYPT);
@@ -163,13 +155,11 @@ class User extends dbManage
     /**
      * Delete user
      *
-     * @param int $uid
-     *            - User's id number
-     *            
+     * @param int $uid - User's id number
+     *       
      * @return string - Success message
      */
-    public function deleteUser($uid = null)
-    {
+    public function deleteUser($uid = null) {
         // To ensure at least one admin account is available,
         // some checks are performed to verify rights of accounts
         if (!empty($uid) && $uid != $_SESSION['userInfo']['userid']) {
@@ -197,7 +187,7 @@ class User extends dbManage
                 );
                 $otherUsers = $this->queryDB($stmt, $params);
                 
-                foreach ( $otherUsers as $areTheyAdmin ) {
+                foreach ($otherUsers as $areTheyAdmin) {
                     $isAdmin = (array) $perms->loadRights($areTheyAdmin['role']);
                     
                     if ($isAdmin['admin']) {
@@ -232,57 +222,52 @@ class User extends dbManage
     /**
      * Update user status
      *
-     * @param int $uid
-     *            - User's id number
-     * @param int $status_id
-     *            - # for user status type
-     * @param string $message
-     *            - User's away message
-     * @param string $returntime
-     *            - Return time for away user
-     *            
+     * @param int $uid - User's id number
+     * @param int $status_id - # for user status type
+     * @param string $message - User's away message
+     * @param string $returntime - Return time for away user
+     *       
      * @return string - Success message
      */
-    public function updateUserStatus($uid = null, $status_id = null, $message = null, $returntime = null)
-    {
+    public function updateUserStatus($uid = null, $status_id = null, $message = null, $returntime = null) {
         if (!empty($uid) && !empty($status_id)) {
             $date = new \DateTime();
             $date = $date->format('Y-m-d H:i:s');
             
             switch ($status_id) {
-                case "Available" :
+                case "Available":
                     $status_id = 1;
                     $returntime = '00:00:00';
                     $message = '';
                     break;
-                case "Away From Desk" :
+                case "Away From Desk":
                     $status_id = 2;
                     break;
-                case "At Lunch" :
+                case "At Lunch":
                     $status_id = 3;
                     break;
-                case "Out for Day" :
+                case "Out for Day":
                     $status_id = 4;
                     break;
-                case "Out" :
+                case "Out":
                     $status_id = 5;
                     break;
-                case "Appointment" :
+                case "Appointment":
                     $status_id = 6;
                     break;
-                case "Do Not Disturb" :
+                case "Do Not Disturb":
                     $status_id = 7;
                     break;
-                case "Meeting" :
+                case "Meeting":
                     $status_id = 8;
                     break;
-                case "Out Sick" :
+                case "Out Sick":
                     $status_id = 9;
                     break;
-                case "Vacation" :
+                case "Vacation":
                     $status_id = 10;
                     break;
-                default :
+                default:
                     $status_id = 1;
                     $returntime = "00:00:00";
                     break;
@@ -307,12 +292,11 @@ class User extends dbManage
 
     /**
      * Revoke API keys for user
-     * 
-     * @param int $id - User ID number
+     *
+     * @param int $id User ID number
      * @return string - Message
      */
-    public function revokeAPIKey($id)
-    {
+    public function revokeAPIKey($id) {
         $sql = 'DELETE FROM ' . DB_PREFIX . 'apikeys
                 WHERE user = :id';
         $params = array (
