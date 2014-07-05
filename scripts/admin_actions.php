@@ -11,7 +11,9 @@ namespace Dandelion;
 
 require_once 'bootstrap.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $action = new adminActions();
-    echo $action->doAction($_POST);
+if ($_SESSION['rights']['admin']){
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $action = new adminActions();
+        echo $action->doAction($_POST);
+    }
 }
