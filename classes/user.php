@@ -297,11 +297,11 @@ class User extends dbManage
             if ($delete) {
                 $sql = 'DELETE u, p, a, m
                         FROM ' . DB_PREFIX . 'users AS u
-                        JOIN ' . DB_PREFIX . 'presence AS p
+                        LEFT JOIN ' . DB_PREFIX . 'presence AS p
                             ON p.uid = u.userid
-                        JOIN ' . DB_PREFIX . 'apikeys AS a
+                        LEFT JOIN ' . DB_PREFIX . 'apikeys AS a
                             ON a.user = u.userid
-                        JOIN ' . DB_PREFIX . 'mail AS m
+                        LEFT JOIN ' . DB_PREFIX . 'mail AS m
                             ON m.toUser = u.userid
                         WHERE u.userid = :userid';
                 $params = array(
