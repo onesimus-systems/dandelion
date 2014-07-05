@@ -27,7 +27,84 @@ use Dandelion\Permissions;
 
 class User extends dbManage
 {
-
+    // User data
+    public $userInfo = array();
+    public $userCheesto = array();
+    public $userApi = array(
+    	"keystring" => null,
+        "expires" => null
+    );
+    
+    /**
+     * Prepare database connection and load user info if needed
+     * 
+     * @param bool $load - Load user information for user $uid
+     * @param int $uid - ID of user to load
+     */
+    public function __construct($load = false, $uid = -1) {
+        // Prepare database connection
+        parent::__construct();
+        
+        if ($load == true && $uid >= 0) {
+            $this->userInfo['userid'] = $uid;
+            $this->loadUser();
+        }
+        elseif ($load == true && $uid < 0) {
+            echo 'To load a user you must provide a user ID.';
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Get data from database for use from the users, presence, and api tables
+     */
+    public function loadUser() {
+        $params = array (
+            'userid' => $this->userInfo['userid']
+        );
+        
+        $sql = 'SELECT  u.userid AS u_userid,
+                            u.username AS u_username,
+                            u.realname AS u_realname,
+                            u.role AS u_role,
+                            u.firsttime AS u_firsttime,
+                            u.theme AS u_theme,
+                        p.id AS p_id,
+                            p.status AS p_status,
+                            p.message AS p_message,
+                            p.returntime AS p_returntime,
+                        a.keystring AS a_keystring,
+                            a.expires AS a_expires
+                    FROM '.DB_PREFIX.'users AS u
+                    LEFT JOIN '.DB_PREFIX.'presence AS p
+                        ON p.uid = u.userid
+                    LEFT JOIN '.DB_PREFIX.'apikeys AS a
+                        ON a.user = u.userid
+                    WHERE u.userid = :userid';
+        
+        $allUserInfo = $this->queryDB($sql, $params);
+        
+        foreach($allUserInfo[0] as $key => $value) {
+            $infoType = substr($key, 0, 2);
+            $key = substr_replace($key, '', 0, 2);
+            
+            switch ($infoType) {
+            	case 'u_':
+                    $this->userInfo[$key] = $value;
+                    break;
+            	case 'p_':
+            	    $this->userCheesto[$key] = $value;
+            	    break;
+            	case 'a_':
+            	    $this->userApi[$key] = $value;
+            	    break;
+            }
+        }
+        
+        return true;
+    }
+    
     /**
      * Update user information
      *
@@ -87,6 +164,7 @@ class User extends dbManage
                 $add_real = $userInfoArray['realname'];
                 $add_role = $userInfoArray['role'];
                 
+                // Create row in users table
                 $stmt = 'INSERT INTO `' . DB_PREFIX . 'users` (username, password, realname, role, datecreated, theme) VALUES (:username, :password, :realname, :role, :datecreated, \'\')';
                 $params = array (
                     'username' => $add_user,
@@ -97,18 +175,17 @@ class User extends dbManage
                 );
                 $this->queryDB($stmt, $params);
                 
-                if ($add_role != 'guest') {
-                    $lastID = $this->lastInsertId();
-                    
-                    $stmt = 'INSERT INTO `' . DB_PREFIX . 'presence` (`uid`, `realname`, `status`, `message`, `returntime`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
-                    $params = array (
-                        'uid' => $lastID,
-                        'real' => $add_real,
-                        'date' => $date->format('Y-m-d H:i:s') 
-                    );
-                    
-                    $this->queryDB($stmt, $params);
-                }
+                $lastID = $this->lastInsertId();
+                
+                // Create row in presence table
+                $stmt = 'INSERT INTO `' . DB_PREFIX . 'presence` (`uid`, `realname`, `status`, `message`, `returntime`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
+                $params = array (
+                    'uid' => $lastID,
+                    'real' => $add_real,
+                    'date' => $date->format('Y-m-d H:i:s') 
+                );
+                
+                $this->queryDB($stmt, $params);
                 
                 return 'User Added<br><br>';
             }
