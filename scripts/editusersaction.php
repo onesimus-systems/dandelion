@@ -17,149 +17,117 @@ use Dandelion\Users\User;
 
 $conn = new dbManage();
 
-if (isset($_POST['user_action']) || isset($_POST['sub_type'])) {
-    if (isset($_POST['user_action'])) {
-        $u_action = $_POST['user_action'];
-        $u_action2 = isset($_POST['user_action2']) ? $_POST['user_action2'] : 'none';
-        $choosen = isset($_POST['the_choosen_one']) ? $_POST['the_choosen_one'] : '';
-        
-        if ($u_action == 'none' && $u_action2 != 'none') {
-            $u_action = $u_action2;
-        }
-        elseif ($u_action != 'none' && $u_action2 != 'none') {
-            $u_action = 'none';
-            echo 'ERROR: Both action boxes had a selection.<br><br>';
-        }
-        elseif ($u_action == 'none' && $u_action2 == 'none') {
-            echo 'ERROR: No action selected.<br><br>';
-        }
-        
-        $stmt = 'SELECT * FROM `' . DB_PREFIX . 'users` WHERE `userid` = :userid';
-        $params = array (
-            'userid' => $choosen 
-        );
-        $edit_user_info = $conn->queryDB($stmt, $params);
-        $edit_user_info = isset($edit_user_info[0]) ? $edit_user_info[0] : '';
-        
-        $userforms = new UserForms();
-        
-        if ($u_action != 'add' && !empty($choosen) && $edit_user_info !== '') {
-            
-            if ($u_action == 'delete' && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Confirm user delete
-                $userforms->confirmDelete($edit_user_info['realname'], $choosen);
-            }
-            elseif ($u_action == 'cxeesto' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show status update form
-                $stmt = 'SELECT * FROM `' . DB_PREFIX . 'presence` WHERE `uid` = :userid';
-                $params = array (
-                    'userid' => $choosen 
-                );
-                $row = $conn->queryDB($stmt, $params);
-                
-                if (!empty($row)) {
-                    $row = $row[0];
-                    $userforms->editCxeesto($row);
-                }
-                else {
-                    echo 'ERROR: Selected user doesn\'t have a &#264;eesto account.<br><br>';
-                }
-                
-                /**
-                 * @noinspection PhpUnusedLocalVariableInspection
-                 */
-                $showList = false;
-            }
-            elseif ($u_action == 'edit' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show edit user form
-                $userforms->editUser($edit_user_info);
-                
-                /**
-                 * @noinspection PhpUnusedLocalVariableInspection
-                 */
-                $showList = false;
-            }
-            elseif ($u_action == 'reset' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show password reset form
-                $userforms->resetPassword($choosen, $edit_user_info['username'], $edit_user_info['realname']);
-                
-                /**
-                 * @noinspection PhpUnusedLocalVariableInspection
-                 */
-                $showList = false;
-            }
-            elseif ($u_action == 'revokeKey' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Confirm API revoke
-                $userforms->confirmKeyRevoke($edit_user_info['realname'], $choosen);
-                
-                /**
-                 * @noinspection PhpUnusedLocalVariableInspection
-                 */
-                $showList = false;
-            }
-        }
-        elseif ($u_action == 'add' && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Show create user form
-            $userforms->addUser();
-            
-            /**
-             * @noinspection PhpUnusedLocalVariableInspection
-             */
-            $showList = false;
-        }
-        elseif ($u_action != 'none' && empty($choosen)) {
-            echo 'ERROR: No user was selected.<br><br>';
-        }
-        elseif ($edit_user_info === '') {
-            echo 'Error getting information from database.<br><br>';
-        }
-    }
+if (isset($_POST['user_action'])) {
+    $u_action = $_POST['user_action'];
+    $userId = isset($_POST['the_choosen_one']) ? $_POST['the_choosen_one'] : '';
     
-    if (isset($_POST['sub_type'])) {
-        $choosen = isset($_POST['the_choosen_one']) ? $_POST['the_choosen_one'] : '';
-        $second_tier = $_POST['sub_type'];
-        
-        $useractions = new User();
-        
-        if ($second_tier == "Save Edit" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Edit user data
-            $edit = array (
-                'realname' => $_POST['edit_real'],
-                'role' => $_POST['edit_role'],
-                'first' => $_POST['edit_first'],
-                'uid' => $_POST['edit_uid'],
-                'theme' => $_POST['userTheme'] 
-            );
-            
-            echo $useractions->editUser($edit);
+    $user = new User(true, $userId);
+    
+    if ($u_action != 'add' && !empty($userId)) {
+        if ($u_action == 'delete' && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Confirm user delete
+            userforms::confirmDelete($user);
         }
-        elseif ($second_tier == "Add" && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Create new user
-            $add = array (
-                'username' => $_POST['add_user'],
-                'password' => $_POST['add_pass'],
-                'realname' => $_POST['add_real'],
-                'role' => $_POST['add_role'] 
-            );
-            
-            echo $useractions->addUser($add);
-        }
-        elseif ($second_tier == "Reset" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Reset user password
-            $reset_3 = $_POST['reset_1'];
-            $reset_4 = $_POST['reset_2'];
-            
-            if ($reset_3 == $reset_4) {
-                echo $useractions->resetUserPw($_POST['reset_uid'], $reset_3);
+        elseif ($u_action == 'cxeesto' &&($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show status update form
+            if (!empty($user->userCheesto)) {
+                userforms::editCxeesto($user);
             }
             else {
-                echo 'New passwords do not match<br><br>';
+                echo 'ERROR: Selected user doesn\'t have a &#264;eesto account.<br><br>';
             }
-        }
-        elseif ($second_tier == "Yes" && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Delete user
-            echo empty($choosen) ? 'Delete failed, no user selected.' : $useractions->deleteUser($choosen);
-        }
-        elseif ($second_tier == "Revoke" && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Revoke API keys
-            echo empty($choosen) ? 'API revoke failed, no user selected.' : $useractions->revokeAPIKey($choosen);
-        }
-        elseif ($second_tier == "Set Status" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Change user Cxeesto status
-            $user_id = $_POST['status_id'];
-            $status = $_POST['status_s'];
-            $message = $_POST['status_message'];
-            $return = $_POST['status_return'];
             
-            echo $useractions->updateUserStatus($user_id, $status, $message, $return);
+            $showList = false;
         }
+        elseif ($u_action == 'edit' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show edit user form
+            userforms::editUser($user);
+            $showList = false;
+        }
+        elseif ($u_action == 'reset' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show password reset form
+            userforms::resetPassword($user);
+            $showList = false;
+        }
+        elseif ($u_action == 'revokeKey' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Confirm API revoke
+            userforms::confirmKeyRevoke($user);
+        }
+    }
+    elseif ($u_action == 'add' && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Show create user form
+        userforms::addUser();
+        $showList = false;
+    }
+    elseif ($u_action != 'none' && empty($userId)) {
+        echo 'ERROR: No user was selected.<br><br>';
+    }
+}
+
+if (isset($_POST['sub_type'])) {
+    $userId = isset($_POST['the_choosen_one']) ? $_POST['the_choosen_one'] : '';
+    $second_tier = $_POST['sub_type'];
+    
+    if ($second_tier == "Save Edit" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Edit user data
+        $user = new User();
+        $user->userInfo = array (
+            'realname' => $_POST['edit_real'],
+            'role' => $_POST['edit_role'],
+            'firsttime' => $_POST['edit_first'],
+            'theme' => $_POST['userTheme'],
+            'userid' => $_POST['edit_uid']
+        );
+        
+        echo $user->editUser();
+    }
+    elseif ($second_tier == "Add" && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Create new user
+        $user = new User();
+        $user->userInfo = array (
+            'username' => $_POST['add_user'],
+            'password' => $_POST['add_pass'],
+            'realname' => $_POST['add_real'],
+            'role' => $_POST['add_role'] 
+        );
+        $user->userCheesto['create'] = true;
+        
+        echo $user->addUser();
+    }
+    elseif ($second_tier == "Reset" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Reset user password
+        $reset_3 = $_POST['reset_1'];
+        $reset_4 = $_POST['reset_2'];
+        
+        if ($reset_3 == $reset_4) {
+            $user = new User(false, $_POST['reset_uid']);
+            $user->userInfo['password'] = $reset_3;
+            echo $user->resetUserPw();
+        }
+        else {
+            echo 'New passwords do not match<br><br>';
+        }
+    }
+    elseif ($second_tier == "Yes" && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Delete user
+        if (!empty($userId)) {
+            $user = new User(false, $userId);
+            echo $user->deleteUser();
+        }
+        else {
+            echo 'Delete failed, no user selected.';
+        }
+    }
+    elseif ($second_tier == "Revoke" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Revoke API keys
+        if (!empty($userId)) {
+            $user = new User(false, $userId);
+            echo $user->revokeAPIKey();
+        }
+        else {
+            echo 'API revoke failed, no user selected.';
+        }
+    }
+    elseif ($second_tier == "Set Status" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Change user Cxeesto status
+        $user_id = $_POST['status_id'];
+        
+        $user = new User(false, $_POST['status_id']);
+        
+        $user->userCheesto = array(
+            'status' => $_POST['status_s'],
+            'message' => $_POST['status_message'],
+            'returntime' => $_POST['status_return']
+        );
+        
+        echo $user->updateUserStatus();
     }
 }

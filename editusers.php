@@ -80,31 +80,6 @@ $showList = true;
                         }
                     ?>
                 </table>
-                <br>
-                
-                Action: 
-                <select name="user_action2">
-                    <option value="none">Select:</option>
-                    
-                    <?php
-                    if ($_SESSION['rights']['adduser']) {
-                        echo '<option value="add">Add User</option>';
-                    }
-                    
-                    if ($_SESSION['rights']['deleteuser']) {
-                        echo '<option value="delete">Delete</option>';
-                    }
-                    
-                    if ($_SESSION['rights']['edituser']) {
-                        echo '<option value="edit">Edit</option>';
-                        echo '<option value="reset">Reset Password</option>';
-                        echo '<option value="cxeesto">Change &#264;eesto</option>';
-                        echo '<option value="revokeKey">Revoke API Key</option>';
-                    }
-                    ?>
-                </select>
-                
-                <input type="submit" name="sub_type" value="Go">
             </form>
         <?php } ?>
         
