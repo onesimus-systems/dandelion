@@ -29,17 +29,17 @@ namespace Dandelion\API;
 
 use Dandelion\database\dbManage;
 
-require '../scripts/bootstrap.php';
-$loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;
+require_once '../scripts/bootstrap.php';
+$localCall = isset($localCall) ? $localCall : false;
 
 // Allow API requests if the public API is enabled or a user is logged in
-if ($_SESSION['app_settings']['public_api'] || $loggedin) {
+if ($_SESSION['app_settings']['public_api'] && !$localCall) {
     // Get API key and url for API request
     $apikey = isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : '';
     $url = isset($_REQUEST['url']) ? $_REQUEST['url'] : '';
     $url = explode('/', $url);
     
-    echo processRequest($apikey, $loggedin, $url);
+    echo processRequest($apikey, $localCall, $url[0], $url[1]);
 }
 
 /**
@@ -51,8 +51,8 @@ if ($_SESSION['app_settings']['public_api'] || $loggedin) {
  *            
  * @return DAPI object
  */
-function processRequest($key, $loggedin, $request) {
-    if ($request[0] == 'apitest') {
+function processRequest($key, $localCall, $subsystem, $request, $loggedin = false) {
+    if ($subsystem == 'apitest') {
         // Checks for a good API key and notifies requester
         return apitest($key);
     }
@@ -65,16 +65,21 @@ function processRequest($key, $loggedin, $request) {
         /*
          * Declare request source as the api Default value is empty in bootstrap.php
          */
-        define('REQ_SOURCE', 'api');
+        if (!$localCall) {
+            define('REQ_SOURCE', 'api'); // Public API
+        }
+        else {
+            define('REQ_SOURCE', 'iapi'); // Internal API
+        }
         
         // Call the request function (as defined by the second part of the URL)
         $data = call_user_func(array (
-            __NAMESPACE__ . '\\' . $request[0] . 'API',
-            $request[1] 
+            __NAMESPACE__ . '\\' . $subsystem . 'API',
+            $request 
         ));
         
         // Return DAPI object
-        return makeDAPI(0, 'Completed', $request[0], json_decode($data));
+        return makeDAPI(0, 'Completed', $subsystem, json_decode($data));
     }
 }
 

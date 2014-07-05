@@ -21,8 +21,8 @@
  */
 namespace Dandelion\API;
 
-if (REQ_SOURCE != 'api') {
-    exit(makeDAPI(2, 'This script can only be called by the API.', 'keyManager'));
+if (REQ_SOURCE != 'iapi') {
+    exit(makeDAPI(2, 'This script can only be called by the internal API.', 'keyManager'));
 }
 
 class keyManagerAPI

@@ -4,14 +4,14 @@ $(function(){
 
 var api = {
     getApiKey: function() {
-        $.getJSON("api/keyManager/getKey",
+        $.getJSON("iapi/keyManager/getKey",
             function(data) {
                 $("#apiKey").html(data['data']['key']);
         });
     },
     
     generateKey: function() {
-        $.getJSON("api/keyManager/newKey",
+        $.getJSON("iapi/keyManager/newKey",
             function(data) {
                 $("#apiKey").html(data['data']['key']);
         });
