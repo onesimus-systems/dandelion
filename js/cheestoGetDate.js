@@ -9,12 +9,12 @@ $(document).ready(function() {
 function giveTime() {
     var newStatus = window.opener.newStatus,
 		rtime = $("#datepick").val(),
-		isWin = window.opener.isWind,
+		ver = window.opener.presence.version,
 		message = $("#messagetext").val();
 		
     message = encodeURIComponent(message);
     
-    window.opener.presence.sendNewStatus(newStatus, rtime, isWin, message);
+    window.opener.presence.sendNewStatus(newStatus, rtime, ver, message);
     window.close();
 }
 

@@ -42,7 +42,7 @@ else {
 		<title>Dandelion Web Log</title>
 	</head>
     
-	<body onLoad="refreshFun.startrefresh(); mail.areUnread();">
+	<body onLoad="refreshFun.startrefresh(); presence.checkstat(0); mail.areUnread();">
 	
 		<?php
 		if ($_SESSION['app_settings']['cheesto_enabled'] && $_SESSION['rights']['viewcheesto']) {

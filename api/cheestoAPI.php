@@ -21,7 +21,7 @@
  */
 namespace Dandelion\API;
 
-if (REQ_SOURCE != 'api') {
+if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
     exit(makeDAPI(2, 'This script can only be called by the API.', 'cheesto'));
 }
 
@@ -33,7 +33,35 @@ class cheestoAPI
      * @return JSON
      */
     public static function readall() {
-        $cheesto = new \Dandelion\cxeesto();
-        return $cheesto->getJson();
+        $rights = new \Dandelion\rights(USER_ID);
+        
+        if ($rights->authorized('viewcheesto')) {
+            $cheesto = new \Dandelion\cxeesto();
+            return $cheesto->getJson();
+        }
+        else {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+        }
+    }
+    
+    /**
+     * Update the status of user
+     * 
+     * @return JSON
+     */
+    public static function update() {
+        $rights = new \Dandelion\rights(USER_ID);
+        
+        if ($rights->authorized('updatecheesto')) {
+            $cheesto = new \Dandelion\cxeesto();
+            $message = isset($_POST['message']) ? $_POST['message'] : '';
+            $status = isset($_POST['status']) ? $_POST['status'] : 1;
+            $returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
+            
+            return $cheesto->updateStatus($message, $status, $returntime, $_SESSION['userInfo']['userid']);
+        }
+        else {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+        }
     }
 }

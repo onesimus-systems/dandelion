@@ -39,53 +39,6 @@ class cxeesto extends Database\dbManage
         
         return json_encode($statuses);
     }
-    
-    /** Displays the labels, symbols, return times, and messages of statuses
-      *
-      * @param int $isWin - Determines if calling function is from the mini or full version of Cxeesto
-      * @param int $isWin2 - Used to fix a bug with initial load of the full version
-      *
-      * @author Lee Keitel
-      * @date February 4, 2014
-    ***/
-    public function refreshStatus($isWin, $isWin2)
-    {
-        $all_users = $this->selectAll('presence');
-
-        // If updating for the mini version
-        if ($isWin == 0 && $isWin2 == 0) {
-
-            echo '<table><thead><tr><td>Name</td><td>Status</td></tr></thead><tbody>';
-
-            foreach ($all_users as $row) {
-                echo '<tr>';
-                echo '<td><span title="' . $row['message'] . '" class="message">' . $row['realname'] . '</span></td>';
-
-                $statusProps = $this->statusType($row['status'], '&#013;', $row['returntime']);
-
-                echo '<td class="statusi"><span title="' . $statusProps['status'] . '" class="' . $statusProps['color'] . '">' . $statusProps['symbol'] . '</span></td></tr>';
-            }
-            echo '<tr><td colspan="2" class="cen"><form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto" /></form></td></tr>';
-
-            echo '</tbody></table>';
-        }
-
-        // Updating the windowed version
-        elseif ($isWin == 1 || $isWin2 == 1) {
-
-            echo '<table><thead><tr><td>Name</td><td>Message</td><td colspan="2">Status</td><td>Last Changed</td></tr></thead><tbody>';
-
-            foreach ($all_users as $row) {
-                echo '<tr>';
-                echo '<td>' . $row['realname'] . '</td><td>' . $row['message'] . '</td>';
-
-                $statusProps = $this->statusType($row['status'], '<br>', $row['returntime']);
-
-                echo '<td class="statusi"><span class="' . $statusProps['color'] . '">' . $statusProps['symbol'] . '</span></td><td>' . $statusProps['status'] . '</td><td>' . $row['dmodified'] . '</td></tr>';
-            }
-            echo '</tbody></table>';
-        }
-    }
 
     /**
      * Given the status number, returns status label, symbol, and return time
@@ -169,22 +122,22 @@ class cxeesto extends Database\dbManage
      *
      * @return string
      */
-    public function updateStatus($message, $status, $return)
+    public function updateStatus($message, $status, $return, $userId)
     {
         $date = new \DateTime();
         $date = $date->format('Y-m-d H:i:s');
 
-        $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
+        $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :uid';
         $params = array(
             'message' => urldecode($message),
             'setorno' => $status,
             'returntime' => $return,
             'dmodified' => $date,
-            'iamaRealBoy' => $_SESSION['userInfo']['userid'] // Don't ask
+            'uid' => $userId
         );
 
         $this->queryDB($stmt, $params);
 
-        return 'User status updated';
+        return json_encode('User status updated');
     }
 }

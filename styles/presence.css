@@ -38,6 +38,7 @@
 #presence table,
 #presence .tables {
   border-collapse: collapse;
+  margin-top: .5em;
 }
 #presence table thead td,
 #presence .tables thead td {

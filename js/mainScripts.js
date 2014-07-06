@@ -38,17 +38,10 @@ var refreshFun =
     startrefresh: function() {
         // Run first time
 		refreshLog("update");
-		if (typeof presence !== 'undefined') {
-            setTimeout(function(){presence.checkstat(0);}, 1);
-		}
         CategoryManage.grabNextLevel('0:0');
 
 		// Set timers
-        refreshc = setInterval(function(){refreshLog("update");}, 120000);
-		if (typeof presence !== 'undefined') {
-            wherearewe = setInterval(function(){presence.checkstat(0);}, 30000);
-		}
-
+        refreshc = setInterval(function(){ refreshLog("update"); }, 120000);
         autore = true;
     },
 

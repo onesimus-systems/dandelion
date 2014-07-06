@@ -37,7 +37,7 @@ if (Gatekeeper\authenticated()) {
     
     require ROOT.'/api/index.php';
     
-    $returnObj = (array) json_decode(processRequest(null, $localCall, $url[0], $url[1] true));
+    $returnObj = (array) json_decode(processRequest($_SESSION['userInfo']['userid'], $localCall, $url[0], $url[1], true));
     $returnObj['iapi'] = true;
     
     echo json_encode($returnObj);

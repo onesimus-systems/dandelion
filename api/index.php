@@ -67,9 +67,11 @@ function processRequest($key, $localCall, $subsystem, $request, $loggedin = fals
          */
         if (!$localCall) {
             define('REQ_SOURCE', 'api'); // Public API
+            define('USER_ID', verifyKey($key));
         }
         else {
             define('REQ_SOURCE', 'iapi'); // Internal API
+            define('USER_ID', $key);
         }
         
         // Call the request function (as defined by the second part of the URL)
@@ -106,7 +108,7 @@ function verifyKey($key) {
         $keyValid = $conn->queryDB($sql, $params);
         
         if (!empty($keyValid[0])) {
-            return true;
+            return $keyValid[0]['user'];
         }
     }
     
@@ -150,8 +152,9 @@ function makeDAPI($ecode, $status, $subsystem, $data = '') {
      *
      * 0 - Successful API call
      * 1 - Invalid API key
-     * 2 - Calling API support script from outside API
+     * 2 - Calling API subsystem from outside API
      * 3 - Action requires active login
+     * 4 - Insufficient permissions
      */
     $response = array (
         'errorcode' => $ecode,

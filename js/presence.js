@@ -1,16 +1,77 @@
 var presence =
 {
-    startR: function() {
-        wherearewe = setInterval(function() {presence.checkstat(1)}, 30000);
+    timeoutId: "",
+    version: 0,
+    
+    checkstat: function(ver) {
+		$.getJSON("iapi/cheesto/readall",
+		        function(data) {
+		            presence.generateView(ver, data);
+            		clearTimeout(presence.timeoutId);
+            		delete presence.timeoutId;
+            		
+            		presence.version = ver;
+            		presence.timeoutId = setTimeout(function() { presence.checkstat(ver); }, 30000);
+		 });
     },
     
-    checkstat: function(isWin) {
-		$("#pt").load("scripts/presence.php", "windowedt="+isWin);
+    generateView: function(ver, dataObj) {
+        dataObj = dataObj['data'];
+        $('#pt').html('');
+        var table = $('<table/>');
+        
+        if (ver == 0) {
+            var tableHead = '<thead><tr>\
+                    <td width="50%">Name</td>\
+                    <td width="50%">Status</td>\
+            </tr></thead>';
+            
+            table.append(tableHead);
+    
+            for(i=0; i<dataObj.length; i++) {
+                var user = dataObj[i];
+    
+                var html = '<tr>\
+                    <td><span title="'+user['message']+'">'+user['realname']+'</span></td>\
+                    <td><span title="'+user['statusInfo']['status']+'" class="'+user['statusInfo']['color']+'">'+user['statusInfo']['symbol']+'</td>\
+                    </tr>';
+    
+                table.append(html);
+            }
+            
+            var popOutButton = '<tr><td colspan="3" width="100%" class="cen">\
+                                    <form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto"></form>\
+                                </td></tr>';
+            table.append(popOutButton);
+        }
+        else if (ver == 1) {
+            var tableHead = '<thead><tr><td>Name</td>\
+                            <td>Message</td>\
+                            <td colspan="2">Status</td>\
+                            <td>Last Changed</td>\
+                            </tr></thead><tbody>';
+            table.append(tableHead);
+
+            for (i=0; i<dataObj.length; i++) {
+                var user = dataObj[i];
+                console.log(user);
+                var html = '<tr>\
+                    <td>'+user['realname']+'</td>\
+                    <td>'+user['message']+'</td>\
+                    <td class="statusi"><span class="'+user['statusInfo']['color']+'">'+user['statusInfo']['symbol']+'</span></td>\
+                    <td>'+user['statusInfo']['status']+'</td>\
+                    <td>'+user['dmodified']+'</td>\
+                    </tr>';
+                
+                table.append(html);
+            }
+        }
+
+        $('#pt').append(table);
     },
     
-    setStatus: function(isWin) {
+    setStatus: function(ver) {
         newStatus = $("select#cstatus").prop("selectedIndex");
-        isWind = isWin;
         
         if (newStatus > 1)
         {
@@ -24,7 +85,7 @@ var presence =
         else
         {
             rtime = "00:00:00";
-            presence.sendNewStatus(newStatus, rtime, isWin, "");
+            presence.sendNewStatus(newStatus, rtime, ver, "");
         }
     },
     
@@ -32,10 +93,12 @@ var presence =
         window.open("presenceWindow.php","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
     },
     
-    sendNewStatus: function(stat, rt, isWin, message) {
-		$("#pt").load("scripts/presence.php", { setorno: stat, returntime: rt, windowedt: isWin, message: message });
-        
-        $("select#cstatus").prop("selectedIndex", 0);
+    sendNewStatus: function(stat, rt, ver, message) {
+		$.post("iapi/cheesto/update", { status: stat, returntime: rt, message: message },
+                function(data) {
+                    $("select#cstatus").prop("selectedIndex", 0);
+                    presence.checkstat(ver);
+        });
     },
     
     showHideP: function() {

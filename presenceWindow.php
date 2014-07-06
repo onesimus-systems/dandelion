@@ -26,10 +26,8 @@ if (!$_SESSION['app_settings']['cheesto_enabled'] || !$_SESSION['rights']['viewc
 		<title>Dandelion Presence</title>
 	</head>
     
-    <body onLoad="presence.startR();">
+    <body onLoad="presence.checkstat(1);">
         <?php
-        // $windowed is used in presence.php to determine the correct HTML rendering
-        $windowed = 1;
 		if ($_SESSION['app_settings']['cheesto_enabled'] && $_SESSION['rights']['viewcheesto']) {
 		?>
         <div id="presence">
@@ -57,9 +55,7 @@ if (!$_SESSION['app_settings']['cheesto_enabled'] || !$_SESSION['rights']['viewc
     		}
             ?>
             
-	        <div id="pt">
-	            <?php include 'scripts/presence.php'; ?>
-	        </div>
+	        <div id="pt"></div>
         </div>
         <?php
 		}
