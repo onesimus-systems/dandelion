@@ -1,9 +1,14 @@
+/* global $, window, alert */
+
+"use strict"; // jshint ignore:line
+
 var CategoryManage = {
 	currentID: -1,
 	currentSelection: [],
 	addLog: false,
 	
 	grabNextLevel: function(parentID, container) {
+	    var pid;
 		if (parentID == "0:0") { pid = "0:0"; }
 		else if (parentID.value) { pid = parentID.value; }
 		else { pid = parentID; }
@@ -51,7 +56,7 @@ var CategoryManage = {
 		}
 		
 		while (true) {
-			newCatDesc = window.prompt(message+catString);
+			var newCatDesc = window.prompt(message+catString);
 			
 			if (newCatDesc === '') {
 				alert('Please enter a category description');
@@ -84,9 +89,8 @@ var CategoryManage = {
 		var elt = $("#level"+cid[1]+" option:selected");
 
 		if (typeof elt.val() !== 'undefined') {
-			editString = elt.text();
-			
-            editedCat = window.prompt("Edit Category Description:",editString);
+			var editString = elt.text();
+            var editedCat = window.prompt("Edit Category Description:",editString);
 
             if (editedCat !== null && editedCat !== '') {
                 $.post("scripts/categories.php", { action: "editcat", cid: cid[0], catDesc: encodeURIComponent(editedCat) })
@@ -128,7 +132,7 @@ var CategoryManage = {
 		}
 		
 		if (catString.length > 0) {
-			return catString.substring(0, catString.length - 1) 
+			return catString.substring(0, catString.length - 1); 
 		}
 		else {
 			return false;

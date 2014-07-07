@@ -1,3 +1,8 @@
+/* global $, clearTimeout, setTimeout, window */
+/* jshint multistr: true */
+
+"use strict"; // jshint ignore:line
+
 var presence =
 {
     timeoutId: "",
@@ -16,24 +21,27 @@ var presence =
     },
     
     generateView: function(ver, dataObj) {
-        dataObj = dataObj['data'];
+        dataObj = dataObj.data;
         $('#pt').html('');
         var table = $('<table/>');
+        var tableHead,
+            user,
+            html;
         
-        if (ver == 0) {
-            var tableHead = '<thead><tr>\
+        if (ver === 0) {
+            tableHead = '<thead><tr>\
                     <td width="50%">Name</td>\
                     <td width="50%">Status</td>\
             </tr></thead>';
             
             table.append(tableHead);
     
-            for(i=0; i<dataObj.length; i++) {
-                var user = dataObj[i];
-    
-                var html = '<tr>\
-                    <td><span title="'+user['message']+'">'+user['realname']+'</span></td>\
-                    <td><span title="'+user['statusInfo']['status']+'" class="'+user['statusInfo']['color']+'">'+user['statusInfo']['symbol']+'</td>\
+            for(var i=0; i<dataObj.length; i++) {
+                user = dataObj[i];
+
+                html = '<tr>\
+                    <td><span title="'+user.message+'">'+user.realname+'</span></td>\
+                    <td><span title="'+user.statusInfo.status+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
                     </tr>';
     
                 table.append(html);
@@ -45,22 +53,21 @@ var presence =
             table.append(popOutButton);
         }
         else if (ver == 1) {
-            var tableHead = '<thead><tr><td>Name</td>\
+            tableHead = '<thead><tr><td>Name</td>\
                             <td>Message</td>\
                             <td colspan="2">Status</td>\
                             <td>Last Changed</td>\
                             </tr></thead><tbody>';
             table.append(tableHead);
 
-            for (i=0; i<dataObj.length; i++) {
-                var user = dataObj[i];
-                console.log(user);
-                var html = '<tr>\
-                    <td>'+user['realname']+'</td>\
-                    <td>'+user['message']+'</td>\
-                    <td class="statusi"><span class="'+user['statusInfo']['color']+'">'+user['statusInfo']['symbol']+'</span></td>\
-                    <td>'+user['statusInfo']['status']+'</td>\
-                    <td>'+user['dmodified']+'</td>\
+            for (var j=0; j<dataObj.length; j++) {
+                user = dataObj[j];
+                html = '<tr>\
+                    <td>'+user.realname+'</td>\
+                    <td>'+user.message+'</td>\
+                    <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>\
+                    <td>'+user.statusInfo.status+'</td>\
+                    <td>'+user.dmodified+'</td>\
                     </tr>';
                 
                 table.append(html);
@@ -71,11 +78,12 @@ var presence =
     },
     
     setStatus: function(ver) {
-        newStatus = $("select#cstatus").prop("selectedIndex");
+        var newStatus = $("select#cstatus").prop("selectedIndex");
+        var rtime;
         
         if (newStatus > 1)
         {
-            rtime = "";
+            rtime = ""; // jshint ignore:line
             window.open("getdate.php","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
         }
 		else if (newStatus === 0)
@@ -84,7 +92,7 @@ var presence =
 		}
         else
         {
-            rtime = "00:00:00";
+            rtime = "00:00:00"; // jshint ignore:line
             presence.sendNewStatus(newStatus, rtime, ver, "");
         }
     },
@@ -95,7 +103,7 @@ var presence =
     
     sendNewStatus: function(stat, rt, ver, message) {
 		$.post("iapi/cheesto/update", { status: stat, returntime: rt, message: message },
-                function(data) {
+                function() {
                     $("select#cstatus").prop("selectedIndex", 0);
                     presence.checkstat(ver);
         });

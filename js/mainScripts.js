@@ -1,10 +1,13 @@
+/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, alert */
+/* exported pagentation */
+
+"use strict"; // jshint ignore:line
+
 var autore = false,
     filt = false,
-    title="",
-    entry="",
-    refreshinv,
     refreshc,
-    secleft=120;
+    secleft=120,
+    editing;
 
 $(document).ready(function() {
     $( "#datesearch" ).datepicker();
@@ -16,16 +19,10 @@ $(document).ready(function() {
 });
 
 $(document).on("focusin", function(e) {
-	if ($(event.target).closest(".mce-window").length) {
+	if ($(e.target).closest(".mce-window").length) {
 		e.stopImmediatePropagation();
 	}
 });
-    
-var miscFun = {
-    clearval: function(clearme) {
-        clearme.value="";
-    },
-};
  
 var refreshFun =
 {
@@ -92,7 +89,7 @@ function refreshLog(kindof) {
  * the SELECT limits.
  */
 function pagentation(pageOffset) {
-    pages = {
+    var pages = {
         pageOffset: pageOffset
     };
     
@@ -122,7 +119,7 @@ function pagentation(pageOffset) {
 
 var addFun =
 {
-    showaddinputs: function(title, entry) {
+    showaddinputs: function() {
         $("#add_edit_form")[0].reset();
         $("textarea#logEntry").html("");
         
@@ -174,13 +171,13 @@ var addFun =
         title = encodeURIComponent(title);
         var entry = $("textarea#logEntry").val();
         entry = encodeURIComponent(entry);
-        cat = CategoryManage.getCatString();
+        var cat = CategoryManage.getCatString();
         
-		if (title != "" && entry != "" && cat != "") {
+		if (title !== "" && entry !== "" && cat !== "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 			
-			logData = {
+			var logData = {
 				cat: cat,
 				add_title: title,
 				add_entry: entry
@@ -270,11 +267,11 @@ var editFun =
         var editedlog = $("textarea#logEntry").val();
         editedlog = encodeURIComponent(editedlog);
         
-        if (editedtitle != "" && editedlog != "") {
+        if (editedtitle !== "" && editedlog !== "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 			
-			logData = {
+			var logData = {
 				editlog: editedlog,
 				edittitle: editedtitle,
 				choosen: id
@@ -330,6 +327,7 @@ var searchFun =
         var searchfor = $("input#searchterm").val();
         var datefor   = $("input#datesearch").val();
         searchfor     = encodeURIComponent(searchfor);
+        var type = '';
 
         if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null && datefor!=="" && datefor!=="Date" && datefor!==null) {
             type = "both";
@@ -345,7 +343,7 @@ var searchFun =
             return false;
         }
         
-        search = {
+        var search = {
 			keyw: searchfor,
 			dates: datefor,
 			type: type
@@ -363,7 +361,7 @@ var searchFun =
     filter: function(cat) {
         if (cat === '') { cat = CategoryManage.getCatString(); }
         
-        filter = {
+        var filter = {
 			type: '',
 			filter: cat
         };

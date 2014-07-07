@@ -1,3 +1,7 @@
+/* global $, alert */
+
+"use strict"; // jshint ignore:line
+
 var permissions = {
     // All permissions to reference for iteration
     allPermissions: {
@@ -137,7 +141,7 @@ var permissions = {
         $.post("scripts/editgroups.php",
 			{ action: "create", name: $("#name").val(), rights: JSON.stringify(permissions.allPermissions) }
           )
-          .done(function( msg ) {
+          .done(function() {
               
               $( "#dialog" ).html( "<p>Rights Group Created Successfully</p>" );
               $( "#dialog" ).dialog({

@@ -89,7 +89,7 @@ else {
             if ($_SESSION['rights']['viewlog']) { ?>
                 <div id="controlPanel">
                     <form id="category" method="post">
-                        <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
+                        <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';" />
                         <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();" /><br />
                         
                         Filter: 

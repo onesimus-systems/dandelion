@@ -1,3 +1,8 @@
+/* global $, window, alert */
+/* exported adminAction */
+
+"use strict"; // jshint ignore:line
+
 var adminAction =
 {
 	editSlogan: function(current) {
