@@ -37,6 +37,19 @@ class cxeesto extends Database\dbManage
             $row['statusInfo'] = $this->statusType($row['status'], '&#013;', $row['returntime']);
         }
         
+        $statuses['statusOptions'] = array(
+            "Available",
+            "Away From Desk",
+            "At Lunch",
+            "Out for Day",
+            "Out",
+            "Appointment",
+            "Do Not Disturb",
+            "Meeting",
+            "Out Sick",
+            "Vacation"
+        );
+        
         return json_encode($statuses);
     }
 

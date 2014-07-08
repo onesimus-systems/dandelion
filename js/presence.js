@@ -36,15 +36,20 @@ var presence =
             
             table.append(tableHead);
     
-            for(var i=0; i<dataObj.length; i++) {
-                user = dataObj[i];
-
-                html = '<tr>\
-                    <td><span title="'+user.message+'">'+user.realname+'</span></td>\
-                    <td><span title="'+user.statusInfo.status+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
-                    </tr>';
+            for (var key in dataObj) {
+                if (!dataObj.hasOwnProperty(key))
+                  continue;
+                
+                if (key !== "statusOptions") {  
+                    user = dataObj[key];
     
-                table.append(html);
+                    html = '<tr>\
+                        <td><span title="'+user.message+'">'+user.realname+'</span></td>\
+                        <td><span title="'+user.statusInfo.status+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
+                        </tr>';
+        
+                    table.append(html);
+                }
             }
             
             var popOutButton = '<tr><td colspan="3" width="100%" class="cen">\
@@ -60,17 +65,23 @@ var presence =
                             </tr></thead><tbody>';
             table.append(tableHead);
 
-            for (var j=0; j<dataObj.length; j++) {
-                user = dataObj[j];
-                html = '<tr>\
-                    <td>'+user.realname+'</td>\
-                    <td>'+user.message+'</td>\
-                    <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>\
-                    <td>'+user.statusInfo.status+'</td>\
-                    <td>'+user.dmodified+'</td>\
-                    </tr>';
+            for (var key in dataObj) { // jshint ignore:line
+                if (!dataObj.hasOwnProperty(key))
+                  continue;
                 
-                table.append(html);
+                if (key !== "statusOptions") {  
+                    user = dataObj[key];
+                    
+                    html = '<tr>\
+                        <td>'+user.realname+'</td>\
+                        <td>'+user.message+'</td>\
+                        <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>\
+                        <td>'+user.statusInfo.status+'</td>\
+                        <td>'+user.dmodified+'</td>\
+                        </tr>';
+                    
+                    table.append(html);
+                }
             }
         }
 
