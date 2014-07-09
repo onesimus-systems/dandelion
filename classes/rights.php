@@ -44,6 +44,11 @@ class rights
      * @param string $permission - Permission to check
      */
     public function authorized($permission) {
+        // The admin flag grants full rights
+        if ($this->permissions["admin"]) {
+            return true;
+        }
+        
         return $this->permissions[$permission];
     }
 }
