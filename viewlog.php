@@ -50,31 +50,7 @@ else {
         <div id="presence">
 	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mailbox.php"><img id="mailicon" src="images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
 	        
-        	<div id="mainPresence">
-                <?php
-        		if ($_SESSION['rights']['updatecheesto']) {
-        		?>
-	            <form method="post">
-	                <select id="cstatus">
-	                    <option>Set Status:</option>
-	                    <option>Available</option>
-	                    <option>Away From Desk</option>
-	                    <option>At Lunch</option>
-	                    <option>Out for Day</option>
-	                    <option>Out</option>
-	                    <option>Appointment</option>
-	                    <option>Do Not Disturb</option>
-	                    <option>Meeting</option>
-	                    <option>Out Sick</option>
-	                    <option>Vacation</option>
-	                </select>
-	                <input type="button" value="Set" class="linklike set" onClick="presence.setStatus(0);" />
-	            </form>
-                <?php
-        		}
-                ?>
-	            <div id="pt"></div>
-            </div>
+        	<div id="mainPresence"></div>
         </div>
         <?php
 		}

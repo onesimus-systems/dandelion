@@ -11,7 +11,11 @@
   border: 1px solid black;
   padding: 5px;
   color: black;
-  text-align: left;
+  text-align: center;
+  /*.set {
+		padding: .25em .5em;
+	}*/
+  /* .tables is here to import the styles to presenceWin.less */
 }
 #presence .linklike {
   margin-top: .5em;
@@ -24,8 +28,8 @@
 #presence .linklike:hover {
   color: black;
 }
-#presence .set {
-  padding: .25em .5em;
+#presence #cstatus {
+  margin: 3px;
 }
 #presence #showHide {
   color: black;
@@ -71,6 +75,10 @@
 #presence .tables td .red {
   color: red;
   cursor: help;
+}
+#presence table td.textLeft,
+#presence .tables td.textLeft {
+  text-align: left;
 }
 #presence table td.cen,
 #presence .tables td.cen {

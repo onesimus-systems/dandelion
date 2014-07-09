@@ -55,7 +55,7 @@ class cheestoAPI
         if ($rights->authorized('updatecheesto')) {
             $cheesto = new \Dandelion\cxeesto();
             $message = isset($_POST['message']) ? $_POST['message'] : '';
-            $status = isset($_POST['status']) ? $_POST['status'] : 1;
+            $status = isset($_POST['status']) ? $_POST['status'] : -1;
             $returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
             
             return $cheesto->updateStatus($message, $status, $returntime, $_SESSION['userInfo']['userid']);

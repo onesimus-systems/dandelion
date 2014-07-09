@@ -2,134 +2,165 @@
 /* jshint multistr: true */
 
 "use strict"; // jshint ignore:line
+var newStatus = 1;
 
 var presence =
 {
     timeoutId: "",
     version: 0,
-    
+
     checkstat: function(ver) {
-		$.getJSON("iapi/cheesto/readall",
-		        function(data) {
-		            presence.generateView(ver, data);
-            		clearTimeout(presence.timeoutId);
-            		delete presence.timeoutId;
-            		
-            		presence.version = ver;
-            		presence.timeoutId = setTimeout(function() { presence.checkstat(ver); }, 30000);
-		 });
+        $.getJSON("iapi/cheesto/readall",
+                function(data) {
+            presence.generateView(ver, data);
+            clearTimeout(presence.timeoutId);
+            delete presence.timeoutId;
+
+            presence.version = ver;
+            presence.timeoutId = setTimeout(function() { presence.checkstat(ver); }, 30000);
+        });
     },
-    
+
     generateView: function(ver, dataObj) {
         dataObj = dataObj.data;
-        $('#pt').html('');
-        var table = $('<table/>');
-        var tableHead,
-            user,
-            html;
-        
+        var tableView;
+
+        // Clear div area and generate new div container
+        $('#mainPresence').html('');
+        var appendable = $('<div/>').attr('id', 'pt');
+
+        // Generate select box of status options
+        var statusSelect = $('<select/>').attr('id', 'cstatus');
+        statusSelect.change(function() { presence.setStatus(0); });
+        statusSelect.append('<option value="-1">Set Status:</option>');
+
+        for (var key2 in dataObj.statusOptions) {
+            var html = '<option>'+dataObj.statusOptions[key2]+'</option>';
+            statusSelect.append(html);
+        }
+        appendable.append(statusSelect);
+
+        // Generate status table depending on view version
         if (ver === 0) {
-            tableHead = '<thead><tr>\
-                    <td width="50%">Name</td>\
-                    <td width="50%">Status</td>\
-            </tr></thead>';
-            
-            table.append(tableHead);
-    
-            for (var key in dataObj) {
-                if (!dataObj.hasOwnProperty(key))
-                  continue;
-                
-                if (key !== "statusOptions") {  
-                    user = dataObj[key];
-    
-                    html = '<tr>\
-                        <td><span title="'+user.message+'">'+user.realname+'</span></td>\
-                        <td><span title="'+user.statusInfo.status+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
-                        </tr>';
-        
-                    table.append(html);
-                }
-            }
-            
-            var popOutButton = '<tr><td colspan="3" width="100%" class="cen">\
-                                    <form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto"></form>\
-                                </td></tr>';
-            table.append(popOutButton);
+            tableView = this.makeTableMini(dataObj);
         }
-        else if (ver == 1) {
-            tableHead = '<thead><tr><td>Name</td>\
-                            <td>Message</td>\
-                            <td colspan="2">Status</td>\
-                            <td>Last Changed</td>\
-                            </tr></thead><tbody>';
-            table.append(tableHead);
-
-            for (var key in dataObj) { // jshint ignore:line
-                if (!dataObj.hasOwnProperty(key))
-                  continue;
-                
-                if (key !== "statusOptions") {  
-                    user = dataObj[key];
-                    
-                    html = '<tr>\
-                        <td>'+user.realname+'</td>\
-                        <td>'+user.message+'</td>\
-                        <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>\
-                        <td>'+user.statusInfo.status+'</td>\
-                        <td>'+user.dmodified+'</td>\
-                        </tr>';
-                    
-                    table.append(html);
-                }
-            }
+        else if (ver === 1) {
+            tableView = this.makeTableFull(dataObj);
         }
+        appendable.append(tableView);
 
-        $('#pt').append(table);
+        $('#mainPresence').append(appendable);
     },
-    
+
+    makeTableMini: function(dataObj) {
+        // Mini view on main page
+        var table = $('<table/>');
+        var tableHead = '<thead><tr>\
+            <td width="50%">Name</td>\
+            <td width="50%">Status</td>\
+            </tr></thead>';
+
+        table.append(tableHead);
+
+        for (var key in dataObj) {
+            if (!dataObj.hasOwnProperty(key))
+                continue;
+
+            if (key !== "statusOptions") {  
+                var user = dataObj[key];
+                var classm = '';
+                
+                if (user.message !== '') {
+                    classm = ' class="message"';
+                }
+
+                var html = '<tr>\
+                    <td class="textLeft"><span title="'+user.message+'"'+classm+'>'+user.realname+'</span></td>\
+                    <td><span title="'+user.statusInfo.status+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
+                    </tr>';
+
+                table.append(html);
+            }
+        }
+
+        var popOutButton = '<tr><td colspan="3" width="100%" class="cen">\
+            <form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto"></form>\
+            </td></tr>';
+        table.append(popOutButton);
+
+        return table;
+    },
+
+    makeTableFull: function(dataObj) {
+        // Windowed view
+        var table = $('<table/>');
+        var tableHead = '<thead><tr><td>Name</td>\
+            <td>Message</td>\
+            <td colspan="2">Status</td>\
+            <td>Last Changed</td>\
+            </tr></thead><tbody>';
+        table.append(tableHead);
+
+        for (var key in dataObj) { // jshint ignore:line
+            if (!dataObj.hasOwnProperty(key))
+                continue;
+
+            if (key !== "statusOptions") {  
+                var user = dataObj[key];
+
+                var html = '<tr>\
+                    <td>'+user.realname+'</td>\
+                    <td>'+user.message+'</td>\
+                    <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>\
+                    <td>'+user.statusInfo.status+'</td>\
+                    <td>'+user.dmodified+'</td>\
+                    </tr>';
+
+                table.append(html);
+            }
+        }
+
+        return table;
+    },
+
     setStatus: function(ver) {
-        var newStatus = $("select#cstatus").prop("selectedIndex");
+        newStatus = $("select#cstatus").prop("selectedIndex");
+        $("select#cstatus").prop("selectedIndex", 0);
         var rtime;
-        
-        if (newStatus > 1)
-        {
+
+        if (newStatus > 1) {
+            // Status requires a return time and optional status
             rtime = ""; // jshint ignore:line
             window.open("getdate.php","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
         }
-		else if (newStatus === 0)
-		{
-            return false;
-		}
-        else
-        {
+        else if (newStatus === 1) {
+            // Status is Available
             rtime = "00:00:00"; // jshint ignore:line
-            presence.sendNewStatus(newStatus, rtime, ver, "");
+            presence.sendNewStatus(1, rtime, ver, "");
         }
     },
-    
+
     popOut: function() {
         window.open("presenceWindow.php","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
     },
-    
+
     sendNewStatus: function(stat, rt, ver, message) {
-		$.post("iapi/cheesto/update", { status: stat, returntime: rt, message: message },
+        $.post("iapi/cheesto/update", { status: stat, returntime: rt, message: message },
                 function() {
-                    $("select#cstatus").prop("selectedIndex", 0);
-                    presence.checkstat(ver);
+            presence.checkstat(ver);
         });
     },
-    
+
     showHideP: function() {
-		if ($("#showHide").html() == "[ - ]") {
-			$("#presence").css("minWidth", $("#mainPresence").prop("offsetWidth")+"px");
-			$("#mainPresence").css("display", "none");
-			$("#showHide").html( "[ + ]" );
-		}
-		else {
-			$("#presence").css("minWidth", "0px");
-			$("#mainPresence").css("display", "");
-			$("#showHide").html( "[ - ]" );
-		}
+        if ($("#showHide").html() == "[ - ]") {
+            $("#presence").css("minWidth", $("#mainPresence").prop("offsetWidth")+"px");
+            $("#mainPresence").css("display", "none");
+            $("#showHide").html( "[ + ]" );
+        }
+        else {
+            $("#presence").css("minWidth", "0px");
+            $("#mainPresence").css("display", "");
+            $("#showHide").html( "[ - ]" );
+        }
     }
 };
