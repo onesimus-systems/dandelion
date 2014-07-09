@@ -63,6 +63,6 @@ if (!Gatekeeper\authenticated()) {
             <input type="button" onclick="giveTime();" value="Done">
         </form>
 
-        <?php echo loadJS("jquery","jqueryui","timepicker.js","slider.js","cheestoGetDate.js");?>
+        <?php echo loadJS("jquery","jqueryui","timepicker.min.js","slider.js","cheestoGetDate.js");?>
     </body>
 </html>

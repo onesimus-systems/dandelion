@@ -40,14 +40,14 @@ function loadJS()
 
         switch($file) {
             case "jquery":
-                $scriptList .= '<script src="jquery/js/jquery-2.1.1.min.js"></script>';
+                $scriptList .= '<script src="js/jquery/js/jquery-2.1.1.min.js"></script>';
                 break;
             case "jqueryui":
-                $scriptList .= '<script src="jquery/js/jquery-ui-1.10.4.min.js"></script>';
+                $scriptList .= '<script src="js/jquery/js/jquery-ui-1.10.4.min.js"></script>';
                 break;
             case "tinymce":
-                $scriptList .= '<script src="tinymce/js/jquery.tinymce.min.js"></script>';
-                $scriptList .= '<script src="tinymce/js/tinymce.min.js"></script>';
+                $scriptList .= '<script src="js/tinymce/js/jquery.tinymce.min.js"></script>';
+                $scriptList .= '<script src="js/tinymce/js/tinymce.min.js"></script>';
                 break;
             case "catmanage":
                 $scriptList .= '<script src="js/catManage.js"></script>';

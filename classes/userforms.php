@@ -84,7 +84,7 @@ HTML;
      * @return string
      */
     public static function editCxeesto($userObj) {
-        $scripts = \Dandelion\loadJS("jquery", "jqueryui", "timepicker.js", "slider.js");
+        $scripts = \Dandelion\loadJS("jquery", "jqueryui", "timepicker.min.js", "slider.js");
         $uid = $userObj->userInfo['userid'];
         $realname = $userObj->userInfo['realname'];
         $message = $userObj->userCheesto['message'];
