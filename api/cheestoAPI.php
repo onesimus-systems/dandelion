@@ -58,7 +58,7 @@ class cheestoAPI
             $status = isset($_POST['status']) ? $_POST['status'] : -1;
             $returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
             
-            return $cheesto->updateStatus($message, $status, $returntime, $_SESSION['userInfo']['userid']);
+            return $cheesto->updateStatus($message, $status, $returntime, USER_ID);
         }
         else {
             exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
