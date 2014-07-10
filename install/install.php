@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             chmod('../config/config.php', 0400);
             chmod('../config', 0500);
 
-            header( 'Location: ../scripts/logout.php' );
+            header( 'Location: ../lib/logout.php' );
         } else {
             echo 'Dandelion does not have sufficient write permissions to create configuration.<br />Please make the ./config directory writeable to Dandelion and try again.';
         }

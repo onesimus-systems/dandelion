@@ -14,24 +14,24 @@ namespace Dandelion;
 
 use Dandelion\Database\dbManage;
 
+// Get and define root path of application
+define('ROOT', dirname(dirname(__FILE__)));
+
 /**
  * Check running PHP version
  * The password compatibility library requires PHP version 5.3.7 or above
  */
 if (!function_exists('version_compare') || version_compare(phpversion(), "5.3.7", "<")) {
-    require 'phpVersionError.php';
+    require ROOT. '/lib/phpVersionError.php';
     PHPVersionError('site');
 }
 
-// Get and define root path of application
-define('ROOT', dirname(dirname(__FILE__)));
-
 // Load Composer dependencies
 require_once ROOT . '/vendor/autoload.php';
-require_once ROOT . '/scripts/autoloader.php';
+require_once ROOT . '/lib/autoloader.php';
 
 // Setup error logging
-require_once ROOT . '/scripts/logging.php';
+require_once ROOT . '/lib/logging.php';
 error_reporting(-1);
 ini_set('log_errors', true);
 
@@ -75,7 +75,7 @@ dbManage::$connInfo = $CONFIG;
 $timeout = 21600; // 6 hours
 ini_set('session.gc_maxlifetime', $timeout);
 
-require ROOT . '/scripts/session_manager.php';
+require ROOT . '/lib/session_manager.php';
 session_name($CONFIG['session_name']);
 session_start();
 /*
@@ -89,9 +89,9 @@ if (isset($_SESSION['timeout_idle']) && $_SESSION['timeout_idle'] < time()) {
 $_SESSION['timeout_idle'] = time() + $timeout;*/
 
 // Load helper scripts
-require_once ROOT . '/scripts/authenticate.php';
-require_once ROOT . '/scripts/themes.php';
-require_once ROOT . '/scripts/scripts.php';
+require_once ROOT . '/lib/authenticate.php';
+require_once ROOT . '/lib/themes.php';
+require_once ROOT . '/lib/scripts.php';
 
 // Load application settings
 if (!isset($_SESSION['app_settings'])) {

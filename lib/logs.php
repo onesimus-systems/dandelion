@@ -9,7 +9,7 @@
 ***/
 namespace Dandelion;
 
-require_once 'bootstrap.php';
+require_once '../lib/bootstrap.php';
 
 if (Gatekeeper\authenticated()) {
     $logs = new Logs();

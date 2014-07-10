@@ -27,7 +27,7 @@ namespace Dandelion\API;
 
 use Dandelion\Gatekeeper;
 
-require_once '../scripts/bootstrap.php';
+require_once '../lib/bootstrap.php';
 
 if (Gatekeeper\authenticated()) {
     $localCall = true;

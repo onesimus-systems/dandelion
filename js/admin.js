@@ -13,7 +13,7 @@ var adminAction =
 	},
 	
 	backupDB: function() {
-		$.post("scripts/admin_actions.php", { action: "backupDB" })
+		$.post("lib/admin_actions.php", { action: "backupDB" })
             .done(function( msg ) {
                 alert(msg);
             });
@@ -35,7 +35,7 @@ var adminAction =
 	},
 	
 	performAction: function(action, data) {
-        $.post("scripts/admin_actions.php", { action: action, data: encodeURIComponent(data) })
+        $.post("lib/admin_actions.php", { action: action, data: encodeURIComponent(data) })
             .done(function( msg ) {
                 alert(msg);
             });

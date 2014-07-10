@@ -16,7 +16,7 @@ namespace Dandelion;
 // Because this file is called from the root and a subdirectory,
 // a check needs to be done to determine how the required files are
 // included.
-require_once (is_file('scripts/bootstrap.php')) ? 'scripts/bootstrap.php' : '../scripts/bootstrap.php';
+require_once (is_file('lib/bootstrap.php')) ? 'lib/bootstrap.php' : '../lib/bootstrap.php';
 require_once (is_file('classes/categories.php')) ? 'classes/categories.php' : '../classes/categories.php';
 
 // Authenticate user, if fail go to login page

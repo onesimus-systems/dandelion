@@ -9,7 +9,7 @@
  ***/
 namespace Dandelion;
 
-require_once 'bootstrap.php';
+require_once '../lib/bootstrap.php';
 
 if ($_SESSION['rights']['admin']){
     if ($_SERVER["REQUEST_METHOD"] == "POST") {

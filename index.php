@@ -24,7 +24,7 @@ namespace Dandelion;
  *
  * And that is how Dandelion was born.
  */
-require_once 'scripts/bootstrap.php';
+require_once 'lib/bootstrap.php';
 
 if (!INSTALLED) {
     header( 'Location: ./install' );

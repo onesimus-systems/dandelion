@@ -1,7 +1,7 @@
 <?php
 namespace Dandelion;
 
-include_once 'scripts/bootstrap.php';
+require_once 'lib/bootstrap.php';
 
 if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
@@ -26,7 +26,7 @@ $content = false;
 
         <h2>Administration</h2>
 		
-    	<form name="admin_form" method="post" action="scripts/admin_actions.php">
+    	<form name="admin_form" method="post" action="lib/admin_actions.php">
 			<?php
 			if ($_SESSION['rights']['adduser'] || $_SESSION['rights']['edituser'] || $_SESSION['rights']['deleteuser']) {
 				echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers.php\'"><br>';

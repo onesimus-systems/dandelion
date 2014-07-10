@@ -29,7 +29,7 @@ namespace Dandelion\API;
 
 use Dandelion\database\dbManage;
 
-require_once '../scripts/bootstrap.php';
+require_once '../lib/bootstrap.php';
 $localCall = isset($localCall) ? $localCall : false;
 
 // Allow API requests if the public API is enabled or a user is logged in

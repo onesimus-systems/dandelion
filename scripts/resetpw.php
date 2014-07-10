@@ -12,7 +12,7 @@
 namespace Dandelion;
 use Dandelion\Database\dbManage;
 
-require_once 'bootstrap.php';
+require_once '../lib/bootstrap.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $reset_3 = isset($_POST['reset_1']) ? $_POST['reset_1'] : '';
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $params = array('id'=>$_SESSION['userInfo']['userid']);
         $conn->queryDB($stmt, $params);
 
-        header( 'Location: logout.php' );
+        header( 'Location: ../lib/logout.php' );
     } else {
         $_SESSION['errors'] = '<br><span class="bad">Entered passwords do not match. Please try again.</span><br><br>';
         header( 'Location: ../reset.php' );

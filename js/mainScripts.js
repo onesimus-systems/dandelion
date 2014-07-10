@@ -57,7 +57,7 @@ function refreshLog(kindof) {
         {
             $.ajax({
                 type: "POST",
-                url: "scripts/logs.php",
+                url: "lib/logs.php",
                 async: false,
                 data: { action: "getLogs", data: "" }
             })
@@ -93,7 +93,7 @@ function pagentation(pageOffset) {
         pageOffset: pageOffset
     };
     
-    $.post("scripts/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
+    $.post("lib/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
         .done(function( html ) {
             $("#refreshed").html( html );
             
@@ -183,7 +183,7 @@ var addFun =
 				add_entry: entry
 			};
 
-			$.post("scripts/logs.php", { action: "addLog", data: JSON.stringify(logData) })
+			$.post("lib/logs.php", { action: "addLog", data: JSON.stringify(logData) })
 				.done(function( html ) {
 					refreshLog();
 					secleft=120;
@@ -256,7 +256,7 @@ var editFun =
      * the fields.
      */
     grabedit: function(logid) {
-        $.post("scripts/logs.php", { action: 'getLogInfo', data: logid })
+        $.post("lib/logs.php", { action: 'getLogInfo', data: logid })
             .done( editFun.showeditinputs );
     },
 
@@ -277,7 +277,7 @@ var editFun =
 				choosen: id
 			};
 			
-			$.post("scripts/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
+			$.post("lib/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
 				.done(function( html ) {
 				refreshLog();
 				secleft=120;
@@ -349,7 +349,7 @@ var searchFun =
 			type: type
         };
         
-        $.post("scripts/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
+        $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
             .done(function( html ) {
                 filt=true;
                 refreshFun.stoprefresh();
@@ -368,7 +368,7 @@ var searchFun =
         
         if (cat)
         {
-            $.post("scripts/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
+            $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
                 .done(function( html ) {
                     $("#refreshed").html( html );
                     filt=true;

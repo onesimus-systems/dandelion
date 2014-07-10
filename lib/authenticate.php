@@ -22,7 +22,7 @@ use Dandelion\Permissions;
  * If this happens a user is attempting to login.
  */
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["in_name"])) {
-    require_once (is_file('bootstrap.php')) ? 'bootstrap.php' : 'scripts/bootstrap.php';
+    require 'bootstrap.php';
     login();
 }
 
