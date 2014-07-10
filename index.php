@@ -26,7 +26,7 @@ namespace Dandelion;
  */
 require_once 'scripts/bootstrap.php';
 
-if (!$_SESSION['config']['installed']) {
+if (!INSTALLED) {
     header( 'Location: ./install' );
 }
 
@@ -35,3 +35,5 @@ if (Gatekeeper\authenticated()) {
 } else {
     include 'loginbox.php';
 }
+
+session_write_close();

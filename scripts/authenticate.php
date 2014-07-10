@@ -67,6 +67,8 @@ function login()
             setcookie('dan_username', $_SESSION['userInfo']['username'], time()+60*60*24*30, '/');
         }
 
+        session_write_close(); // Must write session to database before redirecting
+        
         switch($userInfo['firsttime']) {
             case 2:
                 header ( 'Location: ../reset.php' );

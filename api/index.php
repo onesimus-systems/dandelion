@@ -40,6 +40,8 @@ if ($_SESSION['app_settings']['public_api'] && !$localCall) {
     $url = explode('/', $url);
     
     echo processRequest($apikey, $localCall, $url[0], $url[1]);
+    
+    session_write_close();
 }
 
 /**

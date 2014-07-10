@@ -41,6 +41,8 @@ if (Gatekeeper\authenticated()) {
     $returnObj['iapi'] = true;
     
     echo json_encode($returnObj);
+    
+    session_write_close();
 }
 else {
     exit('The internal API can only be accessed by Dandelion.');

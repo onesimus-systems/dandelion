@@ -14,6 +14,8 @@ $CONFIG = array(
     'db_pass' => '',
     // Database table prefix
     'db_prefix' => 'dan_',
+    // Name of PHP session for Dandelion, make unique for each instance of Dandelion
+    'session_name' => 'dan_session_1',
     // Is the app installed, set to false to rerun install script
     'installed' => true,
     // Debug mode, set to false in prod

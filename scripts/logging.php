@@ -60,6 +60,7 @@ function errorHandler($error_level, $error_message, $error_file, $error_line, $e
 
 function shutdownHandler()
 {
+    session_write_close();
     $lasterror = error_get_last();
     switch ($lasterror['type']) {
         case E_ERROR:
