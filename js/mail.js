@@ -16,11 +16,11 @@ $(document).on("focusin", function(e) {
 
 var mail = {
         areUnread: function() {
-            $.getJSON("scripts/mail/getMailCount.php", function(data) {
-                if (data.count > 0) {
+            $.getJSON("iapi/mail/mailCount", function(data) {
+                if (data.data.count > 0) {
                     $("#mailicon").attr("src", "images/mail.png");
                     $("#mailicon").attr("alt", "You have mail");
-                    $("#mailicon").attr("title", data.count);
+                    $("#mailicon").attr("title", data.data.count);
                 }
             });
 
@@ -41,13 +41,13 @@ var mail = {
         },
 
         getAllMail: function() {
-            $.getJSON("scripts/mail/getAllMail.php",
-                    function(data){ mail.showMailList(data); });
+            $.getJSON("iapi/mail/getAllMail",
+                    function(data){ mail.showMailList(data.data); });
         },
         
         getTrashCan: function() {
-            $.getJSON("scripts/mail/getAllMail.php", {"trash": "true"},
-                    function(data){ mail.showMailList(data); });
+            $.getJSON("iapi/mail/getAllMail", {"trash": "true"},
+                    function(data){ mail.showMailList(data.data); });
         },
 
         showMailList: function(parsed) {
@@ -85,7 +85,8 @@ var mail = {
         },
 
         viewMail: function(id) {
-            $.getJSON("scripts/mail/viewMail.php", {mid: id}, function(data) {
+            $.getJSON("iapi/mail/read", {mid: id}, function(data) {
+                data = data.data;
                 mail.showFolder();
 
                 var html = '<h2>'+data[0].subject+'</h2>\
@@ -119,7 +120,8 @@ var mail = {
         replyToMail: function() {
             var selection = this.getSelectedMailIds();
             if (selection.length == 1) {
-                $.getJSON("scripts/mail/viewMail.php", {mid: selection[0]}, function(data) {
+                $.getJSON("iapi/mail/read", {mid: selection[0]}, function(data) {
+                    data = data.data;
                     $("#mailForm")[0].reset();
                     $("textarea#mailBody").html(data[0].body);
                     $("#mailSubject").val("RE: " + data[0].subject);
@@ -133,7 +135,8 @@ var mail = {
         },
 
         writeMailDialog: function() {
-            $.getJSON("scripts/mail/getUserList.php", function(data) {
+            $.getJSON("iapi/mail/getUserList", function(data) {
+                data = data.data;
                 $("#mailForm")[0].reset();
                 $("#toUsers").prop("readonly", false);
                 $("textarea#mailBody").html("");
@@ -220,9 +223,10 @@ var mail = {
             if (mailPiece.to !== "" && mailPiece.subject !== "" && mailPiece.body !== "") {
                 mailPiece = JSON.stringify(mailPiece);
 
-                $.post("scripts/mail/sendMail.php", {mail: mailPiece},
+                $.post("iapi/mail/send", {mail: mailPiece},
                         function(data) {
-                    alert(data);
+                    data = JSON.parse(data);
+                    alert(data.data);
                 });
 
                 return true;
@@ -243,10 +247,11 @@ var mail = {
                     permenant = true;
                 }
                 
-                $.post("scripts/mail/deleteMail.php", {"mid": selected[0], "permenant": permenant},
-                    function(data) { 
+                $.post("iapi/mail/delete", {"mid": selected[0], "permenant": permenant},
+                    function(data) {
+                        data = JSON.parse(data);
                         mail.showFolder();
-                        alert(data);
+                        alert(data.data);
                 });
             }
         },
