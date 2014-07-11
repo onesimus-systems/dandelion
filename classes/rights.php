@@ -45,10 +45,14 @@ class rights
      */
     public function authorized($permission) {
         // The admin flag grants full rights
-        if ($this->permissions["admin"]) {
+        if ($this->permissions['admin']) {
             return true;
         }
         
-        return $this->permissions[$permission];
+        return $this->permissions[strtolower($permission)];
+    }
+    
+    public function isAdmin() {
+        return $this->permissions['admin'];
     }
 }

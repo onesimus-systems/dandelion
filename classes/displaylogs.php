@@ -90,6 +90,8 @@ class displaylogs
      */
     private static function showLogs($grab_logs, $isFiltered)
     {
+        global $User_Rights;
+        
         $logList = '';
 
         $logList .= '<div id="refreshed_core">';
@@ -110,7 +112,7 @@ class displaylogs
                 $logList .= '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
             }
 
-            if (($_SESSION['userInfo']['userid'] == $row['usercreated'] && $_SESSION['rights']['editlog']) OR $_SESSION['rights']['admin']) {
+            if (($_SESSION['userInfo']['userid'] == $row['usercreated'] && $User_Rights->authorized('editlog')) OR $User_Rights->isAdmin()) {
                 $logList .= "<input type=\"button\" value=\"Edit\" onClick=\"editFun.grabedit({$row['logid']});\" class=\"flri\" />";
             }
 

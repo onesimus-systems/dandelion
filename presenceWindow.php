@@ -13,7 +13,7 @@ namespace Dandelion;
 
 require_once 'lib/bootstrap.php';
 
-if (!$_SESSION['app_settings']['cheesto_enabled'] || !$_SESSION['rights']['viewcheesto'] || !Gatekeeper\authenticated()) {
+if (!$_SESSION['app_settings']['cheesto_enabled'] || !$User_Rights->authorized('viewcheesto') || !Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
 }
 ?>

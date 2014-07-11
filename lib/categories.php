@@ -31,7 +31,7 @@ if (isset($_POST['action'])) {
         $displayCats->getChildren($past);
     }
     elseif ($_POST['action'] == 'addcat') {
-        if ($_SESSION['rights']['addcat']) {
+        if ($User_Rights->authorized('addcat')) {
             $parent = $_POST['parentID'];
             $desc = $_POST['catDesc'];
             
@@ -43,7 +43,7 @@ if (isset($_POST['action'])) {
         }
     }
     elseif ($_POST['action'] == 'delcat') {
-        if ($_SESSION['rights']['deletecat']) {
+        if ($User_Rights->authorized('deletecat')) {
             $cat = $_POST['cid'];
             
             $deleteCat = new Categories();
@@ -54,7 +54,7 @@ if (isset($_POST['action'])) {
         }
     }
     elseif ($_POST['action'] == 'editcat') {
-        if ($_SESSION['rights']['editcat']) {
+        if ($User_Rights->authorized('editcat')) {
             $cid = $_POST['cid'];
             $desc = $_POST['catDesc'];
             

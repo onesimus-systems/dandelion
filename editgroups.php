@@ -50,15 +50,15 @@ if (!Gatekeeper\authenticated()) {
             <div name="categorySelects" id="categorySelects"></div><br>
 
             <?php
-            if ($_SESSION['rights']['addgroup']) {
+            if ($User_Rights->authorized('addgroup')) {
                 echo '<input type="button" class="dButton" onClick="permissions.createNew();" value="Add Group">';
             }
 
-            if ($_SESSION['rights']['editgroup']) {
+            if ($User_Rights->authorized('editgroup')) {
                 echo '<input type="button" class="dButton" onClick="permissions.getPermissions();" value="Edit Group">';
             }
 
-            if ($_SESSION['rights']['deletegroup']) {
+            if ($User_Rights->authorized('deletegroup')) {
                 echo '<input type="button" class="dButton" onClick="permissions.deleteGroup();" value="Delete Group">';
             }
             ?>

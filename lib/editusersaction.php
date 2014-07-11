@@ -24,10 +24,10 @@ if (isset($_POST['user_action'])) {
     $user = new User(true, $userId);
     
     if ($u_action != 'add' && !empty($userId)) {
-        if ($u_action == 'delete' && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Confirm user delete
+        if ($u_action == 'delete' && $User_Rights->authorized('deleteuser')) { // Confirm user delete
             userforms::confirmDelete($user);
         }
-        elseif ($u_action == 'cxeesto' &&($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show status update form
+        elseif ($u_action == 'cxeesto' && $User_Rights->authorized('edituser')) { // Show status update form
             if (!empty($user->userCheesto)) {
                 userforms::editCxeesto($user);
             }
@@ -37,19 +37,19 @@ if (isset($_POST['user_action'])) {
             
             $showList = false;
         }
-        elseif ($u_action == 'edit' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show edit user form
+        elseif ($u_action == 'edit' && $User_Rights->authorized('edituser')) { // Show edit user form
             userforms::editUser($user);
             $showList = false;
         }
-        elseif ($u_action == 'reset' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Show password reset form
+        elseif ($u_action == 'reset' && $User_Rights->authorized('edituser')) { // Show password reset form
             userforms::resetPassword($user);
             $showList = false;
         }
-        elseif ($u_action == 'revokeKey' && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Confirm API revoke
+        elseif ($u_action == 'revokeKey' && $User_Rights->authorized('edituser')) { // Confirm API revoke
             userforms::confirmKeyRevoke($user);
         }
     }
-    elseif ($u_action == 'add' && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Show create user form
+    elseif ($u_action == 'add' && $User_Rights->authorized('adduser')) { // Show create user form
         userforms::addUser();
         $showList = false;
     }
@@ -62,21 +62,21 @@ if (isset($_POST['sub_type'])) {
     $userId = isset($_POST['the_choosen_one']) ? $_POST['the_choosen_one'] : '';
     $second_tier = $_POST['sub_type'];
     
-    if ($second_tier == "Save Edit" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Edit user data
+    if ($second_tier == "Save Edit" && $User_Rights->authorized('edituser')) { // Edit user data
         $user = new User();
-        $user->userInfo = array (
+        $user->userInfo = array(
             'realname' => $_POST['edit_real'],
             'role' => $_POST['edit_role'],
             'firsttime' => $_POST['edit_first'],
             'theme' => $_POST['userTheme'],
-            'userid' => $_POST['edit_uid']
+            'userid' => $_POST['edit_uid'] 
         );
         
         echo $user->editUser();
     }
-    elseif ($second_tier == "Add" && ($_SESSION['rights']['adduser'] || $_SESSION['rights']['admin'])) { // Create new user
+    elseif ($second_tier == "Add" && $User_Rights->authorized('adduser')) { // Create new user
         $user = new User();
-        $user->userInfo = array (
+        $user->userInfo = array(
             'username' => $_POST['add_user'],
             'password' => $_POST['add_pass'],
             'realname' => $_POST['add_real'],
@@ -86,7 +86,7 @@ if (isset($_POST['sub_type'])) {
         
         echo $user->addUser();
     }
-    elseif ($second_tier == "Reset" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Reset user password
+    elseif ($second_tier == "Reset" && $User_Rights->authorized('edituser')) { // Reset user password
         $reset_3 = $_POST['reset_1'];
         $reset_4 = $_POST['reset_2'];
         
@@ -99,7 +99,7 @@ if (isset($_POST['sub_type'])) {
             echo 'New passwords do not match<br><br>';
         }
     }
-    elseif ($second_tier == "Yes" && ($_SESSION['rights']['deleteuser'] || $_SESSION['rights']['admin'])) { // Delete user
+    elseif ($second_tier == "Yes" && $User_Rights->authorized('deleteuser')) { // Delete user
         if (!empty($userId)) {
             $user = new User(false, $userId);
             echo $user->deleteUser();
@@ -108,7 +108,7 @@ if (isset($_POST['sub_type'])) {
             echo 'Delete failed, no user selected.';
         }
     }
-    elseif ($second_tier == "Revoke" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Revoke API keys
+    elseif ($second_tier == "Revoke" && $User_Rights->authorized('edituser')) { // Revoke API keys
         if (!empty($userId)) {
             $user = new User(false, $userId);
             echo $user->revokeAPIKey();
@@ -117,7 +117,7 @@ if (isset($_POST['sub_type'])) {
             echo 'API revoke failed, no user selected.';
         }
     }
-    elseif ($second_tier == "Set Status" && ($_SESSION['rights']['edituser'] || $_SESSION['rights']['admin'])) { // Change user Cxeesto status
+    elseif ($second_tier == "Set Status" && $User_Rights->authorized('edituser')) { // Change user Cxeesto status
         $user_id = $_POST['status_id'];
         
         $user = new User(false, $_POST['status_id']);
@@ -125,7 +125,7 @@ if (isset($_POST['sub_type'])) {
         $user->userCheesto = array(
             'status' => $_POST['status_s'],
             'message' => $_POST['status_message'],
-            'returntime' => $_POST['status_return']
+            'returntime' => $_POST['status_return'] 
         );
         
         echo $user->updateUserStatus();

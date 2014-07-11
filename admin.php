@@ -28,22 +28,22 @@ $content = false;
 		
     	<form name="admin_form" method="post" action="lib/admin_actions.php">
 			<?php
-			if ($_SESSION['rights']['adduser'] || $_SESSION['rights']['edituser'] || $_SESSION['rights']['deleteuser']) {
+			if ($User_Rights->authorized('adduser') || $User_Rights->authorized('edituser') || $User_Rights->authorized('deleteuser')) {
 				echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers.php\'"><br>';
 				$content = true;
 			}
 			
-			if ($_SESSION['rights']['addgroup'] || $_SESSION['rights']['editgroup'] || $_SESSION['rights']['deletegroup']) {
+			if ($User_Rights->authorized('addgroup') || $User_Rights->authorized('editgroup') || $User_Rights->authorized('deletegroup')) {
 				echo '<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location=\'editgroups.php\'"><br>';
 				$content = true;
 			}
 			
-			if ($_SESSION['rights']['addcat'] || $_SESSION['rights']['editcat'] || $_SESSION['rights']['deletecat']) {
+			if ($User_Rights->authorized('addcat') || $User_Rights->authorized('editcat') || $User_Rights->authorized('deletecat')) {
 				echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories.php\'"><br>';
 				$content = true;
 			}
 			
-			if ($_SESSION['rights']['admin']) {
+			if ($User_Rights->authorized('admin')) {
 				$content = true;
 			?>
 				<input type="button" class="dButton adminButton" value="Edit Site Slogan" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['app_settings']['slogan']); ?>');">

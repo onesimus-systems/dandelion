@@ -20,6 +20,8 @@ namespace Dandelion;
  */
 function loadJS()
 {
+    global $User_Rights;
+    
     $scripts = func_get_args();
     $scriptList = '';
 
@@ -57,7 +59,7 @@ function loadJS()
                 break;
             case "cheesto":
             case 'presence':
-                if ($_SESSION['rights']['viewcheesto']) {
+                if ($User_Rights->authorized('viewcheesto')) {
                     $scriptList .= '<script src="js/presence.js"></script>';
                 }
                 break;

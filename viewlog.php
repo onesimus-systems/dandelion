@@ -16,7 +16,7 @@ namespace Dandelion;
 
 //Authenticate user, if fail go to login page
 if (Gatekeeper\authenticated()) {
-	if ($_SESSION['rights']['createlog']) {
+	if ($User_Rights->authorized('createlog')) {
 		$add_link = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 	}
 	else {
@@ -45,7 +45,7 @@ else {
 	<body onLoad="refreshFun.startrefresh(); presence.checkstat(0); mail.areUnread();">
 	
 		<?php
-		if ($_SESSION['app_settings']['cheesto_enabled'] && $_SESSION['rights']['viewcheesto']) {
+		if ($_SESSION['app_settings']['cheesto_enabled'] && $User_Rights->authorized('viewcheesto')) {
 		?>
         <div id="presence">
 	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mailbox.php"><img id="mailicon" src="images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
@@ -62,7 +62,7 @@ else {
             </header>
 
             <?php
-            if ($_SESSION['rights']['viewlog']) { ?>
+            if ($User_Rights->authorized('viewlog')) { ?>
                 <div id="controlPanel">
                     <form id="category" method="post">
                         <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';" />
@@ -86,9 +86,9 @@ else {
                     
                     <div id="dialog"></div>
                 </div>
-            <?php } ?>
             
-            <div id="refreshed"></div>
+                <div id="refreshed"></div>
+            <?php } ?>
             
             <footer>
                 <?php include_once 'views/footer.php'; ?>

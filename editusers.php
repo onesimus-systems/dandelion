@@ -32,15 +32,15 @@ $showList = true;
                     <option value="none">Select:</option>
                     
                     <?php
-                    if ($_SESSION['rights']['adduser']) {
+                    if ($User_Rights->authorized('adduser')) {
                         echo '<option value="add">Add User</option>';
                     }
                     
-                    if ($_SESSION['rights']['deleteuser']) {
+                    if ($User_Rights->authorized('deleteuser')) {
                         echo '<option value="delete">Delete</option>';
                     }
                     
-                    if ($_SESSION['rights']['edituser']) {
+                    if ($User_Rights->authorized('edituser')) {
                         echo '<option value="edit">Edit</option>';
                         echo '<option value="reset">Reset Password</option>';
                         echo '<option value="cxeesto">Change &#264;eesto</option>';

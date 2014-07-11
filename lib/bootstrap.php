@@ -102,3 +102,8 @@ if (!isset($_SESSION['app_settings'])) {
     }
     unset($conn);
 }
+
+// Load rights module for logged in user
+if (Gatekeeper\authenticated()) {
+    $User_Rights = new \Dandelion\rights($_SESSION['userInfo']['userid']);
+}

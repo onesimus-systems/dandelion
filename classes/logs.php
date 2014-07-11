@@ -71,7 +71,9 @@ class logs extends Database\dbManage
      * @return string Confirmation message or error message
      */
     private function addLog($logData) {
-        if ($_SESSION['rights']['createlog']) {
+        global $User_Rights;
+        
+        if ($User_Rights->authorized('createlog')) {
             $logData = (array) json_decode($logData);
             
             $new_title = isset($logData['add_title']) ? $logData['add_title'] : '';
@@ -119,7 +121,9 @@ class logs extends Database\dbManage
      * @return string Confirmation message or error message
      */
     private function editLog($logData) {
-        if ($_SESSION['rights']['editlog']) {
+        global $User_Rights;
+        
+        if ($User_Rights->authorized('editlog')) {
             $logData = (array) json_decode($logData);
             
             $editedlog = isset($logData['editlog']) ? $logData['editlog'] : '';
@@ -264,7 +268,9 @@ HTML;
      * @return string Formatted log html
      */
     private function getLogs($data) {
-        if ($_SESSION['rights']['viewlog']) {
+        global $User_Rights;
+        
+        if ($User_Rights->authorized('viewlog')) {
             $pageInfo = (array) json_decode($data);
             
             // Initialize Variables
