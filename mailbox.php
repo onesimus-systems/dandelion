@@ -29,7 +29,7 @@ if (!Gatekeeper\authenticated()) {
 	
 	<body>
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
 		
 		<div id="mailDialog" title="View Mail"></div>
@@ -65,7 +65,7 @@ if (!Gatekeeper\authenticated()) {
 		</div>
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
 	

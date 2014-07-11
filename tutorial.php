@@ -30,7 +30,7 @@ if (!Gatekeeper\authenticated()) {
 	</head>
 	<body>
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
 		
 		<div id="content">
@@ -101,7 +101,7 @@ if (!Gatekeeper\authenticated()) {
         </div>
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
 </html>

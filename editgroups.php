@@ -29,7 +29,7 @@ if (!Gatekeeper\authenticated()) {
     </head>
     <body onLoad="permissions.getList();">
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
 
         <div id="dialog" title="Alert"></div>
@@ -122,7 +122,7 @@ if (!Gatekeeper\authenticated()) {
         </div>
 
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
     </body>
 

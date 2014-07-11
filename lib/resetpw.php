@@ -12,7 +12,7 @@
 namespace Dandelion;
 use Dandelion\Database\dbManage;
 
-require_once '../lib/bootstrap.php';
+require_once 'bootstrap.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $reset_3 = isset($_POST['reset_1']) ? $_POST['reset_1'] : '';

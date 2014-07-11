@@ -58,7 +58,7 @@ else {
     
         <div id="divMain">
             <header>
-                <?php include 'scripts/header.php'; ?>
+                <?php include 'views/header.php'; ?>
             </header>
 
             <?php
@@ -91,7 +91,7 @@ else {
             <div id="refreshed"></div>
             
             <footer>
-                <?php include_once 'scripts/footer.php'; ?>
+                <?php include_once 'views/footer.php'; ?>
             </footer>
         </div>
 

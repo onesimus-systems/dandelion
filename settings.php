@@ -29,12 +29,12 @@ if (!Gatekeeper\authenticated()) {
 	</head>
 	<body>
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
 		
 		<h2>User Settings</h2>
 		
-		<?php require_once 'scripts/saveSettings.php';?>
+		<?php require_once 'lib/saveSettings.php';?>
 
         <form method="post">
             <input type="submit" name="set_action" class="dButton adminButton" value="Reset Password" />
@@ -63,7 +63,7 @@ if (!Gatekeeper\authenticated()) {
         <?php } ?>
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
 	

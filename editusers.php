@@ -20,10 +20,10 @@ $showList = true;
 	</head>
 	<body>
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
         
-		<?php include 'scripts/editusersaction.php'; ?>
+		<?php include 'lib/editusersaction.php'; ?>
 		
         <?php if ($showList) {?><br>
             <form method="post">
@@ -84,7 +84,7 @@ $showList = true;
         <?php } ?>
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
 </html>

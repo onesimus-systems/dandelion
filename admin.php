@@ -21,7 +21,7 @@ $content = false;
 	</head>
 	<body>
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
 
         <h2>Administration</h2>
@@ -84,7 +84,7 @@ $content = false;
     	?>
 
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
         
         <?php echo loadJS('jquery','admin.js');?>

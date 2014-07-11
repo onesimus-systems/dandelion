@@ -29,7 +29,7 @@ var CategoryManage = {
 		
 		$.ajax({
             type: "POST",
-            url: "scripts/categories.php",
+            url: "lib/categories.php",
             data: { action: "grabcats", pastSelections: JSON.stringify(this.currentSelection)},
             async: false
         })
@@ -76,7 +76,7 @@ var CategoryManage = {
 		var parent = this.currentSelection[this.currentSelection.length-1].split(':');
 		parent = parent[0];
 		
-		$.post("scripts/categories.php", { action: "addcat", parentID: parent, catDesc: newCatDesc })
+		$.post("lib/categories.php", { action: "addcat", parentID: parent, catDesc: newCatDesc })
             .done(function( html ) {
                 alert( html );
 				CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
@@ -93,7 +93,7 @@ var CategoryManage = {
             var editedCat = window.prompt("Edit Category Description:",editString);
 
             if (editedCat !== null && editedCat !== '') {
-                $.post("scripts/categories.php", { action: "editcat", cid: cid[0], catDesc: encodeURIComponent(editedCat) })
+                $.post("lib/categories.php", { action: "editcat", cid: cid[0], catDesc: encodeURIComponent(editedCat) })
                     .done(function( html ) {
                         alert( html );
                         CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
@@ -111,7 +111,7 @@ var CategoryManage = {
 			return false;
 		}
 		
-        $.post("scripts/categories.php", { action: "delcat", cid: cid })
+        $.post("lib/categories.php", { action: "delcat", cid: cid })
             .done(function( html ) {
                 alert( html );
                 CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);

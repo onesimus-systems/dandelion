@@ -43,7 +43,7 @@ if (!Gatekeeper\authenticated()) {
         <br />
         
 		<div id="editform">
-			<form name="edit_form" method="post" action="scripts/resetpw.php">
+			<form name="edit_form" method="post" action="lib/resetpw.php">
 				<table>
 					<tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
 					<tr><td>Repeat Password:</td><td><input type="password" name="reset_2" /></td></tr>
@@ -55,7 +55,7 @@ if (!Gatekeeper\authenticated()) {
 		<br />
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
 </html>

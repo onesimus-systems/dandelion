@@ -11,7 +11,7 @@
  ***/
 namespace Dandelion;
 
-require_once '../lib/bootstrap.php';
+require_once 'bootstrap.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     $action = $_GET['action'];

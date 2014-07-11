@@ -10,5 +10,5 @@
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
 namespace Dandelion\Gatekeeper;
-require_once '../lib/bootstrap.php';
+require_once 'bootstrap.php';
 logout();

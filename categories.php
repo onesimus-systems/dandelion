@@ -18,7 +18,7 @@ if (!Gatekeeper\authenticated()) {
 	</head>
 	<body onLoad="CategoryManage.grabNextLevel('0:0');">
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
 		
         <h3>Category Management</h3>
@@ -44,7 +44,7 @@ if (!Gatekeeper\authenticated()) {
         </form>
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
     
