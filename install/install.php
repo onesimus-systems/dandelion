@@ -53,20 +53,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             /** Write config file */
             $newFile = "<?php
-            $DBCONFIG=array(
-            'db_type' => '{$CONFIG['db_type']}',
-            'sqlite_fn' => '',
-            'db_name' => '{$CONFIG['db_name']}',
-            'db_host' => '{$CONFIG['db_host']}',
-            'db_user' => '{$CONFIG['db_user']}',
-            'db_pass' => '{$CONFIG['db_pass']}',
-            'db_prefix' => 'dan_',
-            );
+\$DBCONFIG = array (
+'db_type' => '{$CONFIG['db_type']}',
+'sqlite_fn' => '',
+'db_name' => '{$CONFIG['db_name']}',
+'db_host' => '{$CONFIG['db_host']}',
+'db_user' => '{$CONFIG['db_user']}',
+'db_pass' => '{$CONFIG['db_pass']}',
+'db_prefix' => 'dan_'
+);
 
-            define('HOSTNAME', {$hostname});
-            define('PHP_SESSION_NAME', 'dan_session_1');
-            define('DEBUG_ENABLED', true);
-            define('INSTALLED', true);";
+define('HOSTNAME', '{$hostname}');
+define('PHP_SESSION_NAME', 'dan_session_1');
+define('DEBUG_ENABLED', true);
+define('INSTALLED', true);";
 
             file_put_contents('../config/config.php', $newFile);
 

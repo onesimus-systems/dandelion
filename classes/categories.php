@@ -93,7 +93,7 @@ class categories extends Database\dbManage
     {
         $stmt = 'INSERT INTO `'.DB_PREFIX.'category` (`description`, `pid`) VALUES (:description, :parentid)';
         $params = array(
-            'description' => $description,
+            'description' => urldecode($description),
             'parentid'	  => $parent
         );
 
@@ -152,7 +152,7 @@ class categories extends Database\dbManage
     {
         $stmt = 'UPDATE `'.DB_PREFIX.'category` SET `description` = :desc WHERE `cid` = :cid';
         $params = array(
-                'desc' => $desc,
+                'desc' => urldecode($desc),
                 'cid' => $cid
         );
 

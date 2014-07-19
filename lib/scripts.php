@@ -30,8 +30,8 @@ function loadJS()
         if (substr($file, -3) == ".js") {
             if (is_file('js/'.$file)) {
                 $scriptList .= '<script src="js/'.$file.'"></script>';
-            } elseif (is_file('jquery/js/'.$file)) {
-                $scriptList .= '<script src="jquery/js/'.$file.'"></script>';
+            } elseif (is_file('js/jquery/js/'.$file)) {
+                $scriptList .= '<script src="js/jquery/js/'.$file.'"></script>';
             } else {
                 $scriptList .= "<!-- {$file} was not found. Error 404. -->";
             }

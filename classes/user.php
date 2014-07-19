@@ -46,10 +46,10 @@ class User extends dbManage
             $this->userInfo['userid'] = $uid;
         }
         
-        if ($load == true && $uid >= 0) {
+        if ($load === true && $uid >= 0) {
             $this->loadUser();
         }
-        elseif ($load == true && $uid < 0) {
+        elseif ($load === true && $uid < 0) {
             echo 'To load a user you must provide a user ID.';
         }
         

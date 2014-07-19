@@ -21,7 +21,7 @@ Install - Automatic
 
 1. Grab a copy of the source either via git clone or download and put it on your web server
 2. Create a MySQL/Maria database to house Dandelion
-3. Browse to install.php in the root of Dandelion
+3. Browse to [hostname]/install in Dandelion
 4. Type in database hostname, username, password, and database name
 5. The installer will direct you to the index page. Login with:
 
