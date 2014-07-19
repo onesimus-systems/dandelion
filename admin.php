@@ -1,7 +1,7 @@
 <?php
 namespace Dandelion;
 
-include_once 'scripts/bootstrap.php';
+require_once 'lib/bootstrap.php';
 
 if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
@@ -21,29 +21,29 @@ $content = false;
 	</head>
 	<body>
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
 
         <h2>Administration</h2>
 		
-    	<form name="admin_form" method="post" action="scripts/admin_actions.php">
+    	<form name="admin_form" method="post" action="lib/admin_actions.php">
 			<?php
-			if ($_SESSION['rights']['adduser'] || $_SESSION['rights']['edituser'] || $_SESSION['rights']['deleteuser']) {
+			if ($User_Rights->authorized('adduser') || $User_Rights->authorized('edituser') || $User_Rights->authorized('deleteuser')) {
 				echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers.php\'"><br>';
 				$content = true;
 			}
 			
-			if ($_SESSION['rights']['addgroup'] || $_SESSION['rights']['editgroup'] || $_SESSION['rights']['deletegroup']) {
+			if ($User_Rights->authorized('addgroup') || $User_Rights->authorized('editgroup') || $User_Rights->authorized('deletegroup')) {
 				echo '<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location=\'editgroups.php\'"><br>';
 				$content = true;
 			}
 			
-			if ($_SESSION['rights']['addcat'] || $_SESSION['rights']['editcat'] || $_SESSION['rights']['deletecat']) {
+			if ($User_Rights->authorized('addcat') || $User_Rights->authorized('editcat') || $User_Rights->authorized('deletecat')) {
 				echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories.php\'"><br>';
 				$content = true;
 			}
 			
-			if ($_SESSION['rights']['admin']) {
+			if ($User_Rights->authorized('admin')) {
 				$content = true;
 			?>
 				<input type="button" class="dButton adminButton" value="Edit Site Slogan" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['app_settings']['slogan']); ?>');">
@@ -61,7 +61,15 @@ $content = false;
 	                <option value="false" <?php echo !$_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Disabled</option>
 	            </select>
 	            
-	            <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save">
+	            <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save"><br><br>
+	            
+	            Public API:
+	            <select id="api_enabled">
+	                <option value="true" <?php echo $_SESSION['app_settings']['public_api'] ? 'selected' : ''; ?>>Enabled</option>
+	                <option value="false" <?php echo !$_SESSION['app_settings']['public_api'] ? 'selected' : ''; ?>>Disabled</option>
+	            </select>
+	            
+	            <input type="button" class="dButton" onClick="adminAction.saveApiSetting();" value="Save">
 	            
 	            <br><br><hr width="350">
 				<h3>Database Administration</h3>
@@ -76,7 +84,7 @@ $content = false;
     	?>
 
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
         
         <?php echo loadJS('jquery','admin.js');?>

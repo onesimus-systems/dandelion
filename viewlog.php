@@ -16,7 +16,7 @@ namespace Dandelion;
 
 //Authenticate user, if fail go to login page
 if (Gatekeeper\authenticated()) {
-	if ($_SESSION['rights']['createlog']) {
+	if ($User_Rights->authorized('createlog')) {
 		$add_link = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 	}
 	else {
@@ -42,39 +42,15 @@ else {
 		<title>Dandelion Web Log</title>
 	</head>
     
-	<body onLoad="refreshFun.startrefresh(); mail.areUnread();">
+	<body onLoad="refreshFun.startrefresh(); presence.checkstat(0); mail.areUnread();">
 	
 		<?php
-		if ($_SESSION['app_settings']['cheesto_enabled'] && $_SESSION['rights']['viewcheesto']) {
+		if ($_SESSION['app_settings']['cheesto_enabled'] && $User_Rights->authorized('viewcheesto')) {
 		?>
         <div id="presence">
 	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mailbox.php"><img id="mailicon" src="images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
 	        
-        	<div id="mainPresence">
-                <?php
-        		if ($_SESSION['rights']['updatecheesto']) {
-        		?>
-	            <form method="post">
-	                <select id="cstatus">
-	                    <option>Set Status:</option>
-	                    <option>Available</option>
-	                    <option>Away From Desk</option>
-	                    <option>At Lunch</option>
-	                    <option>Out for Day</option>
-	                    <option>Out</option>
-	                    <option>Appointment</option>
-	                    <option>Do Not Disturb</option>
-	                    <option>Meeting</option>
-	                    <option>Out Sick</option>
-	                    <option>Vacation</option>
-	                </select>
-	                <input type="button" value="Set" class="linklike set" onClick="presence.setStatus(0);" />
-	            </form>
-                <?php
-        		}
-                ?>
-	            <div id="pt"></div>
-            </div>
+        	<div id="mainPresence"></div>
         </div>
         <?php
 		}
@@ -82,14 +58,14 @@ else {
     
         <div id="divMain">
             <header>
-                <?php include 'scripts/header.php'; ?>
+                <?php include 'views/header.php'; ?>
             </header>
 
             <?php
-            if ($_SESSION['rights']['viewlog']) { ?>
+            if ($User_Rights->authorized('viewlog')) { ?>
                 <div id="controlPanel">
                     <form id="category" method="post">
-                        <input type="text" id="searchterm" size="40" value="Keyword" onClick="miscFun.clearval(this);" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="miscFun.clearval(this);" />
+                        <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';" />
                         <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();" /><br />
                         
                         Filter: 
@@ -110,12 +86,12 @@ else {
                     
                     <div id="dialog"></div>
                 </div>
+            
+                <div id="refreshed"></div>
             <?php } ?>
             
-            <div id="refreshed"></div>
-            
             <footer>
-                <?php include_once 'scripts/footer.php'; ?>
+                <?php include_once 'views/footer.php'; ?>
             </footer>
         </div>
 

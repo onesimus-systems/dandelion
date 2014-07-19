@@ -1,3 +1,8 @@
+/* global $, window, alert */
+/* exported adminAction */
+
+"use strict"; // jshint ignore:line
+
 var adminAction =
 {
 	editSlogan: function(current) {
@@ -8,7 +13,7 @@ var adminAction =
 	},
 	
 	backupDB: function() {
-		$.post("scripts/admin_actions.php", { action: "backupDB" })
+		$.post("lib/admin_actions.php", { action: "backupDB" })
             .done(function( msg ) {
                 alert(msg);
             });
@@ -24,8 +29,13 @@ var adminAction =
         this.performAction("saveCheesto", cheesto);
 	},
 	
+	saveApiSetting: function() {
+	    var pAPI = $("#api_enabled").val();
+	    this.performAction("savePAPI", pAPI);
+	},
+	
 	performAction: function(action, data) {
-        $.post("scripts/admin_actions.php", { action: action, data: encodeURIComponent(data) })
+        $.post("lib/admin_actions.php", { action: action, data: encodeURIComponent(data) })
             .done(function( msg ) {
                 alert(msg);
             });

@@ -1,10 +1,13 @@
+/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, alert */
+/* exported pagentation */
+
+"use strict"; // jshint ignore:line
+
 var autore = false,
     filt = false,
-    title="",
-    entry="",
-    refreshinv,
     refreshc,
-    secleft=120;
+    secleft=120,
+    editing;
 
 $(document).ready(function() {
     $( "#datesearch" ).datepicker();
@@ -16,16 +19,10 @@ $(document).ready(function() {
 });
 
 $(document).on("focusin", function(e) {
-	if ($(event.target).closest(".mce-window").length) {
+	if ($(e.target).closest(".mce-window").length) {
 		e.stopImmediatePropagation();
 	}
 });
-    
-var miscFun = {
-    clearval: function(clearme) {
-        clearme.value="";
-    },
-};
  
 var refreshFun =
 {
@@ -38,17 +35,10 @@ var refreshFun =
     startrefresh: function() {
         // Run first time
 		refreshLog("update");
-		if (typeof presence !== 'undefined') {
-            setTimeout(function(){presence.checkstat(0);}, 1);
-		}
         CategoryManage.grabNextLevel('0:0');
 
 		// Set timers
-        refreshc = setInterval(function(){refreshLog("update");}, 120000);
-		if (typeof presence !== 'undefined') {
-            wherearewe = setInterval(function(){presence.checkstat(0);}, 30000);
-		}
-
+        refreshc = setInterval(function(){ refreshLog("update"); }, 120000);
         autore = true;
     },
 
@@ -67,7 +57,7 @@ function refreshLog(kindof) {
         {
             $.ajax({
                 type: "POST",
-                url: "scripts/logs.php",
+                url: "lib/logs.php",
                 async: false,
                 data: { action: "getLogs", data: "" }
             })
@@ -99,11 +89,11 @@ function refreshLog(kindof) {
  * the SELECT limits.
  */
 function pagentation(pageOffset) {
-    pages = {
+    var pages = {
         pageOffset: pageOffset
     };
     
-    $.post("scripts/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
+    $.post("lib/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
         .done(function( html ) {
             $("#refreshed").html( html );
             
@@ -129,7 +119,7 @@ function pagentation(pageOffset) {
 
 var addFun =
 {
-    showaddinputs: function(title, entry) {
+    showaddinputs: function() {
         $("#add_edit_form")[0].reset();
         $("textarea#logEntry").html("");
         
@@ -181,19 +171,19 @@ var addFun =
         title = encodeURIComponent(title);
         var entry = $("textarea#logEntry").val();
         entry = encodeURIComponent(entry);
-        cat = CategoryManage.getCatString();
+        var cat = CategoryManage.getCatString();
         
-		if (title != "" && entry != "" && cat != "") {
+		if (title !== "" && entry !== "" && cat !== "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 			
-			logData = {
+			var logData = {
 				cat: cat,
 				add_title: title,
 				add_entry: entry
 			};
 
-			$.post("scripts/logs.php", { action: "addLog", data: JSON.stringify(logData) })
+			$.post("lib/logs.php", { action: "addLog", data: JSON.stringify(logData) })
 				.done(function( html ) {
 					refreshLog();
 					secleft=120;
@@ -266,7 +256,7 @@ var editFun =
      * the fields.
      */
     grabedit: function(logid) {
-        $.post("scripts/logs.php", { action: 'getLogInfo', data: logid })
+        $.post("lib/logs.php", { action: 'getLogInfo', data: logid })
             .done( editFun.showeditinputs );
     },
 
@@ -277,17 +267,17 @@ var editFun =
         var editedlog = $("textarea#logEntry").val();
         editedlog = encodeURIComponent(editedlog);
         
-        if (editedtitle != "" && editedlog != "") {
+        if (editedtitle !== "" && editedlog !== "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 			
-			logData = {
+			var logData = {
 				editlog: editedlog,
 				edittitle: editedtitle,
 				choosen: id
 			};
 			
-			$.post("scripts/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
+			$.post("lib/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
 				.done(function( html ) {
 				refreshLog();
 				secleft=120;
@@ -337,6 +327,7 @@ var searchFun =
         var searchfor = $("input#searchterm").val();
         var datefor   = $("input#datesearch").val();
         searchfor     = encodeURIComponent(searchfor);
+        var type = '';
 
         if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null && datefor!=="" && datefor!=="Date" && datefor!==null) {
             type = "both";
@@ -352,13 +343,13 @@ var searchFun =
             return false;
         }
         
-        search = {
+        var search = {
 			keyw: searchfor,
 			dates: datefor,
 			type: type
         };
         
-        $.post("scripts/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
+        $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
             .done(function( html ) {
                 filt=true;
                 refreshFun.stoprefresh();
@@ -370,14 +361,14 @@ var searchFun =
     filter: function(cat) {
         if (cat === '') { cat = CategoryManage.getCatString(); }
         
-        filter = {
+        var filter = {
 			type: '',
 			filter: cat
         };
         
         if (cat)
         {
-            $.post("scripts/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
+            $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
                 .done(function( html ) {
                     $("#refreshed").html( html );
                     filt=true;

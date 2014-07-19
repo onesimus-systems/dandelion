@@ -112,4 +112,24 @@ class adminactions extends Database\dbManage
 
         return 'Settings set successfully';
     }
+    
+    /**
+     * Save public API enabled status
+     *
+     * @param $data bool - Enabled?
+     * @return string
+     */
+    private function savePAPI($data) {
+        // Set Public API enabled/disabled
+        $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :enabled WHERE `name` = "public_api"';
+        $enabled = ($data == 'true') ? 1 : 0;
+        $params = array(
+            'enabled' => $enabled
+        );
+        $this->queryDB($stmt, $params);
+
+        $_SESSION['app_settings']['public_api'] = $enabled;
+
+        return 'Setting saved';
+    }
 }

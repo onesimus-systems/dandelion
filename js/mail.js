@@ -1,21 +1,26 @@
+/* global $, document, setTimeout, alert, confirm */
+/* jshint multistr: true */
+
+"use strict"; // jshint ignore:line
+
 $(document).ready(function() {
     $("#writeMail").css("display", "none");
     mail.showFolder();
 });
 
 $(document).on("focusin", function(e) {
-    if ($(event.target).closest(".mce-window").length) {
+    if ($(e.target).closest(".mce-window").length) {
         e.stopImmediatePropagation();
     }
 });
 
 var mail = {
         areUnread: function() {
-            $.getJSON("scripts/mail/getMailCount.php", function(data) {
-                if (data['count'] > 0) {
+            $.getJSON("iapi/mail/mailCount", function(data) {
+                if (data.data.count > 0) {
                     $("#mailicon").attr("src", "images/mail.png");
                     $("#mailicon").attr("alt", "You have mail");
-                    $("#mailicon").attr("title", data['count']);
+                    $("#mailicon").attr("title", data.data.count);
                 }
             });
 
@@ -36,13 +41,13 @@ var mail = {
         },
 
         getAllMail: function() {
-            $.getJSON("scripts/mail/getAllMail.php",
-                    function(data){ mail.showMailList(data); });
+            $.getJSON("iapi/mail/getAllMail",
+                    function(data){ mail.showMailList(data.data); });
         },
         
         getTrashCan: function() {
-            $.getJSON("scripts/mail/getAllMail.php", {"trash": "true"},
-                    function(data){ mail.showMailList(data); });
+            $.getJSON("iapi/mail/getAllMail", {"trash": "true"},
+                    function(data){ mail.showMailList(data.data); });
         },
 
         showMailList: function(parsed) {
@@ -58,17 +63,17 @@ var mail = {
                     <th width="20%">Date</th>\
             </tr>');
 
-            for(i=0; i<mailItems; i++){
-                mailItem = parsed[i];
+            for(var i=0; i<mailItems; i++){
+                var mailItem = parsed[i];
 
-                html = '<tr>\
-                    <td><input type="checkbox" id="check'+i+'" value='+mailItem['id']+'></td>\
-                    <td>'+mailItem['realname']+'</td>\
-                    <td><a href="#" onClick="mail.viewMail('+mailItem['id']+');">'+mailItem['subject']+'</a></td>\
-                    <td>'+mailItem['dateSent']+'</td>\
+                var html = '<tr>\
+                    <td><input type="checkbox" id="check'+i+'" value='+mailItem.id+'></td>\
+                    <td>'+mailItem.realname+'</td>\
+                    <td><a href="#" onClick="mail.viewMail('+mailItem.id+');">'+mailItem.subject+'</a></td>\
+                    <td>'+mailItem.dateSent+'</td>\
                     </tr>';
 
-                if (mailItem['isItRead'] == "0") {
+                if (mailItem.isItRead == "0") {
                     table.append($(html).addClass('unread'));
                 }
                 else {
@@ -80,14 +85,15 @@ var mail = {
         },
 
         viewMail: function(id) {
-            $.getJSON("scripts/mail/viewMail.php", {mid: id}, function(data) {
+            $.getJSON("iapi/mail/read", {mid: id}, function(data) {
+                data = data.data;
                 mail.showFolder();
 
-                var html = '<h2>'+data[0]['subject']+'</h2>\
+                var html = '<h2>'+data[0].subject+'</h2>\
                 To: You<br>\
-                From: '+data[0]['realname']+'<br>\
-                Sent: '+data[0]['dateSent']+' '+data[0]['timeSent']+'<br>\
-                <br>'+data[0]['body'];
+                From: '+data[0].realname+'<br>\
+                Sent: '+data[0].dateSent+' '+data[0].timeSent+'<br>\
+                <br>'+data[0].body;
 
                 $( "#mailDialog" ).html( html );
                 $( "#mailDialog" ).dialog({
@@ -114,13 +120,13 @@ var mail = {
         replyToMail: function() {
             var selection = this.getSelectedMailIds();
             if (selection.length == 1) {
-                $.getJSON("scripts/mail/viewMail.php", {mid: selection[0]}, function(data) {
-                    console.log(data);
+                $.getJSON("iapi/mail/read", {mid: selection[0]}, function(data) {
+                    data = data.data;
                     $("#mailForm")[0].reset();
-                    $("textarea#mailBody").html(data[0]['body']);
-                    $("#mailSubject").val("RE: " + data[0]['subject']);
-                    $("#toUsersId").val(data[0]['fromUser']);
-                    $("#toUsers").val(data[0]['realname']);
+                    $("textarea#mailBody").html(data[0].body);
+                    $("#mailSubject").val("RE: " + data[0].subject);
+                    $("#toUsersId").val(data[0].fromUser);
+                    $("#toUsers").val(data[0].realname);
                     $("#toUsers").prop("readonly", true);
                     
                     mail.showWriteDialog();
@@ -129,7 +135,8 @@ var mail = {
         },
 
         writeMailDialog: function() {
-            $.getJSON("scripts/mail/getUserList.php", function(data) {
+            $.getJSON("iapi/mail/getUserList", function(data) {
+                data = data.data;
                 $("#mailForm")[0].reset();
                 $("#toUsers").prop("readonly", false);
                 $("textarea#mailBody").html("");
@@ -141,8 +148,8 @@ var mail = {
 
                 $(data).each(function(key, value) {
                     var user = [];
-                    user.label = value["realname"];
-                    user.value = value["userid"];
+                    user.label = value.realname;
+                    user.value = value.userid;
                     users.push(user);
                 });
 
@@ -209,16 +216,17 @@ var mail = {
         sendMail: function() {
             var mailPiece = {};
 
-            mailPiece["to"] = $("#toUsersId").val();
-            mailPiece["subject"] = $("#mailSubject").val();
-            mailPiece["body"] = $("#mailBody").val();
+            mailPiece.to = $("#toUsersId").val();
+            mailPiece.subject = $("#mailSubject").val();
+            mailPiece.body = $("#mailBody").val();
 
-            if (mailPiece.to != "" && mailPiece.subject != "" && mailPiece.body != "") {
+            if (mailPiece.to !== "" && mailPiece.subject !== "" && mailPiece.body !== "") {
                 mailPiece = JSON.stringify(mailPiece);
 
-                $.post("scripts/mail/sendMail.php", {mail: mailPiece},
+                $.post("iapi/mail/send", {mail: mailPiece},
                         function(data) {
-                    alert(data);
+                    data = JSON.parse(data);
+                    alert(data.data);
                 });
 
                 return true;
@@ -232,17 +240,18 @@ var mail = {
         deleteMail: function() {
             var selected = this.getSelectedMailIds();
 
-            if (selected.length == 1 && confirm("Delete Selected Mail?")) {
+            if (selected.length === 1 && confirm("Delete Selected Mail?")) {
                 var permenant = false;
                 
                 if ($("#folder").val() == "trash") {
                     permenant = true;
                 }
                 
-                $.post("scripts/mail/deleteMail.php", {"mid": selected[0], "permenant": permenant},
-                    function(data) { 
+                $.post("iapi/mail/delete", {"mid": selected[0], "permenant": permenant},
+                    function(data) {
+                        data = JSON.parse(data);
                         mail.showFolder();
-                        alert(data);
+                        alert(data.data);
                 });
             }
         },

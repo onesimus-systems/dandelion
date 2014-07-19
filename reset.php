@@ -14,7 +14,7 @@
  ***/
 namespace Dandelion;
 
-require_once 'scripts/bootstrap.php';
+require_once 'lib/bootstrap.php';
 
 // Check whether the user is logged in
 if (!Gatekeeper\authenticated()) {
@@ -33,7 +33,7 @@ if (!Gatekeeper\authenticated()) {
 	<body>
         <header>
             <h1 class="t_cen">Dandelion Web Log - v <?php echo D_VERSION ?></h1>
-            <p class="t_cen">Welcome, <?php echo $_SESSION['userInfo']['realname']; ?> <a href="scripts/logout.php">Logout</a></p>
+            <p class="t_cen">Welcome, <?php echo $_SESSION['userInfo']['realname']; ?> <a href="lib/logout.php">Logout</a></p>
         </header>
         
         <p>This is your first time logging into Dandelion. Please reset your password:</p>
@@ -43,7 +43,7 @@ if (!Gatekeeper\authenticated()) {
         <br />
         
 		<div id="editform">
-			<form name="edit_form" method="post" action="scripts/resetpw.php">
+			<form name="edit_form" method="post" action="lib/resetpw.php">
 				<table>
 					<tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
 					<tr><td>Repeat Password:</td><td><input type="password" name="reset_2" /></td></tr>
@@ -55,7 +55,7 @@ if (!Gatekeeper\authenticated()) {
 		<br />
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
 </html>

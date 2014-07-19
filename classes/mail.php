@@ -25,19 +25,6 @@ namespace Dandelion\Mail;
 
 use Dandelion\Database;
 
-/**
- * Database schema:
- *
- * id - int
- * isRead - bool (0,1)
- * toUser - int (user ID)
- * fromUser - int (user ID)
- * subject - string
- * body - big string
- * deleted - bool (0,1) - Used for trash can functionality
- * dateSent - date
- * timeSent - time
- */
 class mail extends Database\dbManage
 {
 

@@ -1,3 +1,7 @@
+/* global $, alert */
+
+"use strict"; // jshint ignore:line
+
 var permissions = {
     // All permissions to reference for iteration
     allPermissions: {
@@ -27,13 +31,13 @@ var permissions = {
     },
     
     getList: function() {
-        $("#groups").load("scripts/editgroups.php", "action=getlist");
+        $("#groups").load("lib/editgroups.php", "action=getlist");
     },
     
     getPermissions: function(gid) {
         var group = typeof gid !== 'undefined' ? gid : $("#groupList")[0].value;
         
-        $.get("scripts/editgroups.php", { action: "getpermissions", groups: group })
+        $.get("lib/editgroups.php", { action: "getpermissions", groups: group })
           .done(function( html ) {
               permissions.showPermissions(html);
           });
@@ -58,7 +62,7 @@ var permissions = {
         if (group !== 0) {
 			var newPermissionsJson = JSON.stringify(newPermissions);
 
-			$.post("scripts/editgroups.php", { action: "save", permissions: newPermissionsJson, gid: group })
+			$.post("lib/editgroups.php", { action: "save", permissions: newPermissionsJson, gid: group })
 				.done(function( msg ) {
 					alert(msg);
 					$("#permissionsForm")[0].reset();
@@ -134,10 +138,10 @@ var permissions = {
     },
     
     sendNew: function() {
-        $.post("scripts/editgroups.php",
+        $.post("lib/editgroups.php",
 			{ action: "create", name: $("#name").val(), rights: JSON.stringify(permissions.allPermissions) }
           )
-          .done(function( msg ) {
+          .done(function() {
               
               $( "#dialog" ).html( "<p>Rights Group Created Successfully</p>" );
               $( "#dialog" ).dialog({
@@ -177,7 +181,7 @@ var permissions = {
               
                 var group = $("#groupList").val();
             
-                $.post("scripts/editgroups.php", { action: "delete", groups: group })
+                $.post("lib/editgroups.php", { action: "delete", groups: group })
                   .done(function( msg ) {
                       
                       $( "#dialog" ).html( "<p>"+msg+"</p>" );

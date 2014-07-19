@@ -15,7 +15,7 @@ $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
     <body>
         <div id="login">
             <h1>Dandelion Web Log</h1>
-            <form id="login_form" action="scripts/authenticate.php" method="post">
+            <form id="login_form" action="lib/authenticate.php" method="post">
             <?php echo $status;
                 if (isset($_COOKIE['dan_username'])) {
                     $username = $_COOKIE['dan_username'];

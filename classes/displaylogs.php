@@ -33,20 +33,19 @@ class displaylogs
      *
      * @param array $grab_logs Log entries that need to be displayed
      * @param bool $filtered Is this request for filtered logs or not
-     * @param array $users User IDs and real names from database
      * @param int $pageOffset The lower limit used to determine page breaks
      * @param int $logSize Number of total rows of log data
      *
      * @return string HTML of log data and pagination controls
      */
-    public static function display($grab_logs, $filtered, $users, $pageOffset = null, $logSize = null)
+    public static function display($grab_logs, $filtered, $pageOffset = null, $logSize = null)
     {
         $logHtml = '';
 
         if (!$filtered)
             $logHtml .= self::pageing($pageOffset, $logSize); // Show page controls
 
-        $logHtml .= self::showLogs($grab_logs, $filtered, $users); // Display log entries
+        $logHtml .= self::showLogs($grab_logs, $filtered); // Display log entries
 
         if (!$filtered)
             $logHtml .= self::pageing($pageOffset, $logSize); // Show page controls
@@ -84,31 +83,21 @@ class displaylogs
      *
      * @param array $grab_logs Log entries that need to be displayed
      * @param bool $isFiltered Is this request for filtered logs or not
-     * @param array $userArray User IDs and real names from database
      *
      * @return string HTML of log data
      *
      * @TODO Improve attribution of deleted users
      */
-    private static function showLogs($grab_logs, $isFiltered, $userArray)
+    private static function showLogs($grab_logs, $isFiltered)
     {
+        global $User_Rights;
+        
         $logList = '';
 
         $logList .= '<div id="refreshed_core">';
 
         foreach ($grab_logs as $row) {
-            $creator = '';
-            // Cycle through all users to find which one the entry belongs to
-            foreach ($userArray as $user) {
-                if ($row['usercreated'] == $user['userid']) {
-                    $creator = $user['realname'];
-                    break;
-                }
-            }
-
-            if ($creator == '') {
-                $creator = 'Unknown User';
-            }
+            $creator = ($row['realname'] == '') ? 'Unknown User' : $row['realname'];
 
             // Display each log entry
             $logList .= '<form method="post">';
@@ -123,7 +112,7 @@ class displaylogs
                 $logList .= '<br /><a href="#" onClick="searchFun.filter(\'' . $row['cat'] . '\');">Learn more about this system...</a>';
             }
 
-            if (($_SESSION['userInfo']['userid'] == $row['usercreated'] && $_SESSION['rights']['editlog']) OR $_SESSION['rights']['admin']) {
+            if (($_SESSION['userInfo']['userid'] == $row['usercreated'] && $User_Rights->authorized('editlog')) OR $User_Rights->isAdmin()) {
                 $logList .= "<input type=\"button\" value=\"Edit\" onClick=\"editFun.grabedit({$row['logid']});\" class=\"flri\" />";
             }
 

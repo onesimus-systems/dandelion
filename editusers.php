@@ -1,7 +1,7 @@
 <?php
 namespace Dandelion;
 
-include_once 'scripts/bootstrap.php';
+require_once 'lib/bootstrap.php';
 
 if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
@@ -20,10 +20,10 @@ $showList = true;
 	</head>
 	<body>
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
         
-		<?php include 'scripts/editusersaction.php'; ?>
+		<?php include 'lib/editusersaction.php'; ?>
 		
         <?php if ($showList) {?><br>
             <form method="post">
@@ -32,18 +32,19 @@ $showList = true;
                     <option value="none">Select:</option>
                     
                     <?php
-                    if ($_SESSION['rights']['adduser']) {
+                    if ($User_Rights->authorized('adduser')) {
                         echo '<option value="add">Add User</option>';
                     }
                     
-                    if ($_SESSION['rights']['deleteuser']) {
+                    if ($User_Rights->authorized('deleteuser')) {
                         echo '<option value="delete">Delete</option>';
                     }
                     
-                    if ($_SESSION['rights']['edituser']) {
+                    if ($User_Rights->authorized('edituser')) {
                         echo '<option value="edit">Edit</option>';
                         echo '<option value="reset">Reset Password</option>';
                         echo '<option value="cxeesto">Change &#264;eesto</option>';
+                        echo '<option value="revokeKey">Revoke API Key</option>';
                     }
                     ?>
                 </select>
@@ -65,7 +66,6 @@ $showList = true;
                     
                     <?php
                         // Database connection is defined in edituseractions.php
-                        /** @noinspection PhpUndefinedMethodInspection */
                         $allUsers = $conn->selectAll('users');
                         foreach ($allUsers as $row) {
                             echo '<tr>';
@@ -80,35 +80,11 @@ $showList = true;
                         }
                     ?>
                 </table>
-                <br>
-                
-                Action: 
-                <select name="user_action2">
-                    <option value="none">Select:</option>
-                    
-                    <?php
-                    if ($_SESSION['rights']['adduser']) {
-                        echo '<option value="add">Add User</option>';
-                    }
-                    
-                    if ($_SESSION['rights']['deleteuser']) {
-                        echo '<option value="delete">Delete</option>';
-                    }
-                    
-                    if ($_SESSION['rights']['edituser']) {
-                        echo '<option value="edit">Edit</option>';
-                        echo '<option value="reset">Reset Password</option>';
-                        echo '<option value="cxeesto">Change &#264;eesto</option>';
-                    }
-                    ?>
-                </select>
-                
-                <input type="submit" name="sub_type" value="Go">
             </form>
         <?php } ?>
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
 </html>

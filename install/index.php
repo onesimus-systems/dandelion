@@ -25,7 +25,8 @@ if (file_exists('../config/config.php')) {
     } else {
         $needToInstall = false;
     }
-} else {
+}
+else {
     $needToInstall = true;
     if (!is_writable('../config/')) {
         $message = 'Dandelion does not have sufficient write permissions to create configuration.<br />Please make the ./config directory writeable to Dandelion and try again.';
@@ -68,7 +69,7 @@ if ($needToInstall) {
             <table>
                 <tr>
                     <td>Database Type:</td>
-                    <td><select name="dbtype" onChange="showHide(this.value);"><option value="mysql">MySQL</option><option value="sqlite">SQLite</option></select></td>
+                    <td><select name="dbtype" onChange="showHide(this.value);"><option value="mysql">MySQL</option><!-- <option value="sqlite">SQLite</option>--></select></td>
                 </tr>
             </table>
             <table id="mysql_only" style="display:inline;">

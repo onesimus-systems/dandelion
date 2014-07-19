@@ -25,51 +25,34 @@ namespace Dandelion;
 
 class cxeesto extends Database\dbManage
 {
-    /** Displays the labels, symbols, return times, and messages of statuses
-      *
-      * @param int $isWin - Determines if calling function is from the mini or full version of Cxeesto
-      * @param int $isWin2 - Used to fix a bug with initial load of the full version
-      *
-      * @author Lee Keitel
-      * @date February 4, 2014
-    ***/
-    public function refreshStatus($isWin, $isWin2)
-    {
-        $all_users = $this->selectAll('presence');
-
-        // If updating for the mini version
-        if ($isWin == 0 && $isWin2 == 0) {
-
-            echo '<table><thead><tr><td>Name</td><td>Status</td></tr></thead><tbody>';
-
-            foreach ($all_users as $row) {
-                echo '<tr>';
-                echo '<td><span title="' . $row['message'] . '" class="message">' . $row['realname'] . '</span></td>';
-
-                $statusProps = $this->statusType($row['status'], '&#013;', $row['returntime']);
-
-                echo '<td class="statusi"><span title="' . $statusProps[0] . '" class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td></tr>';
-            }
-            echo '<tr><td colspan="2" class="cen"><form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto" /></form></td></tr>';
-
-            echo '</tbody></table>';
+    // Order matters!! These correspond to the statusType() switch case order
+    private $statusOptions = array(
+        "Available",
+        "Away From Desk",
+        "At Lunch",
+        "Out for Day",
+        "Out",
+        "Appointment",
+        "Do Not Disturb",
+        "Meeting",
+        "Out Sick",
+        "Vacation"
+    );
+    /**
+     * Returns JSON array of user statuses
+     * 
+     * @return JSON - Users statuses
+     */
+    public function getJson() {
+        $statuses = $this->selectAll('presence');
+        
+        foreach ($statuses as &$row) {
+            $row['statusInfo'] = $this->statusType($row['status'], '&#013;', $row['returntime']);
         }
-
-        // Updating the windowed version
-        elseif ($isWin == 1 || $isWin2 == 1) {
-
-            echo '<table><thead><tr><td>Name</td><td>Message</td><td colspan="2">Status</td><td>Last Changed</td></tr></thead><tbody>';
-
-            foreach ($all_users as $row) {
-                echo '<tr>';
-                echo '<td>' . $row['realname'] . '</td><td>' . $row['message'] . '</td>';
-
-                $statusProps = $this->statusType($row['status'], '<br>', $row['returntime']);
-
-                echo '<td class="statusi"><span class="' . $statusProps[2] . '">' . $statusProps[1] . '</span></td><td>' . $statusProps[0] . '</td><td>' . $row['dmodified'] . '</td></tr>';
-            }
-            echo '</tbody></table>';
-        }
+        
+        $statuses['statusOptions'] = $this->statusOptions;
+        
+        return json_encode($statuses);
     }
 
     /**
@@ -87,59 +70,59 @@ class cxeesto extends Database\dbManage
 
         switch($sNum) {
             case 1:
-                $statusProps[0] = 'Available';
-                $statusProps[1] = '&#x2713;';
-                $statusProps[2] = 'green';
+                $statusProps['status'] = 'Available';
+                $statusProps['symbol'] = '&#x2713;';
+                $statusProps['color'] = 'green';
                 break;
             case 2:
-                $statusProps[0] = 'Away From Desk'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#8709;';
-                $statusProps[2] = 'blue';
+                $statusProps['status'] = 'Away From Desk'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#8709;';
+                $statusProps['color'] = 'blue';
                 break;
             case 3:
-                $statusProps[0] = 'At Lunch'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#8709;';
-                $statusProps[2] = 'blue';
+                $statusProps['status'] = 'At Lunch'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#8709;';
+                $statusProps['color'] = 'blue';
                 break;
             case 4:
-                $statusProps[0] = 'Out For Day'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Out For Day'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 5:
-                $statusProps[0] = 'Out'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Out'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 6:
-                $statusProps[0] = 'Appointment'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Appointment'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 7:
-                $statusProps[0] = 'Do Not Disturb'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Do Not Disturb'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 8:
-                $statusProps[0] = 'Meeting'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#8709;';
-                $statusProps[2] = 'blue';
+                $statusProps['status'] = 'Meeting'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#8709;';
+                $statusProps['color'] = 'blue';
                 break;
             case 9:
-                $statusProps[0] = 'Out Sick'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Out Sick'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 10:
-                $statusProps[0] = 'Vacation'.$lBreak.'Return: '.$returnT;
-                $statusProps[1] = '&#x2717;';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Vacation'.$lBreak.'Return: '.$returnT;
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             default:
-                $statusProps[0] = 'Unknown Status'.$lBreak.'Notify Dandelion Admin';
-                $statusProps[1] = '?';
-                $statusProps[2] = 'red';
+                $statusProps['status'] = 'Unknown Status'.$lBreak.'Notify Dandelion Admin';
+                $statusProps['symbol'] = '?';
+                $statusProps['color'] = 'red';
                 break;
         }
 
@@ -154,22 +137,22 @@ class cxeesto extends Database\dbManage
      *
      * @return string
      */
-    public function updateStatus($message, $status, $return)
+    public function updateStatus($message, $status, $return, $userId)
     {
         $date = new \DateTime();
         $date = $date->format('Y-m-d H:i:s');
 
-        $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :iamaRealBoy';
+        $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :uid';
         $params = array(
             'message' => urldecode($message),
             'setorno' => $status,
             'returntime' => $return,
             'dmodified' => $date,
-            'iamaRealBoy' => $_SESSION['userInfo']['userid'] // Don't ask
+            'uid' => $userId
         );
 
         $this->queryDB($stmt, $params);
 
-        return 'User status updated';
+        return json_encode('User status updated');
     }
 }

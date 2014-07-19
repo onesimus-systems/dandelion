@@ -1,7 +1,7 @@
 <?php
 namespace Dandelion;
 
-include_once 'scripts/bootstrap.php';
+require_once 'lib/bootstrap.php';
 
 if (!Gatekeeper\authenticated()) {
 	header( 'Location: index.php' );
@@ -18,7 +18,7 @@ if (!Gatekeeper\authenticated()) {
 	</head>
 	<body onLoad="CategoryManage.grabNextLevel('0:0');">
         <header>
-            <?php include 'scripts/header.php'; ?>
+            <?php include 'views/header.php'; ?>
         </header>
 		
         <h3>Category Management</h3>
@@ -29,22 +29,22 @@ if (!Gatekeeper\authenticated()) {
         	<div name="categorySelects" id="categorySelects"></div><br><br>
         	
         	<?php
-        	if ($_SESSION['rights']['addcat']) {
+        	if ($User_Rights->authorized('addcat')) {
 				echo '<input type="button" class="dButton" onClick="CategoryManage.createNew();" value="Add Category">';
 			}
 			
-			if ($_SESSION['rights']['editcat']) {
+			if ($User_Rights->authorized('editcat')) {
 				echo '<input type="button" class="dButton" onClick="CategoryManage.editCat();" value="Edit Category">';
 			}
 			
-			if ($_SESSION['rights']['deletecat']) {
+			if ($User_Rights->authorized('deletecat')) {
 				echo '<input type="button" class="dButton" onClick="CategoryManage.deleteCat();" value="Delete Category">';
 			}
         	?>
         </form>
         
         <footer>
-            <?php include_once 'scripts/footer.php'; ?>
+            <?php include_once 'views/footer.php'; ?>
         </footer>
 	</body>
     
