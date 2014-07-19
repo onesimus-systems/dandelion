@@ -28,7 +28,6 @@ if (!function_exists('version_compare') || version_compare(phpversion(), "5.3.7"
 
 // Include autoloaders
 require_once ROOT . '/lib/autoloader.php';  // Dandelion
-require_once ROOT . '/vendor/autoload.php'; // Composer
 
 // Setup error logging
 require_once ROOT . '/lib/logging.php';
@@ -83,6 +82,7 @@ $_SESSION['timeout_idle'] = time() + $timeout;*/
 require_once ROOT . '/lib/authenticate.php';
 require_once ROOT . '/lib/themes.php';
 require_once ROOT . '/lib/scripts.php';
+require_once ROOT . '/lib/password-compat/password.php';
 
 // Load application settings
 if (!isset($_SESSION['app_settings'])) {

@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $sqliteFileName = '';
                     break;
 
-                case 'sqlite':
+                case 'sqliteDISABLED':
                     $db_unique_filename = mt_rand(1, 100); // To prevent overwriting an old database, generate a random number as a unique identifier
                     if (!is_dir(dirname(dirname(__FILE__)).'/database')) {
                         mkdir(dirname(dirname(__FILE__)).'/database');
@@ -47,49 +47,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            if ($CONFIG['db_type']=='mysql') {
-                /** Drop any existing tables in the database */
-                $exec = $conn->prepare('SHOW TABLES');
-                $exec->execute();
-
-                $allTables = $exec->fetchAll();
-
-                if ($allTables[0]) {
-                    $drop = 'DROP TABLES ';
-
-                    foreach ($allTables as $table) {
-                        $drop .= '`'.$table[0].'`,';
-                    }
-
-                    $drop = rtrim($drop, ',');
-                    $drop .= ';';
-
-                    $exec = $conn->prepare($drop);
-                    $exec->execute();
-                }
-            }
-
             include_once $CONFIG['db_type'].'Install.php'; // Load the database specific creation commands
 
             $conn = null;
 
             /** Write config file */
-            $handle = fopen('../config/config.php', 'w');
-            $newFile = "<?php\n";
-            $newFile .= "\$CONFIG=array(\n";
-            $newFile .= "'db_type' => '".$CONFIG['db_type']."',\n";
-            $newFile .= "'sqlite_fn' => '".$sqliteFileName."',\n";
-            $newFile .= "'db_name' => '".$CONFIG['db_name']."',\n";
-            $newFile .= "'db_host' => '".$CONFIG['db_host']."',\n";
-            $newFile .= "'db_user' => '".$CONFIG['db_user']."',\n";
-            $newFile .= "'db_pass' => '".$CONFIG['db_pass']."',\n";
-            $newFile .= "'db_prefix' => 'dan_',\n";
-            $newFile .= "'installed' => true,\n";
-            $newFile .= "'debug' => false,\n";
-            $newFile .= "'hostname' => '".$hostname."',\n";
-            $newFile .= ");";
+            $newFile = "<?php
+            $DBCONFIG=array(
+            'db_type' => '{$CONFIG['db_type']}',
+            'sqlite_fn' => '',
+            'db_name' => '{$CONFIG['db_name']}',
+            'db_host' => '{$CONFIG['db_host']}',
+            'db_user' => '{$CONFIG['db_user']}',
+            'db_pass' => '{$CONFIG['db_pass']}',
+            'db_prefix' => 'dan_',
+            );
 
-            fwrite($handle, $newFile);
+            define('HOSTNAME', {$hostname});
+            define('PHP_SESSION_NAME', 'dan_session_1');
+            define('DEBUG_ENABLED', true);
+            define('INSTALLED', true);";
+
+            file_put_contents('../config/config.php', $newFile);
 
             // Change config directory to user:readonly for security
             chmod('../config/config.php', 0400);
