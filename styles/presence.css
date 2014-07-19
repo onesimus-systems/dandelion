@@ -15,7 +15,12 @@
   /*.set {
 		padding: .25em .5em;
 	}*/
+
   /* .tables is here to import the styles to presenceWin.less */
+
+}
+#presence h3 {
+  text-align: left;
 }
 #presence .linklike {
   margin-top: .5em;
@@ -39,49 +44,39 @@
   margin: 0;
   margin-bottom: 5px;
 }
-#presence table,
-#presence .tables {
+#presence table, #presence .tables {
   border-collapse: collapse;
   margin-top: .5em;
 }
-#presence table thead td,
-#presence .tables thead td {
+#presence table thead td, #presence .tables thead td {
   font-weight: bold;
 }
-#presence table .statusi,
-#presence .tables .statusi {
+#presence table .statusi, #presence .tables .statusi {
   text-align: center;
 }
-#presence table td,
-#presence .tables td {
+#presence table td, #presence .tables td {
   border: 1px solid black;
   padding: 5px;
 }
-#presence table td .message,
-#presence .tables td .message {
+#presence table td .message, #presence .tables td .message {
   cursor: help;
 }
-#presence table td .green,
-#presence .tables td .green {
+#presence table td .green, #presence .tables td .green {
   color: green;
   cursor: help;
 }
-#presence table td .blue,
-#presence .tables td .blue {
+#presence table td .blue, #presence .tables td .blue {
   color: blue;
   cursor: help;
 }
-#presence table td .red,
-#presence .tables td .red {
+#presence table td .red, #presence .tables td .red {
   color: red;
   cursor: help;
 }
-#presence table td.textLeft,
-#presence .tables td.textLeft {
+#presence table td.textLeft, #presence .tables td.textLeft {
   text-align: left;
 }
-#presence table td.cen,
-#presence .tables td.cen {
+#presence table td.cen, #presence .tables td.cen {
   text-align: center;
   border: none;
 }
