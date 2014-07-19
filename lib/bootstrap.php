@@ -26,9 +26,9 @@ if (!function_exists('version_compare') || version_compare(phpversion(), "5.3.7"
     PHPVersionError('site');
 }
 
-// Load Composer dependencies
-require_once ROOT . '/vendor/autoload.php';
-require_once ROOT . '/lib/autoloader.php';
+// Include autoloaders
+require_once ROOT . '/lib/autoloader.php';  // Dandelion
+require_once ROOT . '/vendor/autoload.php'; // Composer
 
 // Setup error logging
 require_once ROOT . '/lib/logging.php';
@@ -38,12 +38,6 @@ ini_set('log_errors', true);
 // Load configuration
 if (file_exists(ROOT . '/config/config.php')) {
     require ROOT . '/config/config.php';
-    
-    if (!isset($CONFIG)) {
-        trigger_error('The configuration file is corrupt or otherwise damaged. Please check config.php and try again.', E_USER_ERROR);
-        echo 'The configuration file is corrupt or otherwise damaged. Please check config.php and try again.';
-        exit(1);
-    }
 }
 else {
     trigger_error('No configuration file found. Please create ROOT/config/config.php.', E_USER_ERROR);
@@ -52,12 +46,9 @@ else {
 }
 
 // Define constants
-define('DB_PREFIX', $CONFIG['db_prefix']);
-define('HOSTNAME', $CONFIG['hostname']);
-define('DEBUG_ENABLED', $CONFIG['debug']);
-define('INSTALLED', $CONFIG['installed']);
 define('D_VERSION', '5.0.0');
 define('THEME_DIR', 'themes');
+define('DB_PREFIX', $DBCONFIG['db_prefix']);
 
 // Display errors if in debug mode
 if (DEBUG_ENABLED) {
@@ -66,7 +57,7 @@ if (DEBUG_ENABLED) {
 }
 
 // Give database class the info to connect
-dbManage::$connInfo = $CONFIG;
+dbManage::$connInfo = $DBCONFIG;
 
 /**
  * This checks the time of the current session and if it has been
@@ -76,7 +67,7 @@ $timeout = 21600; // 6 hours
 ini_set('session.gc_maxlifetime', $timeout);
 
 require ROOT . '/lib/session_manager.php';
-session_name($CONFIG['session_name']);
+session_name(PHP_SESSION_NAME);
 session_start();
 /*
 if (isset($_SESSION['timeout_idle']) && $_SESSION['timeout_idle'] < time()) {

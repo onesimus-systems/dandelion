@@ -52,7 +52,7 @@ class dbManage
                 \PDO::ATTR_PERSISTENT => true 
             ));
             
-            if (self::$connInfo['debug']) {
+            if (DEBUG_ENABLED) {
                 $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             }
             
