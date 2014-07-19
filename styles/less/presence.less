@@ -12,7 +12,11 @@
     border: 1px solid black;
     padding: 5px;
 	color: black;
-	text-align: left;
+	text-align: center;
+
+	h3 {
+		text-align: left;
+	}
 	
 	.linklike {
 	    margin-top: .5em;
@@ -27,9 +31,13 @@
 		}
 	}
 	
-	.set {
-		padding: .25em .5em;
+	#cstatus {
+	    margin: 3px;
 	}
+	
+	/*.set {
+		padding: .25em .5em;
+	}*/
 	
 	#showHide {
 		color: black;
@@ -41,8 +49,10 @@
 	    margin-bottom: 5px;
 	}
 	
+	/* .tables is here to import the styles to presenceWin.less */
 	table, .tables {
 	    border-collapse: collapse;
+	    margin-top: .5em;
 	    
 		thead td {
 		    font-weight: bold;
@@ -74,11 +84,15 @@
 			    color: red;
 			    cursor: help;
 			}
-		}
-	
-		td.cen {
-			text-align: center;
-			border: none;	
+			
+			&.textLeft {
+                text-align: left;
+			}
+			
+			&.cen {
+                text-align: center;
+                border: none;
+			}
 		}
 	}
 }

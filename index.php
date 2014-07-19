@@ -11,6 +11,7 @@
   *
   * @license GNU GPL v3 (see full license in root/LICENSE.md)
 ***/
+namespace Dandelion;
 
 /*! \mainpage Dandelion Weblog
  *
@@ -23,20 +24,16 @@
  *
  * And that is how Dandelion was born.
  */
+require_once 'lib/bootstrap.php';
 
-include_once 'scripts/grabber.php';
-
-if (!$_SESSION['config']['installed']) {
-	header( 'Location: ./install' );
+if (!INSTALLED) {
+    header( 'Location: ./install' );
 }
 
-if (authenticated()) {
-    include 'viewlog.phtml';
+if (Gatekeeper\authenticated()) {
+    include 'viewlog.php';
+} else {
+    include 'loginbox.php';
 }
 
-else {
-    $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
-	
-	$theme = getTheme();
-	include 'loginbox.php';
-}
+session_write_close();

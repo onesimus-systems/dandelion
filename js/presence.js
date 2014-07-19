@@ -1,65 +1,166 @@
-var presence = {
-    startR: function() {
-        wherearewe = setInterval(function() {presence.checkstat(1)}, 30000);
+/* global $, clearTimeout, setTimeout, window */
+/* jshint multistr: true */
+
+"use strict"; // jshint ignore:line
+var newStatus = 1;
+
+var presence =
+{
+    timeoutId: "",
+    version: 0,
+
+    checkstat: function(ver) {
+        $.getJSON("iapi/cheesto/readall",
+                function(data) {
+            presence.generateView(ver, data);
+            clearTimeout(presence.timeoutId);
+            delete presence.timeoutId;
+
+            presence.version = ver;
+            presence.timeoutId = setTimeout(function() { presence.checkstat(ver); }, 30000);
+        });
     },
-    
-    checkstat: function(isWin) {
-    	var params = new Object;
-    	params.success = function()
-	      	{
-	    	  document.getElementById("pt").innerHTML=responseText;
-	        }
-        
-    	params.address= 'scripts/presence.php';
-    	params.data = "windowedt=" + isWin;
-        _.ajax(params);
+
+    generateView: function(ver, dataObj) {
+        dataObj = dataObj.data;
+        var tableView;
+
+        // Clear div area and generate new div container
+        $('#mainPresence').html('');
+        var appendable = $('<div/>').attr('id', 'pt');
+
+        // Generate select box of status options
+        var statusSelect = $('<select/>').attr('id', 'cstatus');
+        statusSelect.change(function() { presence.setStatus(0); });
+        statusSelect.append('<option value="-1">Set Status:</option>');
+
+        for (var key2 in dataObj.statusOptions) {
+            var html = '<option>'+dataObj.statusOptions[key2]+'</option>';
+            statusSelect.append(html);
+        }
+        appendable.append(statusSelect);
+
+        // Generate status table depending on view version
+        if (ver === 0) {
+            tableView = this.makeTableMini(dataObj);
+        }
+        else if (ver === 1) {
+            tableView = this.makeTableFull(dataObj);
+        }
+        appendable.append(tableView);
+
+        $('#mainPresence').append(appendable);
     },
-    
-    setStatus: function(isWin) {
-        newStatus = document.getElementById('cstatus').selectedIndex;
-        isWind = isWin;
-        
-        if (newStatus != 1 && newStatus != 0) {
-            rtime = "";
+
+    makeTableMini: function(dataObj) {
+        // Mini view on main page
+        var table = $('<table/>');
+        var tableHead = '<thead><tr>\
+            <td width="50%">Name</td>\
+            <td width="50%">Status</td>\
+            </tr></thead>';
+
+        table.append(tableHead);
+
+        for (var key in dataObj) {
+            if (!dataObj.hasOwnProperty(key))
+                continue;
+
+            if (key !== "statusOptions") {  
+                var user = dataObj[key];
+                var classm = '';
+                
+                if (user.message !== '') {
+                    classm = ' class="message"';
+                }
+
+                var html = '<tr>\
+                    <td class="textLeft"><span title="'+user.message+'"'+classm+'>'+user.realname+'</span></td>\
+                    <td><span title="'+user.statusInfo.status+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
+                    </tr>';
+
+                table.append(html);
+            }
+        }
+
+        var popOutButton = '<tr><td colspan="3" width="100%" class="cen">\
+            <form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto"></form>\
+            </td></tr>';
+        table.append(popOutButton);
+
+        return table;
+    },
+
+    makeTableFull: function(dataObj) {
+        // Windowed view
+        var table = $('<table/>');
+        var tableHead = '<thead><tr><td>Name</td>\
+            <td>Message</td>\
+            <td colspan="2">Status</td>\
+            <td>Last Changed</td>\
+            </tr></thead><tbody>';
+        table.append(tableHead);
+
+        for (var key in dataObj) { // jshint ignore:line
+            if (!dataObj.hasOwnProperty(key))
+                continue;
+
+            if (key !== "statusOptions") {  
+                var user = dataObj[key];
+
+                var html = '<tr>\
+                    <td>'+user.realname+'</td>\
+                    <td>'+user.message+'</td>\
+                    <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>\
+                    <td>'+user.statusInfo.status+'</td>\
+                    <td>'+user.dmodified+'</td>\
+                    </tr>';
+
+                table.append(html);
+            }
+        }
+
+        return table;
+    },
+
+    setStatus: function(ver) {
+        newStatus = $("select#cstatus").prop("selectedIndex");
+        $("select#cstatus").prop("selectedIndex", 0);
+        var rtime;
+
+        if (newStatus > 1) {
+            // Status requires a return time and optional status
+            rtime = ""; // jshint ignore:line
             window.open("getdate.php","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
-            }
-        else if (newStatus == 0)
-            return false;
-        else {
-            rtime = "00:00:00";
-            presence.sendNewStatus(newStatus, rtime, isWin, "");
-            }
+        }
+        else if (newStatus === 1) {
+            // Status is Available
+            rtime = "00:00:00"; // jshint ignore:line
+            presence.sendNewStatus(1, rtime, ver, "");
+        }
     },
-    
+
     popOut: function() {
-        window.open("presenceWindow.phtml","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
+        window.open("presenceWindow.php","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
     },
-    
-    sendNewStatus: function(stat, rt, isWin, message) {
-        var params = new Object();
-          
-        params.success = function()
-	        {
-	            document.getElementById("pt").innerHTML=responseText;
-	        }
-        
-        params.address = 'scripts/presence.php';
-        params.data = "setorno=" + stat + "&returntime=" + rt + "&windowedt=" + isWin + "&message=" + message;
-        _.ajax(params);
-        
-        document.getElementById('cstatus').selectedIndex = 0;
+
+    sendNewStatus: function(stat, rt, ver, message) {
+        $.post("iapi/cheesto/update", { status: stat, returntime: rt, message: message },
+                function() {
+            presence.checkstat(ver);
+        });
     },
-    
+
     showHideP: function() {
-    	if (document.getElementById('showHide').innerHTML == "[ - ]") {
-    		document.getElementById('presence').style.minWidth = document.getElementById('mainPresence').offsetWidth+"px";
-    		document.getElementById('mainPresence').style.display = 'none';
-    		document.getElementById('showHide').innerHTML = "[ + ]";
-    	}
-    	else {
-    		document.getElementById('presence').style.minWidth = "0px";
-    		document.getElementById('mainPresence').style.display = '';
-    		document.getElementById('showHide').innerHTML = "[ - ]";
-    	}
+        if ($("#showHide").html() == "[ - ]") {
+            $("#presence").css("minWidth", $("#mainPresence").prop("offsetWidth")+"px");
+            $("#mainPresence").css("display", "none");
+            $("#showHide").html( "[ + ]" );
+        }
+        else {
+            $("#presence").css("minWidth", "0px");
+            $("#mainPresence").css("display", "");
+            $("#showHide").html( "[ - ]" );
+        }
     }
-}
+};

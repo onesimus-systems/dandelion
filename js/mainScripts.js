@@ -1,344 +1,320 @@
-var clearinput = true,
-    editing = false,
-    autore = true,
+/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, alert */
+/* exported pagentation */
+
+"use strict"; // jshint ignore:line
+
+var autore = false,
     filt = false,
-    cat1="",
-    cat2="",
-    cat3="",
-    cat4="",
-    cat5="",
-    title="",
-    entry="",
-    refreshinv,
     refreshc,
-    secleft=120;
+    secleft=120,
+    editing;
 
 $(document).ready(function() {
     $( "#datesearch" ).datepicker();
     $( "#datesearch" ).change(function() {
         $( "#datesearch" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         });
-}); 
-    
-var miscFun = {
-    //clears the add_edit div element
-    clearaddedit: function() {
-        document.getElementById("add_edit").innerHTML="";
-    },
-    
-    clearval: function(clearme) {
-        clearme.value="";
-    },
-}
- 
-var refreshFun = {
-    //This function is ran onload() of viewlog.phtml
-    //It refreshes the log and then begins an interval
-    //counter for every 2 minutes
-    //This function can also be called on to restart
-    //the autorefresh counter
-    startrefresh: function() {
-    	// Run first time
-		refreshLog("update");
-		setTimeout(function(){presence.checkstat(0);}, 1);
-        CategoryManage.grabNextLevel('0:0');
-		
-		// Set timers
-        refreshc = setInterval(function(){refreshLog("update");}, 120000);
-        wherearewe = setInterval(function(){presence.checkstat(0);}, 30000);
 
+    $("#add_edit").css("display", "none");
+});
+
+$(document).on("focusin", function(e) {
+	if ($(e.target).closest(".mce-window").length) {
+		e.stopImmediatePropagation();
+	}
+});
+ 
+var refreshFun =
+{
+    /* This function is ran onload() of viewlog.php
+     * It refreshes the log and then begins an interval
+     * counter for every 2 minutes
+     * This function can also be called on to restart
+     * the autorefresh counter
+     */
+    startrefresh: function() {
+        // Run first time
+		refreshLog("update");
+        CategoryManage.grabNextLevel('0:0');
+
+		// Set timers
+        refreshc = setInterval(function(){ refreshLog("update"); }, 120000);
         autore = true;
     },
 
-    //Stops auto refresh
     stoprefresh: function() {
         clearInterval(refreshc);
         autore = false;
     },
-} //refreshFun
+}; // refreshFun
 
-//This function updates the live feed.
-//If kindof == "update" it shows the recent log entries
-//logfilter.php and shows the returned output.
+/* This function updates the live feed.
+ * If kindof == "update" it shows the recent log entries
+ * logfilter.php and shows the returned output.
+ */
 function refreshLog(kindof) {
-	var params = new Object();
-    params.success = function()
-	    {
-		    document.getElementById("refreshed").innerHTML=responseText;
-		    
-		    if (clearinput && !editing) {
-		        document.getElementById("add_edit").innerHTML="";
-		    }
-		    else {
-		        clearinput = true;
-		    }
-	    }
-    params.failure = function()
-	    {
-	    	if (ready===4 && status===404)
-	        {
-		        document.getElementById("refreshed").innerHTML="";
-		        document.location.href = 'index.php';
-	        }
-	    }
-    
-    if (kindof==="update" && !filt)
+    if (!filt)
         {
-    		params.address = 'scripts/updatelog.php';
-    		params.async = false;
-    		_.ajax(params);
+            $.ajax({
+                type: "POST",
+                url: "lib/logs.php",
+                async: false,
+                data: { action: "getLogs", data: "" }
+            })
+                .done(function( html ) {
+                    $("#refreshed").html( html );
+                })
+
+                .fail(function( jqXHR ) {
+                    if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
+                    {
+                        $("#refreshed").html("An error has occured. Please try logging out and back in.");
+                    }
+                });
         }
-    else if (kindof==="clearf")
+    
+    if (kindof==="clearf")
         {
-            params.address = 'scripts/updatelog.php';
-    		params.async = false;
-    		_.ajax(params);
             filt=false;
-            document.getElementById('searchterm').value="Keyword";
-            document.getElementById('datesearch').value="Date";
+            $("#searchterm").val("Keyword");
+            $("#datesearch").val("Date");
             refreshFun.startrefresh();
         }
 }
 
-// This function manages the pagentation of the
-// log. It receives the desired DB row offset
-// which is supplied by readlog.php then sends
-// the request to updatelog.php which handles
-// the SELECT limits.
+/* This function manages the pagentation of the
+ * log. It receives the desired DB row offset
+ * which is supplied by readlog.php then sends
+ * the request to updatelog.php which handles
+ * the SELECT limits.
+ */
 function pagentation(pageOffset) {
-	var params = new Object;
-    params.success = function()
-      {
-        miscFun.clearaddedit(); // Clear any open add/edit forms
-        
-        document.getElementById("refreshed").innerHTML=responseText;
-        
-        if (pageOffset <= 0)
-        {
-            refreshLog('clearf'); // If the page offset returnes to page "1", return to auto refresh
-        }
-        else
-        {
-            refreshFun.stoprefresh(); // If on pages > 1, stop refresh
-        }
-        
-        window.scrollTo(0,0);
-      }
-    params.failure = function()
-      {
-    	if (ready===4 && status===404)
-            {
-	            document.getElementById("refreshed").innerHTML="";
-	            document.location.href = 'index.php';
-            }
-      }      
-    params.address = 'scripts/updatelog.php';
-    params.data = 'pageOffset=' + pageOffset;
+    var pages = {
+        pageOffset: pageOffset
+    };
     
-    _.ajax(params);
+    $.post("lib/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
+        .done(function( html ) {
+            $("#refreshed").html( html );
+            
+            if (pageOffset <= 0)
+            {
+                refreshLog('clearf');
+            }
+            else
+            {
+                refreshFun.stoprefresh();
+            }
+            
+            window.scrollTo(0,0);
+        })
+        
+        .fail(function( jqXHR ) {
+            if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
+            {
+                $("#refreshed").html("An error has occured. Please try logging out and back in.");
+            }
+        });
 }
 
-var addFun = {
-    //This function creates the add log form using DOM objects
-    //From this form the data is sent to addlog();
+var addFun =
+{
     showaddinputs: function() {
-        miscFun.clearaddedit();
-        var add_form = document.createElement("form");
-        var break_it = document.createElement("br");
+        $("#add_edit_form")[0].reset();
+        $("textarea#logEntry").html("");
         
-        var title_label = document.createTextNode("Title:");
-            add_form.appendChild(title_label);
+        $( "#add_edit" ).dialog({
+			height: 575,
+			width: 800,
+			modal: true,
+			show: {
+				effect: "fade",
+				duration: 500
+			},
+			hide: {
+				effect: "fade",
+				duration: 500
+			},
+			buttons: {
+				"Add Log": function() {
+					addFun.addlog();
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+					CategoryManage.addLog = false;
+					CategoryManage.grabNextLevel('0:0');
+				}
+			}
+        });
         
-        var title_text = document.createElement("input");
-            title_text.id = "add_title";
-            title_text.type = "text";
-            title_text.size = 60;
-            add_form.appendChild(title_text);
-            add_form.appendChild(break_it);
-        
-        var entry_label = document.createTextNode("Entry:");
-            add_form.appendChild(entry_label);
-            
-        var entry_text = document.createElement("textarea");
-            entry_text.id = "add_entry";
-            entry_text.cols = 80;
-            entry_text.rows = 15;
-            add_form.appendChild(entry_text);
-        
-        var cat_label = document.createTextNode("Category:");
-            add_form.appendChild(break_it.cloneNode(true));
-            add_form.appendChild(cat_label);
-            
-        var cat_div = document.createElement("div");
-        	cat_div.setAttribute('id', 'add_cat');
-        	add_form.appendChild(cat_div);
- 
-        var space_label = document.createTextNode("\u00a0\u00a0\u00a0");
-            add_form.appendChild(space_label);
-            
-        var add_button = document.createElement("input");
-            add_button.type="button";
-            add_button.setAttribute('onclick', 'addFun.addlog();');
-            add_button.setAttribute('class', 'dButton');
-            add_button.value="Add Log";
-            add_form.appendChild(add_button);
-            
-        var separator_label = document.createTextNode("\u00a0|\u00a0");
-            add_form.appendChild(separator_label);
-            
-        var add_button = document.createElement("input");
-            add_button.type="button";
-            add_button.setAttribute('onclick', 'miscFun.clearaddedit()');
-            add_button.setAttribute('class', 'dButton');
-            add_button.value="Cancel";
-            add_form.appendChild(add_button);
-
-        document.getElementById("add_edit").appendChild(add_form);
+        $("textarea#logEntry").tinymce({
+			forced_root_block: false,
+			resize: false,
+			menubar: "edit format view insert tools",
+			toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
+			plugins: [
+				"autolink link lists hr anchor pagebreak spellchecker",
+				"searchreplace wordcount code insertdatetime",
+				"contextmenu template paste textcolor"
+				]
+        });
 
         CategoryManage.addLog = true;
         CategoryManage.grabNextLevel('0:0');
-        editing = true;
-        window.scrollTo(0,0);
     },
 
-    //This function sends details for a new log entry to
-    //add_log.php. It then refreshes the Live feed.
-    addlog :function() {    
-        title = document.getElementById("add_title").value;
+    /* This function sends details for a new log entry to
+     * add_log.php. It then refreshes the Live feed.
+     */
+    addlog: function() {    
+        var title = $("input#logTitle").val();
         title = encodeURIComponent(title);
-        entry = document.getElementById("add_entry").value;
+        var entry = $("textarea#logEntry").val();
         entry = encodeURIComponent(entry);
-        cat = CategoryManage.getCatString();
-        var params = new Object;
+        var cat = CategoryManage.getCatString();
         
-        params.success=function()
-          {
-            document.getElementById("add_edit").innerHTML=responseText;
-            clearinput = false;
-            editing = false;
-            refreshLog("update");
-            secleft=120;
-            CategoryManage.addLog = false;
-            CategoryManage.grabNextLevel('0:0');
-          }        
-        params.address = 'scripts/add_log.php';
-        params.data = 'cat=' + cat + '&add_title=' + title + '&add_entry=' + entry;
-        
-        _.ajax(params);
-    },
-} //addFun
-
-var editFun = {
-    //This function displays the fields to edit a log
-    showeditinputs: function(log_info) {
-
-        var linfo = eval ('(' + log_info.slice(1, -1) + ')');
-        var break_it = document.createElement("br");
-        
-        miscFun.clearaddedit();
-        var add_form = document.createElement("form");
-        
-        var loguid = document.createElement("input");
-            loguid.type="hidden";
-            loguid.id="loguid";
-            loguid.value="";
-            add_form.appendChild(loguid);
-        
-        var title_label = document.createTextNode("Title:");
-        	add_form.appendChild(title_label);
-        
-        var title_text = document.createElement("input");
-            title_text.id = "edittitle";
-            title_text.type = "text";
-            title_text.size = 60;
-            title_text.value = linfo.title;
-            add_form.appendChild(title_text);
-			add_form.appendChild(break_it);
+		if (title !== "" && entry !== "" && cat !== "") {
+			$( "#add_edit" ).dialog( "close" );
+			$("#messages").fadeOut();
 			
-		var entry_label = document.createTextNode("Entry:");
-            add_form.appendChild(entry_label);
-            
-        var entry_text = document.createElement("textarea");
-            entry_text.id = "editlog";
-            entry_text.cols = 80;
-            entry_text.rows = 15;
-            var editing_text = document.createTextNode(linfo.entry);
-            entry_text.appendChild(editing_text);
-            add_form.appendChild(entry_text);
-            add_form.appendChild(break_it.cloneNode(true));
-            
-        var cat_label = document.createTextNode("Category: ");
-            add_form.appendChild(cat_label);
-            
-        var acat_label = document.createTextNode(linfo.cat);
-            add_form.appendChild(acat_label);
-            
-        var separator_label = document.createTextNode("\u00a0\u00a0\u00a0");
-            add_form.appendChild(separator_label);
-            
-        var edit_button = document.createElement("input");
-            edit_button.type="button";
-            edit_button.setAttribute('onclick', 'editFun.editlogs('+linfo.logid+');');
-            edit_button.setAttribute('class', 'dButton');
-            edit_button.value="Save Edit";
-            add_form.appendChild(edit_button);
-            
-        var separator_label = document.createTextNode("\u00a0|\u00a0");
-            add_form.appendChild(separator_label);
-            
-        edit_button = document.createElement("input");
-            edit_button.type="button";
-            edit_button.setAttribute('onclick', 'miscFun.clearaddedit();');
-            edit_button.setAttribute('class', 'dButton');
-            edit_button.value="Cancel";
-            add_form.appendChild(edit_button);
+			var logData = {
+				cat: cat,
+				add_title: title,
+				add_entry: entry
+			};
 
-        document.getElementById("add_edit").appendChild(add_form);
+			$.post("lib/logs.php", { action: "addLog", data: JSON.stringify(logData) })
+				.done(function( html ) {
+					refreshLog();
+					secleft=120;
+					CategoryManage.addLog = false;
+					CategoryManage.grabNextLevel('0:0');
+					showDialog(html);
+				});
+        }
+        else {
+			$("input#logTitle").val( decodeURIComponent(title) );
+			$("textarea#logEntry").html( decodeURIComponent(entry) );
+			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
+			CategoryManage.addLog = true;
+			CategoryManage.grabNextLevel('0:0');
+			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
+        }
+    },
+}; //addFun
+
+var editFun =
+{
+    showeditinputs: function(log_info) {
+        
+        var linfo = JSON.parse(log_info);
+        
+        $("input#logTitle").val( linfo.title );
+        $("textarea#logEntry").val( linfo.entry );
+        $("#catSpace").text( linfo.cat );
+        
+        $( "#add_edit" ).dialog({
+			height: 575,
+			width: 800,
+			modal: true,
+			show: {
+				effect: "fade",
+				duration: 500
+			},
+			hide: {
+				effect: "fade",
+				duration: 500
+			},
+			buttons: {
+				"Save Edit": function() {
+					editFun.editlogs(linfo.logid);
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+        });
+        
+        $("textarea#logEntry").tinymce({
+			forced_root_block: false,
+			resize: false,
+			menubar: "edit format view insert tools",
+			toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
+			plugins: [
+				"autolink link lists hr anchor pagebreak spellchecker",
+				"searchreplace wordcount code insertdatetime",
+				"contextmenu template paste textcolor"
+				]
+        });
         
         editing = true;
-        window.scrollTo(0,0);
     },
 
-    //This function is called when a user clicks edit
-    //It grabs the information about the log entry they
-    //want to edit then calls showeditinputs(); to display
-    //the fields.
+    /* This function is called when a user clicks edit
+     * It grabs the information about the log entry they
+     * want to edit then calls showeditinputs(); to display
+     * the fields.
+     */
     grabedit: function(logid) {
-    	var params = new Object;
-    	params.address = 'scripts/logeditinfo.php';
-    	params.data = 'loguid=' + logid;
-    	params.success = function()
-	        {
-              editFun.showeditinputs(responseText);
-	        }
-        
-        _.ajax(params);
+        $.post("lib/logs.php", { action: 'getLogInfo', data: logid })
+            .done( editFun.showeditinputs );
     },
 
     //Sends the finished edited log to a PHP file for processing
     editlogs: function(id) {
-    	var params = new Object;
-        var editedtitle = document.getElementById("edittitle").value;
+        var editedtitle = $("input#logTitle").val();
         editedtitle = encodeURIComponent(editedtitle);
-        var editedlog = document.getElementById("editlog").value;
+        var editedlog = $("textarea#logEntry").val();
         editedlog = encodeURIComponent(editedlog);
-
-        params.success = function()
-          {
-            document.getElementById("add_edit").innerHTML=responseText;
-            clearinput = false;
-            editing = false;
-            refreshLog("update");
-            secleft=120;
-          }        
-        params.address = 'scripts/editlogs.php';
-        params.data = 'editlog=' + editedlog + '&edittitle=' + editedtitle + '&choosen=' + id;
         
-        _.ajax(params)
+        if (editedtitle !== "" && editedlog !== "") {
+			$( "#add_edit" ).dialog( "close" );
+			$("#messages").fadeOut();
+			
+			var logData = {
+				editlog: editedlog,
+				edittitle: editedtitle,
+				choosen: id
+			};
+			
+			$.post("lib/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
+				.done(function( html ) {
+				refreshLog();
+				secleft=120;
+				showDialog(html);
+			});
+		}
+		
+        else {
+			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
+			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
+        }
     },
-} //editFun
+}; //editFun
 
-var searchFun = {
+function showDialog( html ) {
+	$( "#dialog" ).html( "<p>"+html+"</p>" );
+	$( "#dialog" ).dialog({
+		modal: true,
+		width: 400,
+		show: {
+			effect: "fade",
+			duration: 500
+		},
+		hide: {
+			effect: "fade",
+			duration: 500
+		},
+		buttons: {
+			Ok: function() {
+				$( this ).dialog( "close" );
+			}
+		}
+	});
+}
+
+var searchFun =
+{
     // Checks if enter key was pressed, if so search
     check: function(e) {
         if (e.keyCode == 13) {
@@ -346,15 +322,15 @@ var searchFun = {
         }
     },
 
-    // Actually searches the database
+    // Search for keyword or datestamp
     searchlog :function() {
-    	var params    = new Object();
-        var searchfor = document.getElementById('searchterm').value;
-        var datefor   = document.getElementById('datesearch').value;
+        var searchfor = $("input#searchterm").val();
+        var datefor   = $("input#datesearch").val();
         searchfor     = encodeURIComponent(searchfor);
+        var type = '';
 
         if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null && datefor!=="" && datefor!=="Date" && datefor!==null) {
-            type="both";
+            type = "both";
         }
         else if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null) {
             type = "keyw";
@@ -367,52 +343,47 @@ var searchFun = {
             return false;
         }
         
-        params.address     = 'scripts/logfilter.php';
-        params.data        = 'keyw=' + searchfor + '&dates=' + datefor + '&type=' + type;
-        params.success = function()
-	        {
-              miscFun.clearaddedit();
-              filt=true;
-              refreshFun.stoprefresh();
-              document.getElementById("refreshed").innerHTML=responseText;
-	        }
+        var search = {
+			keyw: searchfor,
+			dates: datefor,
+			type: type
+        };
         
-        _.ajax(params);
+        $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
+            .done(function( html ) {
+                filt=true;
+                refreshFun.stoprefresh();
+                $("#refreshed").html( html );
+            });
     },
     
+    // Search for a category of logs
     filter: function(cat) {
-    	if (cat == '') { cat = CategoryManage.getCatString(); }
-        if (cat) {
-	    	var params = new Object();
-	        params.success = function()
-    	    {
-    		    document.getElementById("refreshed").innerHTML=responseText;
-    		    
-    		    if (clearinput && !editing) {
-    		        document.getElementById("add_edit").innerHTML="";
-    		    }
-    		    else {
-    		        clearinput = true;
-    		    }
-    	    }
-	        
-	        params.failure = function()
-    	    {
-    	    	if (ready===4 && status===404)
-    	        {
-    		        document.getElementById("refreshed").innerHTML="";
-    		        document.location.href = 'index.php';
-    	        }
-    	    }
-
-            params.address = 'scripts/logfilter.php';
-            params.data="filter=" + cat;
-            _.ajax(params);
-            filt=true;
-            refreshFun.stoprefresh();
+        if (cat === '') { cat = CategoryManage.getCatString(); }
+        
+        var filter = {
+			type: '',
+			filter: cat
+        };
+        
+        if (cat)
+        {
+            $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
+                .done(function( html ) {
+                    $("#refreshed").html( html );
+                    filt=true;
+                    refreshFun.stoprefresh();
+                })
+                
+                .fail(function( jqXHR ) {
+                    if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
+                    {
+                        $("#refreshed").html("An error has occured. Please try logging out and back in.");
+                    }
+                });
         }
         else {
             alert("Please select a valid filter.");
         }
     },
-}
+};

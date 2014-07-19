@@ -1,49 +1,43 @@
-var adminAction = {
+/* global $, window, alert */
+/* exported adminAction */
+
+"use strict"; // jshint ignore:line
+
+var adminAction =
+{
 	editSlogan: function(current) {
 		var newSlogan = window.prompt('Website Slogan', current);
 		
-		if (newSlogan !== '' && newSlogan !== null) {
-			var params = new Object;
-			
-			params.address = "scripts/admin_actions.php";
-			params.data = 'sub_action=slogan&slogan=' + encodeURIComponent(newSlogan);
-			params.success = function() { alert(responseText); };
-			
-			_.ajax(params);
-		}
+		if (newSlogan !== '' && newSlogan !== null)
+            this.performAction("saveSlogan", newSlogan);
 	},
 	
 	backupDB: function() {
-        var params = new Object;
-		
-		params.address = "scripts/admin_actions.php";
-		params.data = 'sub_action=backupdb';
-		params.success = function() { alert(responseText); };
-		
-		_.ajax(params);
+		$.post("lib/admin_actions.php", { action: "backupDB" })
+            .done(function( msg ) {
+                alert(msg);
+            });
 	},
 	
 	saveDefaultTheme: function() {
-        var newTheme = document.getElementById('userTheme').value;
-        
-		var params = new Object;
-		
-		params.address = "scripts/admin_actions.php";
-		params.data = 'sub_action=defaultTheme&theme=' + encodeURIComponent(newTheme);
-		params.success = function() { alert(responseText); };
-		
-		_.ajax(params);
+        var newTheme = $("#userTheme").val();
+        this.performAction("saveDefaultTheme", newTheme);
 	},
 	
 	saveCheesto: function() {
-        var cheesto = document.getElementById('cheesto_enabled').value;
-        
-		var params = new Object;
-		
-		params.address = "scripts/admin_actions.php";
-		params.data = 'sub_action=cheesto&enabled=' + encodeURIComponent(cheesto);
-		params.success = function() { alert(responseText); };
-		
-		_.ajax(params);
+        var cheesto = $("#cheesto_enabled").val();
+        this.performAction("saveCheesto", cheesto);
 	},
+	
+	saveApiSetting: function() {
+	    var pAPI = $("#api_enabled").val();
+	    this.performAction("savePAPI", pAPI);
+	},
+	
+	performAction: function(action, data) {
+        $.post("lib/admin_actions.php", { action: action, data: encodeURIComponent(data) })
+            .done(function( msg ) {
+                alert(msg);
+            });
+	}
 };
