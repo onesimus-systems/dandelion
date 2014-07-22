@@ -14,7 +14,7 @@
 **/
 .buttonRegular {
   background-color: #858585;
-  color: #ffffff;
+  color: #000;
 }
 .buttonHover {
   background-color: #111111;
@@ -33,7 +33,7 @@ body {
 #nav_link a:link,
 #nav_link a:active {
   background-color: #858585;
-  color: #ffffff;
+  color: #000;
 }
 #nav_link a:hover {
   background-color: #111111;
@@ -42,23 +42,23 @@ body {
 .pagination {
   background-color: #858585;
 }
-.pagination input {
+#divMain .pagination input {
   background-color: #858585;
-  color: #ffffff;
+  color: #000;
 }
-.pagination input:hover {
+#divMain .pagination input:hover {
   background-color: #111111;
   color: #ffffff;
 }
 .dButton,
 #login_button,
-.logentry input {
+#divMain .logentry input {
   background-color: #858585;
-  color: #ffffff;
+  color: #000;
 }
 .dButton:hover,
 #login_button:hover,
-.logentry input:hover {
+#divMain .logentry input:hover {
   background-color: #111111;
   color: #ffffff;
 }
