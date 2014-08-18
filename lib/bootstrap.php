@@ -45,7 +45,7 @@ else {
 }
 
 // Define constants
-define('D_VERSION', '5.0.0');
+define('D_VERSION', '5.0.1');
 define('THEME_DIR', 'themes');
 define('DB_PREFIX', $DBCONFIG['db_prefix']);
 
