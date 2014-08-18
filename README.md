@@ -32,7 +32,7 @@ Install - Automatic
 
 6. Change the admin password, login again, and see your new empty log.
 
-Install - Manaully
+Install - Manually
 ------------------
 
 Do you enjoy doing things by hand? That's ok! Just follow these instructions to install Dandelion:
