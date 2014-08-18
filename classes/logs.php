@@ -162,6 +162,12 @@ class logs extends Database\dbManage
         $notice = '';
         $query = (array) json_decode($filterQuery);
         $type = isset($query['type']) ? $query['type'] : '';
+        // The only difference between the SQL statements are the WHERE clauses
+        // The SELECT, FROM, and JOIN clauses are the same
+        $sqlSelectJoin = 'SELECT l.*, u.realname
+                          FROM ' . DB_PREFIX . 'log AS l
+                          LEFT JOIN '.DB_PREFIX.'users AS u
+                            ON l.usercreated = u.userid ';
         
         // Category Search
         if ($type == '') {
@@ -174,7 +180,7 @@ class logs extends Database\dbManage
                     <input type="button" value="Clear Filter" onClick="refreshLog('clearf')" />
                 </form><br>
 HTML;
-            $stmt = 'SELECT * FROM `' . DB_PREFIX . 'log` WHERE `cat` LIKE :filter ORDER BY `logid` DESC';
+            $stmt = $sqlSelectJoin . 'WHERE cat LIKE :filter ORDER BY logid DESC';
             $params = array(
                 'filter' => "%" . $filter . "%" 
             );
@@ -189,7 +195,7 @@ HTML;
             if ($type == "keyw") {
                 $message = $keyw;
                 
-                $stmt = 'SELECT * FROM `' . DB_PREFIX . 'log` WHERE `title` LIKE :keyw or `entry` LIKE :keyw ORDER BY `logid` DESC';
+                $stmt = $sqlSelectJoin . 'WHERE title LIKE :keyw or entry LIKE :keyw ORDER BY logid DESC';
                 $params = array(
                     'keyw' => "%" . $keyw . "%" 
                 );
@@ -201,7 +207,8 @@ HTML;
             else if ($type == "dates") {
                 $message = $dates;
                 
-                $stmt = 'SELECT * FROM `' . DB_PREFIX . 'log` WHERE `datec`=:dates ORDER BY `logid` DESC';
+                $stmt = $sqlSelectJoin . 'WHERE datec=:dates ORDER BY logid DESC';
+                print($stmt);
                 $params = array(
                     'dates' => $dates 
                 );
@@ -213,7 +220,7 @@ HTML;
             else {
                 $message = $keyw . ' on ' . $dates;
                 
-                $stmt = 'SELECT * FROM `' . DB_PREFIX . 'log` WHERE (`title` LIKE :keyw or `entry` LIKE :keyw) and `datec`=:dates ORDER BY `logid` DESC';
+                $stmt = $sqlSelectJoin . 'WHERE (title LIKE :keyw or entry LIKE :keyw) and datec=:dates ORDER BY logid DESC';
                 $params = array(
                     'keyw' => "%" . $keyw . "%",
                     'dates' => $dates 
@@ -228,12 +235,9 @@ HTML;
                     <input type="button" value="Clear Search" onClick="refreshLog('clearf')" />
                 </form><br>
 HTML;
-            
-            $stmt = 'SELECT `userid`,`realname` FROM `' . DB_PREFIX . 'users`';
-            $userArray = $this->queryDB($stmt, NULL);
         }
         
-        return $notice . DisplayLogs::display($grab_logs, true, $userArray);
+        return $notice . DisplayLogs::display($grab_logs, true);
     }
 
     /**
