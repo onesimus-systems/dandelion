@@ -1,4 +1,4 @@
-Dandelion v5.0.0
+Dandelion v5.0.1
 ================
 
 Dandelion is a web-based entry log application.
@@ -70,6 +70,10 @@ with any Dandelion v5+ installation. The extension can be install from the [Chro
 
 Release Notes
 -------------
+
+v5.0.1
+
+- Bug fix: User's name not showing on filtered logs
 
 v5.0.0
 
