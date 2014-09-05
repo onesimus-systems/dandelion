@@ -201,14 +201,15 @@ var mail = {
             });
 
             $("textarea#mailBody").tinymce({
+                browser_spellcheck: true,
                 forced_root_block: false,
                 resize: false,
                 menubar: "edit format view insert tools",
                 toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
                 plugins: [
-                          "autolink link lists hr anchor pagebreak spellchecker",
+                          "autolink link lists hr anchor pagebreak",
                           "searchreplace wordcount code insertdatetime",
-                          "contextmenu template paste textcolor"
+                          "template paste textcolor"
                           ]
             });
         },

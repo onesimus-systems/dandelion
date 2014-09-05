@@ -1,4 +1,4 @@
-Dandelion v5.0.1
+Dandelion v5.0.2
 ================
 
 Dandelion is a web-based entry log application.
@@ -70,6 +70,10 @@ with any Dandelion v5+ installation. The extension can be install from the [Chro
 
 Release Notes
 -------------
+
+v5.0.2
+
+- Bug fix: No spellcheck in TinyMCE editor
 
 v5.0.1
 
