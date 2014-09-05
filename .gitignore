@@ -11,6 +11,8 @@ koala-config*
 backups/
 vendor/
 *.lock
+node_modules/
+app/
 
 #################
 ## Eclipse
