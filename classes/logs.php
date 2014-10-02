@@ -208,7 +208,6 @@ HTML;
                 $message = $dates;
                 
                 $stmt = $sqlSelectJoin . 'WHERE datec=:dates ORDER BY logid DESC';
-                print($stmt);
                 $params = array(
                     'dates' => $dates 
                 );
