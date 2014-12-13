@@ -67,7 +67,7 @@ HTML;
         $_SESSION['userInfo']['theme'] = $newTheme;
         
         // Reload page to show new theme
-        header('Location: settings.php');
+        redirect('userSettings');
     }
     
     if ($sub_action == "Reset") {

@@ -27,7 +27,7 @@ namespace Dandelion;
 require_once 'lib/bootstrap.php';
 
 if (!INSTALLED) {
-    header( 'Location: ./install' );
+    redirect('installer');
 }
 
 if (Gatekeeper\authenticated()) {

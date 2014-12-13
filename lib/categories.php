@@ -21,7 +21,7 @@ require_once (is_file('classes/categories.php')) ? 'classes/categories.php' : '.
 
 // Authenticate user, if fail go to login page
 if (!Gatekeeper\authenticated()) {
-    header('Location: ../index.php');
+    redirect('index');
 }
 
 if (isset($_POST['action'])) {

@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if ($db_connect === '') {
                 $_SESSION['error_text'] = 'Please enter MySQL database connection information:';
-                header( 'Location: ../install.php' );
+                redirect('installer');
             }
 
             $conn = new PDO($db_connect, $db_user, $db_pass);
@@ -74,7 +74,7 @@ define('INSTALLED', true);";
             chmod('../config/config.php', 0400);
             chmod('../config', 0500);
 
-            header( 'Location: ../lib/logout.php' );
+            redirect('logout');
         } else {
             echo 'Dandelion does not have sufficient write permissions to create configuration.<br />Please make the ./config directory writeable to Dandelion and try again.';
         }
@@ -82,5 +82,5 @@ define('INSTALLED', true);";
         echo 'Error setting up database: '.$e;
     }
 } else {
-    header( 'Location: ../install.php' );
+    redirect('installer');
 }

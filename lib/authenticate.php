@@ -34,7 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["in_name"])) {
 function authenticated()
 {
     $loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;
-
     return $loggedin;
 }
 
@@ -68,16 +67,16 @@ function login()
         
         switch($userInfo['firsttime']) {
             case 2:
-                header ( 'Location: ../reset.php' );
+                \Dandelion\redirect('resetPassword');
                 break;
             default:
-                header( 'Location: ../' );
+                \Dandelion\redirect('home');
                 break;
         }
     } else {
         trigger_error('Failed login attempt for '.$username.' at ' . date("Y-m-d H:i:s"), E_USER_WARNING);
         $_SESSION['badlogin'] = '<span class="bad">Incorrect username or password</span><br>'; // Used to display a message to the user
-        header( 'Location: ../' );
+        \Dandelion\redirect('index');
     }
 }
 
@@ -121,5 +120,5 @@ function logout()
     }
     session_destroy();
 
-    header( 'Location: ../' );
+    \Dandelion\redirect('index');
 }

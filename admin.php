@@ -4,7 +4,7 @@ namespace Dandelion;
 require_once 'lib/bootstrap.php';
 
 if (!Gatekeeper\authenticated()) {
-	header( 'Location: index.php' );
+	redirect('index');
 }
 
 // Stays false unless a button or admin control is shown

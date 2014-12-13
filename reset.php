@@ -18,7 +18,7 @@ require_once 'lib/bootstrap.php';
 
 // Check whether the user is logged in
 if (!Gatekeeper\authenticated()) {
-	header( 'Location: index.php' );
+	redirect('index');
 }
 ?>
 <!DOCTYPE html>

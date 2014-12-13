@@ -27,11 +27,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $params = array('id'=>$_SESSION['userInfo']['userid']);
         $conn->queryDB($stmt, $params);
 
-        header( 'Location: ../lib/logout.php' );
+        redirect('logout');
     } else {
         $_SESSION['errors'] = '<br><span class="bad">Entered passwords do not match. Please try again.</span><br><br>';
-        header( 'Location: ../reset.php' );
+        redirect('resetPassword');
     }
 } else {
-    header( 'Location: ../viewlog.php' );
+    redirect('index');
 }

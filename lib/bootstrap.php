@@ -27,10 +27,10 @@ if (!function_exists('version_compare') || version_compare(phpversion(), "5.3.7"
 }
 
 // Include autoloaders
-require_once ROOT . '/lib/autoloader.php';  // Dandelion
+require ROOT . '/lib/autoloader.php';  // Dandelion
 
 // Setup error logging
-require_once ROOT . '/lib/logging.php';
+require ROOT . '/lib/logging.php';
 error_reporting(-1);
 ini_set('log_errors', true);
 
@@ -59,7 +59,7 @@ if (DEBUG_ENABLED) {
 dbManage::$connInfo = $DBCONFIG;
 
 // Check for and apply updates
-require_once ROOT . '/lib/update.php';
+require ROOT . '/lib/update.php';
 update();
 
 // Setup session manager
@@ -72,9 +72,10 @@ session_start();
 
 // Load helper scripts
 require_once ROOT . '/lib/authenticate.php';
-require_once ROOT . '/lib/themes.php';
-require_once ROOT . '/lib/javascript.php';
-require_once ROOT . '/lib/password-compat/password.php';
+require ROOT . '/lib/themes.php';
+require ROOT . '/lib/javascript.php';
+require ROOT . '/lib/password-compat/password.php';
+require ROOT . '/lib/helperScripts.php';
 
 // Load application settings
 if (!isset($_SESSION['app_settings'])) {

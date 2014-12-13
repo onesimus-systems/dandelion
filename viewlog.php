@@ -24,7 +24,7 @@ if (Gatekeeper\authenticated()) {
 	}
 }
 else {
-	header( 'Location: index.php' );
+	redirect('index');
 }
 
 /*

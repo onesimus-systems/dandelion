@@ -118,6 +118,6 @@ if ($needToInstall) {
 </html>
 <?php
 } else {
-    header( 'Location: ../' );
+    redirect('index');
 }
 ?>
