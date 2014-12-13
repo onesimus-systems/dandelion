@@ -143,7 +143,7 @@ function verifyKey($key) {
     if (!empty($keyValid[0])) {
         return $keyValid[0]['user'];
     }
-    return
+    return;
 }
 
 /**
@@ -157,7 +157,7 @@ function apitest($key) {
     if (verifyKey($key)) {
         return makeDAPI(0, 'API key is good', 'index');
     }
-    return
+    return;
 }
 
 /**
