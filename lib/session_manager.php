@@ -102,6 +102,7 @@ class SessionSaveHandler {
             'time' => time()
         );
         
+        $this->sdbc->queryDB($sql, $params);
         return true;
     }
 }
