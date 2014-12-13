@@ -15,7 +15,7 @@ $content = false;
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-        <link rel="icon" type="image/ico" href="images/favicon.ico">
+        <link rel="icon" type="image/ico" href="static/images/favicon.ico">
 		<?php echo loadCssSheets(); ?>
 		<title>Dandelion Web Log</title>
 	</head>
@@ -46,8 +46,8 @@ $content = false;
 			if ($User_Rights->authorized('admin')) {
 				$content = true;
 			?>
-				<input type="button" class="dButton adminButton" value="Edit Site Slogan" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['app_settings']['slogan']); ?>');">
-				<br><br><hr width="350"><br>
+				<input type="button" class="dButton adminButton" value="Edit Site Slogan" onClick="adminAction.editSlogan('<?php echo addslashes($_SESSION['app_settings']['slogan']); ?>');"><br>
+				<br><hr width="350"><br>
 	
 	            Default theme:
 	        	
