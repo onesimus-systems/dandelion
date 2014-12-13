@@ -30,6 +30,7 @@ if (!INSTALLED) {
     redirect('installer');
 }
 
+$indexCall = true;
 if (Gatekeeper\authenticated()) {
     include 'viewlog.php';
 } else {

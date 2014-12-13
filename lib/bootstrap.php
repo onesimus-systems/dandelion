@@ -91,3 +91,8 @@ if (!isset($_SESSION['app_settings'])) {
 if (Gatekeeper\authenticated()) {
     $User_Rights = new \Dandelion\rights($_SESSION['userInfo']['userid']);
 }
+
+// Check for protected page and if protected, check authentication
+if ($protectedPage && !Gatekeeper\authenticated()) {
+    redirect('index');
+}

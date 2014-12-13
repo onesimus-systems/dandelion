@@ -14,17 +14,17 @@
  ***/
 namespace Dandelion;
 
-//Authenticate user, if fail go to login page
-if (Gatekeeper\authenticated()) {
-	if ($User_Rights->authorized('createlog')) {
-		$add_link = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
-	}
-	else {
-		$add_link = '';
-	}
+if (!$indexCall) {
+    // This redirect statement is an exception
+    // Reason: This file doesn't load bootstrap.php (it doesn't need to).
+    header('Location: index.php');
+}
+
+if ($User_Rights->authorized('createlog')) {
+	$add_link = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 }
 else {
-	redirect('index');
+	$add_link = '';
 }
 
 /*

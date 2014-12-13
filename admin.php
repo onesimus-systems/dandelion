@@ -1,11 +1,8 @@
 <?php
 namespace Dandelion;
 
+$protectedPage = true;
 require_once 'lib/bootstrap.php';
-
-if (!Gatekeeper\authenticated()) {
-	redirect('index');
-}
 
 // Stays false unless a button or admin control is shown
 $content = false;

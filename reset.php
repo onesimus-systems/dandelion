@@ -14,12 +14,9 @@
  ***/
 namespace Dandelion;
 
+$protectedPage = true;
 require_once 'lib/bootstrap.php';
 
-// Check whether the user is logged in
-if (!Gatekeeper\authenticated()) {
-	redirect('index');
-}
 ?>
 <!DOCTYPE html>
 <html>
