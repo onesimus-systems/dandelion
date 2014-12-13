@@ -1,4 +1,4 @@
-/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, alert */
+/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, alert, tinymce */
 /* exported pagentation */
 
 "use strict"; // jshint ignore:line
