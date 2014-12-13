@@ -16,7 +16,7 @@ $(document).on("focusin", function(e) {
 
 var mail = {
         areUnread: function() {
-            $.getJSON("iapi/mail/mailCount", function(data) {
+            $.getJSON("api/i/mail/mailCount", function(data) {
                 if (data.data.count > 0) {
                     $("#mailicon").attr("src", "static/images/mail.png");
                     $("#mailicon").attr("alt", "You have mail");
@@ -41,12 +41,12 @@ var mail = {
         },
 
         getAllMail: function() {
-            $.getJSON("iapi/mail/getAllMail",
+            $.getJSON("api/i/mail/getAllMail",
                     function(data){ mail.showMailList(data.data); });
         },
         
         getTrashCan: function() {
-            $.getJSON("iapi/mail/getAllMail", {"trash": "true"},
+            $.getJSON("api/i/mail/getAllMail", {"trash": "true"},
                     function(data){ mail.showMailList(data.data); });
         },
 
@@ -85,7 +85,7 @@ var mail = {
         },
 
         viewMail: function(id) {
-            $.getJSON("iapi/mail/read", {mid: id}, function(data) {
+            $.getJSON("api/i/mail/read", {mid: id}, function(data) {
                 data = data.data;
                 mail.showFolder();
 
@@ -120,7 +120,7 @@ var mail = {
         replyToMail: function() {
             var selection = this.getSelectedMailIds();
             if (selection.length == 1) {
-                $.getJSON("iapi/mail/read", {mid: selection[0]}, function(data) {
+                $.getJSON("api/i/mail/read", {mid: selection[0]}, function(data) {
                     data = data.data;
                     $("#mailForm")[0].reset();
                     $("textarea#mailBody").html(data[0].body);
@@ -135,7 +135,7 @@ var mail = {
         },
 
         writeMailDialog: function() {
-            $.getJSON("iapi/mail/getUserList", function(data) {
+            $.getJSON("api/i/mail/getUserList", function(data) {
                 data = data.data;
                 $("#mailForm")[0].reset();
                 $("#toUsers").prop("readonly", false);
@@ -224,7 +224,7 @@ var mail = {
             if (mailPiece.to !== "" && mailPiece.subject !== "" && mailPiece.body !== "") {
                 mailPiece = JSON.stringify(mailPiece);
 
-                $.post("iapi/mail/send", {mail: mailPiece},
+                $.post("api/i/mail/send", {mail: mailPiece},
                         function(data) {
                     data = JSON.parse(data);
                     alert(data.data);
@@ -248,7 +248,7 @@ var mail = {
                     permenant = true;
                 }
                 
-                $.post("iapi/mail/delete", {"mid": selected[0], "permenant": permenant},
+                $.post("api/i/mail/delete", {"mid": selected[0], "permenant": permenant},
                     function(data) {
                         data = JSON.parse(data);
                         mail.showFolder();

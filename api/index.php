@@ -1,7 +1,6 @@
 <?php
 /**
- * Central entry point for Dandelion API.
- * This script is responsible
+ * Central entry point for Dandelion API. This script is responsible
  * for directing requests where needed.
  *
  * The DAPI array will always contain an error code. Please refer
@@ -23,68 +22,96 @@
  * The full GPLv3 license is available in LICENSE.md in the root.
  *
  * @author Lee Keitel
- * @date July 2014
+ * @date Dec 2014
  */
 namespace Dandelion\API;
 
 use Dandelion\database\dbManage;
+use Dandelion\Gatekeeper;
 
 require_once '../lib/bootstrap.php';
-$localCall = isset($localCall) ? $localCall : false;
 
-// Allow API requests if the public API is enabled or a user is logged in
-if ($_SESSION['app_settings']['public_api'] && !$localCall) {
-    // Get API key and url for API request
-    $apikey = isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : '';
-    $url = isset($_REQUEST['url']) ? $_REQUEST['url'] : '';
-    $url = explode('/', $url);
-    
-    echo processRequest($apikey, $localCall, $url[0], $url[1]);
-    
+// Process URL
+$url = isset($_REQUEST['url']) ? $_REQUEST['url'] : '';
+$url = explode('/', $url);
+
+if ($url[0] == 'i') {
+    internalApiCall($url);
+} else {
+    apiCall($url);
+}
+
+/**
+ * Process api call
+ * 
+ * @param array $u - Exploded URL
+ * 
+ * @return Nothing
+ */
+function apiCall($u) {
+    if ($_SESSION['app_settings']['public_api']) {
+        $apikey = isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : '';
+        echo processRequest($apikey, false, $u[0], $u[1]);
+        session_write_close();
+    }
+    return;
+}
+
+/**
+ * Process internal api call
+ * 
+ * @param array $u - Exploded URL
+ * 
+ * @return Nothing
+ */
+function internalApiCall($u) {
+    if (!Gatekeeper\authenticated()) {
+        exit('The internal API can only be accessed by Dandelion.');
+    }
+
+    $returnObj = (array) json_decode(processRequest($_SESSION['userInfo']['userid'], true, $u[1], $u[2]));
+    $returnObj['iapi'] = true;
+    echo json_encode($returnObj);
     session_write_close();
+    return;
 }
 
 /**
  * Process API request
  *
- * @param string $key - API key
- * @param bool $loggedin - Is a user currently logged in
- * @param array $request - API subsystem and request
+ * @param string $key - API key or userID
+ * @param bool $localCall - Is the call from a Dandelion component
+ * @param string $subsystem - Module being called
+ * @param string $request - Method being called
  *            
  * @return DAPI object
  */
-function processRequest($key, $localCall, $subsystem, $request, $loggedin = false) {
+function processRequest($key, $localCall, $subsystem, $request) {
     if ($subsystem == 'apitest') {
         // Checks for a good API key and notifies requester
         return apitest($key);
     }
-    else {
-        // Verify api key if not logged in
-        if (!$loggedin) {
-            verifyKey($key);
-        }
-        
-        /*
-         * Declare request source as the api Default value is empty in bootstrap.php
-         */
-        if (!$localCall) {
-            define('REQ_SOURCE', 'api'); // Public API
-            define('USER_ID', verifyKey($key));
-        }
-        else {
-            define('REQ_SOURCE', 'iapi'); // Internal API
-            define('USER_ID', $key);
-        }
-        
-        // Call the request function (as defined by the second part of the URL)
-        $data = call_user_func(array (
-            __NAMESPACE__ . '\\' . $subsystem . 'API',
-            $request 
-        ));
-        
-        // Return DAPI object
-        return makeDAPI(0, 'Completed', $subsystem, json_decode($data));
+
+    /*
+     * Declare request source as the api Default value is empty in bootstrap.php
+     */
+    if (!$localCall) {
+        define('REQ_SOURCE', 'api'); // Public API
+        define('USER_ID', verifyKey($key));
     }
+    else {
+        define('REQ_SOURCE', 'iapi'); // Internal API
+        define('USER_ID', $key);
+    }
+    
+    // Call the request function (as defined by the second part of the URL)
+    $data = call_user_func(array (
+        __NAMESPACE__ . '\\' . $subsystem . 'API',
+        $request 
+    ));
+    
+    // Return DAPI object
+    return makeDAPI(0, 'Completed', $subsystem, json_decode($data));
 }
 
 /**
@@ -95,27 +122,28 @@ function processRequest($key, $localCall, $subsystem, $request, $loggedin = fals
  * @return bool true on success, DAPI object on failure
  */
 function verifyKey($key) {
-    if (!empty($key)) {
-        $conn = new dbManage();
-        
-        // Search for key with case sensitive collation
-        $sql = 'SELECT *
-                FROM ' . DB_PREFIX . 'apikeys
-                WHERE keystring = :key
-                COLLATE latin1_general_cs';
-        $params = array (
-            "key" => $key 
-        );
-        
-        $keyValid = $conn->queryDB($sql, $params);
-        
-        if (!empty($keyValid[0])) {
-            return $keyValid[0]['user'];
-        }
+    if (empty($key)) {
+        // If $key is empty or the key isn't in the DB, exit with a DAPI object
+        exit(makeDAPI(1, 'API key is not valid', 'index'));
     }
+
+    $conn = new dbManage();
     
-    // If $key is empty or the key isn't in the DB, exit with a DAPI object
-    exit(makeDAPI(1, 'API key is not valid', 'index'));
+    // Search for key with case sensitive collation
+    $sql = 'SELECT *
+            FROM ' . DB_PREFIX . 'apikeys
+            WHERE keystring = :key
+            COLLATE latin1_general_cs';
+    $params = array (
+        "key" => $key 
+    );
+    
+    $keyValid = $conn->queryDB($sql, $params);
+    
+    if (!empty($keyValid[0])) {
+        return $keyValid[0]['user'];
+    }
+    return
 }
 
 /**
@@ -129,6 +157,7 @@ function apitest($key) {
     if (verifyKey($key)) {
         return makeDAPI(0, 'API key is good', 'index');
     }
+    return
 }
 
 /**
@@ -164,6 +193,5 @@ function makeDAPI($ecode, $status, $subsystem, $data = '') {
         'apisub' => $subsystem,
         'data' => $data 
     );
-    
     return json_encode($response);
 }

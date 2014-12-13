@@ -10,7 +10,7 @@ var presence =
     version: 0,
 
     checkstat: function(ver) {
-        $.getJSON("iapi/cheesto/readall",
+        $.getJSON("api/i/cheesto/readall",
                 function(data) {
             presence.generateView(ver, data);
             clearTimeout(presence.timeoutId);
@@ -145,7 +145,7 @@ var presence =
     },
 
     sendNewStatus: function(stat, rt, ver, message) {
-        $.post("iapi/cheesto/update", { status: stat, returntime: rt, message: message },
+        $.post("api/i/cheesto/update", { status: stat, returntime: rt, message: message },
                 function() {
             presence.checkstat(ver);
         });
