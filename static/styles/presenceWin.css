@@ -28,6 +28,9 @@ body {
 	}*/
   /* .tables is here to import the styles to presenceWin.less */
 }
+#presence h3 {
+  text-align: left;
+}
 #presence .linklike {
   margin-top: .5em;
   cursor: default;
