@@ -73,7 +73,7 @@ session_start();
 // Load helper scripts
 require_once ROOT . '/lib/authenticate.php';
 require_once ROOT . '/lib/themes.php';
-require_once ROOT . '/lib/scripts.php';
+require_once ROOT . '/lib/javascript.php';
 require_once ROOT . '/lib/password-compat/password.php';
 
 // Load application settings
