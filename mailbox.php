@@ -22,7 +22,7 @@ if (!Gatekeeper\authenticated()) {
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-        <link rel="icon" type="image/ico" href="images/favicon.ico" />
+        <link rel="icon" type="image/ico" href="static/images/favicon.ico" />
 		<?php echo loadCssSheets("mail", "jqueryui"); ?>
 		<title>Dandelion Web Log</title>
 	</head>
@@ -48,10 +48,10 @@ if (!Gatekeeper\authenticated()) {
 		
 		<div id="mailbox">
 		  <div id="controls">
-		      <a href="#" onClick="mail.writeMailDialog();"><img src="images/newmail.png" width="22" heigh="22" alt="New Mail" title="New Mail"></a>
-		      <a href="#" onClick="mail.getAllMail();"><img src="images/refresh.png" width="22" heigh="22" alt="Refresh" title="Refresh"></a>
-		      <a href="#" onClick="mail.replyToMail();"><img src="images/reply.png" width="22" heigh="22" alt="Reply" title="Reply"></a>
-		      <a href="#" onClick="mail.deleteMail();"><img src="images/maildelete.png" width="22" heigh="22" alt="Delete" title="Delete"></a>
+		      <a href="#" onClick="mail.writeMailDialog();"><img src="static/images/newmail.png" width="22" heigh="22" alt="New Mail" title="New Mail"></a>
+		      <a href="#" onClick="mail.getAllMail();"><img src="static/images/refresh.png" width="22" heigh="22" alt="Refresh" title="Refresh"></a>
+		      <a href="#" onClick="mail.replyToMail();"><img src="static/images/reply.png" width="22" heigh="22" alt="Reply" title="Reply"></a>
+		      <a href="#" onClick="mail.deleteMail();"><img src="static/images/maildelete.png" width="22" heigh="22" alt="Delete" title="Delete"></a>
 		      
 		      Folder: <select id="folder" onChange="mail.showFolder();">
 		          <option value="inbox">Inbox</option>

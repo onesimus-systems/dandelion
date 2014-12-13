@@ -28,10 +28,10 @@ function loadJS()
     foreach($scripts as $file) {
         // Check to see if it's a manually supplied JS file
         if (substr($file, -3) == ".js") {
-            if (is_file('js/'.$file)) {
-                $scriptList .= '<script src="js/'.$file.'"></script>';
-            } elseif (is_file('js/jquery/js/'.$file)) {
-                $scriptList .= '<script src="js/jquery/js/'.$file.'"></script>';
+            if (is_file('static/js/'.$file)) {
+                $scriptList .= '<script src="static/js/'.$file.'"></script>';
+            } elseif (is_file('static/js/jquery/js/'.$file)) {
+                $scriptList .= '<script src="static/js/jquery/js/'.$file.'"></script>';
             } else {
                 $scriptList .= "<!-- {$file} was not found. Error 404. -->";
             }
@@ -42,25 +42,25 @@ function loadJS()
 
         switch($file) {
             case "jquery":
-                $scriptList .= '<script src="js/jquery/js/jquery-2.1.1.min.js"></script>';
+                $scriptList .= '<script src="static/js/jquery/js/jquery-2.1.1.min.js"></script>';
                 break;
             case "jqueryui":
-                $scriptList .= '<script src="js/jquery/js/jquery-ui-1.10.4.min.js"></script>';
+                $scriptList .= '<script src="static/js/jquery/js/jquery-ui-1.10.4.min.js"></script>';
                 break;
             case "tinymce":
-                $scriptList .= '<script src="js/tinymce/js/jquery.tinymce.min.js"></script>';
-                $scriptList .= '<script src="js/tinymce/js/tinymce.min.js"></script>';
+                $scriptList .= '<script src="static/js/tinymce/js/jquery.tinymce.min.js"></script>';
+                $scriptList .= '<script src="static/js/tinymce/js/tinymce.min.js"></script>';
                 break;
             case "catmanage":
-                $scriptList .= '<script src="js/catManage.js"></script>';
+                $scriptList .= '<script src="static/js/catManage.js"></script>';
                 break;
             case "main":
-                $scriptList .= '<script src="js/mainScripts.js"></script>';
+                $scriptList .= '<script src="static/js/mainScripts.js"></script>';
                 break;
             case "cheesto":
             case 'presence':
                 if ($User_Rights->authorized('viewcheesto')) {
-                    $scriptList .= '<script src="js/presence.js"></script>';
+                    $scriptList .= '<script src="static/js/presence.js"></script>';
                 }
                 break;
         }

@@ -79,7 +79,7 @@ function loadCssSheets()
     }
 
     if ($main) {
-        $cssList .= '<link rel="stylesheet" type="text/css" href="styles/main.css">';
+        $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/main.css">';
         $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/main.css">';
     }
 
@@ -87,8 +87,8 @@ function loadCssSheets()
     foreach ($optionalSheets as $sheet) {
         // Load manual filenames if given
         if (substr($sheet, -4) == '.css') {
-            if (is_file('styles/'.$sheet))
-                $cssList .= '<link rel="stylesheet" type="text/css" href="styles/'.$sheet.'">';
+            if (is_file('static/styles/'.$sheet))
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/'.$sheet.'">';
             continue;
         }
 
@@ -99,32 +99,32 @@ function loadCssSheets()
             // CSS for Cheesto presence system
             case "cheesto":
             case 'presence':
-                $cssList .= '<link rel="stylesheet" type="text/css" href="styles/presence.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/presence.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/cheesto.css">';
                 break;
 
             // CSS for Cheesto presence system (windowed)
             case "cheestowin":
             case "presencewin":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="styles/presenceWin.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/presenceWin.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
                 break;
 
             // CSS for jQueryUI
             case "jquery":
             case "jqueryui":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="js/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/js/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
                 break;
 
             // CSS for Tutorial
             case "tutorial":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="styles/tutorial.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/tutorial.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/tutorial.css">';
                 break;
 
             // CSS for MailBox
             case "mail":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="styles/mail.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/mail.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/mail.css">';
                 break;
         }

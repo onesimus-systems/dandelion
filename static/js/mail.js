@@ -18,7 +18,7 @@ var mail = {
         areUnread: function() {
             $.getJSON("iapi/mail/mailCount", function(data) {
                 if (data.data.count > 0) {
-                    $("#mailicon").attr("src", "images/mail.png");
+                    $("#mailicon").attr("src", "static/images/mail.png");
                     $("#mailicon").attr("alt", "You have mail");
                     $("#mailicon").attr("title", data.data.count);
                 }

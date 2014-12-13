@@ -37,7 +37,7 @@ else {
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-        <link rel="icon" type="image/ico" href="images/favicon.ico" />
+        <link rel="icon" type="image/ico" href="static/images/favicon.ico" />
 		<?php echo loadCssSheets("cheesto","jqueryui"); ?>
 		<title>Dandelion Web Log</title>
 	</head>
@@ -48,7 +48,7 @@ else {
 		if ($_SESSION['app_settings']['cheesto_enabled'] && $User_Rights->authorized('viewcheesto')) {
 		?>
         <div id="presence">
-	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mailbox.php"><img id="mailicon" src="images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
+	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mailbox.php"><img id="mailicon" src="static/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
 	        
         	<div id="mainPresence"></div>
         </div>

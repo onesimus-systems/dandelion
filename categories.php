@@ -12,7 +12,7 @@ if (!Gatekeeper\authenticated()) {
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-        <link rel="icon" type="image/ico" href="images/favicon.ico" />
+        <link rel="icon" type="image/ico" href="static/images/favicon.ico" />
 		<?php echo loadCssSheets(); ?>
 		<title>Dandelion Web Log</title>
 	</head>
