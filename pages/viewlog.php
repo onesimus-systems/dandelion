@@ -15,9 +15,8 @@
 namespace Dandelion;
 
 if (!$indexCall) {
-    // This redirect statement is an exception
-    // Reason: This file doesn't load bootstrap.php (it doesn't need to).
-    header('Location: index.php');
+    header('Dandelion: Access Denied');
+    exit(1);
 }
 
 if ($User_Rights->authorized('createlog')) {
@@ -48,7 +47,7 @@ else {
 		if ($_SESSION['app_settings']['cheesto_enabled'] && $User_Rights->authorized('viewcheesto')) {
 		?>
         <div id="presence">
-	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mailbox.php"><img id="mailicon" src="static/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
+	        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="static/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
 	        
         	<div id="mainPresence"></div>
         </div>

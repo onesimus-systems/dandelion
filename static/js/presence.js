@@ -31,7 +31,7 @@ var presence =
 
         // Generate select box of status options
         var statusSelect = $('<select/>').attr('id', 'cstatus');
-        statusSelect.change(function() { presence.setStatus(0); });
+        statusSelect.change(function() { presence.setStatus(ver); });
         statusSelect.append('<option value="-1">Set Status:</option>');
 
         for (var key2 in dataObj.statusOptions) {
@@ -131,7 +131,7 @@ var presence =
         if (newStatus > 1) {
             // Status requires a return time and optional status
             rtime = ""; // jshint ignore:line
-            window.open("getdate.php","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
+            window.open("getdate","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
         }
         else if (newStatus === 1) {
             // Status is Available
@@ -141,7 +141,7 @@ var presence =
     },
 
     popOut: function() {
-        window.open("presenceWindow.php","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
+        window.open("presenceWindow","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
     },
 
     sendNewStatus: function(stat, rt, ver, message) {

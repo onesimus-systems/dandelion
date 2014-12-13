@@ -11,4 +11,4 @@
 ***/
 namespace Dandelion;
 
-echo '<p id="credits" class="t_cen">&copy; 2014 Onesimus Computer Systems | <a href="about.php" class="aboutlink">Dandelion v' . D_VERSION . '</a></p>';
+echo '<p id="credits" class="t_cen">&copy; 2014 Onesimus Computer Systems | <a href="about" class="aboutlink">Dandelion v' . D_VERSION . '</a></p>';

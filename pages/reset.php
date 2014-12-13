@@ -14,8 +14,10 @@
  ***/
 namespace Dandelion;
 
-$protectedPage = true;
-require_once 'lib/bootstrap.php';
+if (!$indexCall) {
+    header('Dandelion: Access Denied');
+    exit(1);
+}
 
 ?>
 <!DOCTYPE html>
@@ -30,7 +32,7 @@ require_once 'lib/bootstrap.php';
 	<body>
         <header>
             <h1 class="t_cen">Dandelion Web Log - v <?php echo D_VERSION ?></h1>
-            <p class="t_cen">Welcome, <?php echo $_SESSION['userInfo']['realname']; ?> <a href="lib/logout.php">Logout</a></p>
+            <p class="t_cen">Welcome, <?php echo $_SESSION['userInfo']['realname']; ?> <a href="logout">Logout</a></p>
         </header>
         
         <p>This is your first time logging into Dandelion. Please reset your password:</p>

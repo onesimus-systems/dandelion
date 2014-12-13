@@ -16,7 +16,7 @@ session_start();
 if (file_exists('../config/config.php')) {
     include_once '../config/config.php';
 
-    if (!$CONFIG['installed']) {
+    if (!INSTALLED) {
         $needToInstall = true;
 
         if (!is_writable('../config/')) {
@@ -33,17 +33,19 @@ else {
     }
 }
 
-if ($needToInstall) {
-
+if (!$needToInstall) {
+    header('Location: ../');
+    exit(0);
+}
 ?>
 <html>
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="x-ua-compatible" content="IE=9">
         <title>Dandelion Web Log - Install Script</title>
-        <link rel="stylesheet" href="../styles/main.css" />
+        <link rel="stylesheet" href="../static/styles/main.css" />
         <link rel="stylesheet" type="text/css" href="../themes/Halloween/main.css" />
-        <link rel="icon" type="image/ico" href="../images/favicon.ico" />
+        <link rel="icon" type="image/ico" href="../static/images/favicon.ico" />
     </head>
 
     <body>
@@ -116,8 +118,3 @@ if ($needToInstall) {
     }
     </script>
 </html>
-<?php
-} else {
-    redirect('index');
-}
-?>

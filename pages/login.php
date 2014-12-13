@@ -2,9 +2,8 @@
 namespace Dandelion;
 
 if (!$indexCall) {
-    // This redirect statement is an exception
-    // Reason: This file doesn't load bootstrap.php (it doesn't need to).
-    header('Location: index.php');
+    header('Dandelion: Access Denied');
+    exit(1);
 }
 
 $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
