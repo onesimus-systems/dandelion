@@ -230,7 +230,7 @@ class User extends dbManage
         if (!empty($uid) && !empty($pass)) {
             $pass = password_hash($pass, PASSWORD_BCRYPT);
             
-            $stmt = 'UPDATE `' . DB_PREFIX . 'users` SET `password` = :newpass WHERE `userid` = :id';
+            $stmt = 'UPDATE `' . DB_PREFIX . 'users` SET `password` = :newpass, `firsttime` = 0 WHERE `userid` = :id';
             $params = array(
                 'newpass' => $pass,
                 'id' => $uid 
