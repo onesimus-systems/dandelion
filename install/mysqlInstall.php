@@ -83,7 +83,7 @@ $exec->execute();
 $stmt ='CREATE TABLE IF NOT EXISTS `dan_sessions` (
           `id` char(32) NOT NULL,
           `data` mediumtext,
-          `last_accessed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          `last_accessed` int(11) NOT NULL,
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=latin1';
 $exec = $conn->prepare($stmt);

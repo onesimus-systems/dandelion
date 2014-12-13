@@ -66,6 +66,7 @@ $timeout = 21600; // 6 hours
 ini_set('session.gc_maxlifetime', $timeout);
 
 require ROOT . '/lib/session_manager.php';
+new SessionSaveHandler();
 session_name(PHP_SESSION_NAME);
 session_start();
 /*
