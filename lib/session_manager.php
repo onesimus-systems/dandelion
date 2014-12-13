@@ -32,7 +32,7 @@ class SessionSaveHandler {
     }
 
     public function close() {
-        $this->gc(get_cfg_var('session.gc_maxlifetime'));
+        $this->gc(ini_get('session.gc_maxlifetime'));
         unset($this->sdbc);
         return true;
     }
@@ -102,7 +102,6 @@ class SessionSaveHandler {
             'time' => time()
         );
         
-        $this->sdbc->queryDB($sql, $params);
         return true;
     }
 }

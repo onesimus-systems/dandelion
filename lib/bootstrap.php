@@ -58,26 +58,13 @@ if (DEBUG_ENABLED) {
 // Give database class the info to connect
 dbManage::$connInfo = $DBCONFIG;
 
-/**
- * This checks the time of the current session and if it has been
- * inactive for $timeout seconds long, destroy the session and start again
- */
+// Setup session manager
 $timeout = 21600; // 6 hours
 ini_set('session.gc_maxlifetime', $timeout);
-
 require ROOT . '/lib/session_manager.php';
 new SessionSaveHandler();
 session_name(PHP_SESSION_NAME);
 session_start();
-/*
-if (isset($_SESSION['timeout_idle']) && $_SESSION['timeout_idle'] < time()) {
-    session_destroy();
-    session_start();
-    session_regenerate_id();
-    $_SESSION = array();
-}
-
-$_SESSION['timeout_idle'] = time() + $timeout;*/
 
 // Load helper scripts
 require_once ROOT . '/lib/authenticate.php';
