@@ -58,6 +58,10 @@ if (DEBUG_ENABLED) {
 // Give database class the info to connect
 dbManage::$connInfo = $DBCONFIG;
 
+// Check for and apply updates
+require_once ROOT . '/lib/update.php';
+update();
+
 // Setup session manager
 $timeout = 21600; // 6 hours
 ini_set('session.gc_maxlifetime', $timeout);
