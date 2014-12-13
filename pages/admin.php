@@ -1,8 +1,10 @@
 <?php
 namespace Dandelion;
 
-$protectedPage = true;
-require_once 'lib/bootstrap.php';
+if (!$indexCall) {
+    header('Dandelion: Access Denied');
+    exit(1);
+}
 
 // Stays false unless a button or admin control is shown
 $content = false;
@@ -26,17 +28,17 @@ $content = false;
     	<form name="admin_form" method="post" action="lib/admin_actions.php">
 			<?php
 			if ($User_Rights->authorized('adduser') || $User_Rights->authorized('edituser') || $User_Rights->authorized('deleteuser')) {
-				echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers.php\'"><br>';
+				echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers\'"><br>';
 				$content = true;
 			}
 			
 			if ($User_Rights->authorized('addgroup') || $User_Rights->authorized('editgroup') || $User_Rights->authorized('deletegroup')) {
-				echo '<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location=\'editgroups.php\'"><br>';
+				echo '<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location=\'editgroups\'"><br>';
 				$content = true;
 			}
 			
 			if ($User_Rights->authorized('addcat') || $User_Rights->authorized('editcat') || $User_Rights->authorized('deletecat')) {
-				echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories.php\'"><br>';
+				echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories\'"><br>';
 				$content = true;
 			}
 			

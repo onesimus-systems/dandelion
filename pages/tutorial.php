@@ -13,7 +13,10 @@
  ***/
 namespace Dandelion;
 
-require_once 'lib/bootstrap.php';
+if (!$indexCall) {
+    header('Dandelion: Access Denied');
+    exit(1);
+}
 
 ?>
 <!DOCTYPE html>

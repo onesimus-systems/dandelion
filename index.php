@@ -30,11 +30,18 @@ if (!INSTALLED) {
     redirect('installer');
 }
 
+$url = isset($_REQUEST['url']) ? $_REQUEST['url'] : '';
+$url = explode('/', $url);
+if ($url[0] == "") {
+  // Homepage
+  $url[0] = "viewlog";
+}
+
 $indexCall = true;
 if (Gatekeeper\authenticated()) {
-    include 'viewlog.php';
+    include 'pages/'.$url[0].'.php';
 } else {
-    include 'loginbox.php';
+    include 'pages/login.php';
 }
 
 session_write_close();
