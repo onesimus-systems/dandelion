@@ -55,7 +55,7 @@ function loadJS()
                 $scriptList .= '<script src="static/js/catManage.js"></script>';
                 break;
             case "main":
-                $scriptList .= '<script src="static/js/mainScripts.js"></script>';
+                $scriptList .= '<script src="static/js/logs.js"></script>';
                 break;
             case "cheesto":
             case 'presence':
