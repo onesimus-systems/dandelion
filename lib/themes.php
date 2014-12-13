@@ -79,7 +79,7 @@ function loadCssSheets()
     }
 
     if ($main) {
-        $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/main.css">';
+        $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/main.css">';
         $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/main.css">';
     }
 
@@ -88,7 +88,7 @@ function loadCssSheets()
         // Load manual filenames if given
         if (substr($sheet, -4) == '.css') {
             if (is_file('static/styles/'.$sheet))
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/'.$sheet.'">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/'.$sheet.'">';
             continue;
         }
 
@@ -99,14 +99,14 @@ function loadCssSheets()
             // CSS for Cheesto presence system
             case "cheesto":
             case 'presence':
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/presence.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/presence.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/cheesto.css">';
                 break;
 
             // CSS for Cheesto presence system (windowed)
             case "cheestowin":
             case "presencewin":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/presenceWin.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/presenceWin.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
                 break;
 
@@ -118,13 +118,13 @@ function loadCssSheets()
 
             // CSS for Tutorial
             case "tutorial":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/tutorial.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/tutorial.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/tutorial.css">';
                 break;
 
             // CSS for MailBox
             case "mail":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/mail.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/mail.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/mail.css">';
                 break;
         }

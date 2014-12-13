@@ -57,6 +57,9 @@ a:active {
   margin-top: .75em;
 }
 /** Navigation */
+#nav_link {
+  margin: 20px 0px;
+}
 #nav_link a:visited,
 #nav_link a:link,
 #nav_link a:active {
