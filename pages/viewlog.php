@@ -75,6 +75,7 @@ include 'static/includes/head.php';
     refreshFun.startrefresh();
     presence.checkstat(0);
     mail.areUnread();
+    $('#presence').draggable();
 </script>
 <!-- End Page Body -->
 <?php include 'static/includes/footer.php'; ?>
