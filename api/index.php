@@ -66,7 +66,7 @@ function apiCall($u) {
  */
 function internalApiCall($u) {
     if (!Gatekeeper\authenticated()) {
-        exit('The internal API can only be accessed by Dandelion.');
+        exit(makeDAPI(3, 'Login required', 'iapi', '%REDIRECTLOGIN%'));
     }
 
     $returnObj = (array) json_decode(processRequest($_SESSION['userInfo']['userid'], true, $u[1], $u[2]));

@@ -42,7 +42,7 @@ var refreshFun =
         CategoryManage.grabNextLevel('0:0');
 
 		// Set timers
-        refreshc = setInterval(function(){ refreshLog("update"); }, 120000);
+        refreshc = setInterval(function(){ refreshLog("update"); }, 60000);
         autore = true;
     },
 
@@ -66,6 +66,10 @@ function refreshLog(kindof) {
                 data: { action: "getLogs", data: "" }
             })
                 .done(function( html ) {
+                    if (html === "") {
+                        // PHP session timed out, use no longer logged in
+                        window.location.reload(true);
+                    }
                     $("#refreshed").html( html );
                 })
 
