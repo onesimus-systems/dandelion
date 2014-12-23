@@ -87,7 +87,7 @@ function loadCssSheets()
     foreach ($optionalSheets as $sheet) {
         // Load manual filenames if given
         if (substr($sheet, -4) == '.css') {
-            if (is_file('static/styles/'.$sheet))
+            if (is_file('static/styles/css/'.$sheet))
                 $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/'.$sheet.'">';
             continue;
         }
