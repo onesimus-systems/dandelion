@@ -23,7 +23,7 @@
  ***/
 namespace Dandelion;
 
-class cxeesto extends Database\dbManage
+class cxeesto
 {
     // Order matters!! These correspond to the statusType() switch case order
     private $statusOptions = array(
@@ -38,20 +38,26 @@ class cxeesto extends Database\dbManage
         "Out Sick",
         "Vacation"
     );
+
+    public function __construct(databaseConn $dbConn) {
+        $this->dbConn = $dbConn;
+        return;
+    }
+
     /**
      * Returns JSON array of user statuses
-     * 
+     *
      * @return JSON - Users statuses
      */
     public function getJson() {
-        $statuses = $this->selectAll('presence');
-        
+        $statuses = $this->dbConn->selectAll('presence')->get();
+
         foreach ($statuses as &$row) {
             $row['statusInfo'] = $this->statusType($row['status'], '&#013;', $row['returntime']);
         }
-        
+
         $statuses['statusOptions'] = $this->statusOptions;
-        
+
         return json_encode($statuses);
     }
 
@@ -142,7 +148,9 @@ class cxeesto extends Database\dbManage
         $date = new \DateTime();
         $date = $date->format('Y-m-d H:i:s');
 
-        $stmt = 'UPDATE `'.DB_PREFIX.'presence` SET `message` = :message, `status` = :setorno, `returntime` = :returntime, `dmodified` = :dmodified WHERE `uid` = :uid';
+        $this->dbConn->update(DB_PREFIX.'presence')
+                     ->set(array('message = :message', 'status = :setorno', 'returntime = :returntime', 'dmodified = :dmodified'))
+                     ->where(array('uid = :uid'));
         $params = array(
             'message' => urldecode($message),
             'setorno' => $status,
@@ -150,8 +158,7 @@ class cxeesto extends Database\dbManage
             'dmodified' => $date,
             'uid' => $userId
         );
-
-        $this->queryDB($stmt, $params);
+        $this->dbConn->go($params);
 
         return json_encode('User status updated');
     }

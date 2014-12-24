@@ -32,7 +32,7 @@ class UserForms
      *
      * @param string $name - User's real name
      * @param int $uid - User's ID number
-     *       
+     *
      * @return string
      */
     public static function confirmDelete($userObj) {
@@ -60,7 +60,7 @@ HTML;
      *
      * @param string $name - User's real name
      * @param int $uid - User's ID number
-     *       
+     *
      * @return string
      */
     public static function confirmKeyRevoke($userObj) {
@@ -80,7 +80,7 @@ HTML;
      * Edit user status form
      *
      * @param array $row - All user information from database for Cxeesto
-     *       
+     *
      * @return string
      */
     public static function editCxeesto($userObj) {
@@ -89,7 +89,7 @@ HTML;
         $realname = $userObj->userInfo['realname'];
         $message = $userObj->userCheesto['message'];
         $returntime = $userObj->userCheesto['returntime'];
-        
+
         echo <<<HTML
         <div id="editform">
             <h2>Edit User Status:</h2>
@@ -135,14 +135,14 @@ HTML;
      * Edit user form
      *
      * @param array $userInfo - All user information from database
-     *       
+     *
      * @return string
      */
     public static function editUser($userObj) {
-        $permissions = new Permissions();
+        $permissions = new Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
         $list = $permissions->getGroupList();
         $themeList = \Dandelion\getThemeList($userObj->userInfo['theme']);
-        
+
         echo <<<HTML
         <div id="editform">
             <h2>Edit User Information:</h2>
@@ -158,7 +158,7 @@ HTML;
                 $selected = 'selected';
             else
                 $selected = '';
-            
+
             echo '<option value="' . $group['role'] . '" ' . $selected . '>' . ucfirst($group['role']) . '</option>';
         }
         echo <<<HTML
@@ -183,7 +183,7 @@ HTML;
      * @return string
      */
     public static function addUser() {
-        $permissions = new Permissions();
+        $permissions = new Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
         $list = $permissions->getGroupList();
         echo <<<HTML
         <div id="editform">
@@ -216,7 +216,7 @@ HTML;
      * @param int $uid - User's ID number
      * @param string $uname - User's username
      * @param string $realname - User's name
-     *       
+     *
      * @return string
      */
     public static function resetPassword($userObj) {

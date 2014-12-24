@@ -41,18 +41,18 @@ class User extends dbManage
     public function __construct($load = false, $uid = -1) {
         // Prepare database connection
         parent::__construct();
-        
+
         if ($uid >= 0) {
             $this->userInfo['userid'] = $uid;
         }
-        
+
         if ($load === true && $uid >= 0) {
             $this->loadUser();
         }
         elseif ($load === true && $uid < 0) {
             echo 'To load a user you must provide a user ID.';
         }
-        
+
         return true;
     }
 
@@ -82,17 +82,17 @@ class User extends dbManage
                     LEFT JOIN ' . DB_PREFIX . 'rights AS r
                         ON r.role = u.role
                     WHERE u.userid = :userid';
-        
+
         $params = array(
-            'userid' => $this->userInfo['userid'] 
+            'userid' => $this->userInfo['userid']
         );
-        
+
         $allUserInfo = $this->queryDB($sql, $params);
-        
+
         foreach ($allUserInfo[0] as $key => $value) {
             $infoType = substr($key, 0, 2);
             $key = substr_replace($key, '', 0, 2);
-            
+
             switch ($infoType) {
                 case 'u_':
                     if ($key == 'permissions') {
@@ -108,7 +108,7 @@ class User extends dbManage
                     break;
             }
         }
-        
+
         return true;
     }
 
@@ -125,17 +125,17 @@ class User extends dbManage
                 'role' => $this->userInfo['role'],
                 'first' => $this->userInfo['firsttime'],
                 'userid' => $this->userInfo['userid'],
-                'theme' => $this->userInfo['theme'] 
+                'theme' => $this->userInfo['theme']
             );
-            
+
             $this->queryDB($stmt, $params);
-            
+
             $stmt = 'UPDATE `' . DB_PREFIX . 'presence` SET `realname` = :realname WHERE `uid` = :userid';
             $params = array(
                 'realname' => $this->userInfo['realname'],
-                'userid' => $this->userInfo['userid'] 
+                'userid' => $this->userInfo['userid']
             );
-            
+
             if ($this->queryDB($stmt, $params)) {
                 return 'User Updated<br><br>';
             }
@@ -159,7 +159,7 @@ class User extends dbManage
         $add_pass = password_hash($this->userInfo['password'], PASSWORD_BCRYPT);
         $add_real = $this->userInfo['realname'];
         $add_role = $this->userInfo['role'];
-        
+
         if (!empty($add_user) && !empty($add_pass) && !empty($add_real) && !empty($add_role)) {
             if (!$this->isUser($add_user)) {
                 // Create row in users table
@@ -169,24 +169,24 @@ class User extends dbManage
                     'password' => $add_pass,
                     'realname' => $add_real,
                     'role' => $add_role,
-                    'datecreated' => $date->format('Y-m-d') 
+                    'datecreated' => $date->format('Y-m-d')
                 );
                 $this->queryDB($stmt, $params);
-                
+
                 if ($this->userCheesto['create'] === true) {
                     $lastID = $this->lastInsertId();
-                    
+
                     // Create row in presence table
                     $stmt = 'INSERT INTO `' . DB_PREFIX . 'presence` (`uid`, `realname`, `status`, `message`, `returntime`, `dmodified`) VALUES (:uid, :real, 1, \'\', \'00:00:00\', :date)';
                     $params = array(
                         'uid' => $lastID,
                         'real' => $add_real,
-                        'date' => $date->format('Y-m-d H:i:s') 
+                        'date' => $date->format('Y-m-d H:i:s')
                     );
-                    
+
                     $this->queryDB($stmt, $params);
                 }
-                
+
                 return 'User Added<br><br>';
             }
             else {
@@ -208,10 +208,10 @@ class User extends dbManage
                  FROM `' . DB_PREFIX . 'users`
                  WHERE `username` = :username';
         $params = array(
-            'username' => $username 
+            'username' => $username
         );
         $row = $this->queryDB($stmt, $params);
-        
+
         if (empty($row))
             return false;
         else
@@ -226,16 +226,16 @@ class User extends dbManage
     public function resetUserPw() {
         $uid = $this->userInfo['userid'];
         $pass = $this->userInfo['password'];
-        
+
         if (!empty($uid) && !empty($pass)) {
             $pass = password_hash($pass, PASSWORD_BCRYPT);
-            
+
             $stmt = 'UPDATE `' . DB_PREFIX . 'users` SET `password` = :newpass, `firsttime` = 0 WHERE `userid` = :id';
             $params = array(
                 'newpass' => $pass,
-                'id' => $uid 
+                'id' => $uid
             );
-            
+
             if ($this->queryDB($stmt, $params)) {
                 return 'Password change successful.<br><br>';
             }
@@ -255,21 +255,21 @@ class User extends dbManage
      */
     public function deleteUser() {
         $uid = $this->userInfo['userid'];
-        
+
         // To ensure at least one admin account is available,
         // some checks are performed to verify rights of accounts
         if (!empty($uid) && $uid != $_SESSION['userInfo']['userid']) {
             $delete = false;
-            
+
             $stmt = 'SELECT `role` FROM `' . DB_PREFIX . 'users` WHERE `userid` = :userid';
             $params = array(
-                'userid' => $uid 
+                'userid' => $uid
             );
             $user = $this->queryDB($stmt, $params)[0]['role'];
-            
-            $perms = new Permissions();
+
+            $perms = new Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
             $isAdmin = (array) $perms->loadRights($user);
-            
+
             if (!$isAdmin['admin']) {
                 // If the account being deleted isn't an admin, then there's nothing to worry about
                 $delete = true;
@@ -279,13 +279,13 @@ class User extends dbManage
                 // there's at least one other user with the admin rights flag
                 $stmt = 'SELECT `role` FROM `' . DB_PREFIX . 'users` WHERE `userid` != :userid';
                 $params = array(
-                    'userid' => $uid 
+                    'userid' => $uid
                 );
                 $otherUsers = $this->queryDB($stmt, $params);
-                
+
                 foreach ($otherUsers as $areTheyAdmin) {
                     $isAdmin = (array) $perms->loadRights($areTheyAdmin['role']);
-                    
+
                     if ($isAdmin['admin']) {
                         // If one is found, stop for loop and allow the delete
                         $delete = true;
@@ -293,7 +293,7 @@ class User extends dbManage
                     }
                 }
             }
-            
+
             if ($delete) {
                 $sql = 'DELETE u, p, a, m
                         FROM ' . DB_PREFIX . 'users AS u
@@ -305,9 +305,9 @@ class User extends dbManage
                             ON m.toUser = u.userid
                         WHERE u.userid = :userid';
                 $params = array(
-                    'userid' => $uid 
+                    'userid' => $uid
                 );
-                
+
                 if ($this->queryDB($sql, $params)) {
                     return 'Action Taken: User Deleted<br><br>';
                 }
@@ -334,11 +334,11 @@ class User extends dbManage
         $status_id = $this->userCheesto['status'];
         $message = $this->userCheesto['message'];
         $returntime = $this->userCheesto['returntime'];
-        
+
         if (!empty($uid) && !empty($status_id)) {
             $date = new \DateTime();
             $date = $date->format('Y-m-d H:i:s');
-            
+
             switch ($status_id) {
                 case "Available":
                     $status_id = 1;
@@ -378,16 +378,16 @@ class User extends dbManage
                     $message = '';
                     break;
             }
-            
+
             $stmt = 'UPDATE `' . DB_PREFIX . 'presence` SET `message` = :message, `status` = :status, `returntime` = :return, `dmodified` = :date WHERE `uid` = :userid';
             $params = array(
                 'message' => $message,
                 'status' => $status_id,
                 'return' => $returntime,
                 'date' => $date,
-                'userid' => $uid 
+                'userid' => $uid
             );
-            
+
             if ($this->queryDB($stmt, $params)) {
                 return 'User Status Updated<br><br>';
             }
@@ -409,9 +409,9 @@ class User extends dbManage
         $sql = 'DELETE FROM ' . DB_PREFIX . 'apikeys
                 WHERE user = :id';
         $params = array(
-            "id" => $this->userInfo['userid'] 
+            "id" => $this->userInfo['userid']
         );
-        
+
         if ($this->queryDB($sql, $params)) {
             $this->userApi = array();
             return 'API Key has been revoked<br><br>';

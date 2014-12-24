@@ -29,35 +29,35 @@ class cheestoAPI
 {
     /**
      * Grab JSON array of all cheesto users and statuses
-     * 
+     *
      * @return JSON
      */
     public static function readall() {
         $rights = new \Dandelion\rights(USER_ID);
-        
+
         if ($rights->authorized('viewcheesto')) {
-            $cheesto = new \Dandelion\cxeesto();
+            $cheesto = new \Dandelion\cxeesto(\Dandelion\Storage\mySqlDatabase::getInstance());
             return $cheesto->getJson();
         }
         else {
             exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
     }
-    
+
     /**
      * Update the status of user
-     * 
+     *
      * @return JSON
      */
     public static function update() {
         $rights = new \Dandelion\rights(USER_ID);
-        
+
         if ($rights->authorized('updatecheesto')) {
-            $cheesto = new \Dandelion\cxeesto();
+            $cheesto = new \Dandelion\cxeesto(\Dandelion\Storage\mySqlDatabase::getInstance());
             $message = isset($_POST['message']) ? $_POST['message'] : '';
             $status = isset($_POST['status']) ? $_POST['status'] : -1;
             $returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
-            
+
             return $cheesto->updateStatus($message, $status, $returntime, USER_ID);
         }
         else {
