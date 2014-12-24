@@ -45,9 +45,9 @@ function processCall($url) {
 
 /**
  * Process api call
- * 
+ *
  * @param array $u - Exploded URL
- * 
+ *
  * @return Nothing
  */
 function apiCall($u) {
@@ -60,9 +60,9 @@ function apiCall($u) {
 
 /**
  * Process internal api call
- * 
+ *
  * @param array $u - Exploded URL
- * 
+ *
  * @return Nothing
  */
 function internalApiCall($u) {
@@ -83,7 +83,7 @@ function internalApiCall($u) {
  * @param bool $localCall - Is the call from a Dandelion component
  * @param string $subsystem - Module being called
  * @param string $request - Method being called
- *            
+ *
  * @return DAPI object
  */
 function processRequest($key, $localCall, $subsystem, $request) {
@@ -103,13 +103,11 @@ function processRequest($key, $localCall, $subsystem, $request) {
         define('REQ_SOURCE', 'iapi'); // Internal API
         define('USER_ID', $key);
     }
-    
-    // Call the request function (as defined by the second part of the URL)
-    $data = call_user_func(array (
-        __NAMESPACE__ . '\\' . $subsystem . 'API',
-        $request 
-    ));
-    
+
+    // Call the requested function (as defined by the second part of the URL)
+    $className = __NAMESPACE__ . '\\' . $subsystem . 'API';
+    $data = $className::$request();
+
     // Return DAPI object
     return makeDAPI(0, 'Completed', $subsystem, json_decode($data));
 }
@@ -118,7 +116,7 @@ function processRequest($key, $localCall, $subsystem, $request) {
  * Checks database to see if API is present and therefore valid
  *
  * @param string $key - API key to verify
- *            
+ *
  * @return bool true on success, DAPI object on failure
  */
 function verifyKey($key) {
@@ -128,18 +126,18 @@ function verifyKey($key) {
     }
 
     $conn = new dbManage();
-    
+
     // Search for key with case sensitive collation
     $sql = 'SELECT *
             FROM ' . DB_PREFIX . 'apikeys
             WHERE keystring = :key
             COLLATE latin1_general_cs';
     $params = array (
-        "key" => $key 
+        "key" => $key
     );
-    
+
     $keyValid = $conn->queryDB($sql, $params);
-    
+
     if (!empty($keyValid[0])) {
         return $keyValid[0]['user'];
     }
@@ -150,7 +148,7 @@ function verifyKey($key) {
  * Test API key, used by extensions to verify key
  *
  * @param string $key - API key to test
- *            
+ *
  * @return DAPI object
  */
 function apitest($key) {
@@ -167,7 +165,7 @@ function apitest($key) {
  * @param string $status - Text status message
  * @param string $subsystem - API where DAPI was created
  * @param array $data - Data returned from API
- *            
+ *
  * @return JSON DAPI object
  */
 function makeDAPI($ecode, $status, $subsystem, $data = '') {
@@ -191,7 +189,7 @@ function makeDAPI($ecode, $status, $subsystem, $data = '') {
         'errorcode' => $ecode,
         'status' => $status,
         'apisub' => $subsystem,
-        'data' => $data 
+        'data' => $data
     );
     return json_encode($response);
 }
