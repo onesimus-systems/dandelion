@@ -29,16 +29,18 @@ namespace Dandelion\API;
 use Dandelion\database\dbManage;
 use Dandelion\Gatekeeper;
 
-require_once '../lib/bootstrap.php';
-
-// Process URL
-$url = isset($_REQUEST['url']) ? $_REQUEST['url'] : '';
-$url = explode('/', $url);
-
-if ($url[0] == 'i') {
-    internalApiCall($url);
-} else {
-    apiCall($url);
+/**
+ *  Takes and array containing the exploded components if an api call URL
+ *
+ *  @param array $url - Exploded URL
+ */
+function processCall($url) {
+    if ($url[0] == 'i') {
+        internalApiCall($url);
+    } else {
+        apiCall($url);
+    }
+    return;
 }
 
 /**
@@ -52,7 +54,6 @@ function apiCall($u) {
     if ($_SESSION['app_settings']['public_api']) {
         $apikey = isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : '';
         echo processRequest($apikey, false, $u[0], $u[1]);
-        session_write_close();
     }
     return;
 }
@@ -72,7 +73,6 @@ function internalApiCall($u) {
     $returnObj = (array) json_decode(processRequest($_SESSION['userInfo']['userid'], true, $u[1], $u[2]));
     $returnObj['iapi'] = true;
     echo json_encode($returnObj);
-    session_write_close();
     return;
 }
 
