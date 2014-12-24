@@ -106,7 +106,7 @@ function processRequest($key, $localCall, $subsystem, $request) {
 
     // Call the requested function (as defined by the second part of the URL)
     $className = __NAMESPACE__ . '\\' . $subsystem . 'API';
-    $data = $className::$request();
+    $data = $className::$request(\Dandelion\Storage\mySqlDatabase::getInstance());
 
     // Return DAPI object
     return makeDAPI(0, 'Completed', $subsystem, json_decode($data));

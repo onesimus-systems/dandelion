@@ -32,11 +32,11 @@ class cheestoAPI
      *
      * @return JSON
      */
-    public static function readall() {
+    public static function readall($db) {
         $rights = new \Dandelion\rights(USER_ID);
 
         if ($rights->authorized('viewcheesto')) {
-            $cheesto = new \Dandelion\cxeesto(\Dandelion\Storage\mySqlDatabase::getInstance());
+            $cheesto = new \Dandelion\cxeesto($db);
             return $cheesto->getJson();
         }
         else {
@@ -49,11 +49,11 @@ class cheestoAPI
      *
      * @return JSON
      */
-    public static function update() {
+    public static function update($db) {
         $rights = new \Dandelion\rights(USER_ID);
 
         if ($rights->authorized('updatecheesto')) {
-            $cheesto = new \Dandelion\cxeesto(\Dandelion\Storage\mySqlDatabase::getInstance());
+            $cheesto = new \Dandelion\cxeesto($db);
             $message = isset($_POST['message']) ? $_POST['message'] : '';
             $status = isset($_POST['status']) ? $_POST['status'] : -1;
             $returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
