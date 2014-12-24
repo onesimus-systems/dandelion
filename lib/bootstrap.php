@@ -6,13 +6,14 @@
  *
  * @author Lee Keitel
  *         @date March 2014
- *        
+ *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
- * 
+ *
  */
 namespace Dandelion;
 
 use Dandelion\Database\dbManage;
+use Dandelion\Storage\mySqlDatabase;
 
 // Get and define root path of application
 define('ROOT', dirname(dirname(__FILE__)));
@@ -28,6 +29,7 @@ if (!function_exists('version_compare') || version_compare(phpversion(), "5.3.7"
 
 // Include autoloaders
 require ROOT . '/lib/autoloader.php';  // Dandelion
+require ROOT . '/lib/interfaces.php';
 
 // Setup error logging
 require ROOT . '/lib/logging.php';
@@ -45,7 +47,7 @@ else {
 }
 
 // Define constants
-define('D_VERSION', '5.0.3');
+define('D_VERSION', '6.0.0 dev');
 define('THEME_DIR', 'themes');
 define('DB_PREFIX', $DBCONFIG['db_prefix']);
 define('FAVICON_PATH', HOSTNAME.'/static/images/favicon.ico');
@@ -58,6 +60,7 @@ if (DEBUG_ENABLED) {
 
 // Give database class the info to connect
 dbManage::$connInfo = $DBCONFIG;
+mySqlDatabase::$connInfo = $DBCONFIG;
 
 // Check for and apply updates
 require ROOT . '/lib/update.php';
