@@ -17,7 +17,8 @@ body {
 #presence {
   position: absolute;
   float: left;
-  left: 1em;
+  left: 2em;
+  top: 2em;
   max-width: 12em;
   border: 1px solid black;
   padding: 5px;
