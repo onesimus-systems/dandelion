@@ -21,11 +21,10 @@
  ***/
 namespace Dandelion;
 
-class permissions extends Database\dbManage
+class permissions
 {
     public function __construct(databaseConn $dbConn) {
-        parent::__construct();
-        $this->dbConn2 = $dbConn;
+        $this->dbConn = $dbConn;
         return;
     }
     /**
@@ -37,15 +36,15 @@ class permissions extends Database\dbManage
     public function getGroupList($groupID = NULL)
     {
         if ($groupID === NULL) {
-            $this->dbConn2->selectAll('rights');
+            $this->dbConn->selectAll('rights');
             $params = NULL;
         } else {
-            $this->dbConn2->select()->from(DB_PREFIX.'rights')->where(array('id = :id'));
+            $this->dbConn->select()->from(DB_PREFIX.'rights')->where(array('id = :id'));
             $params = array(
                 'id' => $groupID
             );
         }
-        return $this->dbConn2->get($params);
+        return $this->dbConn->get($params);
     }
 
     /**
@@ -57,13 +56,13 @@ class permissions extends Database\dbManage
      */
     public function createGroup($name, $rightsArray)
     {
-        $this->dbConn2->insert()->into(DB_PREFIX.'rights', array('role', 'permissions'))->values(array(':role', ':rights'));
+        $this->dbConn->insert()->into(DB_PREFIX.'rights', array('role', 'permissions'))->values(array(':role', ':rights'));
         $params = array(
             'role' => strtolower($name),
             'rights' => serialize($rightsArray)
         );
-        $this->dbConn2->go($params);
-        return $this->dbConn2->lastInsertId();
+        $this->dbConn->go($params);
+        return $this->dbConn->lastInsertId();
     }
 
     /**
@@ -74,11 +73,11 @@ class permissions extends Database\dbManage
      */
     public function deleteGroup($id)
     {
-        $this->dbConn2->delete()->from(DB_PREFIX.'rights')->where(array('id = :id'));
+        $this->dbConn->delete()->from(DB_PREFIX.'rights')->where(array('id = :id'));
         $params = array(
             'id' => $id
         );
-        return $this->dbConn2->go($params);
+        return $this->dbConn->go($params);
     }
 
     /**
@@ -91,12 +90,12 @@ class permissions extends Database\dbManage
     public function editGroup($gid, $rights)
     {
         $rights = serialize($rights);
-        $this->dbConn2->update(DB_PREFIX.'rights')->set(array('permissions = :newPerm'))->where(array('id = :gid'));
+        $this->dbConn->update(DB_PREFIX.'rights')->set(array('permissions = :newPerm'))->where(array('id = :gid'));
         $params = array(
             'gid' => $gid,
             'newPerm' => $rights
         );
-        return $this->dbConn2->go($params);
+        return $this->dbConn->go($params);
     }
 
     /**
@@ -107,11 +106,11 @@ class permissions extends Database\dbManage
      */
     public function loadRights($userrole)
     {
-       $this->dbConn2->select('permissions')->from(DB_PREFIX.'rights')->where(array('role = :userrole'));
+       $this->dbConn->select('permissions')->from(DB_PREFIX.'rights')->where(array('role = :userrole'));
        $params = array(
             'userrole' => $userrole
        );
-       return unserialize($this->dbConn2->get($params)[0]['permissions']);
+       return unserialize($this->dbConn->get($params)[0]['permissions']);
     }
 
     /**
@@ -124,10 +123,10 @@ class permissions extends Database\dbManage
     {
         // Get name of group to search users table
         $groupName = $this->getGroupList($gid)[0]['role'];
-        $this->dbConn2->select('userid')->from(DB_PREFIX.'users')->where(array('role = :role'));
+        $this->dbConn->select('userid')->from(DB_PREFIX.'users')->where(array('role = :role'));
         $params = array(
             'role' => $groupName
         );
-        return $this->dbConn2->get($params);
+        return $this->dbConn->get($params);
     }
 }
