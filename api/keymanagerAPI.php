@@ -30,48 +30,43 @@ class keyManagerAPI
     /**
      * Retrieve key from database for current user.
      * If a key isn't present, create one
-     * 
+     *
      * @param bool $force - Force a new key to be generated
-     * 
+     *
      * @return JSON - API Key or error message
      */
-    public static function getKey($force = false) {
+    public static function getKey($db, $force = false) {
         $conn = new \Dandelion\database\dbManage();
-        
-        $sql = 'SELECT keystring
-                FROM ' . DB_PREFIX . 'apikeys
-                WHERE user = :id';
-        
+
+        $db->select('keystring')->from(DB_PREFIX.'apikeys')->where(array('user = :id'));
         $params = array (
-            "id" => $_SESSION['userInfo']['userid'] 
+            "id" => $_SESSION['userInfo']['userid']
         );
-        
-        $key = $conn->queryDB($sql, $params);
-        
+
+        $key = $db->get($params);
+
         if (!empty($key[0]) && !$force) {
             return SELF::encodeKey($key[0]['keystring']);
         }
         else {
-            $newKey = SELF::generateKey(40);
-            
             // Clear database of old keys for user
-            $sql = 'DELETE FROM ' . DB_PREFIX . 'apikeys
-                    WHERE user = :id';
+            $db->delete()->from(DB_PREFIX.'apikeys')->where(array('user = :id'));
             $params = array (
-                "id" => $_SESSION['userInfo']['userid'] 
+                "id" => $_SESSION['userInfo']['userid']
             );
-            $conn->queryDB($sql, $params);
-            
-            $sql = 'INSERT INTO ' . DB_PREFIX . 'apikeys
-                    (keystring, user)
-                    VALUES (:newkey, :uid)';
-            
+            $db->go($params);
+
+            // Generate new key
+            $newKey = SELF::generateKey(40);
+
+            // Insert new key
+            $db->insert()->into(DB_PREFIX.'apikeys', array('keystring', 'user'))->values(array(':newkey', ':uid'));
             $params = array (
                 "newkey" => $newKey,
-                "uid" => $_SESSION['userInfo']['userid'] 
+                "uid" => $_SESSION['userInfo']['userid']
             );
-            
-            if ($conn->queryDB($sql, $params)) {
+
+            if ($db->go($params)) {
                 return SELF::encodeKey($newKey);
             }
             else {
@@ -83,29 +78,29 @@ class keyManagerAPI
     /**
      * Called to force a new key to be generated
      */
-    public static function newKey() {
-        return SELF::getKey(true);
+    public static function newKey($db) {
+        return SELF::getKey($db, true);
     }
 
     /**
      * Put key into JSON encoded array with 'key' as the name
-     * 
+     *
      * @param string $key - API Key (or error message)
      */
-    public static function encodeKey($key) {
+    private static function encodeKey($key) {
         return json_encode(array (
-            "key" => $key 
+            "key" => $key
         ));
     }
 
     /**
      * Generate a random alphanumeric string
-     * 
+     *
      * @param int $length - Length of generated string
-     * 
+     *
      * @return string
      */
-    public static function generateKey($length = 10) {
+    private static function generateKey($length = 10) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
