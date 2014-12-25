@@ -26,8 +26,11 @@ namespace Dandelion;
  * through each one and gets all the rows of data then writes it to
  * a file with the proper SQL instructions to import back to MySQL.
  */
-class backupdb extends Database\dbManage
+class backupdb
 {
+    public function __construct($db) {
+      $this->db = $db;
+    }
     /**
      * Perform backup
      *
@@ -39,7 +42,7 @@ class backupdb extends Database\dbManage
 
         // Get all of the tables
         $tables = array();
-        $result = $this->queryDB('SHOW TABLES');
+        $result = $this->db->raw('SHOW TABLES')->go();
 
         foreach($result as $table) {
             foreach($table as $tablename) {
@@ -49,10 +52,10 @@ class backupdb extends Database\dbManage
 
         // Cycle through
         foreach($tables as $table) {
-            $result = $this->queryDB('SELECT * FROM `'.$table.'`');
+            $result = $this->db->select()->from($table)->get();
 
             $return.= 'DROP TABLE IF EXISTS `'.$table.'`;';
-            $row2 = $this->queryDB('SHOW CREATE TABLE `'.$table.'`');
+            $row2 = $this->db->raw('SHOW CREATE TABLE '.$table)->go();
             $return.= "\n\n".$row2[0]['Create Table'].";\n\n";
 
             if (isset($result[0])) {

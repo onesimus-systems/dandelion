@@ -21,24 +21,10 @@
 ***/
 namespace Dandelion;
 
-/**
- * Only the doAction() method is publicly visible and it takes
- * in the POST data from a request, determine the action from the
- * data and calls that function giving it the 'data' index of the
- * POST array
- */
-class adminactions extends Database\dbManage
+class adminactions
 {
-    /**
-     * Main function to perform action
-     *
-     * @param $data mixed POST data array
-     *
-     * @return string - Function Response
-     */
-    public function doAction($data)
-    {
-        return $this->$data['action']($data['data']);
+    public function __construct($db) {
+        $this->dbConn = $db;
     }
 
     /**
@@ -47,14 +33,16 @@ class adminactions extends Database\dbManage
      * @param $data string - Website slogan
      * @return string
      */
-    private function saveSlogan($data)
+    public function saveSlogan($data)
     {
         // Save new slogan
-        $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :slogan WHERE `name` = "slogan"';
+        $this->dbConn->update(DB_PREFIX.'settings')
+                      ->set('value = :slogan')
+                      ->where('name = "slogan"');
         $params = array(
             'slogan' => urldecode($data)
         );
-        $this->queryDB($stmt, $params);
+        $this->dbConn->go($params);
 
         $_SESSION['app_settings']['slogan'] = urldecode($data);
 
@@ -66,9 +54,9 @@ class adminactions extends Database\dbManage
      *
      * @return string
      */
-    private function backupDB()
+    public function backupDB()
     {
-        $saveMe = new backupDB();
+        $saveMe = new backupDB($this->dbConn);
         return $saveMe->doBackup();
     }
 
@@ -78,14 +66,16 @@ class adminactions extends Database\dbManage
      * @param $data string - Theme name
      * @return string
      */
-    private function saveDefaultTheme($data)
+    public function saveDefaultTheme($data)
     {
         // Set new default theme
-        $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :theme WHERE `name` = "default_theme"';
+        $this->dbConn->update(DB_PREFIX.'settings')
+                      ->set('value = :theme')
+                      ->where('name = "default_theme"');
         $params = array(
             'theme' => $data
         );
-        $this->queryDB($stmt, $params);
+        $this->dbConn->go($params);
 
         $_SESSION['app_settings']['default_theme'] = $data;
 
@@ -98,35 +88,39 @@ class adminactions extends Database\dbManage
      * @param $data bool - Enabled?
      * @return string
      */
-    private function saveCheesto($data)
+    public function saveCheesto($data)
     {
         // Set cheesto enabled/disabled
-        $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :enabled WHERE `name` = "cheesto_enabled"';
+        $this->dbConn->update(DB_PREFIX.'settings')
+                      ->set('value = :enabled')
+                      ->where('name = "cheesto_enabled"');
         $enabled = ($data == 'true') ? 1 : 0;
         $params = array(
             'enabled' => $enabled
         );
-        $this->queryDB($stmt, $params);
+        $this->dbConn->go($params);
 
         $_SESSION['app_settings']['cheesto_enabled'] = $enabled;
 
         return 'Settings set successfully';
     }
-    
+
     /**
      * Save public API enabled status
      *
      * @param $data bool - Enabled?
      * @return string
      */
-    private function savePAPI($data) {
+    public function savePAPI($data) {
         // Set Public API enabled/disabled
-        $stmt = 'UPDATE `'.DB_PREFIX.'settings` SET `value` = :enabled WHERE `name` = "public_api"';
+        $this->dbConn->update(DB_PREFIX.'settings')
+                      ->set('value = :enabled')
+                      ->where('name = "public_api"');
         $enabled = ($data == 'true') ? 1 : 0;
         $params = array(
             'enabled' => $enabled
         );
-        $this->queryDB($stmt, $params);
+        $this->dbConn->go($params);
 
         $_SESSION['app_settings']['public_api'] = $enabled;
 
