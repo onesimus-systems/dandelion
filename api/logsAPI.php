@@ -43,7 +43,7 @@ class logsAPI
             return $logs->getJSON($db, $limit, $offset);
         }
         else {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
     }
 }
