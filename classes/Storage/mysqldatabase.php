@@ -191,7 +191,7 @@ class mySqlDatabase implements \Dandelion\databaseConn {
                 $stmt = 'DELETE ' . $this->sqlStatement['select'] . ' FROM ' . $this->sqlStatement['from'];
                 break;
             case 'update':
-                $stmt = 'UPDATE ' . $this->sqlStatement['from'] . ' SET ' . implode(', ', $this->sqlStatement['set']);
+                $stmt = 'UPDATE ' . $this->sqlStatement['from'] . ' SET ' . (is_array($this->sqlStatement['set']) ? implode(', ', $this->sqlStatement['set']) : $this->sqlStatement['set']);
                 break;
             case 'insert':
                 $stmt = 'INSERT INTO ' . $this->sqlStatement['from'] . '(' . implode(', ', $this->sqlStatement['insert']) . ') VALUES (' . implode(', ', $this->sqlStatement['set']) . ')';
