@@ -1,8 +1,12 @@
 <?php
 /**
+ * Storage object to interact with a MySQL database.
  *
+ * This file is part of the Dandelion log application.
  *
- *
+ * @author Lee Keitel
+ * @date   December 2014
+ * @license GPLv3
  */
 
 namespace Dandelion\Storage;
@@ -21,7 +25,9 @@ class mySqlDatabase implements \Dandelion\databaseConn {
             'where'  => array()
         );
 
-    // Bureaucratic stuff to maintain a single instance of the database connection
+    /**
+     * Returns the an instance of the MySqlDatabase class. If one is already created, it will return it.
+     */
     public static function getInstance() {
         if ($instance === NULL) {
             $instance = new self();
@@ -36,10 +42,12 @@ class mySqlDatabase implements \Dandelion\databaseConn {
         return;
     }
 
+    // Prevent something from accidentally making multiple instances of the class
     private function __construct() {}
     private function __clone() {}
     private function __wakeup() {}
 
+    // Connect to the database and set the connection variable
     private function init() {
         try {
             $db_connect = 'mysql:host=' . self::$connInfo['db_host'] . ';dbname=' . self::$connInfo['db_name'];
@@ -65,26 +73,40 @@ class mySqlDatabase implements \Dandelion\databaseConn {
         return;
     }
 
+    private function clearStatement() {
+        $this->sqlStatement = array(
+            'select' => '',
+            'insert' => array(),
+            'set'    => array(),
+            'from'   => '',
+            'where'  => array()
+        );
+    }
+
     // Main database functions
     public function select($cols = '*') {
+        $this->clearStatement();
         $this->sqlStatement['select'] = $cols;
         $this->command = 'select';
         return $this;
     }
 
     public function delete($joinCols = '') {
+        $this->clearStatement();
         $this->sqlStatement['select'] = $joinCols;
         $this->command = 'delete';
         return $this;
     }
 
     public function update($table) {
+        $this->clearStatement();
         $this->sqlStatement['from'] = $table;
         $this->command = 'update';
         return $this;
     }
 
     public function insert() {
+        $this->clearStatement();
         $this->command = 'insert';
         return $this;
     }
@@ -138,7 +160,9 @@ class mySqlDatabase implements \Dandelion\databaseConn {
         return $this;
     }
 
-    // Build the SQL statement from supplied data
+    /**
+     * Build the SQL query string from supplied data
+     */
     private function prepareStatement() {
         $stmt = '';
         switch ($this->command) {
@@ -165,7 +189,15 @@ class mySqlDatabase implements \Dandelion\databaseConn {
         return $stmt;
     }
 
-    // Execute query
+    /**
+     * Queries the database
+     *
+     * @param array $paramArray - Array of variables that need to be bound to the PDO
+     * @param int $type - PDO value type (default: PDO::PARAM_STR)
+     *
+     * @return array Containing the results of a SELECT query.
+     *         True when performing any other query type.
+     */
     private function queryDB($paramArray = NULL, $type = \PDO::PARAM_STR) {
         $stmt = $this->prepareStatement();
         try {
