@@ -22,7 +22,9 @@ class mySqlDatabase implements \Dandelion\databaseConn {
             'insert' => array(),
             'set'    => array(),
             'from'   => '',
-            'where'  => array()
+            'where'  => array(),
+            'orderby' => array(),
+            'limit'  => ''
         );
 
     /**
@@ -79,7 +81,9 @@ class mySqlDatabase implements \Dandelion\databaseConn {
             'insert' => array(),
             'set'    => array(),
             'from'   => '',
-            'where'  => array()
+            'where'  => array(),
+            'orderby' => array(),
+            'limit'  => ''
         );
     }
 
@@ -137,6 +141,17 @@ class mySqlDatabase implements \Dandelion\databaseConn {
         return $this;
     }
 
+    public function orderBy($col, $direction) {
+        $this->sqlStatement['orderby']['col'] = $col;
+        $this->sqlStatement['orderby']['dir'] = $direction;
+        return $this;
+    }
+
+    public function limit($range) {
+        $this->sqlStatement['limit'] = $range;
+        return $this;
+    }
+
     public function get($params = null, $type = \PDO::PARAM_STR) {
         return $this->queryDB($params, $type);
     }
@@ -183,8 +198,18 @@ class mySqlDatabase implements \Dandelion\databaseConn {
                 break;
 
         }
+        if (!empty($this->sqlStatement['orderby'])) {
+            $stmt = $stmt . ' ORDER BY ' . $this->sqlStatement['orderby']['col'] . ' ' . $this->sqlStatement['orderby']['dir'];
+        }
         if (!empty($this->sqlStatement['where'])) {
-            $stmt = $stmt . ' WHERE ' . implode(', ', $this->sqlStatement['where']);
+            if (is_array($this->sqlStatement['where'])) {
+                $stmt = $stmt . ' WHERE ' . implode(', ', $this->sqlStatement['where']);
+            } else {
+                $stmt = $stmt . ' WHERE ' . $this->sqlStatement['where'];
+            }
+        }
+        if (!empty($this->sqlStatement['limit'])) {
+            $stmt = $stmt . ' LIMIT ' . $this->sqlStatement['limit'];
         }
         return $stmt;
     }
