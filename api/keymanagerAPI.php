@@ -38,7 +38,7 @@ class keyManagerAPI
     public static function getKey($db, $force = false) {
         $conn = new \Dandelion\database\dbManage();
 
-        $db->select('keystring')->from(DB_PREFIX.'apikeys')->where(array('user = :id'));
+        $db->select('keystring')->from(DB_PREFIX.'apikeys')->where('user = :id');
         $params = array (
             "id" => $_SESSION['userInfo']['userid']
         );
@@ -50,7 +50,7 @@ class keyManagerAPI
         }
         else {
             // Clear database of old keys for user
-            $db->delete()->from(DB_PREFIX.'apikeys')->where(array('user = :id'));
+            $db->delete()->from(DB_PREFIX.'apikeys')->where('user = :id');
             $params = array (
                 "id" => $_SESSION['userInfo']['userid']
             );

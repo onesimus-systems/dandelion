@@ -150,7 +150,7 @@ class cxeesto
 
         $this->dbConn->update(DB_PREFIX.'presence')
                      ->set(array('message = :message', 'status = :setorno', 'returntime = :returntime', 'dmodified = :dmodified'))
-                     ->where(array('uid = :uid'));
+                     ->where('uid = :uid');
         $params = array(
             'message' => urldecode($message),
             'setorno' => $status,
