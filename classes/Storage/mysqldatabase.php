@@ -141,7 +141,7 @@ class mySqlDatabase implements \Dandelion\databaseConn {
         return $this;
     }
 
-    public function orderBy($col, $direction) {
+    public function orderBy($col, $direction = 'ASC') {
         $this->sqlStatement['orderby']['col'] = $col;
         $this->sqlStatement['orderby']['dir'] = $direction;
         return $this;
