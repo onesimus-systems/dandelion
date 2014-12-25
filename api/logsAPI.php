@@ -29,18 +29,18 @@ class logsAPI
 {
     /**
      * Grab JSON array of logs
-     * 
+     *
      * @return JSON
      */
-    public static function read() {
+    public static function read($db) {
         $rights = new \Dandelion\rights(USER_ID);
-        
+
         if ($rights->authorized('viewlog')) {
             $limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 25;
             $offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0;
-            
+
             $logs = new \Dandelion\logs();
-            return $logs->getJSON($limit, $offset);
+            return $logs->getJSON($db, $limit, $offset);
         }
         else {
             exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
