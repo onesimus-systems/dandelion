@@ -22,36 +22,46 @@ include 'static/includes/head.php';
 <!-- Begin Page Body -->
 <h2>User Settings</h2>
 
-<?php require_once 'lib/saveSettings.php';?>
+<div id="passwordResetDialog">
+    <h2>Reset Password for <?php echo $_SESSION['userInfo']['realname']; ?>:</h2>
+    <form>
+        <table>
+            <tr><td>New Password:</td><td><input type="password" id="pass1"></td></tr>
+            <tr><td>Repeat Password:</td><td><input type="password" id="pass2"></td></tr>
+        </table>
+    </form>
+</div>
 
-<form method="post">
-    <input type="submit" name="set_action" class="dButton adminButton" value="Reset Password" />
-    <br /><br /><hr width="350" /><br />
-    
+<form>
+    <button type="button" class="dButton adminButton" onClick="api.showResetPasswordForm();">Reset Password</button>
+    <br><br><hr width="350"><br>
+
     How many logs do you want to see on the main page:<br />
-    <input type="text" name="show_limit" size="3" value="<?php echo $_SESSION['userInfo']['showlimit']; ?>" />
-    <input type="submit" name="set_action" class="dButton" value="Save Limit" />
+    <input type="text" id="show_limit" size="3" value="<?php echo $_SESSION['userInfo']['showlimit']; ?>">
+    <button type="button" class="dButton" onClick="api.saveLogLimit();">Save Limit</button>
 </form>
 
-<br /><hr width="350" /><br />
+<br><hr width="350"><br>
 
-<form method="post">
+<form>
 	Current theme:
-	
+
 	<?php echo getThemeList(); ?>
-	
-    <input type="submit" name="set_action" class="dButton" value="Save Theme" />
+
+    <button type="button" class="dButton" onClick="api.saveTheme();">Save Theme</button>
 </form>
 
 <?php if ($_SESSION['app_settings']['public_api']) { ?>
-    <br /><hr width="350" /><br />
+    <br><hr width="350"><br>
 
-    API Key: <span id="apiKey"></span>
-    <br><br><input type="button" class="dButton" onClick="api.generateKey();" value="Generate New Key">
+    <form>
+        API Key: <span id="apiKey"></span>
+        <br><br><button type="button" class="dButton" onClick="api.generateKey();">Generate New Key</button>
+    </form>
 <?php
 }
 
-echo loadJS('jquery','settings.js'); ?>
+echo loadJS('jquery','jqueryui','settings.js'); ?>
 <!-- End Page Body -->
 
 <?php include 'static/includes/footer.php'; ?>
