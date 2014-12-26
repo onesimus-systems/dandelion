@@ -2,8 +2,10 @@
 /**
  * Applies update if update.lock is present in the root directory.
  *
+ * Notes: The update.lock file will be created by the installer
+ *
  * @author Lee Keitel
- * 
+ *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
  */
 
@@ -23,7 +25,7 @@ function update() {
     }
 
     // Show message about updates
-    
+
     // Run update sequence for each version from $oldVersion to D_VERSION
 
     // if (update sequence returns true) {
