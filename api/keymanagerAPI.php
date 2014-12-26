@@ -35,9 +35,7 @@ class keyManagerAPI
      *
      * @return JSON - API Key or error message
      */
-    public static function getKey($db, $force = false) {
-        $conn = new \Dandelion\database\dbManage();
-
+    public static function getKey($db, $ur, $force = false) {
         $db->select('keystring')->from(DB_PREFIX.'apikeys')->where('user = :id');
         $params = array (
             "id" => $_SESSION['userInfo']['userid']
@@ -78,8 +76,8 @@ class keyManagerAPI
     /**
      * Called to force a new key to be generated
      */
-    public static function newKey($db) {
-        return SELF::getKey($db, true);
+    public static function newKey($db, $ur) {
+        return SELF::getKey($db, $ur, true);
     }
 
     /**
