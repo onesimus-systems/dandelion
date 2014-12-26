@@ -237,10 +237,10 @@ class User extends dbManage
             );
 
             if ($this->queryDB($stmt, $params)) {
-                return 'Password change successful.<br><br>';
+                return 'Password change successful.';
             }
             else {
-                return 'Error changing password.<br><br>';
+                return 'Error changing password.';
             }
         }
         else {
