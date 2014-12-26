@@ -32,10 +32,8 @@ class cheestoAPI
      *
      * @return JSON
      */
-    public static function readall($db) {
-        $rights = new \Dandelion\rights(USER_ID);
-
-        if ($rights->authorized('viewcheesto')) {
+    public static function readall($db, $ur) {
+        if ($ur->authorized('viewcheesto')) {
             $cheesto = new \Dandelion\cxeesto($db);
             return $cheesto->getJson();
         }
@@ -49,10 +47,8 @@ class cheestoAPI
      *
      * @return JSON
      */
-    public static function update($db) {
-        $rights = new \Dandelion\rights(USER_ID);
-
-        if ($rights->authorized('updatecheesto')) {
+    public static function update($db, $ur) {
+        if ($ur->authorized('updatecheesto')) {
             $cheesto = new \Dandelion\cxeesto($db);
             $message = isset($_POST['message']) ? $_POST['message'] : '';
             $status = isset($_POST['status']) ? $_POST['status'] : -1;

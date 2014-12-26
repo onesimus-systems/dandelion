@@ -104,9 +104,11 @@ function processRequest($key, $localCall, $subsystem, $request) {
         define('USER_ID', $key);
     }
 
+    $userRights = new \Dandelion\rights(USER_ID);
+
     // Call the requested function (as defined by the second part of the URL)
     $className = __NAMESPACE__ . '\\' . $subsystem . 'API';
-    $data = $className::$request(\Dandelion\Storage\mySqlDatabase::getInstance());
+    $data = $className::$request(\Dandelion\Storage\mySqlDatabase::getInstance(), $userRights);
 
     // Return DAPI object
     return makeDAPI(0, 'Completed', $subsystem, json_decode($data));

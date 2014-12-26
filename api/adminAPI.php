@@ -30,48 +30,47 @@ class adminAPI
     /**
      * Save the website tagline
      */
-    public static function saveSlogan($db)
+    public static function saveSlogan($db, $ur)
     {
-        return self::go($db, "saveSlogan", $_REQUEST['data']);
+        return self::go($db, $ur, "saveSlogan", $_REQUEST['data']);
     }
 
     /**
      * Call DB backup function
      */
-    public static function backupDB($db)
+    public static function backupDB($db, $ur)
     {
-        return self::go($db, "backupDB", $_REQUEST['data']);
+        return self::go($db, $ur, "backupDB", $_REQUEST['data']);
     }
 
     /**
      * Save the default theme for the site
      */
-    public static function saveDefaultTheme($db)
+    public static function saveDefaultTheme($db, $ur)
     {
-        return self::go($db, "saveDefaultTheme", $_REQUEST['data']);
+        return self::go($db, $ur, "saveDefaultTheme", $_REQUEST['data']);
     }
 
     /**
      * Save Cheesto enabled state
      */
-    public static function saveCheesto($db)
+    public static function saveCheesto($db, $ur)
     {
-        return self::go($db, "saveCheesto", $_REQUEST['data']);
+        return self::go($db, $ur, "saveCheesto", $_REQUEST['data']);
     }
 
     /**
      * Save public API enabled status
      */
-    public static function savePAPI($db) {
-        return self::go($db, "savePAPI", $_REQUEST['data']);
+    public static function savePAPI($db, $ur) {
+        return self::go($db, $ur, "savePAPI", $_REQUEST['data']);
     }
 
     /**
      * Perform administartor action
      */
-    private static function go($db, $func, $data) {
-        $rights = new \Dandelion\rights(USER_ID);
-        if ($rights->isAdmin()) {
+    private static function go($db, $ur, $func, $data) {
+        if ($ur->isAdmin()) {
             $action = new \Dandelion\adminactions($db);
             $response = $action->$func($data);
             return json_encode($response);

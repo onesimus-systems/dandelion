@@ -32,10 +32,8 @@ class logsAPI
      *
      * @return JSON
      */
-    public static function read($db) {
-        $rights = new \Dandelion\rights(USER_ID);
-
-        if ($rights->authorized('viewlog')) {
+    public static function read($db, $ur) {
+        if ($ur->authorized('viewlog')) {
             $limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 25;
             $offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0;
 
