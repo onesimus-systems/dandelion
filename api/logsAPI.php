@@ -33,15 +33,93 @@ class logsAPI
      * @return JSON
      */
     public static function read($db, $ur) {
-        if ($ur->authorized('viewlog')) {
-            $limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 25;
-            $offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0;
-
-            $logs = new \Dandelion\logs();
-            return $logs->getJSON($db, $limit, $offset);
-        }
-        else {
+        if (!$ur->authorized('viewlog')) {
             exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
+
+        $limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 25;
+        $offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0;
+
+        $offset = $offset < 0 ? 0 : $offset;
+
+        if ($offset > $db->numOfRows('log')) {
+            $offset = $offset - $limit;
+        }
+
+        $logs = new \Dandelion\logs2($db);
+        return $logs->getJSON($limit, $offset);
+    }
+
+    /**
+     * Get data for a single log
+     */
+    public static function readOne($db, $ur) {
+        if (!$ur->authorized('viewlog')) {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+        }
+
+        $logs = new \Dandelion\logs2($db);
+        return $logs->getLogInfo($_REQUEST['logid']);
+    }
+
+    public static function create($db, $ur) {
+        if (!$ur->authorized('createlog')) {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+        }
+
+        $title = isset($_REQUEST['title']) ? $_REQUEST['title'] : '';
+        $body = isset($_REQUEST['body']) ? $_REQUEST['body'] : '';
+        $cat = isset($_REQUEST['cat']) ? $_REQUEST['cat'] : NULL;
+
+        $title = urldecode($title);
+        $body = urldecode($body);
+        $cat = rtrim(urldecode($cat), ':');
+
+        $logs = new \Dandelion\logs2($db);
+        return json_encode($logs->addLog($title, $body, $cat, USER_ID));
+    }
+
+    public static function edit($db, $ur) {
+        if (!$ur->authorized('editlog')) {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+        }
+
+        $lid = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
+        $title = isset($_REQUEST['title']) ? $_REQUEST['title'] : '';
+        $body = isset($_REQUEST['body']) ? $_REQUEST['body'] : '';
+        //$cat = isset($_REQUEST['cat']) ? $_REQUEST['cat'] : NULL;
+
+        $title = urldecode($title);
+        $body = urldecode($body);
+        //$cat = rtrim(urldecode($cat), ':');
+
+        $logs = new \Dandelion\logs2($db);
+        return json_encode($logs->editLog($lid, $title, $body));
+    }
+
+    public static function filter($db, $ur) {
+        if (!$ur->authorized('viewlog')) {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+        }
+
+        $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : '';
+        $filter = urldecode($filter);
+
+        $logs = new \Dandelion\logs2($db);
+        return $logs->filter($filter);
+    }
+
+    public static function search($db, $ur) {
+        if (!$ur->authorized('viewlog')) {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+        }
+
+        $kw = isset($_REQUEST['kw']) ? $_REQUEST['kw'] : '';
+        $kw = urldecode($kw);
+        $date = isset($_REQUEST['date']) ? $_REQUEST['date'] : '';
+        $date = urldecode($date);
+
+        $logs = new \Dandelion\logs2($db);
+        return $logs->search($kw, $date);
     }
 }

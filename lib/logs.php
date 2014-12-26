@@ -12,6 +12,7 @@ namespace Dandelion;
 require_once 'bootstrap.php';
 
 if (Gatekeeper\authenticated()) {
+    header('Dandelion Message: Move to logs API'); // To track if anything is still calling this file while the frontend is migrated
     $logs = new Logs();
     echo $logs->doAction($_POST);
 }
