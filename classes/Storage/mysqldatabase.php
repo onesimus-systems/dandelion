@@ -198,15 +198,15 @@ class mySqlDatabase implements \Dandelion\databaseConn {
                 break;
 
         }
-        if (!empty($this->sqlStatement['orderby'])) {
-            $stmt = $stmt . ' ORDER BY ' . $this->sqlStatement['orderby']['col'] . ' ' . $this->sqlStatement['orderby']['dir'];
-        }
         if (!empty($this->sqlStatement['where'])) {
             if (is_array($this->sqlStatement['where'])) {
                 $stmt = $stmt . ' WHERE ' . implode(', ', $this->sqlStatement['where']);
             } else {
                 $stmt = $stmt . ' WHERE ' . $this->sqlStatement['where'];
             }
+        }
+        if (!empty($this->sqlStatement['orderby'])) {
+            $stmt = $stmt . ' ORDER BY ' . $this->sqlStatement['orderby']['col'] . ' ' . $this->sqlStatement['orderby']['dir'];
         }
         if (!empty($this->sqlStatement['limit'])) {
             $stmt = $stmt . ' LIMIT ' . $this->sqlStatement['limit'];
@@ -235,6 +235,7 @@ class mySqlDatabase implements \Dandelion\databaseConn {
                     $query->bindValue(':' . $key, $value, $type);
                 }
             }
+            //var_dump($this->parms($stmt,$paramArray));
             $success = $query->execute();
 
             $command = substr($stmt, 0, 3);
@@ -257,6 +258,18 @@ class mySqlDatabase implements \Dandelion\databaseConn {
         }
     }
 
+    /**
+     * Create a prepared statement for troubleshooting
+     */
+    private function parms($string,$data) {
+        $indexed=$data==array_values($data);
+        foreach($data as $k=>$v) {
+            if(is_string($v)) $v="'$v'";
+            if($indexed) $string=preg_replace('/\?/',$v,$string,1);
+            else $string=str_replace(":$k",$v,$string);
+        }
+        return $string;
+    }
     /**
      * Gets last inserted id number
      *
