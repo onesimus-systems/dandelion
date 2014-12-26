@@ -2,8 +2,7 @@
 /**
  * This page is seen by a person once after their account
  * is initially created. It updates their record with an Bcrypt
- * encrypted password and changes firsttime to 1 so they
- * are redirected to the tutorial on next login.
+ * encrypted password and changes firsttime to 0.
  *
  * This file is a part of Dandelion
  *
@@ -24,18 +23,21 @@ include 'static/includes/head.php';
 <!-- Begin Page Body -->
 <p>This is your first time logging into Dandelion. Please reset your password:</p>
 
-<br />
+<br>
 <?php echo (isset($_SESSION['errors']) ? $_SESSION['errors'] : ''); $_SESSION['errors']=''; ?>
-<br />
+<br>
 
-<div id="editform">
-	<form name="edit_form" method="post" action="lib/resetpw.php">
-		<table>
-			<tr><td>New Password:</td><td><input type="password" name="reset_1" /></td></tr>
-			<tr><td>Repeat Password:</td><td><input type="password" name="reset_2" /></td></tr>
-		</table>
-		<input type="submit" name="sub_act" value="Reset" />
-	</form>
+<div id="passwordResetDialog">
+    <h2>Reset Password for <?php echo $_SESSION['userInfo']['realname']; ?>:</h2>
+    <form>
+        <table>
+            <tr><td>New Password:</td><td><input type="password" id="pass1"></td></tr>
+            <tr><td>Repeat Password:</td><td><input type="password" id="pass2"></td></tr>
+            <tr><td></td><td><button type="button" onClick="api.resetPassword();">Reset Password</button></tr>
+        </table>
+    </form>
 </div>
-<!-- End Page Body -->  
+
+<?php echo loadJS('jquery','reset.js'); ?>
+<!-- End Page Body -->
 <?php include 'static/includes/footer.php'; ?>

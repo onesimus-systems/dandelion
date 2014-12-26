@@ -52,14 +52,14 @@ var api = {
         $("#pass1").val('');
         $("#pass2").val('');
 
-        if (pw1 === pw2) {
+        if (pw1 === pw2 && pw1 !== "") {
             $.post('api/i/settings/resetPassword', {'pw': pw1}, null, "json")
                 .done(function(msg) {
                     $("#passwordResetDialog").dialog("close");
                     alert(msg.data);
                 });
         } else {
-            alert('Passwords do not match');
+            alert('Passwords do not match or are empty');
         }
     },
 
