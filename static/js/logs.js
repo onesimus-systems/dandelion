@@ -1,6 +1,5 @@
 /* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, alert, tinymce */
 
-
 "use strict"; // jshint ignore:line
 
 var filt = false,
@@ -98,7 +97,8 @@ var view = {
 
         var html = '<form method="post">';
         if (data.offset > 0) {
-            html += '<input type="button" value="Previous '+data.limit+'" onClick="view.pagentation('+data.limit+');" class="flle">';
+            var prevPage = data.offset-data.limit;
+            html += '<input type="button" value="Previous '+data.limit+'" onClick="view.pagentation('+prevPage+');" class="flle">';
         }
         if (data.offset+data.limit < data.logSize) {
             var nextPage = data.offset+data.limit;
@@ -152,20 +152,13 @@ var view = {
      * the SELECT limits.
      */
     pagentation: function(pageOffset) {
-        var pages = {
-            pageOffset: pageOffset
-        };
-
-        $.post("lib/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
+        $.post("api/i/logs/read", { offset: pageOffset }, null, "json")
             .done(function( html ) {
-                $("#refreshed").html( html );
+                view.makeLogView(html.data);
 
-                if (pageOffset <= 0)
-                {
-                    refreshFun.refreshLog('clearf');
-                }
-                else
-                {
+                if (pageOffset <= 0) {
+                    refreshFun.startrefresh();
+                } else {
                     refreshFun.stoprefresh();
                 }
 
@@ -173,8 +166,7 @@ var view = {
             })
 
             .fail(function( jqXHR ) {
-                if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
-                {
+                if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404) {
                     $("#refreshed").html("An error has occured. Please try logging out and back in.");
                 }
             });
