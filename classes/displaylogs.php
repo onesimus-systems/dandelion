@@ -68,10 +68,10 @@ class displaylogs
         $pageControls .= '<div class="pagination">';
         $pageControls .= '<form method="post">';
         if ($pageOffset > 0) {
-            $pageControls .= '<input type="button" value="Previous '.$_SESSION['userInfo']['showlimit'].'" onClick="pagentation('. ($pageOffset-$_SESSION['userInfo']['showlimit']) .');" class="flle" />';
+            $pageControls .= '<input type="button" value="Previous '.$_SESSION['userInfo']['showlimit'].'" onClick="view.pagentation('. ($pageOffset-$_SESSION['userInfo']['showlimit']) .');" class="flle" />';
         }
         if ($pageOffset+$_SESSION['userInfo']['showlimit'] < $logSize) {
-            $pageControls .= '<input type="button" value="Next '.$_SESSION['userInfo']['showlimit'].'" onClick="pagentation('. ($pageOffset+$_SESSION['userInfo']['showlimit']) .');" class="flri" />';
+            $pageControls .= '<input type="button" value="Next '.$_SESSION['userInfo']['showlimit'].'" onClick="view.pagentation('. ($pageOffset+$_SESSION['userInfo']['showlimit']) .');" class="flri" />';
         }
         $pageControls .= '</form></div>';
 
@@ -91,7 +91,7 @@ class displaylogs
     private static function showLogs($grab_logs, $isFiltered)
     {
         global $User_Rights;
-        
+
         $logList = '';
 
         $logList .= '<div id="refreshed_core">';

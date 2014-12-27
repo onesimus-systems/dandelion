@@ -1,13 +1,10 @@
 /* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, alert, tinymce */
-/* exported pagentation */
+
 
 "use strict"; // jshint ignore:line
 
-var autore = false,
-    filt = false,
-    refreshc,
-    secleft=120,
-    editing;
+var filt = false,
+    refreshc;
 
 $(document).ready(function() {
     $( "#datesearch" ).datepicker();
@@ -27,7 +24,7 @@ $(document).on("focusin", function(e) {
 tinymce.init({
     browser_spellcheck: true
 });
- 
+
 var refreshFun =
 {
     /* This function is ran onload() of viewlog.php
@@ -38,99 +35,158 @@ var refreshFun =
      */
     startrefresh: function() {
         // Run first time
-		refreshLog("update");
+		refreshFun.refreshLog();
         CategoryManage.grabNextLevel('0:0');
 
 		// Set timers
-        refreshc = setInterval(function(){ refreshLog("update"); }, 60000);
-        autore = true;
+        refreshc = setInterval(function(){ refreshFun.refreshLog(); }, 60000);
     },
 
     stoprefresh: function() {
         clearInterval(refreshc);
-        autore = false;
     },
+    /* This function updates the live feed.
+     * If kindof == "update" it shows the recent log entries
+     * logfilter.php and shows the returned output.
+     */
+    refreshLog: function(kindof) {
+        if (!filt)
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "api/i/logs/read",
+                    async: false,
+                    dataType: "json",
+                    data: { action: "getLogs", data: "" }
+                })
+                    .done(function( html ) {
+                        if (html === "") {
+                            // PHP session timed out, use no longer logged in
+                            window.location.reload(true);
+                        }
+                        view.makeLogView(html.data);
+                    })
+
+                    .fail(function( jqXHR ) {
+                        if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
+                        {
+                            $("#refreshed").html("An error has occured. Please try logging out and back in.");
+                        }
+                    });
+            }
+
+        if (kindof==="clearf")
+            {
+                filt=false;
+                $("#searchterm").val("Keyword");
+                $("#datesearch").val("Date");
+                refreshFun.startrefresh();
+            }
+    }
 }; // refreshFun
 
-/* This function updates the live feed.
- * If kindof == "update" it shows the recent log entries
- * logfilter.php and shows the returned output.
- */
-function refreshLog(kindof) {
-    if (!filt)
-        {
-            $.ajax({
-                type: "POST",
-                url: "lib/logs.php",
-                async: false,
-                data: { action: "getLogs", data: "" }
+var view = {
+    makeLogView:function(data) {
+        $('#refreshed').empty();
+        $('#refreshed').append(view.pageControls(data.metadata));
+        $('#refreshed').append(view.displayLogs(data));
+        $('#refreshed').append(view.pageControls(data.metadata));
+    },
+
+    pageControls: function(data) {
+        var div = $('<div/>').attr('class', 'pagination');
+
+        var html = '<form method="post">';
+        if (data.offset > 0) {
+            html += '<input type="button" value="Previous '+data.limit+'" onClick="view.pagentation('+data.limit+');" class="flle">';
+        }
+        if (data.offset+data.limit < data.logSize) {
+            var nextPage = data.offset+data.limit;
+            html += '<input type="button" value="Next '+data.limit+'" onClick="view.pagentation('+ nextPage +');" class="flri">';
+        }
+        html += '</form></div>';
+        div.append(html);
+        return div;
+    },
+
+    displayLogs: function(data) {
+        var div = $('<div/>').attr('id', 'refreshed_core');
+
+        for (var key in data) {
+            if (!data.hasOwnProperty(key) || key == 'metadata')
+                continue;
+
+            var log = data[key];
+
+            var creator = log.realname;
+            if (creator === '') {
+                creator = 'Unknown User';
+            }
+
+            // Display each log entry
+            // jshint multistr:true
+            var html = '<form method="post">\
+                        <div class="logentry">\
+                        <h2>' + log.title + '</h2>\
+                        <p class="entry">' + log.entry + '</p>\
+                        <p class="entrymeta">Created by ' + creator + ' on ' + log.datec + ' @ ' + log.timec + ' ';
+
+            if (log.edited == "1") { html += '(Edited)'; }
+
+            html += '<br>Categorized as ' + log.cat + '\
+                     <br><a href="#" onClick="searchFun.filter(\'' + log.cat + '\');">Learn more about this system...</a>';
+
+            if (log.canEdit) { html += '<input type="button" value="Edit" onClick="editFun.grabedit(' + log.logid + ');" class="flri">'; }
+
+            html += '</p></div></form>';
+
+            div.append(html);
+        }
+        return div;
+    },
+
+    /* This function manages the pagentation of the
+     * log. It receives the desired DB row offset
+     * which is supplied by readlog.php then sends
+     * the request to updatelog.php which handles
+     * the SELECT limits.
+     */
+    pagentation: function(pageOffset) {
+        var pages = {
+            pageOffset: pageOffset
+        };
+
+        $.post("lib/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
+            .done(function( html ) {
+                $("#refreshed").html( html );
+
+                if (pageOffset <= 0)
+                {
+                    refreshFun.refreshLog('clearf');
+                }
+                else
+                {
+                    refreshFun.stoprefresh();
+                }
+
+                window.scrollTo(0,0);
             })
-                .done(function( html ) {
-                    if (html === "") {
-                        // PHP session timed out, use no longer logged in
-                        window.location.reload(true);
-                    }
-                    $("#refreshed").html( html );
-                })
 
-                .fail(function( jqXHR ) {
-                    if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
-                    {
-                        $("#refreshed").html("An error has occured. Please try logging out and back in.");
-                    }
-                });
-        }
-    
-    if (kindof==="clearf")
-        {
-            filt=false;
-            $("#searchterm").val("Keyword");
-            $("#datesearch").val("Date");
-            refreshFun.startrefresh();
-        }
-}
-
-/* This function manages the pagentation of the
- * log. It receives the desired DB row offset
- * which is supplied by readlog.php then sends
- * the request to updatelog.php which handles
- * the SELECT limits.
- */
-function pagentation(pageOffset) {
-    var pages = {
-        pageOffset: pageOffset
-    };
-    
-    $.post("lib/logs.php", { action: "getLogs", data: JSON.stringify(pages)})
-        .done(function( html ) {
-            $("#refreshed").html( html );
-            
-            if (pageOffset <= 0)
-            {
-                refreshLog('clearf');
-            }
-            else
-            {
-                refreshFun.stoprefresh();
-            }
-            
-            window.scrollTo(0,0);
-        })
-        
-        .fail(function( jqXHR ) {
-            if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
-            {
-                $("#refreshed").html("An error has occured. Please try logging out and back in.");
-            }
-        });
-}
+            .fail(function( jqXHR ) {
+                if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
+                {
+                    $("#refreshed").html("An error has occured. Please try logging out and back in.");
+                }
+            });
+    }
+}; // View
 
 var addFun =
 {
     showaddinputs: function() {
         $("#add_edit_form")[0].reset();
         $("textarea#logEntry").html("");
-        
+
         $( "#add_edit" ).dialog({
 			height: 575,
 			width: 800,
@@ -154,7 +210,7 @@ var addFun =
 				}
 			}
         });
-        
+
         $("textarea#logEntry").tinymce({
             browser_spellcheck: true,
 			forced_root_block: false,
@@ -175,17 +231,17 @@ var addFun =
     /* This function sends details for a new log entry to
      * add_log.php. It then refreshes the Live feed.
      */
-    addlog: function() {    
+    addlog: function() {
         var title = $("input#logTitle").val();
         title = encodeURIComponent(title);
         var entry = $("textarea#logEntry").val();
         entry = encodeURIComponent(entry);
         var cat = CategoryManage.getCatString();
-        
+
 		if (title !== "" && entry !== "" && cat !== "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
-			
+
 			var logData = {
 				cat: cat,
 				add_title: title,
@@ -194,8 +250,7 @@ var addFun =
 
 			$.post("lib/logs.php", { action: "addLog", data: JSON.stringify(logData) })
 				.done(function( html ) {
-					refreshLog();
-					secleft=120;
+					refreshFun.refreshLog();
 					CategoryManage.addLog = false;
 					CategoryManage.grabNextLevel('0:0');
 					showDialog(html);
@@ -215,13 +270,13 @@ var addFun =
 var editFun =
 {
     showeditinputs: function(log_info) {
-        
+
         var linfo = JSON.parse(log_info);
-        
+
         $("input#logTitle").val( linfo.title );
         $("textarea#logEntry").val( linfo.entry );
         $("#catSpace").text( linfo.cat );
-        
+
         $( "#add_edit" ).dialog({
 			height: 575,
 			width: 800,
@@ -243,7 +298,7 @@ var editFun =
 				}
 			}
         });
-        
+
         $("textarea#logEntry").tinymce({
             browser_spellcheck: true,
 			forced_root_block: false,
@@ -256,8 +311,6 @@ var editFun =
 				"template paste textcolor"
 				]
         });
-        
-        editing = true;
     },
 
     /* This function is called when a user clicks edit
@@ -276,25 +329,24 @@ var editFun =
         editedtitle = encodeURIComponent(editedtitle);
         var editedlog = $("textarea#logEntry").val();
         editedlog = encodeURIComponent(editedlog);
-        
+
         if (editedtitle !== "" && editedlog !== "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
-			
+
 			var logData = {
 				editlog: editedlog,
 				edittitle: editedtitle,
 				choosen: id
 			};
-			
+
 			$.post("lib/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
 				.done(function( html ) {
-				refreshLog();
-				secleft=120;
+				refreshFun.refreshLog();
 				showDialog(html);
 			});
 		}
-		
+
         else {
 			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
 			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
@@ -352,13 +404,13 @@ var searchFun =
             alert("Please enter valid search criteria.");
             return false;
         }
-        
+
         var search = {
 			keyw: searchfor,
 			dates: datefor,
 			type: type
         };
-        
+
         $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
             .done(function( html ) {
                 filt=true;
@@ -366,16 +418,16 @@ var searchFun =
                 $("#refreshed").html( html );
             });
     },
-    
+
     // Search for a category of logs
     filter: function(cat) {
         if (cat === '') { cat = CategoryManage.getCatString(); }
-        
+
         var filter = {
 			type: '',
 			filter: cat
         };
-        
+
         if (cat)
         {
             $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
@@ -384,7 +436,7 @@ var searchFun =
                     filt=true;
                     refreshFun.stoprefresh();
                 })
-                
+
                 .fail(function( jqXHR ) {
                     if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
                     {
