@@ -22,8 +22,9 @@
 namespace Dandelion;
 
 class logs2 {
-    public function __construct(databaseConn $dbConn) {
+    public function __construct(databaseConn $dbConn, $ur = null) {
         $this->db = $dbConn;
+        $this->ur = $ur;
         return;
     }
 
@@ -68,6 +69,14 @@ class logs2 {
         // When using an SQL LIMIT, the parameter MUST be an integer.
         // To accomplish this the PDO constant PARAM_INT is passed
         $get_logs = $this->db->get($params, \PDO::PARAM_INT);
+
+        foreach ($get_logs as $key => $value) {
+            if ($this->ur->isAdmin() || $value['usercreated'] == $this->ur->userid) {
+                $get_logs[$key]['canEdit'] = true;
+            } else {
+                $get_logs[$key]['canEdit'] = false;
+            }
+        }
         return json_encode($get_logs);
     }
 
