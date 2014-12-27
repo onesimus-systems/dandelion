@@ -80,11 +80,16 @@ class logsAPI
     }
 
     public static function edit($db, $ur) {
-        if (!$ur->authorized('editlog')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+        $lid = isset($_REQUEST['logid']) ? $_REQUEST['logid'] : '';
+
+        if (!$ur->isAdmin()) {
+            $log = (array) json_decode(self::readOne($db, $ur));
+
+            if (!$ur->authorized('editlog') || $log['usercreated'] != USER_ID) {
+                exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            }
         }
 
-        $lid = isset($_REQUEST['id']) ? $_REQUEST['id'] : '';
         $title = isset($_REQUEST['title']) ? $_REQUEST['title'] : '';
         $body = isset($_REQUEST['body']) ? $_REQUEST['body'] : '';
         //$cat = isset($_REQUEST['cat']) ? $_REQUEST['cat'] : NULL;
