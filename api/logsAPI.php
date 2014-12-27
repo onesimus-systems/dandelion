@@ -37,17 +37,28 @@ class logsAPI
             exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $limit = isset($_REQUEST['limit']) ? $_REQUEST['limit'] : 25;
-        $offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0;
-
+        $userLimit = new \Dandelion\userSettings($db);
+        $limit = (int) $userLimit->getSetting('showlimit', USER_ID);
+        $limit = isset($_REQUEST['limit']) ? (int) $_REQUEST['limit'] : $limit;
+        $offset = isset($_REQUEST['offset']) ? (int) $_REQUEST['offset'] : 0;
         $offset = $offset < 0 ? 0 : $offset;
 
-        if ($offset > $db->numOfRows('log')) {
+        $logSize = (int) $db->numOfRows('log');
+
+        if ($offset > $logSize) {
             $offset = $offset - $limit;
         }
 
-        $logs = new \Dandelion\logs2($db);
-        return $logs->getJSON($limit, $offset);
+        $metaData = array(
+            'offset' => $offset,
+            'limit'  => $limit,
+            'logSize' => $logSize
+        );
+
+        $logs = new \Dandelion\logs2($db, $ur);
+        $return = (array) json_decode($logs->getJSON($limit, $offset));
+        $return['metadata'] = $metaData;
+        return json_encode($return);
     }
 
     /**

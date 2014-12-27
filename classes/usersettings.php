@@ -52,4 +52,13 @@ class userSettings {
         $user->userInfo['password'] = $password;
         return $user->resetUserPw();
     }
+
+    public function getSetting($setting, $id) {
+        $this->db->select($setting)
+                 ->from(DB_PREFIX.'users')
+                 ->where('userid = :id');
+
+        $params = array('id' => $id);
+        return $this->db->get($params)[0][$setting];
+    }
 }
