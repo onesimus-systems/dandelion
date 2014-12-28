@@ -26,73 +26,75 @@ tinymce.init({
 
 var refreshFun =
 {
-    /* This function is ran onload() of viewlog.php
-     * It refreshes the log and then begins an interval
-     * counter for every 2 minutes
-     * This function can also be called on to restart
-     * the autorefresh counter
-     */
-    startrefresh: function() {
-        // Run first time
-		refreshFun.refreshLog();
+    runFirst: function() {
+        refreshFun.refreshLog();
         CategoryManage.grabNextLevel('0:0');
+        this.startrefresh();
+    },
 
-		// Set timers
+    startrefresh: function() {
         refreshc = setInterval(function(){ refreshFun.refreshLog(); }, 60000);
     },
 
     stoprefresh: function() {
         clearInterval(refreshc);
     },
-    /* This function updates the live feed.
-     * If kindof == "update" it shows the recent log entries
-     * logfilter.php and shows the returned output.
-     */
-    refreshLog: function(kindof) {
-        if (!filt)
-            {
-                $.ajax({
-                    type: "POST",
-                    url: "api/i/logs/read",
-                    async: false,
-                    dataType: "json",
-                    data: { action: "getLogs", data: "" }
+
+    refreshLog: function(clearfilter) {
+        if (clearfilter) {
+            filt=false;
+            $("#searchterm").val("Keyword");
+            $("#datesearch").val("Date");
+            refreshFun.startrefresh();
+        }
+
+        if (!filt) {
+            $.ajax({
+                type: "POST",
+                url: "api/i/logs/read",
+                async: false,
+                dataType: "json"
+            })
+                .done(function( html ) {
+                    if (html === "") {
+                        window.location.reload(true);
+                    }
+                    view.makeLogView(html.data);
                 })
-                    .done(function( html ) {
-                        if (html === "") {
-                            // PHP session timed out, use no longer logged in
-                            window.location.reload(true);
-                        }
-                        view.makeLogView(html.data);
-                    })
 
-                    .fail(function( jqXHR ) {
-                        if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
-                        {
-                            $("#refreshed").html("An error has occured. Please try logging out and back in.");
-                        }
-                    });
-            }
-
-        if (kindof==="clearf")
-            {
-                filt=false;
-                $("#searchterm").val("Keyword");
-                $("#datesearch").val("Date");
-                refreshFun.startrefresh();
-            }
+                .fail(function( jqXHR ) {
+                    if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
+                    {
+                        $("#refreshed").html("An error has occured. Please try logging out and back in.");
+                    }
+                });
+        }
     }
 }; // refreshFun
 
 var view = {
     makeLogView:function(data) {
         $('#refreshed').empty();
+        if (filt) { $('#refreshed').append(view.showFilterMessage()); }
         $('#refreshed').append(view.pageControls(data.metadata));
         $('#refreshed').append(view.displayLogs(data));
         $('#refreshed').append(view.pageControls(data.metadata));
     },
 
+    showFilterMessage: function() {
+        var clearForm = $('<form/>');
+        // jshint multistr:true
+        var html = '<h3>You are viewing filtered results\
+                    <button type="button" onClick="refreshFun.refreshLog(true)">Clear Results</button></h3>';
+       clearForm.append(html);
+       return clearForm;
+    },
+
     pageControls: function(data) {
+        if (filt) {
+            return false;
+        }
+
         var div = $('<div/>').attr('class', 'pagination');
 
         var html = '<form method="post">';
@@ -145,18 +147,13 @@ var view = {
         return div;
     },
 
-    /* This function manages the pagentation of the
-     * log. It receives the desired DB row offset
-     * which is supplied by readlog.php then sends
-     * the request to updatelog.php which handles
-     * the SELECT limits.
-     */
     pagentation: function(pageOffset) {
         $.post("api/i/logs/read", { offset: pageOffset }, null, "json")
             .done(function( html ) {
                 view.makeLogView(html.data);
 
                 if (pageOffset <= 0) {
+                    refreshFun.refreshLog();
                     refreshFun.startrefresh();
                 } else {
                     refreshFun.stoprefresh();
@@ -220,9 +217,6 @@ var addFun =
         CategoryManage.grabNextLevel('0:0');
     },
 
-    /* This function sends details for a new log entry to
-     * add_log.php. It then refreshes the Live feed.
-     */
     addlog: function() {
         var title = $("input#logTitle").val();
         title = encodeURIComponent(title);
@@ -234,18 +228,12 @@ var addFun =
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 
-			var logData = {
-				cat: cat,
-				add_title: title,
-				add_entry: entry
-			};
-
-			$.post("lib/logs.php", { action: "addLog", data: JSON.stringify(logData) })
+			$.post("api/i/logs/create", { title: title, body: entry, cat: cat }, null, 'json')
 				.done(function( html ) {
 					refreshFun.refreshLog();
 					CategoryManage.addLog = false;
 					CategoryManage.grabNextLevel('0:0');
-					showDialog(html);
+					showDialog(html.data);
 				});
         }
         else {
@@ -262,8 +250,7 @@ var addFun =
 var editFun =
 {
     showeditinputs: function(log_info) {
-
-        var linfo = JSON.parse(log_info);
+        var linfo = log_info.data;
 
         $("input#logTitle").val( linfo.title );
         $("textarea#logEntry").val( linfo.entry );
@@ -311,7 +298,7 @@ var editFun =
      * the fields.
      */
     grabedit: function(logid) {
-        $.post("lib/logs.php", { action: 'getLogInfo', data: logid })
+        $.post("api/i/logs/readone", { logid: logid }, null, 'json')
             .done( editFun.showeditinputs );
     },
 
@@ -326,16 +313,10 @@ var editFun =
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 
-			var logData = {
-				editlog: editedlog,
-				edittitle: editedtitle,
-				choosen: id
-			};
-
-			$.post("lib/logs.php", { action: 'editLog', data: JSON.stringify(logData) })
+			$.post("api/i/logs/edit", { logid: id, title: editedtitle, body: editedlog }, null, 'json')
 				.done(function( html ) {
 				refreshFun.refreshLog();
-				showDialog(html);
+				showDialog(html.data);
 			});
 		}
 
@@ -378,36 +359,18 @@ var searchFun =
 
     // Search for keyword or datestamp
     searchlog :function() {
-        var searchfor = $("input#searchterm").val();
-        var datefor   = $("input#datesearch").val();
-        searchfor     = encodeURIComponent(searchfor);
-        var type = '';
+        var keyword = $("input#searchterm").val();
+        var dateSearch   = $("input#datesearch").val();
+        if (keyword === 'Keyword') { keyword = ''; }
+        if (dateSearch === 'Date') { dateSearch = ''; }
 
-        if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null && datefor!=="" && datefor!=="Date" && datefor!==null) {
-            type = "both";
-        }
-        else if (searchfor!=="" && searchfor!=="Keyword" && searchfor!==null) {
-            type = "keyw";
-        }
-        else if (datefor!=="" && datefor!=="Date" && datefor!==null) {
-            type = "dates";
-        }
-        else {
-            alert("Please enter valid search criteria.");
-            return false;
-        }
+        keyword = encodeURIComponent(keyword);
 
-        var search = {
-			keyw: searchfor,
-			dates: datefor,
-			type: type
-        };
-
-        $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(search) })
+        $.post("api/i/logs/search", { kw: keyword, date: dateSearch })
             .done(function( html ) {
                 filt=true;
                 refreshFun.stoprefresh();
-                $("#refreshed").html( html );
+                view.makeLogView(html.data);
             });
     },
 
@@ -415,18 +378,13 @@ var searchFun =
     filter: function(cat) {
         if (cat === '') { cat = CategoryManage.getCatString(); }
 
-        var filter = {
-			type: '',
-			filter: cat
-        };
-
         if (cat)
         {
-            $.post("lib/logs.php", { action: 'filterLogs', data: JSON.stringify(filter)})
+            $.post("api/i/logs/filter", { filter: cat }, null, 'json')
                 .done(function( html ) {
-                    $("#refreshed").html( html );
                     filt=true;
                     refreshFun.stoprefresh();
+                    view.makeLogView(html.data);
                 })
 
                 .fail(function( jqXHR ) {

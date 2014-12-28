@@ -55,7 +55,7 @@ class logsAPI
             'logSize' => $logSize
         );
 
-        $logs = new \Dandelion\logs2($db, $ur);
+        $logs = new \Dandelion\logs($db, $ur);
         $return = (array) json_decode($logs->getJSON($limit, $offset));
         $return['metadata'] = $metaData;
         return json_encode($return);
@@ -69,7 +69,7 @@ class logsAPI
             exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $logs = new \Dandelion\logs2($db);
+        $logs = new \Dandelion\logs($db);
         return $logs->getLogInfo($_REQUEST['logid']);
     }
 
@@ -86,7 +86,7 @@ class logsAPI
         $body = urldecode($body);
         $cat = rtrim(urldecode($cat), ':');
 
-        $logs = new \Dandelion\logs2($db);
+        $logs = new \Dandelion\logs($db);
         return json_encode($logs->addLog($title, $body, $cat, USER_ID));
     }
 
@@ -109,7 +109,7 @@ class logsAPI
         $body = urldecode($body);
         //$cat = rtrim(urldecode($cat), ':');
 
-        $logs = new \Dandelion\logs2($db);
+        $logs = new \Dandelion\logs($db);
         return json_encode($logs->editLog($lid, $title, $body));
     }
 
@@ -120,8 +120,9 @@ class logsAPI
 
         $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : '';
         $filter = urldecode($filter);
+        $filter = rtrim($filter, ':');
 
-        $logs = new \Dandelion\logs2($db);
+        $logs = new \Dandelion\logs($db);
         return $logs->filter($filter);
     }
 
@@ -135,7 +136,7 @@ class logsAPI
         $date = isset($_REQUEST['date']) ? $_REQUEST['date'] : '';
         $date = urldecode($date);
 
-        $logs = new \Dandelion\logs2($db);
+        $logs = new \Dandelion\logs($db);
         return $logs->search($kw, $date);
     }
 }

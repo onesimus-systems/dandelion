@@ -17,30 +17,15 @@
  * The full GPLv3 license is available in LICENSE.md in the root.
  *
  * @author Lee Keitel
- * @date May 2014
+ * @date December 2014
  */
 namespace Dandelion;
 
-/**
- * The Logs class contains all functions pertaining to creating
- * editing, filtering and initialization to display logs.
- *
- * Only the doAction() method is publicly visible and it takes
- * in the POST data from a request, determine the action from the
- * data and calls that function giving it the 'data' index of the
- * POST array
- */
-class logs extends Database\dbManage
-{
-    /**
-     * Main function to perform action
-     *
-     * @param mixed $data POST data
-     *
-     * @return string Individual function returns
-     */
-    public function doAction($data) {
-        return $this->$data['action']($data['data']);
+class logs {
+    public function __construct(databaseConn $dbConn, $ur = null) {
+        $this->db = $dbConn;
+        $this->ur = $ur;
+        return;
     }
 
     /**
@@ -50,205 +35,31 @@ class logs extends Database\dbManage
      *
      * @return JSON encoded array with log data
      */
-    private function getLogInfo($logid) {
+    public function getLogInfo($logid) {
         $logid = isset($logid) ? $logid : '';
 
-        $stmt = 'SELECT * FROM `' . DB_PREFIX . 'log` WHERE `logid` = :logid';
+        $this->db->select()
+                 ->from(DB_PREFIX.'log')
+                 ->where('logid = :logid');
         $params = array(
             'logid' => $logid
         );
-
-        $edit_log_info = $this->queryDB($stmt, $params);
+        $edit_log_info = $this->db->get($params);
 
         return json_encode($edit_log_info[0]);
-    }
-
-    /**
-     * Create a new log in the database
-     *
-     * @param json $logData JSON encoded log title, entry, and category (strings)
-     *
-     * @return string Confirmation message or error message
-     */
-    private function addLog($logData) {
-        global $User_Rights;
-
-        if ($User_Rights->authorized('createlog')) {
-            $logData = (array) json_decode($logData);
-
-            $new_title = isset($logData['add_title']) ? $logData['add_title'] : '';
-            $new_entry = isset($logData['add_entry']) ? $logData['add_entry'] : '';
-            $new_category = isset($logData['cat']) ? $logData['cat'] : NULL;
-
-            // Check that all required fields have been entered
-            if (!empty($new_title) && !empty($new_entry) && !empty($new_category) && $new_category != 'Select:') {
-                $datetime = getdate();
-                $new_date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
-                $new_time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
-
-                $new_category = rtrim(urldecode($new_category), ':');
-                $new_title = urldecode($new_title);
-                $new_entry = urldecode($new_entry);
-
-                // Add new entry
-                $stmt = 'INSERT INTO `' . DB_PREFIX . 'log` (datec, timec, title, entry, usercreated, cat)  VALUES (:datec, :timec, :title, :entry, :usercreated, :cat)';
-                $params = array(
-                    'datec' => $new_date,
-                    'timec' => $new_time,
-                    'title' => $new_title,
-                    'entry' => $new_entry,
-                    'usercreated' => $_SESSION['userInfo']['userid'],
-                    'cat' => $new_category
-                );
-                $this->queryDB($stmt, $params);
-
-                return 'Log entry created successfully.';
-            }
-            else {
-                return '<span class="bad">Log entries must have a title, category, and entry text.</span>';
-            }
-        }
-        else {
-            return 'This account can\'t create logs.';
-        }
-    }
-
-    /**
-     * Update log row in database
-     *
-     * @param json $logData JSON encoded log title, entry, and id
-     *
-     * @return string Confirmation message or error message
-     */
-    private function editLog($logData) {
-        global $User_Rights;
-
-        if ($User_Rights->authorized('editlog')) {
-            $logData = (array) json_decode($logData);
-
-            $editedlog = isset($logData['editlog']) ? $logData['editlog'] : '';
-            $editedtitle = isset($logData['edittitle']) ? $logData['edittitle'] : '';
-            $logid = isset($logData['choosen']) ? $logData['choosen'] : '';
-
-            if (!empty($editedlog) && !empty($editedtitle) && !empty($logid)) {
-                $stmt = 'UPDATE `' . DB_PREFIX . 'log` SET `title` = :eTitle, `entry` = :eEntry, `edited` = 1 WHERE `logid` = :logid';
-                $params = array(
-                    'eTitle' => urldecode($editedtitle),
-                    'eEntry' => urldecode($editedlog),
-                    'logid' => $logid
-                );
-                $this->queryDB($stmt, $params);
-
-                return '"' . urldecode($editedtitle) . '" edited successfully.';
-            }
-            else {
-                return '<span class="bad">Log entries must have a title, category, and entry text.</span>';
-            }
-        }
-        else {
-            return 'This account can\'t edit logs';
-        }
-    }
-
-    /**
-     * Grab logs from database with given criteria
-     *
-     * @param json $filterQuery JSON encoded query parameters
-     *        (type, keyword, date, category filter string)
-     *
-     * @return string HTML with filtered logs
-     */
-    private function filterLogs($filterQuery) {
-        $notice = '';
-        $query = (array) json_decode($filterQuery);
-        $type = isset($query['type']) ? $query['type'] : '';
-        // The only difference between the SQL statements are the WHERE clauses
-        // The SELECT, FROM, and JOIN clauses are the same
-        $sqlSelectJoin = 'SELECT l.*, u.realname
-                          FROM ' . DB_PREFIX . 'log AS l
-                          LEFT JOIN '.DB_PREFIX.'users AS u
-                            ON l.usercreated = u.userid ';
-
-        // Category Search
-        if ($type == '') {
-            $filter = isset($query['filter']) ? urldecode($query['filter']) : '';
-            $filter = rtrim($filter, ':');
-
-            $notice .= <<<HTML
-                <form>
-                    <h3>**Filter applied: {$filter}**</h3>
-                    <input type="button" value="Clear Filter" onClick="refreshLog('clearf')" />
-                </form><br>
-HTML;
-            $stmt = $sqlSelectJoin . 'WHERE cat LIKE :filter ORDER BY logid DESC';
-            $params = array(
-                'filter' => "%" . $filter . "%"
-            );
-
-            $grab_logs = $this->queryDB($stmt, $params); // Sent to displaylogs function
-        }
-        else {
-            $keyw = isset($query['keyw']) ? urldecode($query['keyw']) : '';
-            $dates = isset($query['dates']) ? $query['dates'] : '';
-
-            // Keyword search
-            if ($type == "keyw") {
-                $message = $keyw;
-
-                $stmt = $sqlSelectJoin . 'WHERE title LIKE :keyw or entry LIKE :keyw ORDER BY logid DESC';
-                $params = array(
-                    'keyw' => "%" . $keyw . "%"
-                );
-
-                $grab_logs = $this->queryDB($stmt, $params); // Sent to displaylogs function
-            }
-
-            // Logs made on certain date
-            else if ($type == "dates") {
-                $message = $dates;
-
-                $stmt = $sqlSelectJoin . 'WHERE datec=:dates ORDER BY logid DESC';
-                $params = array(
-                    'dates' => $dates
-                );
-
-                $grab_logs = $this->queryDB($stmt, $params); // Sent to displaylogs function
-            }
-
-            // Logs made on certain day containing keyword
-            else {
-                $message = $keyw . ' on ' . $dates;
-
-                $stmt = $sqlSelectJoin . 'WHERE (title LIKE :keyw or entry LIKE :keyw) and datec=:dates ORDER BY logid DESC';
-                $params = array(
-                    'keyw' => "%" . $keyw . "%",
-                    'dates' => $dates
-                );
-
-                $grab_logs = $this->queryDB($stmt, $params); // Sent to displaylogs function
-            }
-
-            $notice .= <<<HTML
-                <form>
-                    <h3>Search results for: {$message}</h3>
-                    <input type="button" value="Clear Search" onClick="refreshLog('clearf')" />
-                </form><br>
-HTML;
-        }
-
-        return $notice . DisplayLogs::display($grab_logs, true);
     }
 
     /**
      * Get JSON of log list showing $limit number of logs
      *
      * @param int $limit - Number of logs to get
+     * @param int $offset - Offset for pagination
      */
-    public function getJSON($db, $limit = 25, $offset = 0) {
-        $db->select('l.*, u.realname')
-           ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
-           ->orderBy('l.logid', 'DESC')
-           ->limit(':pO,:lim');
+    public function getJSON($limit = 25, $offset = 0) {
+        $this->db->select('l.*, u.realname')
+                 ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
+                 ->orderBy('l.logid', 'DESC')
+                 ->limit(':pO,:lim');
 
         $params = array(
             'pO' => ((int) $offset),
@@ -257,59 +68,123 @@ HTML;
 
         // When using an SQL LIMIT, the parameter MUST be an integer.
         // To accomplish this the PDO constant PARAM_INT is passed
-        $get_logs = $db->get($params, \PDO::PARAM_INT);
+        $get_logs = $this->db->get($params, \PDO::PARAM_INT);
+
+        foreach ($get_logs as $key => $value) {
+            if ($this->ur->isAdmin() || $value['usercreated'] == $this->ur->userid) {
+                $get_logs[$key]['canEdit'] = true;
+            } else {
+                $get_logs[$key]['canEdit'] = false;
+            }
+        }
         return json_encode($get_logs);
     }
 
     /**
-     * Grab logs from database
+     * Create a new log in the database
      *
-     * @param json $data JSON encoded page offset or page number
+     * @param string $title
+     * @param string $body
+     * @param string $cat
+     * @param int $uid - User ID
      *
-     * @return string Formatted log html
+     * @return string Confirmation message or error message
      */
-    private function getLogs($data) {
-        global $User_Rights;
+    public function addLog($title, $body, $cat, $uid) {
+        if (empty($title) || empty($body) || empty($cat) || $cat == 'Select:') {
+            return 'Log entries require a title, category, and body.';
+        }
 
-        if ($User_Rights->authorized('viewlog')) {
-            $pageInfo = (array) json_decode($data);
+        $datetime = getdate();
+        $new_date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
+        $new_time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
 
-            // Initialize Variables
-            $pageOffset = isset($pageInfo['pageOffset']) ? $pageInfo['pageOffset'] : '0';
-            $viewlimit = isset($pageInfo['showlimit']) ? $pageInfo['showlimit'] : $_SESSION['userInfo']['showlimit'];
+        $this->db->insert()
+                 ->into(DB_PREFIX.'log', array('datec', 'timec', 'title', 'entry', 'usercreated', 'cat'))
+                 ->values(array(':datec', ':timec', ':title', ':entry', ':usercreated', ':cat'));
+        $params = array(
+            'datec' => $new_date,
+            'timec' => $new_time,
+            'title' => $title,
+            'entry' => $body,
+            'usercreated' => $uid,
+            'cat' => $cat
+        );
+        if ($this->db->go($params)) {
+            return 'Log entry created successfully.';
+        } else {
+            return 'An error occured saving the log entry.';
+        }
+    }
 
+    /**
+     * Update log in database
+     *
+     * @param json $logData JSON encoded log title, entry, and id
+     *
+     * @return string Confirmation message or error message
+     */
+    public function editLog($lid, $title, $body) {
+        if (empty($body) || empty($title) || empty($lid)) {
+            return 'Log entries require a title, category, and body.';
+        }
 
-            $pageOffset = $pageOffset < 0 ? '0' : $pageOffset; // If somehow the offset is < 0, make it 0
+        $this->db->update(DB_PREFIX.'log')
+                 ->set('title = :title, entry = :entry, edited = 1')
+                 ->where('logid = :lid');
+        $params = array(
+            'title' => $title,
+            'entry' => $body,
+            'lid' => $lid
+        );
+        $this->db->go($params);
 
-            // Grab row count of log table to determine offset
-            $logSize = $this->numOfRows('log');
+        return "\"{$title}\" edited successfully.";
+    }
 
-            // If the next page offset is > than the row count (which shouldn't happen
-            // any more thanks to some logic in DisplayLogs class), make the offset the last
-            // offset, (the current offset - the user page show limit).
-            if ($pageOffset > $logSize) {
-                $pageOffset = $pageOffset - $_SESSION['userInfo']['showlimit'];
-            }
+    /**
+     * Filter logs by category
+     */
+    public function filter($f) {
+        $this->db->select('l.*, u.realname')
+                 ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
+                 ->where('cat LIKE :filter')
+                 ->orderBy('logid', 'DESC');
+        $params = array('filter' => "%{$f}%");
+        return json_encode($this->db->get($params));
+    }
 
-            // When using a SQL LIMIT, the parameter MUST be an integer.
-            // To accomplish this the PDO constant PARAM_INT is passed
-            $stmt = 'SELECT l.*, u.realname
-                     FROM ' . DB_PREFIX . 'log AS l
-                     LEFT JOIN ' . DB_PREFIX . 'users AS u
-                         ON l.usercreated = u.userid
-                     ORDER BY l.logid DESC
-                     LIMIT :pO,:lim';
+    /**
+     * Search logs by title and content
+     *
+     * @param string $kw - Keywords
+     * @param string $date - Date of creation
+     *
+     * @return Json
+     */
+    public function search($kw = '', $date = '') {
+        $this->db->select('l.*, u.realname')
+                 ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
+                 ->orderBy('logid', 'DESC');
+
+        if ($date == '') {
+            $this->db->where('title LIKE :keyw or entry LIKE :keyw');
             $params = array(
-                'lim' => ((int) trim($viewlimit)),
-                'pO' => ((int) trim($pageOffset))
+                'keyw' => "%{$kw}%"
             );
-
-            $grab_logs = $this->queryDB($stmt, $params, \PDO::PARAM_INT);
-
-            return DisplayLogs::display($grab_logs, false, $pageOffset, $logSize);
+        } elseif ($kw == '') {
+            $this->db->where('datec=:dates');
+            $params = array(
+                'dates' => $date
+            );
+        } else {
+            $this->db->where('(title LIKE :keyw or entry LIKE :keyw) and datec=:dates');
+            $params = array(
+                'keyw' => "%{$kw}%",
+                'dates' => $date
+            );
         }
-        else {
-            return "This account does not have permission to view the activity log.";
-        }
+
+        return json_encode($this->db->get($params));
     }
 }

@@ -35,7 +35,7 @@ include 'static/includes/head.php';
     ?>
     <div id="presence">
         <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="static/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
-        
+
     	<div id="mainPresence"></div>
     </div>
     <?php
@@ -46,14 +46,14 @@ include 'static/includes/head.php';
             <form id="category" method="post">
                 <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';" />
                 <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();" /><br />
-                
-                Filter: 
+
+                Filter:
                 <div id="categorySelects"></div>
-                
+
                 <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');" />
                 <?php echo $add_link; ?>
             </form>
-            
+
             <div id="add_edit" title="">
                 <form id="add_edit_form">
                     Title: <input type="text" id="logTitle" name="logTitle" value="" size="60"><br><br>
@@ -62,17 +62,17 @@ include 'static/includes/head.php';
                     <div id="messages" style="display: none;"></div>
                 </form>
             </div>
-            
+
             <div id="dialog"></div>
         </div>
-    
+
         <div id="refreshed"></div>
     <?php } ?>
 </div>
 
 <?php echo loadJS("jquery","jqueryui","tinymce","catmanage","main","cheesto","mail.js")?>
 <script type="text/javascript">
-    refreshFun.startrefresh();
+    refreshFun.runFirst();
     presence.checkstat(0);
     mail.areUnread();
     $('#presence').draggable();
