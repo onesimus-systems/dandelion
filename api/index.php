@@ -66,7 +66,7 @@ function apiCall($u) {
  * @return Nothing
  */
 function internalApiCall($u) {
-    if (!Gatekeeper\authenticated()) {
+    if (!Gatekeeper\authenticated() && $u[1] != 'auth') {
         exit(makeDAPI(3, 'Login required', 'iapi', '%REDIRECTLOGIN%'));
     }
 
@@ -95,16 +95,21 @@ function processRequest($key, $localCall, $subsystem, $request) {
     /*
      * Declare request source as the api Default value is empty in bootstrap.php
      */
-    if (!$localCall) {
-        define('REQ_SOURCE', 'api'); // Public API
-        define('USER_ID', verifyKey($key));
-    }
-    else {
-        define('REQ_SOURCE', 'iapi'); // Internal API
-        define('USER_ID', $key);
-    }
+    if ($subsystem != 'auth') {
+        if (!$localCall) {
+            define('REQ_SOURCE', 'api'); // Public API
+            define('USER_ID', verifyKey($key));
+        }
+        else {
+            define('REQ_SOURCE', 'iapi'); // Internal API
+            define('USER_ID', $key);
+        }
 
-    $userRights = new \Dandelion\rights(USER_ID);
+        $userRights = new \Dandelion\rights(USER_ID);
+    } else {
+        define('REQ_SOURCE', 'auth');
+        $userRights = null;
+    }
 
     // Call the requested function (as defined by the second part of the URL)
     $className = __NAMESPACE__ . '\\' . $subsystem . 'API';

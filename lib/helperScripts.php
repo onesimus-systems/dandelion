@@ -3,11 +3,11 @@
  * Dandelion helper functions for core.
  *
  * @author Lee Keitel
- * 
+ *
  * @license GNU GPLv3
  */
 
-namespace Dandelion;
+namespace Dandelion {
 
 function redirect($pagename) {
     $allPages = array(
@@ -35,4 +35,37 @@ function redirect($pagename) {
     $newPath = HOSTNAME . '/' . $allPages[$pagename];
     header("Location: $newPath");
     return;
+}
+}
+
+
+namespace Dandelion\Gatekeeper {
+/**
+ * Simple function to determine if a user is logged in or not.
+ *
+ * @return bool
+ */
+function authenticated()
+{
+    $loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;
+    return $loggedin;
+}
+
+/**
+ * Perform a logout by destroying the session.
+ */
+function logout()
+{
+    $_SESSION = array();
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+        );
+    }
+    session_destroy();
+
+    \Dandelion\redirect('index');
+}
 }

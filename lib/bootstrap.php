@@ -75,11 +75,10 @@ session_name(PHP_SESSION_NAME);
 session_start();
 
 // Load helper scripts
-require_once ROOT . '/lib/authenticate.php';
+require ROOT . '/lib/helperScripts.php';
 require ROOT . '/lib/themes.php';
 require ROOT . '/lib/javascript.php';
 require ROOT . '/lib/password-compat/password.php';
-require ROOT . '/lib/helperScripts.php';
 
 // Load application settings
 if (!isset($_SESSION['app_settings'])) {

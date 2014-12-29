@@ -5,8 +5,6 @@ if (!$indexCall) {
     header('Dandelion: Access Denied');
     exit(1);
 }
-
-$status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,24 +18,15 @@ $status = isset($_SESSION['badlogin']) ? $_SESSION['badlogin'] : '&nbsp;';
     <body>
         <div id="login">
             <h1>Dandelion Web Log</h1>
-            <form id="login_form" action="lib/authenticate.php" method="post">
-            <?php echo $status;
-                if (isset($_COOKIE['dan_username'])) {
-                    $username = $_COOKIE['dan_username'];
-                    $userFocus = '';
-                    $passFocus = 'autofocus';
-                    $checkBox = '';
-                } else {
-                    $username = $passFocus = '';
-                    $userFocus = 'autofocus';
-                    $checkBox = '<br><label><input type="checkbox" value="remember" name="rememberMe"> Remember my username</label><br>';
-                }
-            ?>
-                Username:<br /><input type="text" value="<?php echo $username; ?>" name="in_name" autocomplete="off" <?php echo $userFocus; ?>><br><br>
-                Password:<br /><input type="password" value="" name="in_pass" <?php echo $passFocus; ?>><br>
-                <?php echo $checkBox; ?>
-                <div style="margin-top: 0em; margin-left: 2em;"><input type="submit" value="Login" id="login_button"></div>
+            <form id="login_form">
+                Username:<br><input type="text" value="" id="username" onKeyPress="check(event);" autocomplete="off"><br><br>
+                Password:<br><input type="password" value="" id="password" onKeyPress="check(event);"><br>
+                <br><label id="remember"><input type="checkbox" value="remember" id="rememberMe">Remember my username</label><br>
+                <div style="margin-top: 0em; margin-left: 2em;">
+                    <button type="button" id="login_button" onClick="attemptLogin();">Login</button>
+                </div>
             </form>
         </div>
     </body>
+    <?php echo loadJS('jquery', 'login.js'); ?>
 </html>
