@@ -1,7 +1,7 @@
 /* Base theme for Dandelion Web Log
  *
  * @author Lee Keitel
- * @date May 2014 
+ * @date May 2014
 **/
 #permissionsBlock {
   display: none;
@@ -18,4 +18,7 @@
 #permissionsBlock table tr.topRoom td {
   border: none;
   padding-top: 1em;
+}
+#groupList {
+  text-transform: capitalize;
 }

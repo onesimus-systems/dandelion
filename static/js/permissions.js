@@ -8,75 +8,90 @@ var permissions = {
       'createlog': false,
       'editlog': false,
       'viewlog': false,
-      
+
       'addcat': false,
       'editcat': false,
       'deletecat': false,
-      
+
       'adduser': false,
       'edituser': false,
       'deleteuser': false,
-      
+
       'addgroup': false,
       'editgroup': false,
       'deletegroup': false,
-      
+
       'viewcheesto': false,
       'updatecheesto': false,
-      
+
       'admin': false,
     },
-    
+
     currentPermissions: {
     },
-    
+
     getList: function() {
-        $("#groups").load("lib/editgroups.php", "action=getlist");
-    },
-    
-    getPermissions: function(gid) {
-        var group = typeof gid !== 'undefined' ? gid : $("#groupList")[0].value;
-        
-        $.get("lib/editgroups.php", { action: "getpermissions", groups: group })
-          .done(function( html ) {
-              permissions.showPermissions(html);
+        $.get('api/i/rights/getlist', {}, null, 'json')
+          .done(function(json) {
+            // Build select dropdown of current user groups
+            var select = $('<select/>').attr('id', 'groupList');
+            select.append('<option value="0">Select:</option>');
+
+            for (var key in json.data) {
+                if (!json.data.hasOwnProperty(key))
+                    continue;
+
+                var group = json.data[key];
+                select.append('<option value="' + group.id + '">' + group.role + '</option>');
+            }
+
+            $('#groups').empty();
+            $('#groups').append(select);
           });
     },
-    
+
+    getPermissions: function(gid) {
+        var group = typeof gid !== 'undefined' ? gid : $("#groupList")[0].value;
+
+        $.get('api/i/rights/getgroup', {groupid: group}, null, 'json')
+            .done(function(json) {
+                permissions.showPermissions(json.data);
+            });
+    },
+
     showPermissions: function(json) {
-        var permissionsObject = JSON.parse(json);
-        this.currentPermissions = permissionsObject;
-        
-        this.drawGrid(permissionsObject);
-        
+        this.currentPermissions = json;
+
+        this.drawGrid(json);
+
         $("#permissionsBlock").css( "display", "block" );
-        
+
         return true;
     },
-    
+
     savePermissions: function() {
         // Copy allPermissions
         var newPermissions = this.getGrid();
         var group = $("#groupList").val();
-        
+
         if (group !== 0) {
 			var newPermissionsJson = JSON.stringify(newPermissions);
 
-			$.post("lib/editgroups.php", { action: "save", permissions: newPermissionsJson, gid: group })
-				.done(function( msg ) {
-					alert(msg);
+			$.post('api/i/rights/save', { rights: newPermissionsJson, groupid: group }, null, 'json')
+				.done(function( json ) {
+					alert(json.data);
 					$("#permissionsForm")[0].reset();
 					$("#permissionsBlock").css( "display", "none" );
 					$("#groupList").val( 0 );
 				});
         }
     },
-    
+
     checkGrid: function(permission) {
 		var newGrid = this.allPermissions;
 		var theID = "#"+permission;
 		var changed;
-		
+
 		if (permission == 'admin') {
 			if ($(theID).is( ":checked" )) {
 				// An admin user has full permissions, basically a select all
@@ -85,7 +100,7 @@ var permissions = {
 						newGrid[key] = true;
 					}
 				}
-				
+
 				this.drawGrid(newGrid);
 			}
 			else {
@@ -95,7 +110,7 @@ var permissions = {
 				this.drawGrid(changed);
 			}
 		}
-		
+
 		else if (permission == 'createlog' || permission == 'editlog') {
 			// Creating and editing a log inherently means the user can view logs
 			if ($(theID).is( ":checked" )) {
@@ -105,7 +120,7 @@ var permissions = {
 				this.drawGrid(changed);
 			}
 		}
-		
+
 		else if (permission == 'updatecheesto') {
 			if ($(theID).is( ":checked" )) {
 				changed = this.getGrid();
@@ -115,11 +130,11 @@ var permissions = {
 			}
 		}
     },
-    
+
     goBack: function() {
 		this.drawGrid(this.currentPermissions);
     },
-    
+
     createNew: function() {
         $( "#add-form" ).dialog({
           height: 225,
@@ -136,14 +151,12 @@ var permissions = {
           }
         });
     },
-    
+
     sendNew: function() {
-        $.post("lib/editgroups.php",
-			{ action: "create", name: $("#name").val(), rights: JSON.stringify(permissions.allPermissions) }
-          )
-          .done(function() {
-              
-              $( "#dialog" ).html( "<p>Rights Group Created Successfully</p>" );
+        $.post('api/i/rights/create',
+			{ name: $("#name").val(), rights: JSON.stringify(permissions.allPermissions) }, null, 'json')
+          .done(function(response) {
+              $( "#dialog" ).html( response.data );
               $( "#dialog" ).dialog({
                   modal: true,
                   width: 400,
@@ -161,16 +174,16 @@ var permissions = {
                     }
                   }
                 });
-              
+
                 $("#permissionsForm")[0].reset();
                 $("#permissionsBlock").css( "display", "none" );
                 permissions.getList();
           });
     },
-    
+
     deleteGroup: function() {
         var delGroup = $("#groupList option:selected").text();
-        
+
         $( "#dialog" ).html( "<p>Do you really want to delete the group '"+delGroup+"'?</p>" );
         $( "#dialog" ).dialog({
           resizable: false,
@@ -178,13 +191,13 @@ var permissions = {
           buttons: {
             "Delete Group": function() {
                 $( this ).dialog( "close" );
-              
+
                 var group = $("#groupList").val();
-            
-                $.post("lib/editgroups.php", { action: "delete", groups: group })
-                  .done(function( msg ) {
-                      
-                      $( "#dialog" ).html( "<p>"+msg+"</p>" );
+
+                $.post('api/i/rights/delete', { groupid: group }, null, 'json')
+                  .done(function( json ) {
+
+                      $( "#dialog" ).html( "<p>"+json.data+"</p>" );
                       $( "#dialog" ).dialog({
                           modal: true,
                           width: 400,
@@ -202,7 +215,7 @@ var permissions = {
                             }
                           }
                         });
-                        
+
 						$("#permissionsForm")[0].reset();
 						$("#permissionsBlock").css( "display", "none" );
                         permissions.getList();
@@ -214,7 +227,7 @@ var permissions = {
           }
         });
     },
-    
+
     drawGrid: function(object) {
 		for (var key in object) {
            if (object.hasOwnProperty(key)) {
@@ -223,10 +236,10 @@ var permissions = {
               $(getID).prop( "checked", object[key] );
            }
         }
-        
+
         return true;
     },
-    
+
     getGrid: function() {
 		var theGrid = JSON.parse(JSON.stringify(this.allPermissions));
 
@@ -237,10 +250,10 @@ var permissions = {
 				theGrid[key] = $(getID).prop( "checked" );
 			}
 		}
-		
+
 		return theGrid;
     },
-    
+
     // Checks if enter key was pressed, if so submit the form
     check: function(e) {
         if (e.keyCode == 13) {
