@@ -281,4 +281,11 @@ class Users
             return 'At least one admin account must be left to delete another admin account';
         }
     }
+
+    public function getUserList() {
+        $this->db->select('userid, realname, username, role, datecreated, theme, firsttime')
+                 ->from(DB_PREFIX.'users');
+
+        return $this->db->get();
+    }
 }

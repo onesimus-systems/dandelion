@@ -99,4 +99,15 @@ class usersAPI
         $user = new \Dandelion\Users($db);
         return json_encode($user->deleteUser($userid));
     }
+
+    public static function getUsersList($db, $ur) {
+        // Check permissions
+        if ($ur->authorized('edituser')) {
+            $userid = $_REQUEST['uid'];
+        } else {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+        }
+        $list = new \Dandelion\Users($db);
+        return json_encode($list->getUserList());
+    }
 }
