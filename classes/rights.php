@@ -11,7 +11,6 @@
 ***/
 namespace Dandelion;
 
-use Dandelion\Database\dbManage;
 use Dandelion\Permissions;
 
 class rights
@@ -24,18 +23,19 @@ class rights
      * @param int $userid - ID of user
      */
     public function __construct($userid) {
+      $conn = Storage\mySqlDatabase::getInstance();
+
       $this->userid = $userid;
-      $sql = 'SELECT r.permissions
-              FROM '.DB_PREFIX.'rights AS r
+      $conn->select('r.permissions')
+           ->from(DB_PREFIX.'rights AS r
               LEFT JOIN '.DB_PREFIX.'users AS u
-                  ON u.role = r.role
-              WHERE u.userid = :userid';
+                  ON u.role = r.role')
+           ->where('u.userid = :userid');
       $params = array(
       	'userid' => $userid
       );
 
-      $conn = new dbManage();
-      $rights = $conn->queryDB($sql, $params);
+      $rights = $conn->get($params);
       $this->permissions = (array) unserialize($rights[0]['permissions']);
     }
 
@@ -55,5 +55,9 @@ class rights
 
     public function isAdmin() {
         return $this->permissions['admin'];
+    }
+
+    public function getRightsForUser() {
+        return $this->permissions;
     }
 }
