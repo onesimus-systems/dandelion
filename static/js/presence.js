@@ -66,17 +66,17 @@ var presence =
             if (!dataObj.hasOwnProperty(key))
                 continue;
 
-            if (key !== "statusOptions") {  
+            if (key !== "statusOptions") {
                 var user = dataObj[key];
                 var classm = '';
-                
+
                 if (user.message !== '') {
                     classm = ' class="message"';
                 }
 
                 var html = '<tr>\
                     <td class="textLeft"><span title="'+user.message+'"'+classm+'>'+user.realname+'</span></td>\
-                    <td><span title="'+user.statusInfo.status+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
+                    <td><span title="'+dataObj.statusOptions[user.status]+'&#013;Return: '+user.returntime+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
                     </tr>';
 
                 table.append(html);
@@ -105,16 +105,21 @@ var presence =
             if (!dataObj.hasOwnProperty(key))
                 continue;
 
-            if (key !== "statusOptions") {  
+            if (key !== "statusOptions") {
                 var user = dataObj[key];
 
                 var html = '<tr>\
                     <td>'+user.realname+'</td>\
                     <td>'+user.message+'</td>\
-                    <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>\
-                    <td>'+user.statusInfo.status+'</td>\
-                    <td>'+user.dmodified+'</td>\
-                    </tr>';
+                    <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>';
+
+                if (user.status == 0) { // jshint ignore:line
+                    html += '<td>'+dataObj.statusOptions[user.status]+'</td>';
+                } else {
+                    html += '<td>'+dataObj.statusOptions[user.status]+'<br>Return: '+user.returntime+'</td>';
+                }
+
+                html += '<td>'+user.dmodified+'</td></tr>';
 
                 table.append(html);
             }
@@ -124,19 +129,19 @@ var presence =
     },
 
     setStatus: function(ver) {
-        newStatus = $("select#cstatus").prop("selectedIndex");
+        newStatus = $("select#cstatus").prop("selectedIndex") - 1;
         $("select#cstatus").prop("selectedIndex", 0);
         var rtime;
 
-        if (newStatus > 1) {
+        if (newStatus > 0) {
             // Status requires a return time and optional status
             rtime = ""; // jshint ignore:line
             window.open("getdate","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
         }
-        else if (newStatus === 1) {
+        else if (newStatus === 0) {
             // Status is Available
             rtime = "00:00:00"; // jshint ignore:line
-            presence.sendNewStatus(1, rtime, ver, "");
+            presence.sendNewStatus(0, rtime, ver, "");
         }
     },
 

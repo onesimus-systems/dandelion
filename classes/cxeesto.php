@@ -26,6 +26,7 @@ namespace Dandelion;
 class cxeesto
 {
     // Order matters!! These correspond to the statusType() switch case order
+    // I know, that's very bad. They should be in the database... maybe someday
     private $statusOptions = array(
         "Available",
         "Away From Desk",
@@ -49,84 +50,89 @@ class cxeesto
      *
      * @return JSON - Users statuses
      */
-    public function getJson() {
+    public function getAllStatuses() {
         $statuses = $this->dbConn->selectAll('presence')->get();
 
         foreach ($statuses as &$row) {
-            $row['statusInfo'] = $this->statusType($row['status'], '&#013;', $row['returntime']);
+            $row['statusInfo'] = $this->statusType($row['status']);
         }
 
-        $statuses['statusOptions'] = $this->statusOptions;
+        $statuses['statusOptions'] = $this->getStatusText();
 
-        return json_encode($statuses);
+        return $statuses;
+    }
+
+    public function getUserStatus($uid) {
+        $this->dbConn->select()
+                     ->from(DB_PREFIX.'presence')
+                     ->where('uid = :uid');
+        $params = array("uid" => $uid);
+        $userStatus = $this->dbConn->get($params)[0];
+
+        $userStatus['statusInfo'] = $this->statusType($userStatus['status']);
+        $userStatus['statusOptions'] = $this->getStatusText();
+
+        return $userStatus;
+    }
+
+    public function getStatusText() {
+        return $this->statusOptions;
     }
 
     /**
      * Given the status number, returns status label, symbol, and return time
      *
      * @param int $sNum - The numeric representation of a status
-     * @param string $lBreak - The type of break or other character between label and return time
-     * @param string $returnT - Return time formatted as string
      *
      * @return array - 0 = Text, 1 = Symbol, 2 = Class
      */
-    private function statusType($sNum, $lBreak, $returnT)
+    private function statusType($sNum)
     {
+        // Eventually the front-end will be responsible for assigning colors and symbols
         $statusProps = array();
 
         switch($sNum) {
-            case 1:
-                $statusProps['status'] = 'Available';
+            case 0:
                 $statusProps['symbol'] = '&#x2713;';
                 $statusProps['color'] = 'green';
                 break;
+            case 1:
+                $statusProps['symbol'] = '&#8709;';
+                $statusProps['color'] = 'blue';
+                break;
             case 2:
-                $statusProps['status'] = 'Away From Desk'.$lBreak.'Return: '.$returnT;
                 $statusProps['symbol'] = '&#8709;';
                 $statusProps['color'] = 'blue';
                 break;
             case 3:
-                $statusProps['status'] = 'At Lunch'.$lBreak.'Return: '.$returnT;
-                $statusProps['symbol'] = '&#8709;';
-                $statusProps['color'] = 'blue';
+                $statusProps['symbol'] = '&#x2717;';
+                $statusProps['color'] = 'red';
                 break;
             case 4:
-                $statusProps['status'] = 'Out For Day'.$lBreak.'Return: '.$returnT;
                 $statusProps['symbol'] = '&#x2717;';
                 $statusProps['color'] = 'red';
                 break;
             case 5:
-                $statusProps['status'] = 'Out'.$lBreak.'Return: '.$returnT;
                 $statusProps['symbol'] = '&#x2717;';
                 $statusProps['color'] = 'red';
                 break;
             case 6:
-                $statusProps['status'] = 'Appointment'.$lBreak.'Return: '.$returnT;
-                $statusProps['symbol'] = '&#x2717;';
-                $statusProps['color'] = 'red';
-                break;
-            case 7:
-                $statusProps['status'] = 'Do Not Disturb'.$lBreak.'Return: '.$returnT;
                 $statusProps['symbol'] = '&#x2717;&#x2717;';
                 $statusProps['color'] = 'red';
                 break;
-            case 8:
-                $statusProps['status'] = 'Meeting'.$lBreak.'Return: '.$returnT;
+            case 7:
                 $statusProps['symbol'] = '&#8709;';
                 $statusProps['color'] = 'blue';
                 break;
-            case 9:
-                $statusProps['status'] = 'Out Sick'.$lBreak.'Return: '.$returnT;
+            case 8:
                 $statusProps['symbol'] = '&#x2717;';
                 $statusProps['color'] = 'red';
                 break;
-            case 10:
-                $statusProps['status'] = 'Vacation'.$lBreak.'Return: '.$returnT;
+            case 9:
                 $statusProps['symbol'] = '&#x2717;';
                 $statusProps['color'] = 'red';
                 break;
             default:
-                $statusProps['status'] = 'Unknown Status'.$lBreak.'Notify Dandelion Admin';
                 $statusProps['symbol'] = '?';
                 $statusProps['color'] = 'red';
                 break;

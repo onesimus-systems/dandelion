@@ -35,11 +35,25 @@ class cheestoAPI
     public static function readall($db, $ur) {
         if ($ur->authorized('viewcheesto')) {
             $cheesto = new \Dandelion\cxeesto($db);
-            return $cheesto->getJson();
+            return json_encode($cheesto->getAllStatuses());
         }
         else {
             exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
+    }
+
+    public static function read($db, $ur) {
+        if (!$ur->authorized('viewcheesto')) {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+        }
+
+        $cheesto = new \Dandelion\cxeesto($db);
+        return json_encode($cheesto->getUserStatus($_REQUEST['uid']));
+    }
+
+    public static function statusTexts() {
+        $cheesto = new \Dandelion\cxeesto($db);
+        return json_encode($cheesto->getStatusText());
     }
 
     /**
@@ -48,16 +62,24 @@ class cheestoAPI
      * @return JSON
      */
     public static function update($db, $ur) {
-        if ($ur->authorized('updatecheesto')) {
-            $cheesto = new \Dandelion\cxeesto($db);
-            $message = isset($_POST['message']) ? $_POST['message'] : '';
-            $status = isset($_POST['status']) ? $_POST['status'] : -1;
-            $returntime = isset($_POST['returntime']) ? $_POST['returntime'] : '00:00:00';
-
-            return $cheesto->updateStatus($message, $status, $returntime, USER_ID);
-        }
-        else {
+        if (!$ur->authorized('updatecheesto')) {
             exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
+
+        $cheesto = new \Dandelion\cxeesto($db);
+        $message = isset($_REQUEST['message']) ? $_REQUEST['message'] : '';
+        $status = isset($_REQUEST['status']) ? $_REQUEST['status'] : -1;
+        $returntime = isset($_REQUEST['returntime']) ? $_REQUEST['returntime'] : '00:00:00';
+        $userid = USER_ID;
+
+        if (isset($_REQUEST['uid'])) { // A status of another user is trying to be updated
+            if ($ur->authorized('edituser') || $_REQUEST['uid'] == USER_ID) {
+                $userid = $_REQUEST['uid'];
+            } else {
+                exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+            }
+        }
+
+        return $cheesto->updateStatus($message, $status, $returntime, $userid);
     }
 }
