@@ -78,4 +78,8 @@ class rightsAPI {
             return json_encode('Group deleted successfully.');
         }
     }
+
+    public static function getUsersRights($db, $ur) {
+        return json_encode($ur->getRightsForUser());
+    }
 }
