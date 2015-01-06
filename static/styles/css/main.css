@@ -169,7 +169,7 @@ a:active {
 #add_cat {
   display: inline;
 }
-#main {
+#userlist table {
   border: 1px solid black;
   margin-left: auto;
   margin-right: auto;
