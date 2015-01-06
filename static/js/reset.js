@@ -10,7 +10,7 @@ var api = {
         $("#pass2").val('');
 
         if (pw1 === pw2 && pw1 !== "") {
-            $.post('api/i/settings/resetPassword', {'pw': pw1}, null, "json")
+            $.post('api/i/users/resetPassword', {'pw': pw1}, null, "json")
                 .done(function(msg) {
                     alert(msg.data);
                     location.assign('/logout');

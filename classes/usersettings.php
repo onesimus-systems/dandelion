@@ -47,12 +47,6 @@ class userSettings {
         return 'Theme saved successfully';
     }
 
-    public function resetPassword($password) {
-        $user = new Users\User(false, $_SESSION['userInfo']['userid']);
-        $user->userInfo['password'] = $password;
-        return $user->resetUserPw();
-    }
-
     public function getSetting($setting, $id) {
         $this->db->select($setting)
                  ->from(DB_PREFIX.'users')
