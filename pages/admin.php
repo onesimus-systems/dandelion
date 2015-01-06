@@ -38,7 +38,7 @@ include 'static/includes/head.php';
 
         Default theme:
     	
-    	<?php echo getThemeList('default'); ?>
+    	<?php echo getThemeList('', false); ?>
     	
         <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
         

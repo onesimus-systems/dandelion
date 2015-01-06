@@ -31,20 +31,20 @@ function getTheme()
  * @param string $theme - Default null - Name of theme to have preselected
  * @return string - Generated HTML
  */
-function getThemeList($theme = null)
+function getThemeList($theme = null, $showDefaultOption = true)
 {
     /*
      * The call can pass the theme currently used,
      * if one isn't passed, assume the current user's theme
      */
     $currentTheme = ($theme===null) ? getTheme() : $theme;
-    $currentTheme = ($theme=='default') ? $_SESSION['app_settings']['default_theme'] : $currentTheme;
+    $currentTheme = ($theme==='') ? $_SESSION['app_settings']['default_theme'] : $currentTheme;
     $themeList = '';
 
     $handle = opendir('themes');
 
     $themeList .= '<select name="userTheme" id="userTheme">';
-    $themeList .= '<option value="default">Default</option>';
+    if ($showDefaultOption) { $themeList .= '<option value="default">Default</option>'; }
     while (false !== ($themeName = readdir($handle))) {
         if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
             $selected = ($themeName == $currentTheme) ? 'selected' : '';
