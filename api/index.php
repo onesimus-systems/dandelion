@@ -129,7 +129,7 @@ function processRequest($key, $localCall, $subsystem, $request) {
 function verifyKey($key) {
     if (empty($key)) {
         // If $key is empty or the key isn't in the DB, exit with a DAPI object
-        exit(makeDAPI(1, 'API key is not valid', 'index'));
+        exit(makeDAPI(1, 'API key is not valid', 'api'));
     }
 
     $conn = new dbManage();
@@ -147,6 +147,8 @@ function verifyKey($key) {
 
     if (!empty($keyValid[0])) {
         return $keyValid[0]['user'];
+    } else {
+        exit(makeDAPI(1, 'API key is not valid', 'api'));
     }
     return;
 }
@@ -160,7 +162,7 @@ function verifyKey($key) {
  */
 function apitest($key) {
     if (verifyKey($key)) {
-        return makeDAPI(0, 'API key is good', 'index');
+        return makeDAPI(0, 'API key is good', 'api');
     }
     return;
 }

@@ -21,7 +21,7 @@
  */
 namespace Dandelion\API;
 
-if (REQ_SOURCE != 'iapi') {
+if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
     exit(makeDAPI(2, 'This script can only be called by the internal API.', 'keyManager'));
 }
 
@@ -36,41 +36,8 @@ class keyManagerAPI
      * @return JSON - API Key or error message
      */
     public static function getKey($db, $ur, $force = false) {
-        $db->select('keystring')->from(DB_PREFIX.'apikeys')->where('user = :id');
-        $params = array (
-            "id" => $_SESSION['userInfo']['userid']
-        );
-
-        $key = $db->get($params);
-
-        if (!empty($key[0]) && !$force) {
-            return SELF::encodeKey($key[0]['keystring']);
-        }
-        else {
-            // Clear database of old keys for user
-            $db->delete()->from(DB_PREFIX.'apikeys')->where('user = :id');
-            $params = array (
-                "id" => $_SESSION['userInfo']['userid']
-            );
-            $db->go($params);
-
-            // Generate new key
-            $newKey = SELF::generateKey(40);
-
-            // Insert new key
-            $db->insert()->into(DB_PREFIX.'apikeys', array('keystring', 'user'))->values(array(':newkey', ':uid'));
-            $params = array (
-                "newkey" => $newKey,
-                "uid" => $_SESSION['userInfo']['userid']
-            );
-
-            if ($db->go($params)) {
-                return SELF::encodeKey($newKey);
-            }
-            else {
-                return SELF::encodeKey('Error generating key.');
-            }
-        }
+        $key = new \Dandelion\keyManager($db);
+        return SELF::encodeKey($key->getKey($_SESSION['userInfo']['userid'], $force));
     }
 
     /**
@@ -78,6 +45,22 @@ class keyManagerAPI
      */
     public static function newKey($db, $ur) {
         return SELF::getKey($db, $ur, true);
+    }
+
+    public static function revokeKey($db, $ur) {
+        $userid = USER_ID;
+
+        // Check permissions
+        if (isset($_REQUEST['uid'])) {
+            if ($ur->authorized('edituser') || $_REQUEST['uid'] == USER_ID) {
+                $userid = $_REQUEST['uid'];
+            } else {
+                exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'keyManager'));
+            }
+        }
+
+        $key = new \Dandelion\keyManager($db);
+        return SELF::encodeKey($key->revoke($userid));
     }
 
     /**
@@ -89,21 +72,5 @@ class keyManagerAPI
         return json_encode(array (
             "key" => $key
         ));
-    }
-
-    /**
-     * Generate a random alphanumeric string
-     *
-     * @param int $length - Length of generated string
-     *
-     * @return string
-     */
-    private static function generateKey($length = 10) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        return $randomString;
     }
 }
