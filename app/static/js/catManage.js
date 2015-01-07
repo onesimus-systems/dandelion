@@ -9,9 +9,11 @@ var CategoryManage = {
 	
 	grabNextLevel: function(parentID, container) {
 	    var pid;
-		if (parentID == "0:0") { pid = "0:0"; }
-		else if (parentID.value) { pid = parentID.value; }
-		else { pid = parentID; }
+		if (parentID.value) {
+			pid = parentID.value;
+		} else {
+			pid = parentID;
+		}
 		
 		container = (this.addLog) ? '#catSpace' : '#categorySelects';
 		
