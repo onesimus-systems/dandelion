@@ -4,6 +4,7 @@
 
 var userManager = {
 	rights: {},
+    currentuid: null,
 
 	init: function() {
 		this.getUsersRights();
@@ -35,11 +36,11 @@ var userManager = {
 	    if (this.rights.adduser) {
             commands.append('<option value="add">Add User</option>');
         }
-        
+
         if (this.rights.deleteuser) {
             commands.append('<option value="delete">Delete</option>');
         }
-        
+
         if (this.rights.edituser) {
             commands.append('<option value="edit">Edit</option>');
             commands.append('<option value="reset">Reset Password</option>');
@@ -84,7 +85,7 @@ var userManager = {
 
 			var user = userdata[key];
             var html = '<tr>\
-	                    	<td><input type="radio" name="the_choosen_one" value="' + user.userid + '"></td>\
+	                    	<td><input type="radio" name="uid" value="' + user.userid + '"></td>\
 	                    	<td style="text-align: left;">' + user.realname + '</td>\
 	                    	<td>' + user.username + '</td>\
 	                    	<td>' + user.role + '</td>\
@@ -101,37 +102,106 @@ var userManager = {
 	},
 
 	performAction: function() {
+        // Get the action to perform
 		var action = $('#commands').val();
 		$('#commands').prop("selectedIndex", 0);
-
 		if (action === '') {
 			return false;
 		}
-		userManager[action]();
+
+        // Make sure a user is selected
+        var uid = $('input[name=uid]:checked').val();
+        if (typeof uid == 'undefined' && action != 'add') {
+            return false;
+        }
+        this.currentuid = uid;
+
+        // Show dialog for action
+        $('#dialog').empty();
+		userManager.uiforms[action]();
 		return;
 	},
 
 	add: function() { // Create user
-		console.log('I add a user');
+		var username = $('#add_user').val();
+        var password = $('#add_pass').val();
+        var fullname = $('#add_fullname').val();
+        var group = $('#add_group').val();
+
+        $.post('api/i/users/create', {username: username, password: password, fullname: fullname, role: group}, null, 'json')
+            .done(function(data) {
+                console.log(data);
+                userManager.loadUserList();
+            });
+        return;
 	},
 
 	edit: function() { // Edit user
-		console.log('I edit a user');
+        var uid = $('#edit_uid').val();
+        var theme = $('#edit_theme').val();
+        var fullname = $('#edit_fullname').val();
+        var group = $('#edit_group').val();
+        var prompt = $('#edit_prompt').val();
+
+        $.post('api/i/users/save', {uid: uid, fullname: fullname, role: group, prompt: prompt, theme: theme}, null, 'json')
+            .done(function(data) {
+                console.log(data);
+                userManager.loadUserList();
+            });
+        return;
 	},
 
 	delete: function() { // Delete user
-		console.log('I delete a user');
+        $.post('api/i/users/delete', {uid: userManager.currentuid}, null, 'json')
+            .done(function(data) {
+                if (data.errorcode === 0 && data.data === true) {
+                    console.log('Success');
+                    userManager.loadUserList();
+                }
+            });
+        return;
 	},
 
 	reset: function() { // Reset user password
-		console.log('I reset a user');
+        var pass1 = $('#pass1').val();
+        var pass2 = $('#pass2').val();
+        $("#pass1").val('');
+        $("#pass2").val('');
+
+        if (pass1 === pass2 && pass1 !== "") {
+            $.post('api/i/users/resetPassword', {pw: pass1, uid: userManager.currentuid}, null, "json")
+                .done(function(data) {
+                    if (data.errorcode === 0 && data.data === true) {
+                        console.log('Success');
+                    }
+                });
+        } else {
+            alert('Passwords do not match or are empty');
+        }
+        return;
 	},
 
 	cxeesto: function() { // Change user status
-		console.log('I cxeesto a user');
+        var uid = $('#status_uid').val();
+        var status = $("select#status_text").prop("selectedIndex") - 1;
+        var message = $('#status_message').val();
+        var returntime = $('#status_return').val();
+
+        $.post('api/i/cheesto/update', {uid: uid, status: status, returntime: returntime, message: message}, null, 'json')
+            .done(function(data) {
+                console.log(data);
+                userManager.loadUserList();
+            });
+        return;
 	},
 
 	revokeKey: function() { // Revoke user's api key
-		console.log('I revokeKey a user');
+		$.post('api/i/keymanager/revokekey', {uid: userManager.currentuid}, null, 'json')
+            .done(function(data) {
+                if (data.errorcode === 0 && data.data.key === true) {
+                    console.log('Success');
+                }
+            });
+        return;
 	},
 };

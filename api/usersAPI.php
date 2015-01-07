@@ -110,4 +110,21 @@ class usersAPI
         $list = new \Dandelion\Users($db);
         return json_encode($list->getUserList());
     }
+
+    public static function getUserInfo($db, $ur) {
+        // Check permissions
+        if ($ur->authorized('edituser')) {
+            $userid = $_REQUEST['uid'];
+        } else {
+            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+        }
+
+        $uid = $_REQUEST['uid'];
+        if (empty($uid)) {
+            exit(makeDAPI(5, 'No user id received.', 'users'));
+        }
+
+        $user = new \Dandelion\Users($db);
+        return json_encode($user->getUser($uid));
+    }
 }

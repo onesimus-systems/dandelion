@@ -57,6 +57,17 @@ function getThemeList($theme = null, $showDefaultOption = true)
     return $themeList;
 }
 
+function getThemeListArray() {
+    $themeList = [];
+    $handle = opendir('themes');
+    while (false !== ($themeName = readdir($handle))) {
+        if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
+            array_push($themeList, $themeName);
+        }
+    }
+    return $themeList;
+}
+
 /**
  * Generates HTML link tags for given CSS files
  * Names are given as function arguments which are retrieved

@@ -1,7 +1,7 @@
 /* Base theme for Dandelion Web Log
  *
  * @author Lee Keitel
- * @date Feb 2014 
+ * @date Feb 2014
 **/
 body {
   margin: 0px auto;
@@ -169,10 +169,13 @@ a:active {
 #add_cat {
   display: inline;
 }
-#userlist table {
+#editusers #userlist table {
   border: 1px solid black;
   margin-left: auto;
   margin-right: auto;
+}
+#dialog {
+  text-align: left;
 }
 /** Footer */
 #credits {

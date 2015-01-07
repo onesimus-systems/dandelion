@@ -36,4 +36,8 @@ class settingsAPI
         $settings = new \Dandelion\userSettings($db);
         return json_encode($settings->saveTheme($_REQUEST['theme']));
     }
+
+    public static function getThemeList($db) {
+        return json_encode(\Dandelion\getThemeListArray());
+    }
 }

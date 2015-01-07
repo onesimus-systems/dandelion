@@ -109,6 +109,7 @@ class Users
             return 'Something is empty';
         }
 
+        $this->userInfo['role'] = strtolower($this->userInfo['role']);
         // Update main user row
         $this->db->update(DB_PREFIX.'users')
                  ->set('realname = :realname, role = :role, firsttime = :first, theme = :theme')
@@ -149,6 +150,7 @@ class Users
             return 'Username already in use';
         }
 
+        $role = strtolower($role);
         // Create row in users table
         $this->db->insert()
                  ->into(DB_PREFIX.'users', array('username', 'password', 'realname', 'role', 'datecreated', 'theme'))
@@ -287,5 +289,14 @@ class Users
                  ->from(DB_PREFIX.'users');
 
         return $this->db->get();
+    }
+
+    public function getUser($uid) {
+        $this->db->select('userid, realname, username, role, datecreated, theme, firsttime')
+                 ->from(DB_PREFIX.'users')
+                 ->where('userid = :uid');
+        $params = array('uid' => $uid);
+
+        return $this->db->get($params)[0];
     }
 }
