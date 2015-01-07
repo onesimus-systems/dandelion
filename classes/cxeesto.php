@@ -1,8 +1,6 @@
 <?php
 /**
  * This class is used to update the Cxeesto status board.
- * It extends dbManage so an unnecessary dbManage object
- * doesn't have to be created.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

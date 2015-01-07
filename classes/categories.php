@@ -21,8 +21,16 @@
 ***/
 namespace Dandelion;
 
-class categories extends Database\dbManage
+class categories
 {
+    public function __construct($db = null) {
+        if ($db === null) {
+            $this->database = Storage\mySqlDatabase::getInstance();
+        } else {
+            $this->database = $db;
+        }
+    }
+    
     /**
      * Get the children of a parent category and generate a <select>
      * element with the root node and all children
@@ -33,7 +41,7 @@ class categories extends Database\dbManage
      */
     public function getChildren($past)
     {
-        $cat = $this->selectAll('category');
+        $cat = $this->database->selectAll('category')->get();
 
         $response = '';
 
@@ -91,13 +99,15 @@ class categories extends Database\dbManage
      */
     public function addCategory($parent, $description)
     {
-        $stmt = 'INSERT INTO `'.DB_PREFIX.'category` (`description`, `pid`) VALUES (:description, :parentid)';
+        $this->database->insert()
+                       ->into(DB_PREFIX.'category', array('description', 'pid'))
+                       ->values(array(':description', ':parentid'));
         $params = array(
             'description' => urldecode($description),
             'parentid'	  => $parent
         );
 
-        if ($this->queryDB($stmt, $params)) {
+        if ($this->database->go($params)) {
             echo 'Category added successfully';
         } else {
             echo 'Error adding category';
@@ -114,28 +124,33 @@ class categories extends Database\dbManage
     public function delCategory($cid)
     {
         // Get the category's current parent to reassign children
-        $stmt = 'SELECT `pid` FROM `'.DB_PREFIX.'category` WHERE `cid` = :catid';
+        $this->database->select('pid')
+                       ->from(DB_PREFIX.'category')
+                       ->where('cid = :catid');
         $params = array(
             'catid' => $cid
         );
 
-        $newParent = $this->queryDB($stmt, $params);
-        $newParent = $newParent[0]['pid'];
+        $newParent = $this->database->get($params)[0]['pid'];
 
         // Delete category from DB
-        $stmt = 'DELETE FROM `'.DB_PREFIX.'category` WHERE `cid` = :catid';
+        $this->database->delete()
+                       ->from(DB_PREFIX.'category')
+                       ->where('cid = :catid');
         $params = array(
             'catid' => $cid
         );
-        $this->queryDB($stmt, $params);
+        $this->database->go($params);
 
         // Reassign children
-        $stmt = 'UPDATE `'.DB_PREFIX.'category` SET `pid` = :newp WHERE `pid` = :oldp';
+        $this->database->update(DB_PREFIX.'category')
+                       ->set('pid = :newp')
+                       ->where('pid = :oldp');
         $params = array(
             'newp' => $newParent,
             'oldp' => $cid
         );
-        $this->queryDB($stmt, $params);
+        $this->database->go($params);
 
         echo 'Category deleted successfully';
     }
@@ -150,13 +165,15 @@ class categories extends Database\dbManage
      */
     public function editCategory($cid, $desc)
     {
-        $stmt = 'UPDATE `'.DB_PREFIX.'category` SET `description` = :desc WHERE `cid` = :cid';
+        $this->database->update(DB_PREFIX.'category')
+                       ->set('description = :desc')
+                       ->where('cid = :cid');
         $params = array(
                 'desc' => urldecode($desc),
                 'cid' => $cid
         );
 
-        if ($this->queryDB($stmt, $params)) {
+        if ($this->database->go($params)) {
             echo 'Category updated successfully';
         } else {
             echo 'Error saving category';

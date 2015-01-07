@@ -26,7 +26,6 @@
  */
 namespace Dandelion\API;
 
-use Dandelion\database\dbManage;
 use Dandelion\Gatekeeper;
 
 /**
@@ -132,18 +131,18 @@ function verifyKey($key) {
         exit(makeDAPI(1, 'API key is not valid', 'api'));
     }
 
-    $conn = new dbManage();
+    $conn = \Dandelion\Storage\mySqlDatabase::getInstance();
 
     // Search for key with case sensitive collation
-    $sql = 'SELECT *
-            FROM ' . DB_PREFIX . 'apikeys
-            WHERE keystring = :key
-            COLLATE latin1_general_cs';
+    $conn->select()
+         ->from(DB_PREFIX.'apikeys')
+         ->where('keystring = :key')
+         ->collate('latin1_general_cs');
     $params = array (
         "key" => $key
     );
 
-    $keyValid = $conn->queryDB($sql, $params);
+    $keyValid = $conn->get($params);
 
     if (!empty($keyValid[0])) {
         return $keyValid[0]['user'];

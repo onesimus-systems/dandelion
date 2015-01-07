@@ -11,8 +11,6 @@
 
 namespace Dandelion;
 
-use Dandelion\Database\dbManage;
-
 function update() {
     $updateLockFile = ROOT . '/update.lock';
     if (!file_exists($updateLockFile)) {

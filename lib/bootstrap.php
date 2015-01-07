@@ -82,8 +82,8 @@ require ROOT . '/lib/password-compat/password.php';
 
 // Load application settings
 if (!isset($_SESSION['app_settings'])) {
-    $conn = new dbManage();
-    $app_settings = $conn->selectAll('settings');
+    $conn = Storage\mySqlDatabase::getInstance();
+    $app_settings = $conn->selectAll('settings')->get();
     foreach ($app_settings as $setting) {
         $_SESSION['app_settings'][$setting['name']] = $setting['value'];
     }

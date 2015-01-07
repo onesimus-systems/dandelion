@@ -24,19 +24,20 @@ class mySqlDatabase implements \Dandelion\databaseConn {
             'from'   => '',
             'where'  => array(),
             'orderby' => array(),
-            'limit'  => ''
+            'limit'  => '',
+            'collate' => ''
         );
 
     /**
      * Returns the an instance of the MySqlDatabase class. If one is already created, it will return it.
      */
     public static function getInstance() {
-        if ($instance === NULL) {
-            $instance = new self();
+        if (SELF::$instance === NULL) {
+            SELF::$instance = new self();
         }
 
-        $instance->init();
-        return $instance;
+        SELF::$instance->init();
+        return SELF::$instance;
     }
 
     public function __destruct() {
@@ -83,7 +84,8 @@ class mySqlDatabase implements \Dandelion\databaseConn {
             'from'   => '',
             'where'  => array(),
             'orderby' => array(),
-            'limit'  => ''
+            'limit'  => '',
+            'collate' => ''
         );
     }
 
@@ -138,6 +140,11 @@ class mySqlDatabase implements \Dandelion\databaseConn {
 
     public function where($conditions) {
         $this->sqlStatement['where'] = $conditions;
+        return $this;
+    }
+
+    public function collate($collation) {
+        $this->sqlStatement['collate'] = $collation;
         return $this;
     }
 
@@ -210,6 +217,9 @@ class mySqlDatabase implements \Dandelion\databaseConn {
         }
         if (!empty($this->sqlStatement['limit'])) {
             $stmt = $stmt . ' LIMIT ' . $this->sqlStatement['limit'];
+        }
+        if (!empty($this->sqlStatement['collate'])) {
+            $stmt = $stmt . ' COLLATE ' . $this->sqlStatement['collate'];
         }
         return $stmt;
     }
