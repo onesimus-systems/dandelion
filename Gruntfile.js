@@ -5,16 +5,16 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     jshint: {
-      all: ['static/js/*.js']
+      all: ['app/static/js/*.js']
     },
 
     less: {
       dev: {
         files: [{
           expand: true,
-          cwd: 'static/styles/less',
+          cwd: 'app/static/styles/less',
           src: ['*.less'],
-          dest: 'static/styles/css/',
+          dest: 'app/static/styles/css/',
           ext: '.css'
         }]
       }
@@ -22,11 +22,11 @@ module.exports = function(grunt) {
 
     watch: {
       scripts: {
-        files: ['static/js/*.js'],
+        files: ['app/static/js/*.js'],
         tasks: ['newer:jshint:all']
       },
       styles: {
-        files: ['static/styles/less/*.less'],
+        files: ['app/static/styles/less/*.less'],
         tasks: ['newer:less:dev']
       }
     }
