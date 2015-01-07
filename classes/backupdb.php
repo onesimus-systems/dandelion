@@ -28,7 +28,7 @@ namespace Dandelion;
  */
 class backupdb
 {
-    public function __construct($db) {
+    public function __construct(Storage\mySqlDatabase $db) {
       $this->db = $db;
     }
     /**

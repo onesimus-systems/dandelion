@@ -7,7 +7,7 @@
 namespace Dandelion;
 
 class userSettings {
-    public function __construct($db) {
+    public function __construct(databaseConn $db) {
         $this->db = $db;
     }
 

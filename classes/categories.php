@@ -23,7 +23,7 @@ namespace Dandelion;
 
 class categories
 {
-    public function __construct($db = null) {
+    public function __construct(databaseConn $db = null) {
         if ($db === null) {
             $this->database = Storage\mySqlDatabase::getInstance();
         } else {

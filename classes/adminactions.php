@@ -23,7 +23,7 @@ namespace Dandelion;
 
 class adminactions
 {
-    public function __construct($db) {
+    public function __construct(databaseConn $db) {
         $this->dbConn = $db;
     }
 

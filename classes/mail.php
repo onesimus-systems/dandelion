@@ -25,7 +25,7 @@ namespace Dandelion\Mail;
 
 class mail
 {
-    public function __construct($db) {
+    public function __construct(\Dandelion\databaseConn $db) {
         $this->dbConn = $db;
         return;
     }

@@ -31,7 +31,7 @@ class Users
     public $userCheesto = array();
     public $userApi = array();
 
-    public function __construct($db, $uid = -1, $load = false) {
+    public function __construct(databaseConn $db, $uid = -1, $load = false) {
         $this->db = $db;
 
         if ($uid >= 0) {

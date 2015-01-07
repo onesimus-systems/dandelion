@@ -12,7 +12,6 @@
  */
 namespace Dandelion;
 
-use Dandelion\Database\dbManage;
 use Dandelion\Storage\mySqlDatabase;
 
 // Get and define root path of application
@@ -59,7 +58,6 @@ if (DEBUG_ENABLED) {
 }
 
 // Give database class the info to connect
-dbManage::$connInfo = $DBCONFIG;
 mySqlDatabase::$connInfo = $DBCONFIG;
 
 // Check for and apply updates
