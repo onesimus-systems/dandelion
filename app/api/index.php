@@ -69,6 +69,9 @@ function internalApiCall($u) {
         exit(makeDAPI(3, 'Login required', 'iapi', '%REDIRECTLOGIN%'));
     }
 
+    if ($u[1] == 'auth') {
+        $_SESSION['userInfo']['userid'] = null; // Triggers error on login because it's not initialized
+    }
     $returnObj = (array) json_decode(processRequest($_SESSION['userInfo']['userid'], true, $u[1], $u[2]));
     $returnObj['iapi'] = true;
     echo json_encode($returnObj);

@@ -7,7 +7,7 @@
 namespace Dandelion\Gatekeeper;
 
 class authenticate {
-    public function __construct(databaseConn $db) {
+    public function __construct(\Dandelion\databaseConn $db) {
         $this->db = $db;
     }
 
