@@ -23,7 +23,7 @@ include 'static/includes/head.php';
     </form>
 </div>
 
-<?php echo loadJS('jquery', 'jqueryui',  'userManager.js', 'userManagerForms.js', 'timepicker.min.js', 'slider.js'); ?>
+<?php echo loadJS('jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker.min', 'slider'); ?>
 
 <script type="text/javascript">
     userManager.init();

@@ -71,7 +71,7 @@ if (!$content) {
 	echo 'Your account doesn\'t have rights to administrative controls.';
 }
 
-echo loadJS('jquery','admin.js');
+echo loadJS('jquery','admin');
 
 include 'static/includes/footer.php';
 ?>

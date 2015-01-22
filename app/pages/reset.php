@@ -39,6 +39,6 @@ include 'static/includes/head.php';
     </form>
 </div>
 
-<?php echo loadJS('jquery','reset.js'); ?>
+<?php echo loadJS('jquery','reset'); ?>
 <!-- End Page Body -->
 <?php include 'static/includes/footer.php'; ?>

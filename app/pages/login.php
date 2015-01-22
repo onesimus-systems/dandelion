@@ -28,5 +28,5 @@ if (!$indexCall) {
             </form>
         </div>
     </body>
-    <?php echo loadJS('jquery', 'login.js'); ?>
+    <?php echo loadJS('jquery', 'login'); ?>
 </html>

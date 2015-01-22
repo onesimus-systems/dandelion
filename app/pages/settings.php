@@ -62,7 +62,7 @@ include 'static/includes/head.php';
 <?php
 }
 
-echo loadJS('jquery','jqueryui','settings.js'); ?>
+echo loadJS('jquery','jqueryui','settings'); ?>
 <!-- End Page Body -->
 
 <?php include 'static/includes/footer.php'; ?>

@@ -109,7 +109,7 @@ include 'static/includes/head.php';
     </form>
 </div>
 
-<?php echo loadJS('permissions.js','jquery','jqueryui'); ?>
+<?php echo loadJS('permissions','jquery','jqueryui'); ?>
 <script type="text/javascript">
     permissions.getList();
 </script>
