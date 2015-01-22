@@ -17,6 +17,7 @@ if (!$indexCall) {
     exit(1);
 }
 
+$requiredCssFiles = array("jqueryui");
 include 'static/includes/head.php';
 ?>
 <!-- Begin Page Body -->

@@ -6,6 +6,7 @@ if (!$indexCall) {
     exit(1);
 }
 
+$requiredCssFiles = array("jqueryui", "datetimepicker.css");
 include 'static/includes/head.php';
 ?>
 <!-- Begin Page Body -->
@@ -22,7 +23,7 @@ include 'static/includes/head.php';
     </form>
 </div>
 
-<?php echo loadJS('jquery', 'jqueryui', 'userManager.js', 'userManageForms.js', 'timepicker.min.js', 'slider.js'); ?>
+<?php echo loadJS('jquery', 'jqueryui',  'userManager.js', 'userManagerForms.js', 'timepicker.min.js', 'slider.js'); ?>
 
 <script type="text/javascript">
     userManager.init();

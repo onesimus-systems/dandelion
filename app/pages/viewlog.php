@@ -26,6 +26,7 @@ else {
 	$add_link = '';
 }
 
+$requiredCssFiles = array("cheesto","jqueryui",);
 include 'static/includes/head.php';
 ?>
 <!-- Begin Page Body -->
@@ -70,7 +71,7 @@ include 'static/includes/head.php';
     <?php } ?>
 </div>
 
-<?php echo loadJS("jquery","jqueryui","tinymce","catmanage","main","cheesto","mail.js")?>
+<?php echo loadJS("jquery","jqueryui","tinymce","cheesto","catManage","logs","mail")?>
 <script type="text/javascript">
     refreshFun.runFirst();
     presence.checkstat(0);

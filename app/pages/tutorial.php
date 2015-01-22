@@ -18,6 +18,7 @@ if (!$indexCall) {
     exit(1);
 }
 
+$requiredCssFiles = array("tutorial");
 include 'static/includes/head.php';
 ?>
 <!-- Begin Page Body -->

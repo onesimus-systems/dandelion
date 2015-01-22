@@ -6,6 +6,7 @@ if (!$indexCall) {
     exit(1);
 }
 
+$requiredCssFiles = array();
 include 'static/includes/head.php';
 ?>
 <!-- Begin Page Body -->
@@ -31,7 +32,7 @@ include 'static/includes/head.php';
 	?>
 </form>
 
-<?php echo loadJS("jquery", "catmanage");?>
+<?php echo loadJS("jquery", "catManage");?>
 <script type="text/javascript">
     CategoryManage.grabNextLevel('0:0');
 </script>

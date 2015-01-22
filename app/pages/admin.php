@@ -8,6 +8,7 @@ if (!$indexCall) {
 
 // Stays false unless a button or admin control is shown
 $content = false;
+$requiredCssFiles = array("jqueryui");
 include 'static/includes/head.php';
 ?>
 <!-- Begin Page Body -->

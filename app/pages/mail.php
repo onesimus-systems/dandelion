@@ -16,6 +16,7 @@ if (!$indexCall) {
     exit(1);
 }
 
+$requiredCssFiles = array("jqueryui","mail");
 include 'static/includes/head.php';
 ?>
 <!-- Begin Page Body -->
@@ -51,6 +52,6 @@ include 'static/includes/head.php';
   <div id="mailList"></div>
 </div>
 
-<?php echo loadJS("jquery", "jqueryui", "mail.js", "tinymce");?>
+<?php echo loadJS("jquery", "jqueryui", "mail", "tinymce");?>
 <!-- End Page Body -->  
 <?php include 'static/includes/footer.php'; ?>
