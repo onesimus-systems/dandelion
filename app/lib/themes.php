@@ -124,7 +124,7 @@ function loadCssSheets()
             // CSS for jQueryUI
             case "jquery":
             case "jqueryui":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/js/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="static/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
                 break;
 
             // CSS for Tutorial
