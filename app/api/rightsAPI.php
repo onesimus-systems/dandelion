@@ -22,7 +22,7 @@
 namespace Dandelion\API;
 
 if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(makeDAPI(2, 'This script can only be called by the API.', 'rights'));
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'rights'));
 }
 
 class rightsAPI {
@@ -49,7 +49,7 @@ class rightsAPI {
         if ($permissions->editGroup($gid, $rights)) {
             return json_encode('User group saved');
         } else {
-            exit(makeDAPI(5, 'Error saving user group', 'rights'));
+            exit(ApiController::makeDAPI(5, 'Error saving user group', 'rights'));
         }
     }
 
@@ -61,7 +61,7 @@ class rightsAPI {
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return json_encode('User group created successfully');
         } else {
-            exit(makeDAPI(5, 'Error creating user group', 'rights'));
+            exit(ApiController::makeDAPI(5, 'Error creating user group', 'rights'));
         }
     }
 

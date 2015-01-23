@@ -17,8 +17,7 @@ function dandy_autoload($className)
     $namespace = $classInfo[1];
 
     // All API files have an uppercase API at the end of their filenames
-    $isApi = substr($className, -3);
-    if ($isApi == 'api') {
+    if (substr($className, -3) == 'api') {
         $className = str_replace('api', 'API', $className);
     }
 

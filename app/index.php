@@ -26,10 +26,10 @@ $url = explode('/', $url);
 $mainCall = array_shift($url);
 
 // Call the API if it's an api call
-if ($mainCall == "api") {
-  include 'api/index.php';
+if ($mainCall == 'api') {
   header('Content-Type: application/json');
-  API\processCall($url);
+  $apiCall = new API\ApiController();
+  $apiCall->processCall($url);
   session_write_close();
   exit(0);
 }

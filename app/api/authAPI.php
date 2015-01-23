@@ -22,7 +22,7 @@
 namespace Dandelion\API;
 
 if (REQ_SOURCE != 'auth') {
-    exit(makeDAPI(2, 'This script can only be called by the API.', 'auth'));
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'auth'));
 }
 
 class authAPI {

@@ -22,7 +22,7 @@
 namespace Dandelion\API;
 
 if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(makeDAPI(2, 'This script can only be called by the API.', 'admin'));
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'admin'));
 }
 
 class adminAPI
@@ -75,7 +75,7 @@ class adminAPI
             $response = $action->$func($data);
             return json_encode($response);
         } else {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'admin'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'admin'));
         }
         return;
     }

@@ -22,7 +22,7 @@
 namespace Dandelion\API;
 
 if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(makeDAPI(2, 'This script can only be called by the iAPI.', 'mail'));
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the iAPI.', 'mail'));
 }
 
 class mailAPI

@@ -22,7 +22,7 @@
 namespace Dandelion\API;
 
 if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(makeDAPI(2, 'This script can only be called by the API.', 'users'));
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'users'));
 }
 
 class usersAPI
@@ -35,14 +35,14 @@ class usersAPI
             if ($ur->authorized('edituser') || $_REQUEST['uid'] == USER_ID) {
                 $userid = $_REQUEST['uid'];
             } else {
-                exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
             }
         }
 
         // Validate password
         $newPass = $_REQUEST['pw'];
         if ($newPass == '' || $newPass == null) {
-            exit(makeDAPI(5, 'New password cannot be empty', 'users'));
+            exit(ApiController::makeDAPI(5, 'New password cannot be empty', 'users'));
             return;
         }
 
@@ -53,7 +53,7 @@ class usersAPI
 
     public static function create($db, $ur) {
         if (!$ur->authorized('adduser')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
         $username = $_REQUEST['username'];
@@ -68,12 +68,12 @@ class usersAPI
 
     public static function save($db, $ur) {
         if (!$ur->authorized('edituser')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
         $uid = $_REQUEST['uid'];
         if (empty($uid)) {
-            exit(makeDAPI(5, 'No user id received.', 'users'));
+            exit(ApiController::makeDAPI(5, 'No user id received.', 'users'));
         }
 
         $user = new \Dandelion\Users($db, $uid, true);
@@ -86,14 +86,14 @@ class usersAPI
 
     public static function delete($db, $ur) {
         if (USER_ID == $_REQUEST['uid']) {
-            exit(makeDAPI(5, 'You can\'t delete yourself.', 'users'));
+            exit(ApiController::makeDAPI(5, 'You can\'t delete yourself.', 'users'));
         }
 
         // Check permissions
         if ($ur->authorized('edituser')) {
             $userid = $_REQUEST['uid'];
         } else {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
         $user = new \Dandelion\Users($db);
@@ -105,7 +105,7 @@ class usersAPI
         if ($ur->authorized('edituser')) {
             $userid = $_REQUEST['uid'];
         } else {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
         $list = new \Dandelion\Users($db);
         return json_encode($list->getUserList());
@@ -116,12 +116,12 @@ class usersAPI
         if ($ur->authorized('edituser')) {
             $userid = $_REQUEST['uid'];
         } else {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
         $uid = $_REQUEST['uid'];
         if (empty($uid)) {
-            exit(makeDAPI(5, 'No user id received.', 'users'));
+            exit(ApiController::makeDAPI(5, 'No user id received.', 'users'));
         }
 
         $user = new \Dandelion\Users($db);

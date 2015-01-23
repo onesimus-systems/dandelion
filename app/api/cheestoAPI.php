@@ -22,7 +22,7 @@
 namespace Dandelion\API;
 
 if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(makeDAPI(2, 'This script can only be called by the API.', 'cheesto'));
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'cheesto'));
 }
 
 class cheestoAPI
@@ -38,13 +38,13 @@ class cheestoAPI
             return json_encode($cheesto->getAllStatuses());
         }
         else {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
     }
 
     public static function read($db, $ur) {
         if (!$ur->authorized('viewcheesto')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
         $cheesto = new \Dandelion\cxeesto($db);
@@ -63,7 +63,7 @@ class cheestoAPI
      */
     public static function update($db, $ur) {
         if (!$ur->authorized('updatecheesto')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
         $cheesto = new \Dandelion\cxeesto($db);
@@ -76,7 +76,7 @@ class cheestoAPI
             if ($ur->authorized('edituser') || $_REQUEST['uid'] == USER_ID) {
                 $userid = $_REQUEST['uid'];
             } else {
-                exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
             }
         }
 

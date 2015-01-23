@@ -22,7 +22,7 @@
 namespace Dandelion\API;
 
 if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(makeDAPI(2, 'This script can only be called by the API.', 'logs'));
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'logs'));
 }
 
 class logsAPI
@@ -34,7 +34,7 @@ class logsAPI
      */
     public static function read($db, $ur) {
         if (!$ur->authorized('viewlog')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
         $userLimit = new \Dandelion\userSettings($db);
@@ -66,7 +66,7 @@ class logsAPI
      */
     public static function readOne($db, $ur) {
         if (!$ur->authorized('viewlog')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
         $logs = new \Dandelion\logs($db);
@@ -75,7 +75,7 @@ class logsAPI
 
     public static function create($db, $ur) {
         if (!$ur->authorized('createlog')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
         $title = isset($_REQUEST['title']) ? $_REQUEST['title'] : '';
@@ -97,7 +97,7 @@ class logsAPI
             $log = (array) json_decode(self::readOne($db, $ur));
 
             if (!$ur->authorized('editlog') || $log['usercreated'] != USER_ID) {
-                exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
             }
         }
 
@@ -115,7 +115,7 @@ class logsAPI
 
     public static function filter($db, $ur) {
         if (!$ur->authorized('viewlog')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
         $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : '';
@@ -128,7 +128,7 @@ class logsAPI
 
     public static function search($db, $ur) {
         if (!$ur->authorized('viewlog')) {
-            exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
         $kw = isset($_REQUEST['kw']) ? $_REQUEST['kw'] : '';

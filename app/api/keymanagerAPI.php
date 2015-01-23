@@ -22,7 +22,7 @@
 namespace Dandelion\API;
 
 if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(makeDAPI(2, 'This script can only be called by the internal API.', 'keyManager'));
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the internal API.', 'keyManager'));
 }
 
 class keyManagerAPI
@@ -55,7 +55,7 @@ class keyManagerAPI
             if ($ur->authorized('edituser') || $_REQUEST['uid'] == USER_ID) {
                 $userid = $_REQUEST['uid'];
             } else {
-                exit(makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'keyManager'));
+                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'keyManager'));
             }
         }
 
