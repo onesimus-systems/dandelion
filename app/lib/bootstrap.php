@@ -12,8 +12,6 @@
  */
 namespace Dandelion;
 
-use Dandelion\Storage\mySqlDatabase;
-
 // Get and define root path of application
 define('ROOT', dirname(dirname(__FILE__)));
 
@@ -49,7 +47,7 @@ else {
 define('D_VERSION', '6.0.0 dev');
 define('THEME_DIR', 'themes');
 define('DB_PREFIX', $DBCONFIG['db_prefix']);
-define('FAVICON_PATH', HOSTNAME.'/static/images/favicon.ico');
+define('FAVICON_PATH', 'static/images/favicon.ico');
 
 // Display errors if in debug mode
 if (DEBUG_ENABLED) {
@@ -58,7 +56,7 @@ if (DEBUG_ENABLED) {
 }
 
 // Give database class the info to connect
-mySqlDatabase::$connInfo = $DBCONFIG;
+Storage\mySqlDatabase::$connInfo = $DBCONFIG;
 
 // Check for and apply updates
 require ROOT . '/lib/update.php';

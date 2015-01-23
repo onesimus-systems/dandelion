@@ -42,7 +42,7 @@ if ($mainCall == "") {
 
 // Load page
 $indexCall = true;
-if (Gatekeeper\authenticated()) {
+if (is_file('pages/'.$mainCall.'.php') && Gatekeeper\authenticated()) {
     include 'pages/'.$mainCall.'.php';
 } else {
     include 'pages/login.php';
