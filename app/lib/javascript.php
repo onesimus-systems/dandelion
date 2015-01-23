@@ -26,14 +26,14 @@ function loadJS()
     foreach($scripts as $file) {
         // Check for a keyworded include
         $builtin = isBuiltinJsFile($file);
-        if ($builtin != '') {
+        if ($builtin) {
             $scriptList .= $builtin;
             continue;
         }
 
         // Otherwise check for a custom file
         $custom = isCustomJsFile($file);
-        if ($custom != '') {
+        if ($custom) {
             $scriptList .= $custom;
             continue;
         }
@@ -67,9 +67,7 @@ function isBuiltinJsFile($name) {
 
 function isCustomJsFile($name) {
     // Normalize name
-    if (substr($name, -3) == '.js') {
-        $name = preg_replace('/\.js$/s', '', $name).'.js';
-    } else {
+    if (substr($name, -3) != '.js') {
         $name .= '.js';
     }
     $include = '';
