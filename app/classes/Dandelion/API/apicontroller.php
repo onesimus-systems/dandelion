@@ -107,17 +107,14 @@ class ApiController {
          */
         if ($subsystem != 'auth') {
             if (!$localCall) {
-                define('REQ_SOURCE', 'api'); // Public API
                 define('USER_ID', $this->verifyKey($key));
             }
             else {
-                define('REQ_SOURCE', 'iapi'); // Internal API
                 define('USER_ID', $key);
             }
 
             $userRights = new \Dandelion\rights(USER_ID);
         } else {
-            define('REQ_SOURCE', 'auth');
             $userRights = null;
         }
 

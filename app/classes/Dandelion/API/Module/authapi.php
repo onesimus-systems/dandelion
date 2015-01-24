@@ -26,10 +26,6 @@ use Dandelion\API\ApiController;
 class authAPI extends BaseModule
 {
     public function __construct($db, $ur, $params) {
-        if (REQ_SOURCE != 'auth') {
-            exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'auth'));
-        }
-
         parent::__construct($db, $ur, $params);
     }
 
