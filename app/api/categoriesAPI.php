@@ -39,7 +39,7 @@ class categoriesAPI {
         $parent = $params->parentID;
         $desc = $params->catDesc;
         $createCat = new \Dandelion\Categories($db);
-        json_encode($createCat->addCategory($parent, $desc));
+        return json_encode($createCat->addCategory($parent, $desc));
     }
 
     /**
@@ -52,10 +52,10 @@ class categoriesAPI {
             exit(makeDAPI(4, 'Your account doesn\'t have permissions to add a category.', 'categories'));
         }
 
-        $cid = $urlParams->cid;
-        $desc = $urlParams->catDesc;
+        $cid = $params->cid;
+        $desc = $params->catDesc;
         $editCat = new \Dandelion\Categories($db);
-        json_encode($editCat->editCategory($cid, $desc));
+        return json_encode($editCat->editCategory($cid, $desc));
     }
 
     /**
@@ -70,7 +70,7 @@ class categoriesAPI {
 
         $cat = $params->cid;
         $deleteCat = new \Dandelion\Categories($db);
-        json_encode($deleteCat->delCategory($cat));
+        return json_encode($deleteCat->delCategory($cat));
     }
 
     /**

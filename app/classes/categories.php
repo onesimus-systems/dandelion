@@ -35,7 +35,7 @@ class categories
      *
      * @param array $past History of category nodes in parentid:level notation
      *
-     * @return string
+     * @return string - HTML of category select group
      */
     public function getChildren($past)
     {
@@ -76,7 +76,7 @@ class categories
             }
         }
 
-        echo $response;
+        return $response;
     }
 
     /**

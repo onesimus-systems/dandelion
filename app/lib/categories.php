@@ -26,48 +26,10 @@ if (!Gatekeeper\authenticated()) {
 
 $urlParams = new UrlParameters();
 
-if ($urlParams->action) {
-    $action = $urlParams->action;
-    if ($action == 'grabcats') {
-        $past = json_decode(stripslashes($urlParams->pastSelections));
-        $displayCats = new Categories(Storage\mySqlDatabase::getInstance());
-        $displayCats->getChildren($past);
-    }
-    elseif ($action == 'addcat') {
-        if ($User_Rights->authorized('addcat')) {
-            $parent = $urlParams->parentID;
-            $desc = $urlParams->catDesc;
-
-            $createCat = new Categories(Storage\mySqlDatabase::getInstance());
-            echo $createCat->addCategory($parent, $desc);
-        }
-        else {
-            echo 'Your account doesn\'t have permissions to add a category.';
-        }
-    }
-    elseif ($action == 'delcat') {
-        if ($User_Rights->authorized('deletecat')) {
-            $cat = $urlParams->cid;
-
-            $deleteCat = new Categories(Storage\mySqlDatabase::getInstance());
-            echo $deleteCat->delCategory($cat);
-        }
-        else {
-            echo 'Your account doesn\'t have permissions to delete a category.';
-        }
-    }
-    elseif ($action == 'editcat') {
-        if ($User_Rights->authorized('editcat')) {
-            $cid = $urlParams->cid;
-            $desc = $urlParams->catDesc;
-
-            $editCat = new Categories(Storage\mySqlDatabase::getInstance());
-            echo $editCat->editCategory($cid, $desc);
-        }
-        else {
-            echo 'Your account doesn\'t have permissions to edit a category.';
-        }
-    }
+if ($urlParams->action == 'grabcats') {
+    $past = json_decode(stripslashes($urlParams->pastSelections));
+    $displayCats = new Categories(Storage\mySqlDatabase::getInstance());
+    echo $displayCats->getChildren($past);
 }
 
 session_write_close();
