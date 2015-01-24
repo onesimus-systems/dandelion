@@ -47,7 +47,7 @@ else {
 define('D_VERSION', '6.0.0 dev');
 define('THEME_DIR', 'themes');
 define('DB_PREFIX', $DBCONFIG['db_prefix']);
-define('FAVICON_PATH', 'static/images/favicon.ico');
+define('FAVICON_PATH', '/static/images/favicon.ico');
 
 // Display errors if in debug mode
 if (DEBUG_ENABLED) {

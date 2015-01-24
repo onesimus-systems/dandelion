@@ -22,9 +22,7 @@
 namespace Dandelion;
 
 /**
- * DandelionApplication represents an instance of Dandelion. It requires
- * the URI as a parameter and has one public method run(). The class parses
- * the URI, stores it and when run() is executed will route the request accordingly.
+ * DandelionApplication represents an instance of Dandelion.
  */
 class DandelionApplication {
     private $url = [];
@@ -32,30 +30,12 @@ class DandelionApplication {
     /**
      *  @param $url string - The request URI
      */
-    public function __construct($url) {
+    public function __construct() {
         // Load installer if necassary
         if (!INSTALLED) {
             redirect('installer');
         }
-
-        $this->url = $this->parseUrl($url);
-    }
-
-    /**
-     * Parses given URI string and returns an array of the pieces
-     *
-     * @param $url string - Request URI
-     * @return array - Exploded URL
-     */
-    private function parseUrl($url) {
-        // Process url
-        $url = $url ? $url : '';
-        $url = explode('/', $url);
-        array_shift($url); // Remove empty index at 0
-
-        // Remove any GET parameters
-        $url[count($url)-1] = explode('?', $url[count($url)-1])[0];
-        return $url;
+        $this->url = $_SERVER['REQUEST_URI'];
     }
 
     /**
@@ -64,49 +44,7 @@ class DandelionApplication {
      * the api controller or a page.
      */
     public function run() {
-        // Get the first element which is the page or command
-        $page = array_shift($this->url);
-
-        // Call the API if it's an api call
-        if ($page == 'api') {
-            $this->apiRequest();
-            return;
-        }
-
-        $this->loadPage($page);
-        return;
-    }
-
-    /**
-     * Processes and api request
-     */
-    private function apiRequest() {
-        header('Content-Type: application/json');
-        header('Access-Control-Allow-Origin: *');
-        $apiCall = new API\ApiController();
-        $apiCall->processCall($this->url);
-        return;
-    }
-
-    /**
-     * Loads the given page
-     *
-     * @param $page string - Name of page to load
-     */
-    private function loadPage($page) {
-        global $User_Rights;
-        // Set the homepage if necassary
-        if ($page === '') {
-          $page = "viewlog";
-        }
-
-        // Load page
-        $indexCall = true;
-        if (is_file('pages/'.$page.'.php') && Gatekeeper\authenticated()) {
-            include 'pages/'.$page.'.php';
-        } else {
-            include 'pages/login.php';
-        }
+        \Dandelion\Routes::route($this->url);
         return;
     }
 

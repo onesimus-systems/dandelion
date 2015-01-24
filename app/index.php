@@ -12,7 +12,7 @@
 namespace Dandelion;
 
 require_once 'lib/bootstrap.php';
+require_once 'routes.php';
 
-// Instantiate and run application
-$app = new DandelionApplication($_SERVER['REQUEST_URI']);
+$app = new DandelionApplication();
 $app->run();

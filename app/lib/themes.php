@@ -90,8 +90,8 @@ function loadCssSheets()
     }
 
     if ($main) {
-        $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/main.css">';
-        $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/main.css">';
+        $cssList .= '<link rel="stylesheet" type="text/css" href="/static/styles/css/main.css">';
+        $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/main.css">';
     }
 
     // Other stylesheets
@@ -99,7 +99,7 @@ function loadCssSheets()
         // Load manual filenames if given
         if (substr($sheet, -4) == '.css') {
             if (is_file('static/styles/css/'.$sheet))
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/'.$sheet.'">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/static/styles/css/'.$sheet.'">';
             continue;
         }
 
@@ -110,33 +110,33 @@ function loadCssSheets()
             // CSS for Cheesto presence system
             case "cheesto":
             case 'presence':
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/presence.css">';
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/cheesto.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/static/styles/css/presence.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
                 break;
 
             // CSS for Cheesto presence system (windowed)
             case "cheestowin":
             case "presencewin":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/presenceWin.css">';
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/static/styles/css/presenceWin.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
                 break;
 
             // CSS for jQueryUI
             case "jquery":
             case "jqueryui":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/static/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
                 break;
 
             // CSS for Tutorial
             case "tutorial":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/tutorial.css">';
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/tutorial.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/static/styles/css/tutorial.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/tutorial.css">';
                 break;
 
             // CSS for MailBox
             case "mail":
-                $cssList .= '<link rel="stylesheet" type="text/css" href="static/styles/css/mail.css">';
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/mail.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/static/styles/css/mail.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/mail.css">';
                 break;
         }
     }
