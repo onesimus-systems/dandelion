@@ -179,8 +179,9 @@ class ApiController {
     private function apitest($key) {
         if ($this->verifyKey($key)) {
             return self::makeDAPI(0, 'API key is good', 'api');
+        } else {
+            return self::makeDAPI(1, 'Invalid API key', 'api');
         }
-        return;
     }
 
     /**
@@ -209,6 +210,8 @@ class ApiController {
          * 2 - Calling API subsystem from outside API
          * 3 - Action requires active login
          * 4 - Insufficient permissions
+         * 5 - General error
+         * 6 - Server error
          */
         $response = array (
             'errorcode' => $ecode,
