@@ -24,7 +24,7 @@
  * @author Lee Keitel
  * @date Jan 2015
  */
-namespace Dandelion\API;
+namespace Dandelion\Controllers;
 
 use Dandelion\Gatekeeper;
 
@@ -33,34 +33,25 @@ use Dandelion\Gatekeeper;
  * processCall() which takes an array representing an exploded URL. It returns
  * nothing. Instead, the controller directly echos the API response to the client.
  */
-class ApiController {
-    /**
-     * Takes and array containing the exploded components if an api call URL
-     *
-     * @param array $url - Exploded URL
-     *
-     * @return nothing
-     */
-    public function processCall($url) {
-        if ($url[0] == 'i') {
-            $this->internalApiCall($url);
-        } else {
-            $this->apiCall($url);
-        }
-        return;
+class ApiController
+{
+    public function __construct() {
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
     }
 
     /**
      * Process api call
      *
-     * @param array $u - Exploded URL
+     * @param $module string - Name of api module to create
+     * @param $method string - Method to call on module
      *
      * @return Nothing
      */
-    private function apiCall($u) {
+    public function apiCall($module, $method) {
         if ($_SESSION['app_settings']['public_api']) {
             $apikey = isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : '';
-            echo $this->processRequest($apikey, false, $u[0], $u[1]);
+            echo $this->processRequest($apikey, false, $module, $method);
         }
         return;
     }
@@ -68,19 +59,20 @@ class ApiController {
     /**
      * Process internal api call
      *
-     * @param array $u - Exploded URL
+     * @param $module string - Name of api module to create
+     * @param $method string - Method to call on module
      *
      * @return Nothing
      */
-    private function internalApiCall($u) {
-        if (!Gatekeeper\authenticated() && $u[1] != 'auth') {
+    public function internalApiCall($module, $method) {
+        if (!Gatekeeper\authenticated() && $module != 'auth') {
             exit(self::makeDAPI(3, 'Login required', 'iapi', '%REDIRECTLOGIN%'));
         }
 
-        if ($u[1] == 'auth') {
+        if ($module == 'auth') {
             $_SESSION['userInfo']['userid'] = null; // Triggers error on login because it's not initialized
         }
-        $returnObj = (array) json_decode($this->processRequest($_SESSION['userInfo']['userid'], true, $u[1], $u[2]));
+        $returnObj = (array) json_decode($this->processRequest($_SESSION['userInfo']['userid'], true, $module, $method));
         $returnObj['iapi'] = true;
         echo json_encode($returnObj);
         return;
@@ -96,8 +88,8 @@ class ApiController {
      *
      * @return DAPI object
      */
-    private function processRequest($key, $localCall, $subsystem, $request) {
-        if ($subsystem == 'apitest') {
+    private function processRequest($key, $localCall, $module, $request) {
+        if ($module == 'apitest') {
             // Checks for a good API key and notifies requester
             return $this->apitest($key);
         }
@@ -105,7 +97,7 @@ class ApiController {
         /*
          * Declare request source as the api Default value is empty in bootstrap.php
          */
-        if ($subsystem != 'auth') {
+        if ($module != 'auth') {
             if (!$localCall) {
                 define('USER_ID', $this->verifyKey($key));
             }
@@ -122,7 +114,7 @@ class ApiController {
         $urlParams = new \Dandelion\UrlParameters();
 
         // Call the requested function (as defined by the last part of the URL)
-        $className = '\Dandelion\API\Module\\' . $subsystem . 'API';
+        $className = '\Dandelion\API\Module\\' . $module . 'API';
         $ApiModule = new $className($databaseConn, $userRights, $urlParams);
 
         if ($ApiModule instanceof \Dandelion\API\Module\BaseModule) {
@@ -132,7 +124,7 @@ class ApiController {
         }
 
         // Return DAPI object
-        return self::makeDAPI(0, 'Completed', $subsystem, json_decode($data));
+        return self::makeDAPI(0, 'Completed', $module, json_decode($data));
     }
 
     /**

@@ -21,7 +21,7 @@
  */
 namespace Dandelion\API\Module;
 
-use Dandelion\API\ApiController;
+use Dandelion\Controllers\ApiController;
 
 class BaseModule {
     protected $db;

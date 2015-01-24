@@ -20,14 +20,19 @@ function dandy_autoload($className)
     if (file_exists(ROOT."/classes/{$namespace}/{$className}.php")) {
         require (ROOT."/classes/{$namespace}/{$className}.php");
         return;
+    } elseif (file_exists(ROOT."/controllers/{$className}.php")) {
+        require (ROOT."/controllers/{$className}.php");
+        return;
+    } elseif (file_exists(ROOT . "/classes/{$className}.php")) {
+        require (ROOT . "/classes/{$className}.php");
+        return;
     }
 
-    $className = strtolower($className);
     // Load case-insensative classname
+    $className = strtolower($className);
     if (file_exists(ROOT."/classes/{$namespace}/{$className}.php")) {
         require (ROOT."/classes/{$namespace}/{$className}.php");
-    }
-    elseif (file_exists(ROOT . "/classes/{$className}.php")) {
+    } elseif (file_exists(ROOT . "/classes/{$className}.php")) {
         require (ROOT . "/classes/{$className}.php");
     }
     // Error if class not found
