@@ -19,7 +19,7 @@ define('ROOT', dirname(dirname(__FILE__)));
  * Check running PHP version
  * The password compatibility library requires PHP version 5.3.7 or above
  */
-if (!function_exists('version_compare') || version_compare(phpversion(), "5.3.7", "<")) {
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.3.7', '<')) {
     require ROOT. '/lib/phpVersionError.php';
     PHPVersionError('site');
 }
@@ -74,7 +74,11 @@ session_start();
 require ROOT . '/lib/helperScripts.php';
 require ROOT . '/lib/themes.php';
 require ROOT . '/lib/javascript.php';
-require ROOT . '/lib/password-compat/password.php';
+
+// Load password comapatability library if version is less than 5.5
+if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+    require ROOT . '/lib/password-compat/password.php';
+}
 
 // Load application settings
 if (!isset($_SESSION['app_settings'])) {
