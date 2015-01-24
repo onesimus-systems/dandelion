@@ -47,7 +47,10 @@ class keyManager {
             $this->db->go($params);
 
             // Generate new key
-            $newKey = $this->generateKey(40);
+            $newKey = $this->generateKey(15);
+            if (!$newKey) {
+                return 'Error generating key.';
+            }
 
             // Insert new key
             $this->db->insert()->into(DB_PREFIX.'apikeys', array('keystring', 'user'))->values(array(':newkey', ':uid'));
@@ -89,11 +92,10 @@ class keyManager {
      * @return string
      */
     private function generateKey($length = 10) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        $bin = openssl_random_pseudo_bytes($length, $cstrong);
+        if (!$cstrong && !$bin) {
+            return '';
         }
-        return $randomString;
+        return bin2hex(base64_encode($bin));
     }
 }
