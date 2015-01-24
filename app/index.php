@@ -74,6 +74,7 @@ class DandelionApplication {
      */
     private function apiRequest() {
         header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
         $apiCall = new API\ApiController();
         $apiCall->processCall($this->url);
         return;
