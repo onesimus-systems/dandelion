@@ -23,110 +23,110 @@ namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'users'));
-}
-
-class usersAPI
+class usersAPI extends BaseModule
 {
-    public static function resetPassword($db, $ur, $params) {
+    public function __construct($db, $ur, $params) {
+        parent::__construct($db, $ur, $params);
+    }
+
+    public function resetPassword() {
         $userid = USER_ID;
 
         // Check permissions
-        if (isset($params->uid)) {
-            if ($ur->authorized('edituser') || $params->uid == USER_ID) {
-                $userid = $params->uid;
+        if (isset($this->up->uid)) {
+            if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
+                $userid = $this->up->uid;
             } else {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
             }
         }
 
         // Validate password
-        $newPass = $params->pw;
+        $newPass = $this->up->pw;
         if ($newPass == '' || $newPass == null) {
             exit(ApiController::makeDAPI(5, 'New password cannot be empty', 'users'));
             return;
         }
 
         // Do action
-        $user = new \Dandelion\Users($db, $userid);
+        $user = new \Dandelion\Users($this->db, $userid);
         return json_encode($user->resetPassword($newPass));
     }
 
-    public static function create($db, $ur, $params) {
-        if (!$ur->authorized('adduser')) {
+    public function create() {
+        if (!$this->ur->authorized('adduser')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
-        $username = $params->username;
-        $password = $params->password;
-        $realname = $params->fullname;
-        $role     = $params->role;
-        //$cheesto = $params->makecheesto;
+        $username = $this->up->username;
+        $password = $this->up->password;
+        $realname = $this->up->fullname;
+        $role     = $this->up->role;
+        //$cheesto = $this->up->makecheesto;
 
-        $user = new \Dandelion\Users($db);
+        $user = new \Dandelion\Users($this->db);
         return json_encode($user->createUser($username, $password, $realname, $role));
     }
 
-    public static function save($db, $ur, $params) {
-        if (!$ur->authorized('edituser')) {
+    public function save() {
+        if (!$this->ur->authorized('edituser')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
-        $uid = $params->uid;
+        $uid = $this->up->uid;
         if (empty($uid)) {
             exit(ApiController::makeDAPI(5, 'No user id received.', 'users'));
         }
 
-        $user = new \Dandelion\Users($db, $uid, true);
-        $user->userInfo['realname']  = $params->get('fullname', $user->userInfo['realname']);
-        $user->userInfo['role']  = $params->get('role', $user->userInfo['role']);
-        $user->userInfo['firsttime']  = $params->get('prompt', $user->userInfo['firsttime']);
-        $user->userInfo['theme']  = $params->get('theme', $user->userInfo['theme']);
+        $user = new \Dandelion\Users($this->db, $uid, true);
+        $user->userInfo['realname']  = $this->up->get('fullname', $user->userInfo['realname']);
+        $user->userInfo['role']  = $this->up->get('role', $user->userInfo['role']);
+        $user->userInfo['firsttime']  = $this->up->get('prompt', $user->userInfo['firsttime']);
+        $user->userInfo['theme']  = $this->up->get('theme', $user->userInfo['theme']);
         return json_encode($user->saveUser());
     }
 
-    public static function delete($db, $ur, $params) {
-        if (USER_ID == $params->uid) {
+    public function delete() {
+        if (USER_ID == $this->up->uid) {
             exit(ApiController::makeDAPI(5, 'You can\'t delete yourself.', 'users'));
         }
 
         // Check permissions
-        if ($ur->authorized('edituser')) {
-            $userid = $params->uid;
+        if ($this->ur->authorized('edituser')) {
+            $userid = $this->up->uid;
         } else {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
-        $user = new \Dandelion\Users($db);
+        $user = new \Dandelion\Users($this->db);
         return json_encode($user->deleteUser($userid));
     }
 
-    public static function getUsersList($db, $ur, $params) {
+    public function getUsersList() {
         // Check permissions
-        if ($ur->authorized('edituser')) {
-            $userid = $params->uid;
+        if ($this->ur->authorized('edituser')) {
+            $userid = $this->up->uid;
         } else {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
-        $list = new \Dandelion\Users($db);
+        $list = new \Dandelion\Users($this->db);
         return json_encode($list->getUserList());
     }
 
-    public static function getUserInfo($db, $ur, $params) {
+    public function getUserInfo() {
         // Check permissions
-        if ($ur->authorized('edituser')) {
-            $userid = $params->uid;
+        if ($this->ur->authorized('edituser')) {
+            $userid = $this->up->uid;
         } else {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
-        $uid = $params->uid;
+        $uid = $this->up->uid;
         if (empty($uid)) {
             exit(ApiController::makeDAPI(5, 'No user id received.', 'users'));
         }
 
-        $user = new \Dandelion\Users($db);
+        $user = new \Dandelion\Users($this->db);
         return json_encode($user->getUser($uid));
     }
 }

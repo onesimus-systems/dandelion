@@ -23,13 +23,14 @@ namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'rights'));
-}
+class rightsAPI extends BaseModule
+{
+    public function __construct($db, $ur, $params) {
+        parent::__construct($db, $ur, $params);
+    }
 
-class rightsAPI {
-    public static function getList($db, $ur, $params) {
-        $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
+    public function getList() {
+        $permissions = new \Dandelion\Permissions($this->db);
         $allGroups = $permissions->getGroupList();
         foreach ($allGroups as $key => $value) {
             $allGroups[$key]['permissions'] = unserialize($allGroups[$key]['permissions']);
@@ -37,16 +38,20 @@ class rightsAPI {
         return json_encode($allGroups);
     }
 
-    public static function getGroup($db, $ur, $params) {
-        $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
-        $gid = $params->groupid;
+    public function getGroup() {
+        $permissions = new \Dandelion\Permissions($this->db);
+        $gid = $this->up->groupid;
         return json_encode(unserialize($permissions->getGroupList($gid)[0]['permissions']));
     }
 
-    public static function save($db, $ur, $params) {
-        $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
-        $gid = $params->groupid;
-        $rights = (array) json_decode($params->rights);
+    public function save() {
+        if (!$this->ur->authorized('editgroup')) {
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
+        }
+
+        $permissions = new \Dandelion\Permissions($this->db);
+        $gid = $this->up->groupid;
+        $rights = (array) json_decode($this->up->rights);
 
         if ($permissions->editGroup($gid, $rights)) {
             return json_encode('User group saved');
@@ -55,10 +60,14 @@ class rightsAPI {
         }
     }
 
-    public static function create($db, $ur, $params) {
-        $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
-        $name = $params->name;
-        $rights = (array) json_decode($params->rights);
+    public function create() {
+        if (!$this->ur->authorized('addgroup')) {
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
+        }
+
+        $permissions = new \Dandelion\Permissions($this->db);
+        $name = $this->up->name;
+        $rights = (array) json_decode($this->up->rights);
 
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return json_encode('User group created successfully');
@@ -67,12 +76,16 @@ class rightsAPI {
         }
     }
 
-    public static function delete($db, $ur, $params) {
-        $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
-        $gid = $params->groupid;
+    public function delete() {
+        if (!$this->ur->authorized('deletegroup')) {
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
+        }
+
+        $permissions = new \Dandelion\Permissions($this->db);
+        $gid = $this->up->groupid;
         $users = $permissions->usersInGroup($gid);
 
-        if ($users[0]) {
+        if (isset($users[0])) {
             return json_encode('This group is assigned to users.<br>Can not delete this group.');
         }
         else {
@@ -81,7 +94,7 @@ class rightsAPI {
         }
     }
 
-    public static function getUsersRights($db, $ur, $params) {
-        return json_encode($ur->getRightsForUser());
+    public function getUsersRights() {
+        return json_encode($this->ur->getRightsForUser());
     }
 }

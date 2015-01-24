@@ -23,12 +23,12 @@ namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(ApiController::makeDAPI(2, 'This script can only be called by the internal API.', 'keyManager'));
-}
-
-class keyManagerAPI
+class keyManagerAPI extends BaseModule
 {
+    public function __construct($db, $ur, $params) {
+        parent::__construct($db, $ur, $params);
+    }
+
     /**
      * Retrieve key from database for current user.
      * If a key isn't present, create one
@@ -37,31 +37,31 @@ class keyManagerAPI
      *
      * @return JSON - API Key or error message
      */
-    public static function getKey($db, $ur, $params, $force = false) {
-        $key = new \Dandelion\keyManager($db);
+    public function getKey($force = false) {
+        $key = new \Dandelion\keyManager($this->db);
         return SELF::encodeKey($key->getKey($_SESSION['userInfo']['userid'], $force));
     }
 
     /**
      * Called to force a new key to be generated
      */
-    public static function newKey($db, $ur, $params) {
-        return SELF::getKey($db, $ur, true);
+    public function newKey() {
+        return SELF::getKey(true);
     }
 
-    public static function revokeKey($db, $ur, $params) {
+    public function revokeKey() {
         $userid = USER_ID;
 
         // Check permissions
-        if (isset($params->uid)) {
-            if ($ur->authorized('edituser') || $params->uid == USER_ID) {
-                $userid = $params->uid;
+        if (isset($this->up->uid)) {
+            if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
+                $userid = $this->up->uid;
             } else {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'keyManager'));
             }
         }
 
-        $key = new \Dandelion\keyManager($db);
+        $key = new \Dandelion\keyManager($this->db);
         return SELF::encodeKey($key->revoke($userid));
     }
 
@@ -70,7 +70,7 @@ class keyManagerAPI
      *
      * @param string $key - API Key (or error message)
      */
-    private static function encodeKey($key) {
+    private function encodeKey($key) {
         return json_encode(array (
             "key" => $key
         ));

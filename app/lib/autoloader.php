@@ -13,10 +13,17 @@ namespace Dandelion;
 function dandy_autoload($className)
 {
     $classInfo = explode('\\', $className);
-    $className = strtolower(array_pop($classInfo));
+    $className = array_pop($classInfo);
     $namespace = implode('/', $classInfo);
 
-    // Load normal namespaced class
+    // Load case-sensative ClassName per PSR-4
+    if (file_exists(ROOT."/classes/{$namespace}/{$className}.php")) {
+        require (ROOT."/classes/{$namespace}/{$className}.php");
+        return;
+    }
+
+    $className = strtolower($className);
+    // Load case-insensative classname
     if (file_exists(ROOT."/classes/{$namespace}/{$className}.php")) {
         require (ROOT."/classes/{$namespace}/{$className}.php");
     }

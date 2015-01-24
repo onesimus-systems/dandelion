@@ -23,24 +23,25 @@ namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(makeDAPI(2, 'This script can only be called by the API.', 'categories'));
-}
+class categoriesAPI extends BaseModule
+{
+    public function __construct($db, $ur, $params) {
+        parent::__construct($db, $ur, $params);
+    }
 
-class categoriesAPI {
     /**
      * Add new category
      *
      * @return JSON
      */
-    public static function add($db, $ur, $params) {
-        if (!$ur->authorized('addcat')) {
+    public function add() {
+        if (!$this->ur->authorized('addcat')) {
             exit(makeDAPI(4, 'Your account doesn\'t have permissions to add a category.', 'categories'));
         }
 
-        $parent = $params->parentID;
-        $desc = $params->catDesc;
-        $createCat = new \Dandelion\Categories($db);
+        $parent = $this->up->parentID;
+        $desc = $this->up->catDesc;
+        $createCat = new \Dandelion\Categories($this->db);
         return json_encode($createCat->addCategory($parent, $desc));
     }
 
@@ -49,14 +50,14 @@ class categoriesAPI {
      *
      * @return JSON
      */
-    public static function edit($db, $ur, $params) {
-        if (!$ur->authorized('editcat')) {
+    public function edit() {
+        if (!$this->ur->authorized('editcat')) {
             exit(makeDAPI(4, 'Your account doesn\'t have permissions to add a category.', 'categories'));
         }
 
-        $cid = $params->cid;
-        $desc = $params->catDesc;
-        $editCat = new \Dandelion\Categories($db);
+        $cid = $this->up->cid;
+        $desc = $this->up->catDesc;
+        $editCat = new \Dandelion\Categories($this->db);
         return json_encode($editCat->editCategory($cid, $desc));
     }
 
@@ -65,13 +66,13 @@ class categoriesAPI {
      *
      * @return JSON
      */
-    public static function delete($db, $ur, $params) {
-        if (!$ur->authorized('deletecat')) {
+    public function delete() {
+        if (!$this->ur->authorized('deletecat')) {
             exit(makeDAPI(4, 'Your account doesn\'t have permissions to add a category.', 'categories'));
         }
 
-        $cat = $params->cid;
-        $deleteCat = new \Dandelion\Categories($db);
+        $cat = $this->up->cid;
+        $deleteCat = new \Dandelion\Categories($this->db);
         return json_encode($deleteCat->delCategory($cat));
     }
 
@@ -80,7 +81,7 @@ class categoriesAPI {
      *
      * @return JSON
      */
-    public static function getChildren($db, $ur, $params) {
+    public function getChildren() {
         return NULL;
     }
 }

@@ -23,29 +23,29 @@ namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'logs'));
-}
-
-class logsAPI
+class logsAPI extends BaseModule
 {
+    public function __construct($db, $ur, $params) {
+        parent::__construct($db, $ur, $params);
+    }
+
     /**
      * Grab JSON array of logs
      *
      * @return JSON
      */
-    public static function read($db, $ur, $params) {
-        if (!$ur->authorized('viewlog')) {
+    public function read() {
+        if (!$this->ur->authorized('viewlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $userLimit = new \Dandelion\userSettings($db);
+        $userLimit = new \Dandelion\userSettings($this->db);
         $limit = $userLimit->getSetting('showlimit', USER_ID);
-        $limit = (int) $params->get('limit', $limit);
-        $offset = (int) $params->get('offset', 0);
+        $limit = (int) $this->up->get('limit', $limit);
+        $offset = (int) $this->up->get('offset', 0);
         $offset = $offset < 0 ? 0 : $offset;
 
-        $logSize = (int) $db->numOfRows('log');
+        $logSize = (int) $this->db->numOfRows('log');
 
         if ($offset > $logSize) {
             $offset = $offset - $limit;
@@ -57,7 +57,7 @@ class logsAPI
             'logSize' => $logSize
         );
 
-        $logs = new \Dandelion\logs($db, $ur);
+        $logs = new \Dandelion\logs($this->db, $this->ur);
         $return = (array) json_decode($logs->getJSON($limit, $offset));
         $return['metadata'] = $metaData;
         return json_encode($return);
@@ -66,72 +66,72 @@ class logsAPI
     /**
      * Get data for a single log
      */
-    public static function readOne($db, $ur, $params) {
-        if (!$ur->authorized('viewlog')) {
+    public function readOne() {
+        if (!$this->ur->authorized('viewlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $logs = new \Dandelion\logs($db);
-        return $logs->getLogInfo($params->logid);
+        $logs = new \Dandelion\logs($this->db);
+        return $logs->getLogInfo($this->up->logid);
     }
 
-    public static function create($db, $ur, $params) {
-        if (!$ur->authorized('createlog')) {
+    public function create() {
+        if (!$this->ur->authorized('createlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $title = $params->title;
-        $body = $params->body;
-        $cat = $params->cat;
+        $title = $this->up->title;
+        $body = $this->up->body;
+        $cat = $this->up->cat;
 
         $cat = rtrim($cat, ':');
 
-        $logs = new \Dandelion\logs($db);
+        $logs = new \Dandelion\logs($this->db);
         return json_encode($logs->addLog($title, $body, $cat, USER_ID));
     }
 
-    public static function edit($db, $ur, $params) {
-        $lid = $params->logid;
+    public function edit() {
+        $lid = $this->up->logid;
 
-        if (!$ur->isAdmin()) {
-            $log = (array) json_decode(self::readOne($db, $ur));
+        if (!$this->ur->isAdmin()) {
+            $log = (array) json_decode(self::readOne($this->db, $this->ur));
 
-            if (!$ur->authorized('editlog') || $log['usercreated'] != USER_ID) {
+            if (!$this->ur->authorized('editlog') || $log['usercreated'] != USER_ID) {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
             }
         }
 
-        $title = $params->title;
-        $body = $params->body;
-        //$cat = $params->cat;
+        $title = $this->up->title;
+        $body = $this->up->body;
+        //$cat = $this->up->cat;
 
         //$cat = rtrim($cat, ':');
 
-        $logs = new \Dandelion\logs($db);
+        $logs = new \Dandelion\logs($this->db);
         return json_encode($logs->editLog($lid, $title, $body));
     }
 
-    public static function filter($db, $ur, $params) {
-        if (!$ur->authorized('viewlog')) {
+    public function filter() {
+        if (!$this->ur->authorized('viewlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $filter = $params->filter;
+        $filter = $this->up->filter;
         $filter = rtrim($filter, ':');
 
-        $logs = new \Dandelion\logs($db);
+        $logs = new \Dandelion\logs($this->db);
         return $logs->filter($filter);
     }
 
-    public static function search($db, $ur, $params) {
-        if (!$ur->authorized('viewlog')) {
+    public function search() {
+        if (!$this->ur->authorized('viewlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $kw = $params->kw;
-        $date = $params->date;
+        $kw = $this->up->kw;
+        $date = $this->up->date;
 
-        $logs = new \Dandelion\logs($db);
+        $logs = new \Dandelion\logs($this->db);
         return $logs->search($kw, $date);
     }
 }

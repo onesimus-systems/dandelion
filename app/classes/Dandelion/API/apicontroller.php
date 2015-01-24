@@ -126,7 +126,13 @@ class ApiController {
 
         // Call the requested function (as defined by the last part of the URL)
         $className = '\Dandelion\API\Module\\' . $subsystem . 'API';
-        $data = $className::$request($databaseConn, $userRights, $urlParams);
+        $ApiModule = new $className($databaseConn, $userRights, $urlParams);
+
+        if ($ApiModule instanceof \Dandelion\API\Module\BaseModule) {
+            $data = $ApiModule->$request();
+        } else {
+            return self::makeDAPI(6, 'Internal Server Error', 'API', '');
+        }
 
         // Return DAPI object
         return self::makeDAPI(0, 'Completed', $subsystem, json_decode($data));

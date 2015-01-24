@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles API requests for Logs
+ * Base class to be implemented by API modules
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,29 +17,20 @@
  * The full GPLv3 license is available in LICENSE.md in the root.
  *
  * @author Lee Keitel
- * @date July 2014
+ * @date Jan 2015
  */
 namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-class settingsAPI extends BaseModule
-{
-    public function __construct($db, $ur, $params) {
-        parent::__construct($db, $ur, $params);
-    }
+class BaseModule {
+    protected $db;
+    protected $ur;
+    protected $up;
 
-    public function saveLogLimit() {
-        $settings = new \Dandelion\userSettings($this->db);
-        return json_encode($settings->saveLogLimit($this->up->limit));
-    }
-
-    public function saveTheme() {
-        $settings = new \Dandelion\userSettings($this->db);
-        return json_encode($settings->saveTheme($this->up->theme));
-    }
-
-    public function getThemeList() {
-        return json_encode(\Dandelion\getThemeListArray());
+    public function __construct(\Dandelion\databaseConn $db, $ur, $urlParameters) {
+        $this->db = $db;
+        $this->ur = $ur;
+        $this->up = $urlParameters;
     }
 }

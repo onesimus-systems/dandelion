@@ -23,53 +23,53 @@ namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'admin'));
-}
-
-class adminAPI
+class adminAPI extends BaseModule
 {
+    public function __construct($db, $ur, $params) {
+        parent::__construct($db, $ur, $params);
+    }
+
     /**
      * Save the website tagline
      */
-    public static function saveSlogan($db, $ur, $params) {
-        return self::go($db, $ur, "saveSlogan", $params->data);
+    public function saveSlogan() {
+        return self::go("saveSlogan", $this->up->data);
     }
 
     /**
      * Call DB backup function
      */
-    public static function backupDB($db, $ur, $params) {
-        return self::go($db, $ur, "backupDB", $params->data);
+    public function backupDB() {
+        return self::go("backupDB", $this->up->data);
     }
 
     /**
      * Save the default theme for the site
      */
-    public static function saveDefaultTheme($db, $ur, $params) {
-        return self::go($db, $ur, "saveDefaultTheme", $params->data);
+    public function saveDefaultTheme() {
+        return self::go("saveDefaultTheme", $this->up->data);
     }
 
     /**
      * Save Cheesto enabled state
      */
-    public static function saveCheesto($db, $ur, $params) {
-        return self::go($db, $ur, "saveCheesto", $params->data);
+    public function saveCheesto() {
+        return self::go("saveCheesto", $this->up->data);
     }
 
     /**
      * Save public API enabled status
      */
-    public static function savePAPI($db, $ur, $params) {
-        return self::go($db, $ur, "savePAPI", $params->data);
+    public function savePAPI() {
+        return self::go("savePAPI", $this->up->data);
     }
 
     /**
      * Perform administartor action
      */
-    private static function go($db, $ur, $func, $data) {
-        if ($ur->isAdmin()) {
-            $action = new \Dandelion\adminactions($db);
+    private function go($func, $data) {
+        if ($this->ur->isAdmin()) {
+            $action = new \Dandelion\adminactions($this->db);
             $response = $action->$func($data);
             return json_encode($response);
         } else {

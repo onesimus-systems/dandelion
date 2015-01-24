@@ -23,28 +23,28 @@ namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(ApiController::makeDAPI(2, 'This script can only be called by the iAPI.', 'mail'));
-}
-
-class mailAPI
+class mailAPI extends BaseModule
 {
+    public function __construct($db, $ur, $params) {
+        parent::__construct($db, $ur, $params);
+    }
+
     /**
      * Grab JSON array of all cheesto users and statuses
      *
      * @return JSON
      */
-    public static function read($db, $ur, $params) {
-        $myMail = new \Dandelion\Mail\mail($db);
+    public function read() {
+        $myMail = new \Dandelion\Mail\mail($this->db);
 
-        $mail = $myMail->getFullMailInfo($params->mid);
-        $myMail->setReadMail($params->mid);
+        $mail = $myMail->getFullMailInfo($this->up->mid);
+        $myMail->setReadMail($this->up->mid);
 
         return json_encode($mail);
     }
 
-    public static function mailCount($db, $ur, $params) {
-        $myMail = new \Dandelion\Mail\mail($db);
+    public function mailCount() {
+        $myMail = new \Dandelion\Mail\mail($this->db);
 
         $count = $myMail->checkNewMail(true);
         $count = array( 'count' => $count);
@@ -52,27 +52,27 @@ class mailAPI
         return json_encode($count);
     }
 
-    public static function delete($db, $ur, $params) {
-        $myMail = new \Dandelion\Mail\mail($db);
+    public function delete() {
+        $myMail = new \Dandelion\Mail\mail($this->db);
 
-        $perm = ($params->permenant === 'true') ? true : false;
-        $response = $myMail->deleteMail($params->mid, $perm);
+        $perm = ($this->up->permenant === 'true') ? true : false;
+        $response = $myMail->deleteMail($this->up->mid, $perm);
 
         return json_encode($response);
     }
 
-    public static function getUserList($db, $ur, $params) {
-        $myMail = new \Dandelion\Mail\mail($db);
+    public function getUserList() {
+        $myMail = new \Dandelion\Mail\mail($this->db);
 
         $toUsers = $myMail->getUserList();
 
         return json_encode($toUsers);
     }
 
-    public static function getAllMail($db, $ur, $params) {
-        $myMail = new \Dandelion\Mail\mail($db);
+    public function getAllMail() {
+        $myMail = new \Dandelion\Mail\mail($this->db);
 
-        if ($params->trash) {
+        if ($this->up->trash) {
             $mailItems = $myMail->getTrashCan();
         }
         else {
@@ -82,10 +82,10 @@ class mailAPI
         return json_encode($mailItems);
     }
 
-    public static function send($db, $ur, $params) {
-        $myMail = new \Dandelion\Mail\mail($db);
+    public function send() {
+        $myMail = new \Dandelion\Mail\mail($this->db);
 
-        $piece = (array) json_decode($params->mail);
+        $piece = (array) json_decode($this->up->mail);
         $response = $myMail->newMail($piece['subject'], $piece['body'], $piece['to'], $_SESSION['userInfo']['userid']);
 
         return json_encode($response);

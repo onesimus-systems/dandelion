@@ -23,20 +23,20 @@ namespace Dandelion\API\Module;
 
 use Dandelion\API\ApiController;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'cheesto'));
-}
-
-class cheestoAPI
+class cheestoAPI extends BaseModule
 {
+    public function __construct($db, $ur, $params) {
+        parent::__construct($db, $ur, $params);
+    }
+
     /**
      * Grab JSON array of all cheesto users and statuses
      *
      * @return JSON
      */
-    public static function readall($db, $ur, $params) {
-        if ($ur->authorized('viewcheesto')) {
-            $cheesto = new \Dandelion\cxeesto($db);
+    public function readall() {
+        if ($this->ur->authorized('viewcheesto')) {
+            $cheesto = new \Dandelion\cxeesto($this->db);
             return json_encode($cheesto->getAllStatuses());
         }
         else {
@@ -44,17 +44,17 @@ class cheestoAPI
         }
     }
 
-    public static function read($db, $ur, $params) {
-        if (!$ur->authorized('viewcheesto')) {
+    public function read() {
+        if (!$this->ur->authorized('viewcheesto')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
-        $cheesto = new \Dandelion\cxeesto($db);
-        return json_encode($cheesto->getUserStatus($params->uid));
+        $cheesto = new \Dandelion\cxeesto($this->db);
+        return json_encode($cheesto->getUserStatus($this->up->uid));
     }
 
-    public static function statusTexts() {
-        $cheesto = new \Dandelion\cxeesto($db);
+    public function statusTexts() {
+        $cheesto = new \Dandelion\cxeesto($this->db);
         return json_encode($cheesto->getStatusText());
     }
 
@@ -63,20 +63,20 @@ class cheestoAPI
      *
      * @return JSON
      */
-    public static function update($db, $ur, $params) {
-        if (!$ur->authorized('updatecheesto')) {
+    public function update() {
+        if (!$this->ur->authorized('updatecheesto')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
-        $cheesto = new \Dandelion\cxeesto($db);
-        $message = $params->message;
-        $status = $params->get('status', -1);
-        $returntime = $params->get('returntime', '00:00:00');
+        $cheesto = new \Dandelion\cxeesto($this->db);
+        $message = $this->up->message;
+        $status = $this->up->get('status', -1);
+        $returntime = $this->up->get('returntime', '00:00:00');
         $userid = USER_ID;
 
-        if (isset($params->uid)) { // A status of another user is trying to be updated
-            if ($ur->authorized('edituser') || $params->uid == USER_ID) {
-                $userid = $params->uid;
+        if (isset($this->up->uid)) { // A status of another user is trying to be updated
+            if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
+                $userid = $this->up->uid;
             } else {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
             }
