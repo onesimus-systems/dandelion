@@ -43,7 +43,10 @@ class DandelionApplication {
         // Process url
         $url = $url ? $url : '';
         $url = explode('/', $url);
-        array_shift($url); // Remove empty index
+        array_shift($url); // Remove empty index at 0
+
+        // Remove any GET parameters
+        $url[count($url)-1] = explode('?', $url[count($url)-1])[0];
         return $url;
     }
 
