@@ -1,6 +1,6 @@
 <?php
 /**
- * Handles API requests for Logs
+ * Handles authentication API requests
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,25 +19,26 @@
  * @author Lee Keitel
  * @date July 2014
  */
-namespace Dandelion\API;
+namespace Dandelion\API\Module;
 
-if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
-    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'settings'));
+use Dandelion\API\ApiController;
+
+if (REQ_SOURCE != 'auth') {
+    exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'auth'));
 }
 
-class settingsAPI
-{
-    public static function saveLogLimit($db, $ur, $params) {
-        $settings = new \Dandelion\userSettings($db);
-        return json_encode($settings->saveLogLimit($params->limit));
-    }
-
-    public static function saveTheme($db, $ur, $params) {
-        $settings = new \Dandelion\userSettings($db);
-        return json_encode($settings->saveTheme($params->theme));
-    }
-
-    public static function getThemeList($db, $ur, $params) {
-        return json_encode(\Dandelion\getThemeListArray());
+class authAPI {
+    /**
+     * Attempt to login user
+     *
+     * @return JSON
+     */
+    public static function login($db, $ur, $params) {
+        $auth = new \Dandelion\Gatekeeper\authenticate($db);
+        $rem = false;
+        if ($params->remember == 'true') {
+            $rem = true;
+        }
+        return json_encode($auth->login(urldecode($params->user), urldecode($params->pass), $rem));
     }
 }

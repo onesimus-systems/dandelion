@@ -19,7 +19,9 @@
  * @author Lee Keitel
  * @date January 2015
  */
-namespace Dandelion\API;
+namespace Dandelion\API\Module;
+
+use Dandelion\API\ApiController;
 
 if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
     exit(ApiController::makeDAPI(2, 'This script can only be called by the API.', 'users'));

@@ -12,12 +12,7 @@
  */
 namespace Dandelion;
 
-// TODO: Create a better method to check these URLs
-// Because this file is called from the root and a subdirectory,
-// a check needs to be done to determine how the required files are
-// included.
-require_once (is_file('lib/bootstrap.php')) ? 'lib/bootstrap.php' : 'bootstrap.php';
-require_once (is_file('classes/categories.php')) ? 'classes/categories.php' : '../classes/categories.php';
+require_once 'bootstrap.php';
 
 // Authenticate user, if fail go to login page
 if (!Gatekeeper\authenticated()) {

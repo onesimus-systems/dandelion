@@ -125,7 +125,7 @@ class ApiController {
         $urlParams = new \Dandelion\UrlParameters();
 
         // Call the requested function (as defined by the last part of the URL)
-        $className = __NAMESPACE__ . '\\' . $subsystem . 'API';
+        $className = '\Dandelion\API\Module\\' . $subsystem . 'API';
         $data = $className::$request($databaseConn, $userRights, $urlParams);
 
         // Return DAPI object

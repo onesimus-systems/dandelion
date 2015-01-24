@@ -12,29 +12,20 @@ namespace Dandelion;
 
 function dandy_autoload($className)
 {
-    $classInfo = array_reverse(explode('\\', $className));
-    $className = strtolower($classInfo[0]);
-    $namespace = $classInfo[1];
+    $classInfo = explode('\\', $className);
+    $className = strtolower(array_pop($classInfo));
+    $namespace = implode('/', $classInfo);
 
-    // All API files have an uppercase API at the end of their filenames
-    if (substr($className, -3) == 'api') {
-        $className = str_replace('api', 'API', $className);
-    }
-
-    // Load normal class
-    if (file_exists(ROOT . "/classes/{$className}.php")) {
-        require (ROOT . "/classes/{$className}.php");
-    }
-    // Load API class
-    elseif (file_exists(ROOT."/api/{$className}.php")) {
-        require (ROOT."/api/{$className}.php");
-    }
-    elseif (file_exists(ROOT."/classes/{$namespace}/{$className}.php")) {
+    // Load normal namespaced class
+    if (file_exists(ROOT."/classes/{$namespace}/{$className}.php")) {
         require (ROOT."/classes/{$namespace}/{$className}.php");
+    }
+    elseif (file_exists(ROOT . "/classes/{$className}.php")) {
+        require (ROOT . "/classes/{$className}.php");
     }
     // Error if class not found
     else {
-        trigger_error("Class '{$className}' was not able to load.", E_USER_ERROR);
+        trigger_error("Class '{$namespace}/{$className}' was not able to load.", E_USER_ERROR);
     }
 }
 
