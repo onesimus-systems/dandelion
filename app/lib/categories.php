@@ -6,9 +6,9 @@
  *
  * @author Lee Keitel
  * @date March 2014
- *        
+ *
  * @license GNU GPL v3 (see full license in root/LICENSE.md)
- * 
+ *
  */
 namespace Dandelion;
 
@@ -24,42 +24,45 @@ if (!Gatekeeper\authenticated()) {
     redirect('index');
 }
 
-if (isset($_POST['action'])) {
-    if ($_POST['action'] == 'grabcats') {
-        $past = json_decode(stripslashes($_POST['pastSelections']));
-        $displayCats = new Categories();
+$urlParams = new UrlParameters();
+
+if ($urlParams->action) {
+    $action = $urlParams->action;
+    if ($action == 'grabcats') {
+        $past = json_decode(stripslashes($urlParams->pastSelections));
+        $displayCats = new Categories(Storage\mySqlDatabase::getInstance());
         $displayCats->getChildren($past);
     }
-    elseif ($_POST['action'] == 'addcat') {
+    elseif ($action == 'addcat') {
         if ($User_Rights->authorized('addcat')) {
-            $parent = $_POST['parentID'];
-            $desc = $_POST['catDesc'];
-            
-            $createCat = new Categories();
-            $createCat->addCategory($parent, $desc);
+            $parent = $urlParams->parentID;
+            $desc = $urlParams->catDesc;
+
+            $createCat = new Categories(Storage\mySqlDatabase::getInstance());
+            echo $createCat->addCategory($parent, $desc);
         }
         else {
             echo 'Your account doesn\'t have permissions to add a category.';
         }
     }
-    elseif ($_POST['action'] == 'delcat') {
+    elseif ($action == 'delcat') {
         if ($User_Rights->authorized('deletecat')) {
-            $cat = $_POST['cid'];
-            
-            $deleteCat = new Categories();
-            $deleteCat->delCategory($cat);
+            $cat = $urlParams->cid;
+
+            $deleteCat = new Categories(Storage\mySqlDatabase::getInstance());
+            echo $deleteCat->delCategory($cat);
         }
         else {
             echo 'Your account doesn\'t have permissions to delete a category.';
         }
     }
-    elseif ($_POST['action'] == 'editcat') {
+    elseif ($action == 'editcat') {
         if ($User_Rights->authorized('editcat')) {
-            $cid = $_POST['cid'];
-            $desc = $_POST['catDesc'];
-            
-            $editCat = new Categories();
-            $editCat->editCategory($cid, $desc);
+            $cid = $urlParams->cid;
+            $desc = $urlParams->catDesc;
+
+            $editCat = new Categories(Storage\mySqlDatabase::getInstance());
+            echo $editCat->editCategory($cid, $desc);
         }
         else {
             echo 'Your account doesn\'t have permissions to edit a category.';

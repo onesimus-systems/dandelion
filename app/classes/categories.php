@@ -23,14 +23,12 @@ namespace Dandelion;
 
 class categories
 {
-    public function __construct(databaseConn $db = null) {
-        if ($db === null) {
-            $this->database = Storage\mySqlDatabase::getInstance();
-        } else {
-            $this->database = $db;
-        }
+    private $database;
+
+    public function __construct(databaseConn $db) {
+        $this->database = $db;
     }
-    
+
     /**
      * Get the children of a parent category and generate a <select>
      * element with the root node and all children
@@ -95,7 +93,7 @@ class categories
      * @param int $parent Parent ID (0 if root)
      * @param string $description Name of category
      *
-     * @return string
+     * @return string - Status message
      */
     public function addCategory($parent, $description)
     {
@@ -108,9 +106,9 @@ class categories
         );
 
         if ($this->database->go($params)) {
-            echo 'Category added successfully';
+            return 'Category added successfully';
         } else {
-            echo 'Error adding category';
+            return 'Error adding category';
         }
     }
 
@@ -119,7 +117,7 @@ class categories
      *
      * @param int $cid ID of category to be deleted
      *
-     * @return string
+     * @return string - Status message
      */
     public function delCategory($cid)
     {
@@ -152,7 +150,7 @@ class categories
         );
         $this->database->go($params);
 
-        echo 'Category deleted successfully';
+        return 'Category deleted successfully';
     }
 
     /**
@@ -161,7 +159,7 @@ class categories
      * @param int $cid ID of category to update
      * @param string $desc Name of category
      *
-     * @return string
+     * @return string - Status message
      */
     public function editCategory($cid, $desc)
     {
@@ -174,9 +172,9 @@ class categories
         );
 
         if ($this->database->go($params)) {
-            echo 'Category updated successfully';
+            return 'Category updated successfully';
         } else {
-            echo 'Error saving category';
+            return 'Error saving category';
         }
     }
 }
