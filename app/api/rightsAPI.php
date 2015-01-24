@@ -26,7 +26,7 @@ if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
 }
 
 class rightsAPI {
-    public static function getList($db, $ur) {
+    public static function getList($db, $ur, $params) {
         $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
         $allGroups = $permissions->getGroupList();
         foreach ($allGroups as $key => $value) {
@@ -35,16 +35,16 @@ class rightsAPI {
         return json_encode($allGroups);
     }
 
-    public static function getGroup($db, $ur) {
+    public static function getGroup($db, $ur, $params) {
         $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
-        $gid = $_REQUEST['groupid'];
+        $gid = $params->groupid;
         return json_encode(unserialize($permissions->getGroupList($gid)[0]['permissions']));
     }
 
-    public static function save($db, $ur) {
+    public static function save($db, $ur, $params) {
         $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
-        $gid = $_REQUEST['groupid'];
-        $rights = (array) json_decode($_REQUEST['rights']);
+        $gid = $params->groupid;
+        $rights = (array) json_decode($params->rights);
 
         if ($permissions->editGroup($gid, $rights)) {
             return json_encode('User group saved');
@@ -53,10 +53,10 @@ class rightsAPI {
         }
     }
 
-    public static function create($db, $ur) {
+    public static function create($db, $ur, $params) {
         $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
-        $name = $_REQUEST['name'];
-        $rights = (array) json_decode($_REQUEST['rights']);
+        $name = $params->name;
+        $rights = (array) json_decode($params->rights);
 
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return json_encode('User group created successfully');
@@ -65,9 +65,9 @@ class rightsAPI {
         }
     }
 
-    public static function delete($db, $ur) {
+    public static function delete($db, $ur, $params) {
         $permissions = new \Dandelion\Permissions(\Dandelion\Storage\mySqlDatabase::getInstance());
-        $gid = $_REQUEST['groupid'];
+        $gid = $params->groupid;
         $users = $permissions->usersInGroup($gid);
 
         if ($users[0]) {
@@ -79,7 +79,7 @@ class rightsAPI {
         }
     }
 
-    public static function getUsersRights($db, $ur) {
+    public static function getUsersRights($db, $ur, $params) {
         return json_encode($ur->getRightsForUser());
     }
 }

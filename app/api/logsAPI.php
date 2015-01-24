@@ -32,15 +32,15 @@ class logsAPI
      *
      * @return JSON
      */
-    public static function read($db, $ur) {
+    public static function read($db, $ur, $params) {
         if (!$ur->authorized('viewlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
         $userLimit = new \Dandelion\userSettings($db);
-        $limit = (int) $userLimit->getSetting('showlimit', USER_ID);
-        $limit = isset($_REQUEST['limit']) ? (int) $_REQUEST['limit'] : $limit;
-        $offset = isset($_REQUEST['offset']) ? (int) $_REQUEST['offset'] : 0;
+        $limit = $userLimit->getSetting('showlimit', USER_ID);
+        $limit = (int) $params->get('limit', $limit);
+        $offset = (int) $params->get('offset', 0);
         $offset = $offset < 0 ? 0 : $offset;
 
         $logSize = (int) $db->numOfRows('log');
@@ -64,34 +64,32 @@ class logsAPI
     /**
      * Get data for a single log
      */
-    public static function readOne($db, $ur) {
+    public static function readOne($db, $ur, $params) {
         if (!$ur->authorized('viewlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
         $logs = new \Dandelion\logs($db);
-        return $logs->getLogInfo($_REQUEST['logid']);
+        return $logs->getLogInfo($params->logid);
     }
 
-    public static function create($db, $ur) {
+    public static function create($db, $ur, $params) {
         if (!$ur->authorized('createlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $title = isset($_REQUEST['title']) ? $_REQUEST['title'] : '';
-        $body = isset($_REQUEST['body']) ? $_REQUEST['body'] : '';
-        $cat = isset($_REQUEST['cat']) ? $_REQUEST['cat'] : NULL;
+        $title = $params->title;
+        $body = $params->body;
+        $cat = $params->cat;
 
-        $title = urldecode($title);
-        $body = urldecode($body);
-        $cat = rtrim(urldecode($cat), ':');
+        $cat = rtrim($cat, ':');
 
         $logs = new \Dandelion\logs($db);
         return json_encode($logs->addLog($title, $body, $cat, USER_ID));
     }
 
-    public static function edit($db, $ur) {
-        $lid = isset($_REQUEST['logid']) ? $_REQUEST['logid'] : '';
+    public static function edit($db, $ur, $params) {
+        $lid = $params->logid;
 
         if (!$ur->isAdmin()) {
             $log = (array) json_decode(self::readOne($db, $ur));
@@ -101,40 +99,35 @@ class logsAPI
             }
         }
 
-        $title = isset($_REQUEST['title']) ? $_REQUEST['title'] : '';
-        $body = isset($_REQUEST['body']) ? $_REQUEST['body'] : '';
-        //$cat = isset($_REQUEST['cat']) ? $_REQUEST['cat'] : NULL;
+        $title = $params->title;
+        $body = $params->body;
+        //$cat = $params->cat;
 
-        $title = urldecode($title);
-        $body = urldecode($body);
-        //$cat = rtrim(urldecode($cat), ':');
+        //$cat = rtrim($cat, ':');
 
         $logs = new \Dandelion\logs($db);
         return json_encode($logs->editLog($lid, $title, $body));
     }
 
-    public static function filter($db, $ur) {
+    public static function filter($db, $ur, $params) {
         if (!$ur->authorized('viewlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : '';
-        $filter = urldecode($filter);
+        $filter = $params->filter;
         $filter = rtrim($filter, ':');
 
         $logs = new \Dandelion\logs($db);
         return $logs->filter($filter);
     }
 
-    public static function search($db, $ur) {
+    public static function search($db, $ur, $params) {
         if (!$ur->authorized('viewlog')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $kw = isset($_REQUEST['kw']) ? $_REQUEST['kw'] : '';
-        $kw = urldecode($kw);
-        $date = isset($_REQUEST['date']) ? $_REQUEST['date'] : '';
-        $date = urldecode($date);
+        $kw = $params->kw;
+        $date = $params->date;
 
         $logs = new \Dandelion\logs($db);
         return $logs->search($kw, $date);

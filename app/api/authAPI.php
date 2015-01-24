@@ -31,12 +31,12 @@ class authAPI {
      *
      * @return JSON
      */
-    public static function login($db, $ur) {
+    public static function login($db, $ur, $params) {
         $auth = new \Dandelion\Gatekeeper\authenticate($db);
         $rem = false;
-        if ($_REQUEST['remember'] == 'true') {
+        if ($params->remember == 'true') {
             $rem = true;
         }
-        return json_encode($auth->login(urldecode($_REQUEST['user']), urldecode($_REQUEST['pass']), $rem));
+        return json_encode($auth->login(urldecode($params->user), urldecode($params->pass), $rem));
     }
 }

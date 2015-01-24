@@ -121,9 +121,12 @@ class ApiController {
             $userRights = null;
         }
 
+        $databaseConn = \Dandelion\Storage\mySqlDatabase::getInstance();
+        $urlParams = new \Dandelion\UrlParameters();
+
         // Call the requested function (as defined by the last part of the URL)
         $className = __NAMESPACE__ . '\\' . $subsystem . 'API';
-        $data = $className::$request(\Dandelion\Storage\mySqlDatabase::getInstance(), $userRights);
+        $data = $className::$request($databaseConn, $userRights, $urlParams);
 
         // Return DAPI object
         return self::makeDAPI(0, 'Completed', $subsystem, json_decode($data));

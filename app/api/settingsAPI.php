@@ -27,17 +27,17 @@ if (REQ_SOURCE != 'api' && REQ_SOURCE != 'iapi') {
 
 class settingsAPI
 {
-    public static function saveLogLimit($db) {
+    public static function saveLogLimit($db, $ur, $params) {
         $settings = new \Dandelion\userSettings($db);
-        return json_encode($settings->saveLogLimit($_REQUEST['limit']));
+        return json_encode($settings->saveLogLimit($params->limit));
     }
 
-    public static function saveTheme($db) {
+    public static function saveTheme($db, $ur, $params) {
         $settings = new \Dandelion\userSettings($db);
-        return json_encode($settings->saveTheme($_REQUEST['theme']));
+        return json_encode($settings->saveTheme($params->theme));
     }
 
-    public static function getThemeList($db) {
+    public static function getThemeList($db, $ur, $params) {
         return json_encode(\Dandelion\getThemeListArray());
     }
 }

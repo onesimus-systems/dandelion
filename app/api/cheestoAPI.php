@@ -32,7 +32,7 @@ class cheestoAPI
      *
      * @return JSON
      */
-    public static function readall($db, $ur) {
+    public static function readall($db, $ur, $params) {
         if ($ur->authorized('viewcheesto')) {
             $cheesto = new \Dandelion\cxeesto($db);
             return json_encode($cheesto->getAllStatuses());
@@ -42,13 +42,13 @@ class cheestoAPI
         }
     }
 
-    public static function read($db, $ur) {
+    public static function read($db, $ur, $params) {
         if (!$ur->authorized('viewcheesto')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
         $cheesto = new \Dandelion\cxeesto($db);
-        return json_encode($cheesto->getUserStatus($_REQUEST['uid']));
+        return json_encode($cheesto->getUserStatus($params->uid));
     }
 
     public static function statusTexts() {
@@ -61,20 +61,20 @@ class cheestoAPI
      *
      * @return JSON
      */
-    public static function update($db, $ur) {
+    public static function update($db, $ur, $params) {
         if (!$ur->authorized('updatecheesto')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
         $cheesto = new \Dandelion\cxeesto($db);
-        $message = isset($_REQUEST['message']) ? $_REQUEST['message'] : '';
-        $status = isset($_REQUEST['status']) ? $_REQUEST['status'] : -1;
-        $returntime = isset($_REQUEST['returntime']) ? $_REQUEST['returntime'] : '00:00:00';
+        $message = $params->message;
+        $status = $params->get('status', -1);
+        $returntime = $params->get('returntime', '00:00:00');
         $userid = USER_ID;
 
-        if (isset($_REQUEST['uid'])) { // A status of another user is trying to be updated
-            if ($ur->authorized('edituser') || $_REQUEST['uid'] == USER_ID) {
-                $userid = $_REQUEST['uid'];
+        if (isset($params->uid)) { // A status of another user is trying to be updated
+            if ($ur->authorized('edituser') || $params->uid == USER_ID) {
+                $userid = $params->uid;
             } else {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
             }

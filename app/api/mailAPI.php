@@ -32,16 +32,16 @@ class mailAPI
      *
      * @return JSON
      */
-    public static function read($db) {
+    public static function read($db, $ur, $params) {
         $myMail = new \Dandelion\Mail\mail($db);
 
-        $mail = $myMail->getFullMailInfo($_REQUEST['mid']);
-        $myMail->setReadMail($_REQUEST['mid']);
+        $mail = $myMail->getFullMailInfo($params->mid);
+        $myMail->setReadMail($params->mid);
 
         return json_encode($mail);
     }
 
-    public static function mailCount($db) {
+    public static function mailCount($db, $ur, $params) {
         $myMail = new \Dandelion\Mail\mail($db);
 
         $count = $myMail->checkNewMail(true);
@@ -50,16 +50,16 @@ class mailAPI
         return json_encode($count);
     }
 
-    public static function delete($db) {
+    public static function delete($db, $ur, $params) {
         $myMail = new \Dandelion\Mail\mail($db);
 
-        $perm = ($_REQUEST['permenant'] === 'true') ? true : false;
-        $response = $myMail->deleteMail($_REQUEST['mid'], $perm);
+        $perm = ($params->permenant === 'true') ? true : false;
+        $response = $myMail->deleteMail($params->mid, $perm);
 
         return json_encode($response);
     }
 
-    public static function getUserList($db) {
+    public static function getUserList($db, $ur, $params) {
         $myMail = new \Dandelion\Mail\mail($db);
 
         $toUsers = $myMail->getUserList();
@@ -67,10 +67,10 @@ class mailAPI
         return json_encode($toUsers);
     }
 
-    public static function getAllMail($db) {
+    public static function getAllMail($db, $ur, $params) {
         $myMail = new \Dandelion\Mail\mail($db);
 
-        if (isset($_REQUEST['trash']) && $_REQUEST['trash']) {
+        if ($params->trash) {
             $mailItems = $myMail->getTrashCan();
         }
         else {
@@ -80,10 +80,10 @@ class mailAPI
         return json_encode($mailItems);
     }
 
-    public static function send($db) {
+    public static function send($db, $ur, $params) {
         $myMail = new \Dandelion\Mail\mail($db);
 
-        $piece = (array) json_decode($_REQUEST['mail']);
+        $piece = (array) json_decode($params->mail);
         $response = $myMail->newMail($piece['subject'], $piece['body'], $piece['to'], $_SESSION['userInfo']['userid']);
 
         return json_encode($response);

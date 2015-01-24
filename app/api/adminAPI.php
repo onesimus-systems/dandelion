@@ -30,40 +30,36 @@ class adminAPI
     /**
      * Save the website tagline
      */
-    public static function saveSlogan($db, $ur)
-    {
-        return self::go($db, $ur, "saveSlogan", $_REQUEST['data']);
+    public static function saveSlogan($db, $ur, $params) {
+        return self::go($db, $ur, "saveSlogan", $params->data);
     }
 
     /**
      * Call DB backup function
      */
-    public static function backupDB($db, $ur)
-    {
-        return self::go($db, $ur, "backupDB", $_REQUEST['data']);
+    public static function backupDB($db, $ur, $params) {
+        return self::go($db, $ur, "backupDB", $params->data);
     }
 
     /**
      * Save the default theme for the site
      */
-    public static function saveDefaultTheme($db, $ur)
-    {
-        return self::go($db, $ur, "saveDefaultTheme", $_REQUEST['data']);
+    public static function saveDefaultTheme($db, $ur, $params) {
+        return self::go($db, $ur, "saveDefaultTheme", $params->data);
     }
 
     /**
      * Save Cheesto enabled state
      */
-    public static function saveCheesto($db, $ur)
-    {
-        return self::go($db, $ur, "saveCheesto", $_REQUEST['data']);
+    public static function saveCheesto($db, $ur, $params) {
+        return self::go($db, $ur, "saveCheesto", $params->data);
     }
 
     /**
      * Save public API enabled status
      */
-    public static function savePAPI($db, $ur) {
-        return self::go($db, $ur, "savePAPI", $_REQUEST['data']);
+    public static function savePAPI($db, $ur, $params) {
+        return self::go($db, $ur, "savePAPI", $params->data);
     }
 
     /**

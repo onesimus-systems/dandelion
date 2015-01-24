@@ -35,7 +35,7 @@ class keyManagerAPI
      *
      * @return JSON - API Key or error message
      */
-    public static function getKey($db, $ur, $force = false) {
+    public static function getKey($db, $ur, $params, $force = false) {
         $key = new \Dandelion\keyManager($db);
         return SELF::encodeKey($key->getKey($_SESSION['userInfo']['userid'], $force));
     }
@@ -43,17 +43,17 @@ class keyManagerAPI
     /**
      * Called to force a new key to be generated
      */
-    public static function newKey($db, $ur) {
+    public static function newKey($db, $ur, $params) {
         return SELF::getKey($db, $ur, true);
     }
 
-    public static function revokeKey($db, $ur) {
+    public static function revokeKey($db, $ur, $params) {
         $userid = USER_ID;
 
         // Check permissions
-        if (isset($_REQUEST['uid'])) {
-            if ($ur->authorized('edituser') || $_REQUEST['uid'] == USER_ID) {
-                $userid = $_REQUEST['uid'];
+        if (isset($params->uid)) {
+            if ($ur->authorized('edituser') || $params->uid == USER_ID) {
+                $userid = $params->uid;
             } else {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'keyManager'));
             }
