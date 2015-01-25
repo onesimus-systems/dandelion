@@ -26,3 +26,7 @@ define('PHP_SESSION_NAME', 'dan_session_1');
 define('DEBUG_ENABLED', false);
 // Is the app installed, set to false to rerun install script
 define('INSTALLED', true);
+// Directory of theme files
+define('THEME_DIR', 'assets/themes');
+// Directory of public files
+define('PUBLIC_DIR', BASE_DIR.DIRECTORY_SEPARATOR.'public');

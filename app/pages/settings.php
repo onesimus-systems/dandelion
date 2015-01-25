@@ -18,7 +18,7 @@ if (!$indexCall) {
 }
 
 $requiredCssFiles = array("jqueryui");
-include 'static/includes/head.php';
+include ROOT.'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <h2>User Settings</h2>
@@ -65,4 +65,4 @@ include 'static/includes/head.php';
 echo loadJS('jquery','jqueryui','settings'); ?>
 <!-- End Page Body -->
 
-<?php include 'static/includes/footer.php'; ?>
+<?php include ROOT.'/pages/includes/footer.php'; ?>

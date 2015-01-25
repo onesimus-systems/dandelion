@@ -13,7 +13,8 @@
 namespace Dandelion;
 
 // Get and define root path of application
-define('ROOT', dirname(dirname(__FILE__)));
+define('BASE_DIR', dirname(dirname(__FILE__)));
+define('ROOT', BASE_DIR.DIRECTORY_SEPARATOR.'app');
 
 /**
  * Check running PHP version
@@ -24,8 +25,6 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.3.7',
     PHPVersionError('site');
 }
 
-// Include autoloaders
-require ROOT . '/lib/autoloader.php';  // Dandelion
 require ROOT . '/lib/interfaces.php';
 
 // Setup error logging
@@ -45,9 +44,7 @@ else {
 
 // Define constants
 define('D_VERSION', '6.0.0 dev');
-define('THEME_DIR', 'themes');
 define('DB_PREFIX', $DBCONFIG['db_prefix']);
-define('FAVICON_PATH', '/static/images/favicon.ico');
 
 // Display errors if in debug mode
 if (DEBUG_ENABLED) {

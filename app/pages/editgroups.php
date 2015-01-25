@@ -17,7 +17,7 @@ if (!$indexCall) {
 }
 
 $requiredCssFiles = array("jqueryui", "permissions.css");
-include 'static/includes/head.php';
+include ROOT.'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="dialog" title="Alert"></div>
@@ -114,4 +114,4 @@ include 'static/includes/head.php';
     permissions.getList();
 </script>
 <!-- End Page Body -->
-<?php include 'static/includes/footer.php'; ?>
+<?php include ROOT.'/pages/includes/footer.php'; ?>

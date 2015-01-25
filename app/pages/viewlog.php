@@ -27,7 +27,7 @@ else {
 }
 
 $requiredCssFiles = array("cheesto","jqueryui",);
-include 'static/includes/head.php';
+include ROOT.'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="divMain">
@@ -35,7 +35,7 @@ include 'static/includes/head.php';
     if ($_SESSION['app_settings']['cheesto_enabled'] && $User_Rights->authorized('viewcheesto')) {
     ?>
     <div id="presence">
-        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="static/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
+        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="/assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
 
     	<div id="mainPresence"></div>
     </div>
@@ -79,4 +79,4 @@ include 'static/includes/head.php';
     $('#presence').draggable();
 </script>
 <!-- End Page Body -->
-<?php include 'static/includes/footer.php'; ?>
+<?php include ROOT.'/pages/includes/footer.php'; ?>

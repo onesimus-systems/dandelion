@@ -44,6 +44,7 @@ class DandelionApplication {
      * the api controller or a page.
      */
     public function run() {
+        include ROOT.'/routes.php';
         \Dandelion\Routes::route($this->url);
         return;
     }

@@ -9,7 +9,7 @@ if (!$indexCall) {
 // Stays false unless a button or admin control is shown
 $content = false;
 $requiredCssFiles = array("jqueryui");
-include 'static/includes/head.php';
+include ROOT.'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <h2>Administration</h2>
@@ -20,17 +20,17 @@ include 'static/includes/head.php';
 		echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers\'"><br>';
 		$content = true;
 	}
-	
+
 	if ($User_Rights->authorized('addgroup') || $User_Rights->authorized('editgroup') || $User_Rights->authorized('deletegroup')) {
 		echo '<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location=\'editgroups\'"><br>';
 		$content = true;
 	}
-	
+
 	if ($User_Rights->authorized('addcat') || $User_Rights->authorized('editcat') || $User_Rights->authorized('deletecat')) {
 		echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories\'"><br>';
 		$content = true;
 	}
-	
+
 	if ($User_Rights->authorized('admin')) {
 		$content = true;
 	?>
@@ -38,27 +38,27 @@ include 'static/includes/head.php';
 		<br><hr width="350"><br>
 
         Default theme:
-    	
+
     	<?php echo getThemeList('', false); ?>
-    	
+
         <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
-        
+
         &#264;eesto:
         <select id="cheesto_enabled">
             <option value="true" <?php echo $_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Enabled</option>
             <option value="false" <?php echo !$_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Disabled</option>
         </select>
-        
+
         <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save"><br><br>
-        
+
         Public API:
         <select id="api_enabled">
             <option value="true" <?php echo $_SESSION['app_settings']['public_api'] ? 'selected' : ''; ?>>Enabled</option>
             <option value="false" <?php echo !$_SESSION['app_settings']['public_api'] ? 'selected' : ''; ?>>Disabled</option>
         </select>
-        
+
         <input type="button" class="dButton" onClick="adminAction.saveApiSetting();" value="Save">
-        
+
         <br><br><hr width="350">
 		<h3>Database Administration</h3>
 		<input type="button" class="dButton adminButton" value="Export Database to File" onClick="adminAction.backupDB();" title="Creates a single file backup of the Dandelion database tables.&#013;If you have a lot of log entries, the file will be large."><br>
@@ -73,5 +73,5 @@ if (!$content) {
 
 echo loadJS('jquery','admin');
 
-include 'static/includes/footer.php';
+include ROOT.'/pages/includes/footer.php';
 ?>

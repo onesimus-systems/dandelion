@@ -47,18 +47,18 @@ function isBuiltinJsFile($name) {
 
     switch(strtolower($name)) {
         case 'jquery':
-            $include .= '<script src="/static/js/vendor/jquery/js/jquery-2.1.1.min.js"></script>';
+            $include .= '<script src="/assets/js/vendor/jquery/js/jquery-2.1.1.min.js"></script>';
             break;
         case 'jqueryui':
-            $include .= '<script src="/static/js/vendor/jquery/js/jquery-ui-1.10.4.min.js"></script>';
+            $include .= '<script src="/assets/js/vendor/jquery/js/jquery-ui-1.10.4.min.js"></script>';
             break;
         case 'tinymce':
-            $include .= '<script src="/static/js/vendor/tinymce/js/jquery.tinymce.min.js"></script>';
-            $include .= '<script src="/static/js/vendor/tinymce/js/tinymce.min.js"></script>';
+            $include .= '<script src="/assets/js/vendor/tinymce/js/jquery.tinymce.min.js"></script>';
+            $include .= '<script src="/assets/js/vendor/tinymce/js/tinymce.min.js"></script>';
             break;
         case 'cheesto':
             if ($User_Rights->authorized('viewcheesto')) {
-                $include .= '<script src="/static/js/presence.js"></script>';
+                $include .= '<script src="/assets/js/presence.js"></script>';
             }
             break;
     }
@@ -72,10 +72,10 @@ function isCustomJsFile($name) {
     }
     $include = '';
 
-    if (is_file('static/js/'.$name)) {
-        $include .= '<script src="/static/js/'.$name.'"></script>';
-    } elseif (is_file('static/js/vendor/jquery/js/'.$name)) {
-        $include .= '<script src="/static/js/vendor/jquery/js/'.$name.'"></script>';
+    if (is_file('assets/js/'.$name)) {
+        $include .= '<script src="/assets/js/'.$name.'"></script>';
+    } elseif (is_file('assets/js/vendor/jquery/js/'.$name)) {
+        $include .= '<script src="/assets/js/vendor/jquery/js/'.$name.'"></script>';
     } else {
         $include .= "<!-- {$name} was not found. Error 404. -->";
     }

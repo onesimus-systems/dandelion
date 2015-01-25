@@ -6,8 +6,8 @@ namespace Dandelion;
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="IE=9">
-        <link rel="icon" type="image/ico" href="<?php echo FAVICON_PATH; ?>" />
-        <?php 
+        <link rel="icon" type="image/ico" href="/assets/favicon.ico" />
+        <?php
         if (!isset($requiredCssFiles)) {
             // Default CSS list, only the main styles
             $requiredCssFiles = array();

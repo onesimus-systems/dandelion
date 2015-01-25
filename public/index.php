@@ -11,8 +11,9 @@
 ***/
 namespace Dandelion;
 
-require_once 'lib/bootstrap.php';
-require_once 'routes.php';
+require __DIR__.'/../bootstrap/autoloader.php';
+
+require __DIR__.'/../bootstrap/bootstrap.php';
 
 $app = new DandelionApplication();
 $app->run();

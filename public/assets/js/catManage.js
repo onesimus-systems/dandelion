@@ -31,7 +31,7 @@ var CategoryManage = {
 
 		$.ajax({
             type: "POST",
-            url: "lib/categories.php",
+            url: "lib/categories",
             data: { action: "grabcats", pastSelections: JSON.stringify(this.currentSelection)},
             async: false
         })

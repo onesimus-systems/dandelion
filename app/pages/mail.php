@@ -17,7 +17,7 @@ if (!$indexCall) {
 }
 
 $requiredCssFiles = array("jqueryui","mail");
-include 'static/includes/head.php';
+include ROOT.'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="mailDialog" title="View Mail"></div>
@@ -36,22 +36,22 @@ include 'static/includes/head.php';
 
 <div id="mailbox">
   <div id="controls">
-      <a href="#" onClick="mail.writeMailDialog();"><img src="static/images/newmail.png" width="22" heigh="22" alt="New Mail" title="New Mail"></a>
-      <a href="#" onClick="mail.getAllMail();"><img src="static/images/refresh.png" width="22" heigh="22" alt="Refresh" title="Refresh"></a>
-      <a href="#" onClick="mail.replyToMail();"><img src="static/images/reply.png" width="22" heigh="22" alt="Reply" title="Reply"></a>
-      <a href="#" onClick="mail.deleteMail();"><img src="static/images/maildelete.png" width="22" heigh="22" alt="Delete" title="Delete"></a>
-      
+      <a href="#" onClick="mail.writeMailDialog();"><img src="/assets/images/newmail.png" width="22" heigh="22" alt="New Mail" title="New Mail"></a>
+      <a href="#" onClick="mail.getAllMail();"><img src="/assets/images/refresh.png" width="22" heigh="22" alt="Refresh" title="Refresh"></a>
+      <a href="#" onClick="mail.replyToMail();"><img src="/assets/images/reply.png" width="22" heigh="22" alt="Reply" title="Reply"></a>
+      <a href="#" onClick="mail.deleteMail();"><img src="/assets/images/maildelete.png" width="22" heigh="22" alt="Delete" title="Delete"></a>
+
       Folder: <select id="folder" onChange="mail.showFolder();">
           <option value="inbox">Inbox</option>
           <option value="trash">Trash</option>
       </select>
-      
+
       <!--<a href="#" onClick="alert('Forward');"><img src="images/forward.png" width="22" heigh="22" alt="Forward" title="Forward"></a>-->
   </div>
-  
+
   <div id="mailList"></div>
 </div>
 
 <?php echo loadJS("jquery", "jqueryui", "mail", "tinymce");?>
-<!-- End Page Body -->  
-<?php include 'static/includes/footer.php'; ?>
+<!-- End Page Body -->
+<?php include ROOT.'/pages/includes/footer.php'; ?>

@@ -7,7 +7,7 @@ if (!$indexCall) {
 }
 
 $requiredCssFiles = array();
-include 'static/includes/head.php';
+include ROOT.'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <h3>Category Management</h3>
@@ -16,16 +16,16 @@ include 'static/includes/head.php';
 
 <form method="post">
 	<div name="categorySelects" id="categorySelects"></div><br><br>
-	
+
 	<?php
 	if ($User_Rights->authorized('addcat')) {
 		echo '<input type="button" class="dButton" onClick="CategoryManage.createNew();" value="Add Category">';
 	}
-	
+
 	if ($User_Rights->authorized('editcat')) {
 		echo '<input type="button" class="dButton" onClick="CategoryManage.editCat();" value="Edit Category">';
 	}
-	
+
 	if ($User_Rights->authorized('deletecat')) {
 		echo '<input type="button" class="dButton" onClick="CategoryManage.deleteCat();" value="Delete Category">';
 	}
@@ -38,4 +38,4 @@ include 'static/includes/head.php';
 </script>
 <!-- End Page Body -->
 
-<?php include 'static/includes/footer.php'; ?>
+<?php include ROOT.'/pages/includes/footer.php'; ?>

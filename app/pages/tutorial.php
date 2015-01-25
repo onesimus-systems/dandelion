@@ -19,14 +19,14 @@ if (!$indexCall) {
 }
 
 $requiredCssFiles = array("tutorial");
-include 'static/includes/head.php';
+include ROOT.'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="content">
 	<h2 class="t_cen">Tutorial</h2>
-    
+
     <p class="le">Welcome to the Dandelion Web Log. This brief tutorial will walk you through how to do all the basic tasks in Dandelion.</p>
-    
+
     <h3>Reset Password</h3>
     <p class="le">To reset your password:
         <ol>
@@ -36,7 +36,7 @@ include 'static/includes/head.php';
             <li>Click Reset</li>
             <li>Dance</li>
         </ol></p>
-        
+
     <h3>Add a log entry</h3>
     <p class="le">To add a log entry:
         <ol>
@@ -44,7 +44,7 @@ include 'static/includes/head.php';
             <li>Fill in the title, entry, and category</li>
             <li>Click "Add Log"</li>
         </ol></p>
-    
+
     <h3>Edit a log entry</h3>
     <p class="le">To edit a log entry:
         <ol>
@@ -52,7 +52,7 @@ include 'static/includes/head.php';
             <li>Edit the text as needed</li>
             <li>Click "Save Edit"</li>
         </ol></p>
-        
+
     <h3>Search Logs</h3>
     <p class="le">To search for a log entry:
         <ol>
@@ -60,7 +60,7 @@ include 'static/includes/head.php';
             <li>Click "Search Log"</li>
             <li>Click "Clear Search" to return to the live log</li>
         </ol></p>
-        
+
     <h3>Filter Logs by Category</h3>
     <p class="le">To filter the log:
         <ol>
@@ -68,7 +68,7 @@ include 'static/includes/head.php';
             <li>Click "Filter"</li>
             <li>Click "Clear Filter" to return to the live log</li>
         </ol></p>
-        
+
     <h3>Using &#264;eesto</h3>
     <p class="le">To set your current status:
         <ol>
@@ -76,17 +76,17 @@ include 'static/includes/head.php';
             <li>Click "Set"</li>
             <li>Enter any extra data as needed</li>
         </ol></p>
-        
+
     <p class="le">To see someone's status:
         <ol>
             <li>Hover your mouse over the status icon to view its meaning</li>
             <li>If the person is set as Away or Out For the Day, their return time will also be shown</li>
         </ol></p>
-        
+
     <p class="le">To see someone's message:
         <ol>
             <li>Hover your mouse over the person's name to view any message they left</li>
         </ol></p>
 </div>
 <!-- End Page Body -->
-<?php include 'static/includes/footer.php'; ?>
+<?php include ROOT.'/pages/includes/footer.php'; ?>

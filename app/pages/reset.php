@@ -19,7 +19,7 @@ if (!$indexCall) {
 }
 
 $requiredCssFiles = array();
-include 'static/includes/head.php';
+include ROOT.'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <p>This is your first time logging into Dandelion. Please reset your password:</p>
@@ -41,4 +41,4 @@ include 'static/includes/head.php';
 
 <?php echo loadJS('jquery','reset'); ?>
 <!-- End Page Body -->
-<?php include 'static/includes/footer.php'; ?>
+<?php include ROOT.'/pages/includes/footer.php'; ?>
