@@ -12,6 +12,7 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Rights;
 use \Dandelion\Logging;
 use \Dandelion\Utils\Updater;
 use \Dandelion\Auth\GateKeeper;
@@ -78,5 +79,5 @@ if (!isset($_SESSION['app_settings'])) {
 
 // Load rights module for logged in user
 if (GateKeeper::authenticated()) {
-    $User_Rights = new \Dandelion\rights($_SESSION['userInfo']['userid']);
+    $User_Rights = new Rights($_SESSION['userInfo']['userid']);
 }

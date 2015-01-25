@@ -1,10 +1,8 @@
 <?php
+/**
+ * Category management page
+ */
 namespace Dandelion;
-
-if (!$indexCall) {
-    header('Dandelion: Access Denied');
-    exit(1);
-}
 
 $requiredCssFiles = array();
 include ROOT.'/pages/includes/head.php';

@@ -1,22 +1,8 @@
 <?php
 /**
- * This page is a tutorial that shows after a user
- * logs in to the first time and resets their password.
- * This page can also be accessed on-demand.
- *
- * This file is a part of Dandelion
- *
- * @author Lee Keitel
- * @date January 28, 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
+ * Tutorial page
+ */
 namespace Dandelion;
-
-if (!$indexCall) {
-    header('Dandelion: Access Denied');
-    exit(1);
-}
 
 $requiredCssFiles = array("tutorial");
 include ROOT.'/pages/includes/head.php';

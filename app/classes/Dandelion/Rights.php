@@ -1,20 +1,13 @@
 <?php
 /**
-  * This class allows for a central point of checking for proper authorization.
-  *
-  * This file is a part of Dandelion
-  *
-  * @author Lee Keitel
-  * @date July 2014
-  *
-  * @license GNU GPL v3 (see full license in root/LICENSE.md)
-***/
+ * Encapsulation of a user's permissions
+ */
 namespace Dandelion;
 
 use \Dandelion\Permissions;
 use \Dandelion\Storage\MySqlDatabase;
 
-class rights
+class Rights
 {
     private $permissions = null;
 
@@ -23,7 +16,8 @@ class rights
      *
      * @param int $userid - ID of user
      */
-    public function __construct($userid) {
+    public function __construct($userid)
+    {
       $conn = MySqlDatabase::getInstance();
 
       $this->userid = $userid;
@@ -45,20 +39,33 @@ class rights
      *
      * @param string $permission - Permission to check
      */
-    public function authorized($permission) {
+    public function authorized($permissions)
+    {
         // The admin flag grants full rights
         if ($this->permissions['admin']) {
             return true;
         }
 
-        return $this->permissions[strtolower($permission)];
+        if (is_array($permissions)) {
+            foreach ($permissions as $permission) {
+                if ($this->permissions[strtolower($permission)]) {
+                    return true;
+                }
+            }
+        } else {
+            return $this->permissions[strtolower($permissions)];
+        }
+
+        return false;
     }
 
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->permissions['admin'];
     }
 
-    public function getRightsForUser() {
+    public function getRightsForUser()
+    {
         return $this->permissions;
     }
 }

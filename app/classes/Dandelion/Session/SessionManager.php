@@ -1,12 +1,6 @@
 <?php
 /**
- * Functions to manage PHP sessions manually with database
- *
- * @author Lee Keitel
- * @date July, 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- *
+ * Dandelion session management
  */
 namespace Dandelion\Session;
 
@@ -22,8 +16,9 @@ class SessionManager implements \SessionHandlerInterface
     private function __clone() {}
     private function __wakeup() {}
 
-    public static function register() {
-        if (self::$instance === NULL) {
+    public static function register()
+    {
+        if (self::$instance === null) {
             self::$instance = new self();
         } else {
             return false;
@@ -36,25 +31,29 @@ class SessionManager implements \SessionHandlerInterface
         return;
     }
 
-    public static function startSession() {
+    public static function startSession()
+    {
         session_name(PHP_SESSION_NAME);
         session_start();
         return;
     }
 
-    public function open($savePath, $sessionName) {
+    public function open($savePath, $sessionName)
+    {
         $this->sessionName = $sessionName;
         $this->dbc = MySqlDatabase::getInstance();
         return true;
     }
 
-    public function close() {
+    public function close()
+    {
         $this->gc(ini_get('session.gc_maxlifetime'));
         unset($this->dbc);
         return true;
     }
 
-    public function read($id) {
+    public function read($id)
+    {
         $this->dbc->select('data')
                   ->from(DB_PREFIX.'sessions')
                   ->where('id = :sid');
@@ -74,7 +73,8 @@ class SessionManager implements \SessionHandlerInterface
         }
     }
 
-    public function write($id, $data) {
+    public function write($id, $data)
+    {
         // Because of the complexity of this query, it is issued as a raw query
         $sql = "INSERT
                 INTO " . DB_PREFIX . "sessions (id, data, last_accessed)
@@ -95,7 +95,8 @@ class SessionManager implements \SessionHandlerInterface
         return $this->dbc->go($params);
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $this->dbc->delete()
                   ->from(DB_PREFIX.'sessions')
                   ->where('id = :id');
@@ -110,7 +111,8 @@ class SessionManager implements \SessionHandlerInterface
         return true;
     }
 
-    public function gc($maxlifetime) {
+    public function gc($maxlifetime)
+    {
         $this->dbc->delete()
                   ->from(DB_PREFIX.'sessions')
                   ->where('last_accessed + :maxlifetime < :time');

@@ -1,31 +1,16 @@
 <?php
 /**
- * Handles Cheesto API requests
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * The full GPLv3 license is available in LICENSE.md in the root.
- *
- * @author Lee Keitel
- * @date July 2014
+ * Mail API module
  */
 namespace Dandelion\API\Module;
 
-use Dandelion\Controllers\ApiController;
+use \Dandelion\Mail\Mail;
+use \Dandelion\Controllers\ApiController;
 
 class mailAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params) {
+    public function __construct($db, $ur, $params)
+    {
         parent::__construct($db, $ur, $params);
     }
 
@@ -34,8 +19,9 @@ class mailAPI extends BaseModule
      *
      * @return JSON
      */
-    public function read() {
-        $myMail = new \Dandelion\Mail\mail($this->db);
+    public function read()
+    {
+        $myMail = new Mail($this->db);
 
         $mail = $myMail->getFullMailInfo($this->up->mid);
         $myMail->setReadMail($this->up->mid);
@@ -43,8 +29,12 @@ class mailAPI extends BaseModule
         return json_encode($mail);
     }
 
-    public function mailCount() {
-        $myMail = new \Dandelion\Mail\mail($this->db);
+    /**
+     * Get the number of unread messages
+     */
+    public function mailCount()
+    {
+        $myMail = new Mail($this->db);
 
         $count = $myMail->checkNewMail(true);
         $count = array( 'count' => $count);
@@ -52,8 +42,12 @@ class mailAPI extends BaseModule
         return json_encode($count);
     }
 
-    public function delete() {
-        $myMail = new \Dandelion\Mail\mail($this->db);
+    /**
+     * Delete mail from mailbox
+     */
+    public function delete()
+    {
+        $myMail = new Mail($this->db);
 
         $perm = ($this->up->permenant === 'true') ? true : false;
         $response = $myMail->deleteMail($this->up->mid, $perm);
@@ -61,16 +55,24 @@ class mailAPI extends BaseModule
         return json_encode($response);
     }
 
-    public function getUserList() {
-        $myMail = new \Dandelion\Mail\mail($this->db);
+    /**
+     * Get a user list of available recipients
+     */
+    public function getUserList()
+    {
+        $myMail = new Mail($this->db);
 
         $toUsers = $myMail->getUserList();
 
         return json_encode($toUsers);
     }
 
-    public function getAllMail() {
-        $myMail = new \Dandelion\Mail\mail($this->db);
+    /**
+     * Get the list of all mail for a user
+     */
+    public function getAllMail()
+    {
+        $myMail = new Mail($this->db);
 
         if ($this->up->trash) {
             $mailItems = $myMail->getTrashCan();
@@ -82,11 +84,20 @@ class mailAPI extends BaseModule
         return json_encode($mailItems);
     }
 
-    public function send() {
-        $myMail = new \Dandelion\Mail\mail($this->db);
+    /**
+     * Send a new piece of mail
+     */
+    public function send()
+    {
+        $myMail = new Mail($this->db);
 
-        $piece = (array) json_decode($this->up->mail);
-        $response = $myMail->newMail($piece['subject'], $piece['body'], $piece['to'], $_SESSION['userInfo']['userid']);
+        $piece = json_decode($this->up->mail, true);
+        $response = $myMail->newMail(
+            $piece['subject'],
+            $piece['body'],
+            $piece['to'],
+            $_SESSION['userInfo']['userid']
+        );
 
         return json_encode($response);
     }

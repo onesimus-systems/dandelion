@@ -1,43 +1,22 @@
 <?php
 /**
- * Here be the install page for Dandelion.
- * Here is where the admin will enter database
- * type and credentials.
- *
- * This file is a part of Dandelion
- *
- * @author Lee Keitel
- * @date March, 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
+ * Install page for Dandelion. Here we assume absolutely nothing
+ */
 session_start();
 
 if (file_exists('../config/config.php')) {
-    include_once '../config/config.php';
-
-    if (!INSTALLED) {
-        $needToInstall = true;
-
-        if (!is_writable('../config/')) {
-            $message = 'Dandelion does not have sufficient write permissions to create configuration.<br />Please make the ./config directory writeable to Dandelion and try again.';
-        }
-    } else {
-        $needToInstall = false;
-    }
-}
-else {
-    $needToInstall = true;
-    if (!is_writable('../config/')) {
-        $message = 'Dandelion does not have sufficient write permissions to create configuration.<br />Please make the ./config directory writeable to Dandelion and try again.';
+    include '../config/config.php';
+    if (INSTALLED) {
+        header('Location: ../../public');
+        exit(0);
     }
 }
 
-if (!$needToInstall) {
-    header('Location: ../');
-    exit(0);
+if (!is_writable('../config/')) {
+    $message = 'Dandelion does not have sufficient write permissions to create configuration.<br>Please make the ./config directory writeable to Dandelion and try again.';
 }
 ?>
+
 <html>
     <head>
         <meta charset="utf-8" />
@@ -49,7 +28,7 @@ if (!$needToInstall) {
     </head>
 
     <body>
-        <br /><br />
+        <br><br>
         <h1>Install Dandelion Web Log</h1>
 
         <p>The following information is needed to install Dandelion:</p>

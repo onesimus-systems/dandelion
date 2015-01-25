@@ -28,15 +28,11 @@ function dandy_autoload($className)
         return;
     }
 
-    // Load case-insensative classname
+    // Load API modules
     $className = strtolower($className);
     if (file_exists(ROOT."/classes/{$namespace}/{$className}.php")) {
         require (ROOT."/classes/{$namespace}/{$className}.php");
-    } elseif (file_exists(ROOT . "/classes/{$className}.php")) {
-        require (ROOT . "/classes/{$className}.php");
-    }
-    // Error if class not found
-    else {
+    } else {
         trigger_error("Class '{$namespace}/{$className}' was not able to load.", E_USER_ERROR);
     }
 }

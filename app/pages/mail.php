@@ -1,20 +1,8 @@
 <?php
 /**
- * Allows a user to view, send, and manage their mailbox
- *
- * This file is a part of Dandelion
- *
- * @author Lee Keitel
- * @date January 28, 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
+ * Mailbox page
+ */
 namespace Dandelion;
-
-if (!$indexCall) {
-    header('Dandelion: Access Denied');
-    exit(1);
-}
 
 $requiredCssFiles = array("jqueryui","mail");
 include ROOT.'/pages/includes/head.php';
@@ -52,6 +40,6 @@ include ROOT.'/pages/includes/head.php';
   <div id="mailList"></div>
 </div>
 
-<?php echo loadJS("jquery", "jqueryui", "mail", "tinymce");?>
+<?= loadJS("jquery", "jqueryui", "mail", "tinymce");?>
 <!-- End Page Body -->
 <?php include ROOT.'/pages/includes/footer.php'; ?>

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Global head and header file
+ */
 namespace Dandelion;
 ?>
 <!DOCTYPE html>
@@ -17,10 +20,10 @@ namespace Dandelion;
     </head>
     <body>
         <header>
-            <h1 class="t_cen"><?php echo $_SESSION['app_settings']['app_title']; ?></h1>
-            <h4 class="t_cen"><?php echo $_SESSION['app_settings']['slogan']; ?></h4>
+            <h1 class="t_cen"><?= $_SESSION['app_settings']['app_title']; ?></h1>
+            <h4 class="t_cen"><?= $_SESSION['app_settings']['slogan']; ?></h4>
 
             <nav class="t_cen" id="nav_link">
-                <a href="./">View Log</a><a href="settings">Settings</a><a href="admin">Administration</a><a href="tutorial">Tutorial</a><a href="logout">Logout</a>
+                <a href="/">Dashboard</a><a href="/settings">Settings</a><a href="/admin">Administration</a><a href="/tutorial">Tutorial</a><a href="/logout">Logout</a>
             </nav>
         </header>

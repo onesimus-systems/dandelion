@@ -46,12 +46,6 @@ function PHPVersionError( $type ) {
         $finalOutput = "You are using PHP version {$phpVersion} but Dandelion {$dVersion} needs PHP {$minimumVersionPHP} or higher. ABORTING.\n" .
             "Check if you have a newer php executable with a different name, such as php5.\n";
     } elseif ( $type == 'site' ) {
-        /*$pathinfo = pathinfo( $_SERVER['SCRIPT_NAME'] );
-        $encLogo = htmlspecialchars(
-            str_replace( '//', '/', $pathinfo['dirname'] . '/' ) .
-            'skins/common/images/mediawiki.png'
-        );*/
-
         header( "$protocol 500 Dandelion configuration Error" );
         header( 'Content-type: text/html; charset=UTF-8' );
         // Don't cache error pages!  They cause no end of trouble...
@@ -82,7 +76,6 @@ function PHPVersionError( $type ) {
 		</style>
 	</head>
 	<body>
-		<!--<img src="{\$encLogo}" alt='The MediaWiki logo' />-->
 		<h1>Dandelion {$dVersion} internal error</h1>
 		<div class='error'>
 		<p>

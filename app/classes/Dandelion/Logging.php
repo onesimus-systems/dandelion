@@ -1,24 +1,7 @@
 <?php
 /**
-  * Log PHP errors
-  *
-  * This program is free software: you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation, either version 3 of the License, or
-  * (at your option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  * The full GPLv3 license is available in LICENSE.md in the root.
-  *
-  * @author Lee Keitel
-  * @date Jan 2015
-***/
+ * Error logging for PHP errors
+ */
 namespace Dandelion;
 
 class Logging
@@ -27,10 +10,13 @@ class Logging
     private function __clone() {}
     private function __wakeup() {}
 
-    public static function register() {
+    /**
+     *  Register the logging system with Dandelion
+     */
+    public static function register()
+    {
         set_error_handler('\Dandelion\Logging::errorHandler');
         register_shutdown_function('\Dandelion\Logging::shutdownHandler');
-
         error_reporting(E_ALL);
         ini_set('log_errors', true);
 
@@ -43,9 +29,12 @@ class Logging
         }
     }
 
+    /**
+     *  Normal error handler
+     */
     public static function errorHandler($error_level, $error_message, $error_file, $error_line, $error_context)
     {
-        $errortype = array (
+        $errortype = array(
                 E_ERROR              => 'Error',
                 E_WARNING            => 'Warning',
                 E_PARSE              => 'Parsing Error',
@@ -64,23 +53,31 @@ class Logging
         $error = date("Y-m-d H:i:s") . ' | ' . $errortype[$error_level] . ' | Message: ' . $error_message . ' | File: ' . $error_file . ' | Ln: ' . $error_line;
         switch ($error_level) {
             case E_ERROR:
+                // no break
             case E_CORE_ERROR:
+                // no break
             case E_COMPILE_ERROR:
+                // no break
             case E_PARSE:
                 self::logToFile($error, "fatal");
                 exit(1);
                 break;
             case E_USER_ERROR:
+                // no break
             case E_RECOVERABLE_ERROR:
                 self::logToFile($error, "error");
                 break;
             case E_WARNING:
+                // no break
             case E_CORE_WARNING:
+                // no break
             case E_COMPILE_WARNING:
+                // no break
             case E_USER_WARNING:
                 self::logToFile($error, "warn");
                 break;
             case E_NOTICE:
+                // no break
             case E_USER_NOTICE:
                 self::logToFile($error, "info");
                 break;
@@ -93,18 +90,28 @@ class Logging
         return;
     }
 
+    /**
+     *  Handler for harder shutdown errors
+     */
     public static function shutdownHandler()
     {
         session_write_close();
         $lasterror = error_get_last();
         switch ($lasterror['type']) {
             case E_ERROR:
+                // no break
             case E_CORE_ERROR:
+                // no break
             case E_COMPILE_ERROR:
+                // no break
             case E_USER_ERROR:
+                // no break
             case E_RECOVERABLE_ERROR:
+                // no break
             case E_CORE_WARNING:
+                // no break
             case E_COMPILE_WARNING:
+                // no break
             case E_PARSE:
                 $error = date("Y-m-d H:i:s") . " | [SHUTDOWN] Level: " . $lasterror['type'] . " | Message: " . $lasterror['message'] . " | File: " . $lasterror['file'] . " | Ln: " . $lasterror['line'];
                 self::logToFile($error, "fatal");
@@ -112,6 +119,9 @@ class Logging
         exit(1);
     }
 
+    /**
+     *  Log all errors to file with the file name of their error level
+     */
     private static function logToFile($error, $errlvl)
     {
         if (!is_dir(ROOT.'/logs')) {

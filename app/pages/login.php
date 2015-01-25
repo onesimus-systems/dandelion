@@ -1,10 +1,5 @@
 <?php
 namespace Dandelion;
-
-if (!$indexCall) {
-    header('Dandelion: Access Denied');
-    exit(1);
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -12,7 +7,7 @@ if (!$indexCall) {
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="/assets/favicon.ico">
-        <?php echo loadCssSheets(); ?>
+        <?= loadCssSheets(); ?>
         <title>Dandelion Web Log</title>
     </head>
     <body>
@@ -28,5 +23,5 @@ if (!$indexCall) {
             </form>
         </div>
     </body>
-    <?php echo loadJS('jquery', 'login'); ?>
+    <?= loadJS('jquery', 'login'); ?>
 </html>

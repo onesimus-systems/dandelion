@@ -1,14 +1,7 @@
 <?php
 /**
-  * This file handles javascript management in Dandelion
- *
- * This file is a part of Dandelion
- *
- * @author Lee Keitel
- * @date April 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
+ * Generates Javascript <script> tags
+ */
 namespace Dandelion;
 
 /**
@@ -23,7 +16,7 @@ function loadJS()
     $scripts = func_get_args();
     $scriptList = '';
 
-    foreach($scripts as $file) {
+    foreach ($scripts as $file) {
         // Check for a keyworded include
         $builtin = isBuiltinJsFile($file);
         if ($builtin) {
@@ -41,11 +34,12 @@ function loadJS()
     return $scriptList;
 }
 
-function isBuiltinJsFile($name) {
+function isBuiltinJsFile($name)
+{
     global $User_Rights;
     $include = '';
 
-    switch(strtolower($name)) {
+    switch (strtolower($name)) {
         case 'jquery':
             $include .= '<script src="/assets/js/vendor/jquery/js/jquery-2.1.1.min.js"></script>';
             break;
@@ -65,7 +59,8 @@ function isBuiltinJsFile($name) {
     return $include;
 }
 
-function isCustomJsFile($name) {
+function isCustomJsFile($name)
+{
     // Normalize name
     if (substr($name, -3) != '.js') {
         $name .= '.js';
