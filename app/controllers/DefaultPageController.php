@@ -8,7 +8,7 @@ use \Dandelion\Storage\MySqlDatabase;
 
 class DefaultPageController
 {
-    public function render($page) {
+    public function render($page = '') {
         global $User_Rights;
         // Set the homepage if necassary
         if ($page === '') {

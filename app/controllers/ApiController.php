@@ -66,10 +66,6 @@ class ApiController
      * @return Nothing
      */
     public function internalApiCall($module, $method) {
-        if (!GateKeeper::authenticated() && $module != 'auth') {
-            exit(self::makeDAPI(3, 'Login required', 'iapi', '%REDIRECTLOGIN%'));
-        }
-
         if ($module == 'auth') {
             $_SESSION['userInfo']['userid'] = null; // Triggers error on login because it's not initialized
         }

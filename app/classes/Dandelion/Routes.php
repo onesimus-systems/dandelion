@@ -21,6 +21,8 @@
 ***/
 namespace Dandelion;
 
+use \Dandelion\Auth\GateKeeper;
+
 class Routes
 {
     private static $routeList = [];
@@ -29,31 +31,36 @@ class Routes
     private function __clone() {}
     private function __wakeup() {}
 
-    public static function get($url, $route) {
-        self::register('GET', $url, $route);
+    public static function get($url, $options) {
+        self::register('GET', $url, $options);
         return;
     }
 
-    public static function post($url, $route) {
-        self::register('POST', $url, $route);
-        return;
-
-    }
-
-    public static function any($url, $route) {
-        self::register('*', $url, $route);
+    public static function post($url, $options) {
+        self::register('POST', $url, $options);
         return;
 
     }
 
-    private static function register($method, $url, $route) {
-        $route = explode('@', $route);
+    public static function any($url, $options) {
+        self::register('*', $url, $options);
+        return;
+
+    }
+
+    private static function register($method, $url, $options) {
+        if (!is_array($options)) {
+            $options = array('use' => $options, 'before' => '');
+        }
+
+        $options['use'] = explode('@', $options['use']);
         $url = self::cleanUrl($url);
         self::$routeList[$url] = array(
             'httpmethod' => $method,
-            'class' => $route[0],
-            'method' => $route[1],
-            'pattern' => explode('/', $url)
+            'class' => $options['use'][0],
+            'method' => $options['use'][1],
+            'pattern' => explode('/', $url),
+            'before' => $options['before']
         );
         return;
     }
@@ -83,6 +90,10 @@ class Routes
         $routeMethod = self::$routeList[$url]['method'];
 
         if ($routeHttpMethod != '*' && $routeHttpMethod != $method) {
+            return false;
+        }
+
+        if (!self::handleBefore(self::$routeList[$url]['before'])) {
             return false;
         }
 
@@ -122,12 +133,29 @@ class Routes
         $routeHttpMethod = self::$routeList[$route]['httpmethod'];
         $routeClass = self::$routeList[$route]['class'];
         $routeMethod = self::$routeList[$route]['method'];
-        $params = self::getVars($pattern, $url);
 
+        if (!self::handleBefore(self::$routeList[$route]['before'])) {
+            return false;
+        }
+
+        $params = self::getVars($pattern, $url);
         $controller = new $routeClass();
         call_user_func_array(array($controller, $routeMethod), $params);
 
         return true;
+    }
+
+    private static function handleBefore($action) {
+        if (!$action) {
+            return true;
+        }
+
+        switch ($action) {
+            case 'auth':
+                return GateKeeper::authenticated();
+        }
+
+        return false;
     }
 
     private static function cleanUrl($url) {
