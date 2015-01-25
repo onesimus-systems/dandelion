@@ -1,8 +1,9 @@
 <?php
 namespace Dandelion\Controllers;
 
-use \Dandelion\UrlParameters;
 use \Dandelion\Categories;
+use \Dandelion\UrlParameters;
+use \Dandelion\Auth\GateKeeper;
 use \Dandelion\Storage\MySqlDatabase;
 
 class DefaultPageController
@@ -16,7 +17,7 @@ class DefaultPageController
 
         // Load page
         $indexCall = true;
-        if (is_file(ROOT.'/pages/'.$page.'.php') && \Dandelion\Gatekeeper\authenticated()) {
+        if (is_file(ROOT.'/pages/'.$page.'.php') && GateKeeper::authenticated()) {
             include ROOT.'/pages/'.$page.'.php';
         } else {
             include ROOT.'/pages/login.php';

@@ -26,7 +26,8 @@
  */
 namespace Dandelion\Controllers;
 
-use Dandelion\Gatekeeper;
+use \Dandelion\Auth\GateKeeper;
+use \Dandelion\Storage\MySqlDatabase;
 
 /**
  * This class represents a single API request. It's main public function is
@@ -65,7 +66,7 @@ class ApiController
      * @return Nothing
      */
     public function internalApiCall($module, $method) {
-        if (!Gatekeeper\authenticated() && $module != 'auth') {
+        if (!GateKeeper::authenticated() && $module != 'auth') {
             exit(self::makeDAPI(3, 'Login required', 'iapi', '%REDIRECTLOGIN%'));
         }
 
@@ -110,7 +111,7 @@ class ApiController
             $userRights = null;
         }
 
-        $DatabaseConn = \Dandelion\Storage\MySqlDatabase::getInstance();
+        $DatabaseConn = MySqlDatabase::getInstance();
         $urlParams = new \Dandelion\UrlParameters();
 
         // Call the requested function (as defined by the last part of the URL)

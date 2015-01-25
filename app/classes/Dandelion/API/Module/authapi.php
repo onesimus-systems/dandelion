@@ -35,7 +35,7 @@ class authAPI extends BaseModule
      * @return JSON
      */
     public function login() {
-        $auth = new \Dandelion\Gatekeeper\authenticate($this->db);
+        $auth = new \Dandelion\Auth\GateKeeper($this->db);
         $rem = false;
         if ($this->up->remember == 'true') {
             $rem = true;

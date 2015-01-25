@@ -15,5 +15,5 @@ require __DIR__.'/../bootstrap/autoloader.php';
 
 require __DIR__.'/../bootstrap/bootstrap.php';
 
-$app = new DandelionApplication();
+$app = new AppController();
 $app->run();

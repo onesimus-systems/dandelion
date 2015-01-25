@@ -14,6 +14,7 @@ namespace Dandelion;
 
 use \Dandelion\Logging;
 use \Dandelion\Utils\Updater;
+use \Dandelion\Auth\GateKeeper;
 use \Dandelion\Storage\MySqlDatabase;
 use \Dandelion\Session\SessionManager;
 
@@ -32,8 +33,6 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.4.0',
 if (version_compare(PHP_VERSION, '5.5.0', '<')) {
     require ROOT . '/lib/password-compat/password.php';
 }
-
-require ROOT . '/lib/interfaces.php';
 
 // Load configuration
 if (file_exists(ROOT . '/config/config.php')) {
@@ -78,6 +77,6 @@ if (!isset($_SESSION['app_settings'])) {
 }
 
 // Load rights module for logged in user
-if (Gatekeeper\authenticated()) {
+if (GateKeeper::authenticated()) {
     $User_Rights = new \Dandelion\rights($_SESSION['userInfo']['userid']);
 }

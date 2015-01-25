@@ -21,6 +21,8 @@
  ***/
 namespace Dandelion;
 
+use \Dandelion\Storage\Contracts\DatabaseConn;
+
 class cxeesto
 {
     // Order matters!! These correspond to the statusType() switch case order

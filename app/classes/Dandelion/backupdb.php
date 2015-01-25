@@ -21,6 +21,8 @@
 ***/
 namespace Dandelion;
 
+use \Dandelion\Storage\MySqlDatabase;
+
 /**
  * Not much to say here. It gets a list of all the tables then goes
  * through each one and gets all the rows of data then writes it to
@@ -28,7 +30,7 @@ namespace Dandelion;
  */
 class backupdb
 {
-    public function __construct(Storage\MySqlDatabase $db) {
+    public function __construct(MySqlDatabase $db) {
       $this->db = $db;
     }
     /**

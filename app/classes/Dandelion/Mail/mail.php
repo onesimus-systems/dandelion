@@ -23,9 +23,11 @@
  */
 namespace Dandelion\Mail;
 
+use \Dandelion\Storage\Contracts\DatabaseConn;
+
 class mail
 {
-    public function __construct(\Dandelion\DatabaseConn $db) {
+    public function __construct(DatabaseConn $db) {
         $this->dbConn = $db;
         return;
     }

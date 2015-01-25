@@ -21,6 +21,8 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Storage\Contracts\DatabaseConn;
+
 class logs {
     public function __construct(DatabaseConn $dbConn, $ur = null) {
         $this->db = $dbConn;

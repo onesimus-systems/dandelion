@@ -22,7 +22,8 @@
  */
 namespace Dandelion;
 
-use Dandelion\Permissions;
+use \Dandelion\Permissions;
+use \Dandelion\Storage\Contracts\DatabaseConn;
 
 class Users
 {

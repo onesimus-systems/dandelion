@@ -24,7 +24,8 @@ namespace Dandelion;
 /**
  * DandelionApplication represents an instance of Dandelion.
  */
-class DandelionApplication {
+class AppController
+{
     private $url = [];
 
     /**

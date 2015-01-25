@@ -21,6 +21,8 @@
 ***/
 namespace Dandelion;
 
+use \Dandelion\Storage\Contracts\DatabaseConn;
+
 class categories
 {
     private $database;

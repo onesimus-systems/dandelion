@@ -11,7 +11,9 @@
 
 namespace Dandelion\Storage;
 
-class MySqlDatabase implements \Dandelion\DatabaseConn {
+use \Dandelion\Storage\Contracts\DatabaseConn;
+
+class MySqlDatabase implements DatabaseConn {
     private $currentConn;
     private static $instance;
     public static $dbPrefix;

@@ -11,7 +11,8 @@
 ***/
 namespace Dandelion;
 
-use Dandelion\Permissions;
+use \Dandelion\Permissions;
+use \Dandelion\Storage\MySqlDatabase;
 
 class rights
 {
@@ -23,7 +24,7 @@ class rights
      * @param int $userid - ID of user
      */
     public function __construct($userid) {
-      $conn = Storage\MySqlDatabase::getInstance();
+      $conn = MySqlDatabase::getInstance();
 
       $this->userid = $userid;
       $conn->select('r.permissions')

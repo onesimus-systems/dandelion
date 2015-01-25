@@ -21,6 +21,8 @@
 ***/
 namespace Dandelion;
 
+use \Dandelion\Storage\Contracts\DatabaseConn;
+
 class adminactions
 {
     public function __construct(DatabaseConn $db) {

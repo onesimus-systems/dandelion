@@ -1,17 +1,6 @@
 <?php
-/**
- *
- *
- *
- *
- */
 
-namespace Dandelion;
-
-interface repoSocket {
-    //public function rawQuery($sql);
-    //public function
-}
+namespace Dandelion\Storage\Contracts;
 
 // Represents a connection to some database
 // The required functions reflect the typicall CRUD and allow

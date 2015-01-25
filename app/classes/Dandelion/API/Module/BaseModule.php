@@ -22,13 +22,14 @@
 namespace Dandelion\API\Module;
 
 use Dandelion\Controllers\ApiController;
+use \Dandelion\Storage\Contracts\DatabaseConn;
 
 class BaseModule {
     protected $db;
     protected $ur;
     protected $up;
 
-    public function __construct(\Dandelion\DatabaseConn $db, $ur, $urlParameters) {
+    public function __construct(DatabaseConn $db, $ur, $urlParameters) {
         $this->db = $db;
         $this->ur = $ur;
         $this->up = $urlParameters;
