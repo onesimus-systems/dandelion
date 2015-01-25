@@ -12,7 +12,7 @@ namespace Dandelion\Session;
 
 use \Dandelion\Storage\MySqlDatabase;
 
-class SessionManager
+class SessionManager implements \SessionHandlerInterface
 {
     private $sessionName;
     private $dbc;
@@ -32,15 +32,7 @@ class SessionManager
         $timeout = 21600; // 6 hours
         ini_set('session.gc_maxlifetime', $timeout);
 
-        session_set_save_handler(
-            array(self::$instance, "open"),
-            array(self::$instance, "close"),
-            array(self::$instance, "read"),
-            array(self::$instance, "write"),
-            array(self::$instance, "destroy"),
-            array(self::$instance, "gc")
-        );
-        register_shutdown_function('session_write_close');
+        session_set_save_handler(self::$instance, true);
         return;
     }
 
@@ -100,8 +92,7 @@ class SessionManager
             'time' => time()
         );
 
-        $this->dbc->go($params);
-        return true;
+        return $this->dbc->go($params);
     }
 
     public function destroy($id) {
@@ -129,7 +120,6 @@ class SessionManager
             'time' => time()
         );
 
-        $this->dbc->go($params);
-        return true;
+        return $this->dbc->go($params);
     }
 }
