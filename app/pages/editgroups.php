@@ -1,20 +1,8 @@
 <?php
 /**
- * Page for managing user groups and permissions
- *
- * This file is a part of Dandelion
- *
- * @author Lee Keitel
- * @date May 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
+ * Rights group management page
+ */
 namespace Dandelion;
-
-if (!$indexCall) {
-    header('Dandelion: Access Denied');
-    exit(1);
-}
 
 $requiredCssFiles = array("jqueryui", "permissions.css");
 include ROOT.'/pages/includes/head.php';

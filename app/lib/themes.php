@@ -1,14 +1,7 @@
 <?php
 /**
-  * Themes functions
-  *
-  * This file is a part of Dandelion
-  *
-  * @author Lee Keitel
-  * @date March 2014
-  *
-  * @license GNU GPL v3 (see full license in root/LICENSE.md)
-***/
+ * Themes management
+ */
 namespace Dandelion;
 
 /**
@@ -46,7 +39,9 @@ function getThemeList($theme = null, $showDefaultOption = true)
     }
 
     $themeList .= '<select name="userTheme" id="userTheme">';
-    if ($showDefaultOption) { $themeList .= '<option value="default">Default</option>'; }
+    if ($showDefaultOption) {
+        $themeList .= '<option value="default">Default</option>';
+    }
     while (false !== ($themeName = readdir($handle))) {
         if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
             $selected = ($themeName == $currentTheme) ? 'selected' : '';
@@ -59,7 +54,8 @@ function getThemeList($theme = null, $showDefaultOption = true)
     return $themeList;
 }
 
-function getThemeListArray() {
+function getThemeListArray()
+{
     $themeList = [];
     if (!$handle = opendir(PUBLIC_DIR.'/'.THEME_DIR)) {
         return '';
@@ -113,6 +109,7 @@ function loadCssSheets()
         switch($sheet) {
             // CSS for Cheesto presence system
             case "cheesto":
+                // no break
             case 'presence':
                 $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/styles/css/presence.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
@@ -120,6 +117,7 @@ function loadCssSheets()
 
             // CSS for Cheesto presence system (windowed)
             case "cheestowin":
+                // no break
             case "presencewin":
                 $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/styles/css/presenceWin.css">';
                 $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
@@ -127,6 +125,7 @@ function loadCssSheets()
 
             // CSS for jQueryUI
             case "jquery":
+                // no break
             case "jqueryui":
                 $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
                 break;

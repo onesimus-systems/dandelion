@@ -1,30 +1,15 @@
 <?php
 /**
- * Handles all requests pertaining to log entries
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * The full GPLv3 license is available in LICENSE.md in the root.
- *
- * @author Lee Keitel
- * @date December 2014
+ * User log management
  */
 namespace Dandelion;
 
 use \Dandelion\Storage\Contracts\DatabaseConn;
 
-class logs {
-    public function __construct(DatabaseConn $dbConn, $ur = null) {
+class Logs
+{
+    public function __construct(DatabaseConn $dbConn, $ur = null)
+    {
         $this->db = $dbConn;
         $this->ur = $ur;
         return;
@@ -37,7 +22,8 @@ class logs {
      *
      * @return JSON encoded array with log data
      */
-    public function getLogInfo($logid) {
+    public function getLogInfo($logid)
+    {
         $logid = isset($logid) ? $logid : '';
 
         $this->db->select()
@@ -57,7 +43,8 @@ class logs {
      * @param int $limit - Number of logs to get
      * @param int $offset - Offset for pagination
      */
-    public function getJSON($limit = 25, $offset = 0) {
+    public function getJSON($limit = 25, $offset = 0)
+    {
         $this->db->select('l.*, u.realname')
                  ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
                  ->orderBy('l.logid', 'DESC')
@@ -92,7 +79,8 @@ class logs {
      *
      * @return string Confirmation message or error message
      */
-    public function addLog($title, $body, $cat, $uid) {
+    public function addLog($title, $body, $cat, $uid)
+    {
         if (empty($title) || empty($body) || empty($cat) || $cat == 'Select:') {
             return 'Log entries require a title, category, and body.';
         }
@@ -126,7 +114,8 @@ class logs {
      *
      * @return string Confirmation message or error message
      */
-    public function editLog($lid, $title, $body) {
+    public function editLog($lid, $title, $body)
+    {
         if (empty($body) || empty($title) || empty($lid)) {
             return 'Log entries require a title, category, and body.';
         }
@@ -147,7 +136,8 @@ class logs {
     /**
      * Filter logs by category
      */
-    public function filter($f) {
+    public function filter($f)
+    {
         $this->db->select('l.*, u.realname')
                  ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
                  ->where('cat LIKE :filter')
@@ -164,7 +154,8 @@ class logs {
      *
      * @return Json
      */
-    public function search($kw = '', $date = '') {
+    public function search($kw = '', $date = '')
+    {
         $this->db->select('l.*, u.realname')
                  ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
                  ->orderBy('logid', 'DESC');

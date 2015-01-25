@@ -1,11 +1,13 @@
 <?php
-
 namespace Dandelion\Storage\Contracts;
 
-// Represents a connection to some database
-// The required functions reflect the typicall CRUD and allow
-// queries to be written in quasi-SQL form for clarity
-interface DatabaseConn {
+/**
+ * Represents a connection to some database
+ * The required functions reflect the typicall CRUD and allow
+ * queries to be written in quasi-SQL form for clarity
+ */
+interface DatabaseConn
+{
     public function insert();
     public function update($table);
     public function delete($joinCols = '');

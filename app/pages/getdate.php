@@ -1,27 +1,14 @@
 <?php
 /**
-  * Gets return time and message for user status
-  *
-  * This file is a part of Dandelion
-  *
-  * @author Lee Keitel
-  * @date March 2014
-  *
-  * @license GNU GPL v3 (see full license in root/LICENSE.md)
-***/
+ * Dialog to get time and message for Cheesto
+ */
 namespace Dandelion;
-
-if (!$indexCall) {
-    header('Dandelion: Access Denied');
-    exit(1);
-}
-
 ?>
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="IE=9">
-        <?php echo loadCssSheets("cheestoWin","jqueryui","datetimepicker.css",false); ?>
+        <?= loadCssSheets("cheestoWin","jqueryui","datetimepicker.css",false); ?>
         <title>Dandelion cxeesto</title>
     </head>
 
@@ -63,6 +50,6 @@ if (!$indexCall) {
             <input type="button" onclick="giveTime();" value="Done">
         </form>
 
-        <?php echo loadJS("jquery","jqueryui","timepicker.min","slider","cheestoGetDate");?>
+        <?= loadJS("jquery","jqueryui","timepicker.min","slider","cheestoGetDate");?>
     </body>
 </html>

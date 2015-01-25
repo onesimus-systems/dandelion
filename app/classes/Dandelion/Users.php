@@ -1,24 +1,6 @@
 <?php
-
 /**
- * Handle user management functions
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * The full GPLv3 license is available in LICENSE.md in the root.
- *
- * @author Lee Keitel
- * @date Feb 2014
+ * User management
  */
 namespace Dandelion;
 
@@ -243,8 +225,7 @@ class Users
         if (!$isAdmin['admin']) {
             // If the account being deleted isn't an admin, then there's nothing to worry about
             $delete = true;
-        }
-        else {
+        } else {
             // If the account IS an admin, check all other users to make sure
             // there's at least one other user with the admin rights flag
             $this->db->select('role')
@@ -279,8 +260,7 @@ class Users
             } else {
                 return 'Error deleting user';
             }
-        }
-        else {
+        } else {
             return 'At least one admin account must be left to delete another admin account';
         }
     }
@@ -288,7 +268,6 @@ class Users
     public function getUserList() {
         $this->db->select('userid, realname, username, role, datecreated, theme, firsttime')
                  ->from(DB_PREFIX.'users');
-
         return $this->db->get();
     }
 
@@ -297,7 +276,6 @@ class Users
                  ->from(DB_PREFIX.'users')
                  ->where('userid = :uid');
         $params = array('uid' => $uid);
-
         return $this->db->get($params)[0];
     }
 }

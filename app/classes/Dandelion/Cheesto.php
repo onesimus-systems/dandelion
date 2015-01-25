@@ -1,29 +1,12 @@
 <?php
 /**
- * This class is used to update the Cxeesto status board.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * The full GPLv3 license is available in LICENSE.md in the root.
- *
- * @author Lee Keitel
- * @date Feb 2014
- ***/
+ * Cheesto presence status system
+ */
 namespace Dandelion;
 
 use \Dandelion\Storage\Contracts\DatabaseConn;
 
-class cxeesto
+class Cheesto
 {
     // Order matters!! These correspond to the statusType() switch case order
     // I know, that's very bad. They should be in the database... maybe someday
@@ -40,7 +23,8 @@ class cxeesto
         "Vacation"
     );
 
-    public function __construct(DatabaseConn $dbConn) {
+    public function __construct(DatabaseConn $dbConn)
+    {
         $this->dbConn = $dbConn;
         return;
     }
@@ -50,7 +34,8 @@ class cxeesto
      *
      * @return JSON - Users statuses
      */
-    public function getAllStatuses() {
+    public function getAllStatuses()
+    {
         $statuses = $this->dbConn->selectAll('presence')->get();
 
         foreach ($statuses as &$row) {
@@ -62,7 +47,8 @@ class cxeesto
         return $statuses;
     }
 
-    public function getUserStatus($uid) {
+    public function getUserStatus($uid)
+    {
         $this->dbConn->select()
                      ->from(DB_PREFIX.'presence')
                      ->where('uid = :uid');
@@ -75,7 +61,8 @@ class cxeesto
         return $userStatus;
     }
 
-    public function getStatusText() {
+    public function getStatusText()
+    {
         return $this->statusOptions;
     }
 
@@ -158,7 +145,7 @@ class cxeesto
                      ->set(array('message = :message', 'status = :setorno', 'returntime = :returntime', 'dmodified = :dmodified'))
                      ->where('uid = :uid');
         $params = array(
-            'message' => urldecode($message),
+            'message' => $message,
             'setorno' => $status,
             'returntime' => $return,
             'dmodified' => $date,

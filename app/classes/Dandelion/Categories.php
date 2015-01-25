@@ -1,33 +1,17 @@
 <?php
 /**
-  * Responsible for displaying and managing categories
-  *
-  * This program is free software: you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation, either version 3 of the License, or
-  * (at your option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  * The full GPLv3 license is available in LICENSE.md in the root.
-  *
-  * @author Lee Keitel
-  * @date Feb 2014
-***/
+ * Category management
+ */
 namespace Dandelion;
 
 use \Dandelion\Storage\Contracts\DatabaseConn;
 
-class categories
+class Categories
 {
     private $database;
 
-    public function __construct(DatabaseConn $db) {
+    public function __construct(DatabaseConn $db)
+    {
         $this->database = $db;
     }
 
@@ -45,7 +29,7 @@ class categories
 
         $response = '';
 
-        foreach($past as $pastSel) {
+        foreach ($past as $pastSel) {
             $pastSel = explode(':', $pastSel);
 
             $newSel = '<select name="level'.($pastSel[1]+1).'" id="level'.($pastSel[1]+1).'" onChange="CategoryManage.grabNextLevel(this);">';
@@ -53,7 +37,7 @@ class categories
             $option = '';
 
             $alphaList = array();
-            foreach($cat as $isChild) {
+            foreach ($cat as $isChild) {
                 if($isChild['pid'] == $pastSel[0]) {
                     $child = array(
                             'cid' =>  $isChild['cid'],
@@ -65,7 +49,7 @@ class categories
 
             usort($alphaList, "self::cmp");
 
-            foreach($alphaList as $children) {
+            foreach ($alphaList as $children) {
                     $option = '<option value="'.$children['cid'].':'.($pastSel[1]+1).'">'.$children['description'].'</option>';
                     $newSel .= $option;
             }
@@ -103,7 +87,7 @@ class categories
                        ->into(DB_PREFIX.'category', array('description', 'pid'))
                        ->values(array(':description', ':parentid'));
         $params = array(
-            'description' => urldecode($description),
+            'description' => $description,
             'parentid'	  => $parent
         );
 

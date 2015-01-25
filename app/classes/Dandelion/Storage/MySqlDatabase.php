@@ -1,26 +1,21 @@
 <?php
 /**
  * Storage object to interact with a MySQL database.
- *
- * This file is part of the Dandelion log application.
- *
- * @author Lee Keitel
- * @date   December 2014
- * @license GPLv3
  */
-
 namespace Dandelion\Storage;
 
 use \Dandelion\Storage\Contracts\DatabaseConn;
 
-class MySqlDatabase implements DatabaseConn {
+class MySqlDatabase implements DatabaseConn
+{
     private $currentConn;
     private static $instance;
     public static $dbPrefix;
     public static $connInfo = array(); // Loaded from bootstrap file
     private $command;
     private $rawStatment;
-    private $sqlStatement = array(
+    private $sqlStatement;
+    private $blankStatement = array(
             'select' => '',
             'insert' => array(),
             'set'    => array(),
@@ -31,30 +26,32 @@ class MySqlDatabase implements DatabaseConn {
             'collate' => ''
         );
 
-    /**
-     * Returns the an instance of the MySqlDatabase class. If one is already created, it will return it.
-     */
-    public static function getInstance() {
-        if (SELF::$instance === NULL) {
-            SELF::$instance = new self();
-        }
-
-        SELF::$instance->init();
-        return SELF::$instance;
-    }
-
-    public function __destruct() {
-        $this->currentConn = null;
-        return;
-    }
-
     // Prevent something from accidentally making multiple instances of the class
     private function __construct() {}
     private function __clone() {}
     private function __wakeup() {}
+    public function __destruct()
+    {
+        $this->currentConn = null;
+        return;
+    }
+
+    /**
+     * Returns the an instance of the MySqlDatabase class. If one is already created, it will return it.
+     */
+    public static function getInstance()
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+            self::$instance->init();
+        }
+
+        return self::$instance;
+    }
 
     // Connect to the database and set the connection variable
-    private function init() {
+    private function init()
+    {
         try {
             $db_connect = 'mysql:host=' . self::$connInfo['db_host'] . ';dbname=' . self::$connInfo['db_name'];
 
@@ -67,128 +64,141 @@ class MySqlDatabase implements DatabaseConn {
             }
 
             $this->currentConn = $conn;
-        }
-        catch (\PDOException $e) {
+            $this->sqlStatement = $this->blankStatement;
+        } catch (\PDOException $e) {
             if (DEBUG_ENABLED) {
                 echo 'ERROR: ' . $e->getMessage();
-            }
-            else {
+            } else {
                 echo 'Error 0x000185: Can\'t connect to database';
             }
         }
         return;
     }
 
-    private function clearStatement() {
-        $this->sqlStatement = array(
-            'select' => '',
-            'insert' => array(),
-            'set'    => array(),
-            'from'   => '',
-            'where'  => array(),
-            'orderby' => array(),
-            'limit'  => '',
-            'collate' => ''
-        );
+    private function clearStatement()
+    {
+        $this->sqlStatement = $this->blankStatement;
     }
 
     // Main database functions
-    public function select($cols = '*') {
+    public function select($cols = '*')
+    {
         $this->clearStatement();
         $this->sqlStatement['select'] = $cols;
         $this->command = 'select';
         return $this;
     }
 
-    public function delete($joinCols = '') {
+    public function selectAll($table)
+    {
+        $this->select()->from(DB_PREFIX.$table);
+        return $this;
+    }
+
+    public function delete($joinCols = '')
+    {
         $this->clearStatement();
         $this->sqlStatement['select'] = $joinCols;
         $this->command = 'delete';
         return $this;
     }
 
-    public function update($table) {
+    public function update($table)
+    {
         $this->clearStatement();
         $this->sqlStatement['from'] = $table;
         $this->command = 'update';
         return $this;
     }
 
-    public function insert() {
+    public function insert()
+    {
         $this->clearStatement();
         $this->command = 'insert';
         return $this;
     }
 
-    public function into($table, $cols) {
-        $this->sqlStatement['from'] = $table;
-        $this->sqlStatement['insert'] = $cols;
-        return $this;
-    }
-
-    public function values($vals) {
-        $this->sqlStatement['set'] = $vals;
-        return $this;
-    }
-
-    public function set($colVals) {
-        $this->sqlStatement['set'] = $colVals;
-        return $this;
-    }
-
-    public function from($table) {
-        $this->sqlStatement['from'] = $table;
-        return $this;
-    }
-
-    public function where($conditions) {
-        $this->sqlStatement['where'] = $conditions;
-        return $this;
-    }
-
-    public function collate($collation) {
-        $this->sqlStatement['collate'] = $collation;
-        return $this;
-    }
-
-    public function orderBy($col, $direction = 'ASC') {
-        $this->sqlStatement['orderby']['col'] = $col;
-        $this->sqlStatement['orderby']['dir'] = $direction;
-        return $this;
-    }
-
-    public function limit($range) {
-        $this->sqlStatement['limit'] = $range;
-        return $this;
-    }
-
-    public function get($params = null, $type = \PDO::PARAM_STR) {
-        return $this->queryDB($params, $type);
-    }
-
-    public function go($params = null, $type = \PDO::PARAM_STR) {
-        return $this->queryDB($params, $type);
-    }
-
-    public function selectAll($table) {
-        $this->select('*')->from(DB_PREFIX.$table);
-        return $this;
-    }
-
-    public function showFormalStatement() {
-        return $this->prepareStatement();
-    }
-
-    public function raw($sql) {
+    public function raw($sql)
+    {
         $this->rawStatment = $sql;
         $this->command = 'raw';
         return $this;
     }
 
+    // Auxillary and filter functions
+    public function into($table, $cols)
+    {
+        $this->sqlStatement['from'] = $table;
+        $this->sqlStatement['insert'] = $cols;
+        return $this;
+    }
+
+    public function values($vals)
+    {
+        $this->sqlStatement['set'] = $vals;
+        return $this;
+    }
+
+    public function set($colVals)
+    {
+        $this->sqlStatement['set'] = $colVals;
+        return $this;
+    }
+
+    public function from($table)
+    {
+        $this->sqlStatement['from'] = $table;
+        return $this;
+    }
+
+    public function where($conditions)
+    {
+        $this->sqlStatement['where'] = $conditions;
+        return $this;
+    }
+
+    public function collate($collation)
+    {
+        $this->sqlStatement['collate'] = $collation;
+        return $this;
+    }
+
+    public function orderBy($col, $direction = 'ASC')
+    {
+        $this->sqlStatement['orderby']['col'] = $col;
+        $this->sqlStatement['orderby']['dir'] = $direction;
+        return $this;
+    }
+
+    public function limit($range)
+    {
+        $this->sqlStatement['limit'] = $range;
+        return $this;
+    }
+
+    // Perform query
+    public function get($params = [], $type = \PDO::PARAM_STR)
+    {
+        $stmt = $this->prepareStatement();
+        return $this->queryDB($stmt, $params, $type, true);
+    }
+
+    public function go($params = [], $type = \PDO::PARAM_STR)
+    {
+        $stmt = $this->prepareStatement();
+        return $this->queryDB($stmt, $params, $type);
+    }
+
+    public function getStatement()
+    {
+        return $this->prepareStatement();
+    }
+
     /**
      * Build the SQL query string from supplied data
      */
-    private function prepareStatement() {
+    private function prepareStatement()
+    {
         $stmt = '';
         switch ($this->command) {
             case 'raw':
@@ -230,65 +240,47 @@ class MySqlDatabase implements DatabaseConn {
     /**
      * Queries the database
      *
+     * @param string $stmt - Statement to execute
      * @param array $paramArray - Array of variables that need to be bound to the PDO
      * @param int $type - PDO value type (default: PDO::PARAM_STR)
+     * @param bool $returnArray - To return an associative array or not
      *
-     * @return array Containing the results of a SELECT query.
-     *         True when performing any other query type.
+     * @return mixed
      */
-    private function queryDB($paramArray = NULL, $type = \PDO::PARAM_STR) {
-        $stmt = $this->prepareStatement();
+    private function queryDB($stmt = '', array $paramArray = [], $type = \PDO::PARAM_STR, $returnArray = false)
+    {
         try {
             $query = $this->currentConn->prepare($stmt);
-            if (isset($paramArray)) {
+            if (!empty($paramArray)) {
                 foreach ($paramArray as $key => $value) {
-                    // To allow keys with and without semicolons ":"
-                    // Remove any semicolons if present
+                    // Normalize parameters
                     $key = ltrim($key, ':');
                     $query->bindValue(':' . $key, $value, $type);
                 }
             }
-            //var_dump($this->parms($stmt,$paramArray));
             $success = $query->execute();
 
-            $command = substr($stmt, 0, 3);
-
-            // If the statement was a SELECT, return a fetchAll
-            if ($command != 'UPD' && $command != 'INS' && $command != 'DEL') {
+            if ($returnArray) {
                 return $query->fetchall(\PDO::FETCH_ASSOC);
-            }
-            else {
+            } else {
                 return $success;
             }
-        }
-        catch (\PDOException $e) {
+        } catch (\PDOException $e) {
             if (DEBUG_ENABLED) {
                 echo 'ERROR: ' . $e->getMessage();
-            }
-            else {
+            } else {
                 echo 'Error 0x000186: Error processing query';
             }
         }
     }
 
     /**
-     * Create a prepared statement for troubleshooting
-     */
-    private function parms($string,$data) {
-        $indexed=$data==array_values($data);
-        foreach($data as $k=>$v) {
-            if(is_string($v)) $v="'$v'";
-            if($indexed) $string=preg_replace('/\?/',$v,$string,1);
-            else $string=str_replace(":$k",$v,$string);
-        }
-        return $string;
-    }
-    /**
      * Gets last inserted id number
      *
      * @return int Last inserted ID
      */
-    public function lastInsertId() {
+    public function lastInsertId()
+    {
         return $this->currentConn->lastInsertId();
     }
 
@@ -297,7 +289,8 @@ class MySqlDatabase implements DatabaseConn {
      *
      * @return int Row count of last query
      */
-    public function rowCount() {
+    public function rowCount()
+    {
         return $this->currentConn->rowCount();
     }
 
@@ -307,7 +300,8 @@ class MySqlDatabase implements DatabaseConn {
      * @param string $table - Table name
      * @return int
      */
-    public function numOfRows($table) {
+    public function numOfRows($table)
+    {
         $this->select('COUNT(*)')->from(DB_PREFIX.$table);
         return $this->get()[0]['COUNT(*)'];
     }

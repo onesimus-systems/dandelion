@@ -1,36 +1,25 @@
 <?php
 /**
- * Handles API requests for rights management
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * The full GPLv3 license is available in LICENSE.md in the root.
- *
- * @author Lee Keitel
- * @date July 2014
+ * Rights management API module
  */
 namespace Dandelion\API\Module;
 
-use Dandelion\Controllers\ApiController;
+use \Dandelion\Permissions;
+use \Dandelion\Controllers\ApiController;
 
 class rightsAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params) {
+    public function __construct($db, $ur, $params)
+    {
         parent::__construct($db, $ur, $params);
     }
 
-    public function getList() {
-        $permissions = new \Dandelion\Permissions($this->db);
+    /**
+     * Gets the list of rights groups
+     */
+    public function getList()
+    {
+        $permissions = new Permissions($this->db);
         $allGroups = $permissions->getGroupList();
         foreach ($allGroups as $key => $value) {
             $allGroups[$key]['permissions'] = unserialize($allGroups[$key]['permissions']);
@@ -38,20 +27,28 @@ class rightsAPI extends BaseModule
         return json_encode($allGroups);
     }
 
-    public function getGroup() {
-        $permissions = new \Dandelion\Permissions($this->db);
+    /**
+     * Gets the rights for a specific group
+     */
+    public function getGroup()
+    {
+        $permissions = new Permissions($this->db);
         $gid = $this->up->groupid;
         return json_encode(unserialize($permissions->getGroupList($gid)[0]['permissions']));
     }
 
-    public function save() {
+    /**
+     * Save rights for a group
+     */
+    public function save()
+    {
         if (!$this->ur->authorized('editgroup')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
         }
 
-        $permissions = new \Dandelion\Permissions($this->db);
+        $permissions = new Permissions($this->db);
         $gid = $this->up->groupid;
-        $rights = (array) json_decode($this->up->rights);
+        $rights = json_decode($this->up->rights, true);
 
         if ($permissions->editGroup($gid, $rights)) {
             return json_encode('User group saved');
@@ -60,14 +57,18 @@ class rightsAPI extends BaseModule
         }
     }
 
-    public function create() {
+    /**
+     * Create new rights group
+     */
+    public function create()
+    {
         if (!$this->ur->authorized('addgroup')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
         }
 
-        $permissions = new \Dandelion\Permissions($this->db);
+        $permissions = new Permissions($this->db);
         $name = $this->up->name;
-        $rights = (array) json_decode($this->up->rights);
+        $rights = json_decode($this->up->rights, true);
 
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return json_encode('User group created successfully');
@@ -76,12 +77,16 @@ class rightsAPI extends BaseModule
         }
     }
 
-    public function delete() {
+    /**
+     * Delete rights group
+     */
+    public function delete()
+    {
         if (!$this->ur->authorized('deletegroup')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
         }
 
-        $permissions = new \Dandelion\Permissions($this->db);
+        $permissions = new Permissions($this->db);
         $gid = $this->up->groupid;
         $users = $permissions->usersInGroup($gid);
 
@@ -94,7 +99,11 @@ class rightsAPI extends BaseModule
         }
     }
 
-    public function getUsersRights() {
+    /**
+     * Gets the rights for the current user
+     */
+    public function getUsersRights()
+    {
         return json_encode($this->ur->getRightsForUser());
     }
 }

@@ -14,6 +14,7 @@ function redirect($pagename) {
         'home' => '',
         'homepage' => '',
         'index' => '',
+        'dashbaord' => '',
         'userSettings' => 'settings',
         'adminSettings' => 'admin',
         'tutorial' => 'tutorial',

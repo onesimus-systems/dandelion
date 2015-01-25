@@ -1,31 +1,15 @@
 <?php
 /**
- * Permissions is responsible for all permissions handling in Dandelion.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * The full GPLv3 license is available in LICENSE.md in the root.
- *
- * @author Lee Keitel
- * @date May 2014
- ***/
+ * Rights group management
+ */
 namespace Dandelion;
 
 use \Dandelion\Storage\Contracts\DatabaseConn;
 
-class permissions
+class Permissions
 {
-    public function __construct(DatabaseConn $dbConn) {
+    public function __construct(DatabaseConn $dbConn)
+    {
         $this->dbConn = $dbConn;
         return;
     }
@@ -35,13 +19,15 @@ class permissions
      * @param int $groupID - Group ID number, if omitted returns all groups
      * @return array
      */
-    public function getGroupList($groupID = NULL)
+    public function getGroupList($groupID = null)
     {
-        if ($groupID === NULL) {
+        if ($groupID === null) {
             $this->dbConn->selectAll('rights');
-            $params = NULL;
+            $params = null;
         } else {
-            $this->dbConn->select()->from(DB_PREFIX.'rights')->where(array('id = :id'));
+            $this->dbConn->select()
+                         ->from(DB_PREFIX.'rights')
+                         ->where(array('id = :id'));
             $params = array(
                 'id' => $groupID
             );
@@ -58,7 +44,9 @@ class permissions
      */
     public function createGroup($name, $rightsArray)
     {
-        $this->dbConn->insert()->into(DB_PREFIX.'rights', array('role', 'permissions'))->values(array(':role', ':rights'));
+        $this->dbConn->insert()
+                     ->into(DB_PREFIX.'rights', array('role', 'permissions'))
+                     ->values(array(':role', ':rights'));
         $params = array(
             'role' => strtolower($name),
             'rights' => serialize($rightsArray)
@@ -75,7 +63,9 @@ class permissions
      */
     public function deleteGroup($id)
     {
-        $this->dbConn->delete()->from(DB_PREFIX.'rights')->where(array('id = :id'));
+        $this->dbConn->delete()
+                     ->from(DB_PREFIX.'rights')
+                     ->where(array('id = :id'));
         $params = array(
             'id' => $id
         );
@@ -92,7 +82,9 @@ class permissions
     public function editGroup($gid, $rights)
     {
         $rights = serialize($rights);
-        $this->dbConn->update(DB_PREFIX.'rights')->set(array('permissions = :newPerm'))->where(array('id = :gid'));
+        $this->dbConn->update(DB_PREFIX.'rights')
+                     ->set(array('permissions = :newPerm'))
+                     ->where(array('id = :gid'));
         $params = array(
             'gid' => $gid,
             'newPerm' => $rights
@@ -108,7 +100,9 @@ class permissions
      */
     public function loadRights($userrole)
     {
-       $this->dbConn->select('permissions')->from(DB_PREFIX.'rights')->where(array('role = :userrole'));
+       $this->dbConn->select('permissions')
+                    ->from(DB_PREFIX.'rights')
+                    ->where(array('role = :userrole'));
        $params = array(
             'userrole' => $userrole
        );
@@ -125,7 +119,9 @@ class permissions
     {
         // Get name of group to search users table
         $groupName = $this->getGroupList($gid)[0]['role'];
-        $this->dbConn->select('userid')->from(DB_PREFIX.'users')->where(array('role = :role'));
+        $this->dbConn->select('userid')
+                     ->from(DB_PREFIX.'users')
+                     ->where(array('role = :role'));
         $params = array(
             'role' => $groupName
         );

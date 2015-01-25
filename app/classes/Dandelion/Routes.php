@@ -1,24 +1,7 @@
 <?php
 /**
-  * Routing system for Dandelion
-  *
-  * This program is free software: you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation, either version 3 of the License, or
-  * (at your option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  * The full GPLv3 license is available in LICENSE.md in the root.
-  *
-  * @author Lee Keitel
-  * @date Jan 2015
-***/
+ * Routing system for Dandelion
+ */
 namespace Dandelion;
 
 use \Dandelion\Auth\GateKeeper;
@@ -27,28 +10,48 @@ class Routes
 {
     private static $routeList = [];
 
+    /**
+     *  I feel Routes is a natural singleton object.
+     *  There should be no need to have more than one global instance.
+     */
     private function __construct() {}
     private function __clone() {}
     private function __wakeup() {}
 
-    public static function get($url, $options) {
+    /**
+     *  Register route for a GET request
+     */
+    public static function get($url, $options)
+    {
         self::register('GET', $url, $options);
         return;
     }
 
-    public static function post($url, $options) {
+    /**
+     *  Register a route for a POST request
+     */
+    public static function post($url, $options)
+    {
         self::register('POST', $url, $options);
         return;
 
     }
 
-    public static function any($url, $options) {
+    /**
+     *  Register a route for any type of HTTP request
+     */
+    public static function any($url, $options)
+    {
         self::register('*', $url, $options);
         return;
 
     }
 
-    private static function register($method, $url, $options) {
+    /**
+     *  Common register function, adds route to $routeList
+     */
+    private static function register($method, $url, $options)
+    {
         if (!is_array($options)) {
             $options = array('use' => $options, 'before' => '');
         }
@@ -65,7 +68,11 @@ class Routes
         return;
     }
 
-    public static function route($url) {
+    /**
+     *  Initiate the routing for the given URL
+     */
+    public static function route($url)
+    {
         $cleanUrl = self::cleanUrl($url);
         $httpmethod = $_SERVER['REQUEST_METHOD'];
 
@@ -80,7 +87,11 @@ class Routes
         return false;
     }
 
-    private static function exactMatch($url, $method) {
+    /**
+     *  If the URL is an exact match a route, it gets precedence
+     */
+    private static function exactMatch($url, $method)
+    {
         if (!isset(self::$routeList[$url])) {
             return false;
         }
@@ -102,12 +113,19 @@ class Routes
         return true;
     }
 
-    private static function launchRoute($url, $method) {
+    /**
+     *  Search for the best fit route given the URL
+     */
+    private static function launchRoute($url, $method)
+    {
         $url = explode('/', $url);
         $route = '';
         $pattern = [];
 
         foreach (self::$routeList as $key => $value) {
+            // If the pattern is longer than the URL it won't match so just skip it
+            // If the current candidate's pattern is longer than this iterations pattern,
+            // chuck it as well. The longest pattern takes precedence.
             if (count($value['pattern']) > count($url) || count($value['pattern']) < count($pattern)) {
                 continue;
             }
@@ -145,7 +163,11 @@ class Routes
         return true;
     }
 
-    private static function handleBefore($action) {
+    /**
+     *  Perform any before actions on the route
+     */
+    private static function handleBefore($action)
+    {
         if (!$action) {
             return true;
         }
@@ -158,13 +180,20 @@ class Routes
         return false;
     }
 
-    private static function cleanUrl($url) {
-        // Remove GET parameters
-        $url = explode('?', $url)[0];
-        return $url;
+    /**
+     *  Clean the URL by removing any get arguments from the end
+     */
+    private static function cleanUrl($url)
+    {
+        return explode('?', $url)[0];
     }
 
-    private static function getVars($pattern, $url) {
+    /**
+     *  If the route pattern has variables in it, find the corresponding
+     *  positions in the URL and return those as arguments to the routed method
+     */
+    private static function getVars($pattern, $url)
+    {
         $vars = [];
         foreach ($pattern as $key => $value) {
             if (!isset($value[0]) || $value[0] != '{') {

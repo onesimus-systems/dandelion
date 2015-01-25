@@ -1,21 +1,8 @@
 <?php
 /**
- * This page allows users to change their password
- * and change the number of logs show on the home page.
- *
- * This file is a part of Dandelion
- *
- * @author Lee Keitel
- * @date January 28, 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
+ * User settings page
+ */
 namespace Dandelion;
-
-if (!$indexCall) {
-    header('Dandelion: Access Denied');
-    exit(1);
-}
 
 $requiredCssFiles = array("jqueryui");
 include ROOT.'/pages/includes/head.php';
@@ -24,7 +11,7 @@ include ROOT.'/pages/includes/head.php';
 <h2>User Settings</h2>
 
 <div id="passwordResetDialog">
-    <h2>Reset Password for <?php echo $_SESSION['userInfo']['realname']; ?>:</h2>
+    <h2>Reset Password for <?= $_SESSION['userInfo']['realname']; ?>:</h2>
     <form>
         <table>
             <tr><td>New Password:</td><td><input type="password" id="pass1"></td></tr>
@@ -38,7 +25,7 @@ include ROOT.'/pages/includes/head.php';
     <br><br><hr width="350"><br>
 
     How many logs do you want to see on the main page:<br />
-    <input type="text" id="show_limit" size="3" value="<?php echo $_SESSION['userInfo']['showlimit']; ?>">
+    <input type="text" id="show_limit" size="3" value="<?= $_SESSION['userInfo']['showlimit']; ?>">
     <button type="button" class="dButton" onClick="api.saveLogLimit();">Save Limit</button>
 </form>
 
@@ -47,7 +34,7 @@ include ROOT.'/pages/includes/head.php';
 <form>
 	Current theme:
 
-	<?php echo getThemeList(); ?>
+	<?= getThemeList(); ?>
 
     <button type="button" class="dButton" onClick="api.saveTheme();">Save Theme</button>
 </form>

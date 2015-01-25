@@ -54,7 +54,7 @@ $stmt ='CREATE TABLE IF NOT EXISTS `dan_mail` (
 $exec = $conn->prepare($stmt);
 $exec->execute();
 
-/** Create presence (Cxeesto) table */
+/** Create Cheesto table */
 $stmt = 'CREATE TABLE IF NOT EXISTS `dan_presence` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `uid` int(11) NOT NULL,
@@ -129,12 +129,14 @@ $exec = $conn->prepare($stmt);
 $exec->execute();
 
 /** Create Initial Settings */
-$stmt = "INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
+$stmt = <<< 'SQL'
+        INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
         (1, 'app_title', 'Dandelion Web Log'),
         (2, 'slogan', 'Website Slogan'),
         (3, 'default_theme', 'Halloween'),
         (4, 'cheesto_enabled', '1'),
-        (5, 'public_api', '0')";
+        (5, 'public_api', '0')
+SQL;
 $exec = $conn->prepare($stmt);
 $exec->execute();
 

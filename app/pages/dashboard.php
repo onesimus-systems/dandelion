@@ -1,29 +1,12 @@
 <?php
 /**
- * This page is the heart of the whole application.
- * This page show the weblog and allows a user to search,
- * filter, add, or edit a log. This page also houses the
- * presence application Cxeesto.
- *
- * This file is a part of Dandelion
- *
- * @author Lee Keitel
- * @date January 27, 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- ***/
+ * Dashboard page
+ */
 namespace Dandelion;
 
-if (!$indexCall) {
-    header('Dandelion: Access Denied');
-    exit(1);
-}
-
+$addLink = '';
 if ($User_Rights->authorized('createlog')) {
-	$add_link = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
-}
-else {
-	$add_link = '';
+	$addLink = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 }
 
 $requiredCssFiles = array("cheesto","jqueryui",);
@@ -52,7 +35,7 @@ include ROOT.'/pages/includes/head.php';
                 <div id="categorySelects"></div>
 
                 <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');" />
-                <?php echo $add_link; ?>
+                <?php echo $addLink; ?>
             </form>
 
             <div id="add_edit" title="">

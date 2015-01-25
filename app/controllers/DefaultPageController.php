@@ -8,12 +8,10 @@ use \Dandelion\Storage\MySqlDatabase;
 
 class DefaultPageController
 {
-    public function render($page = '') {
+    public function render($page = '')
+    {
         global $User_Rights;
-        // Set the homepage if necassary
-        if ($page === '') {
-          $page = "viewlog";
-        }
+        $page = $page ?: 'dashboard';
 
         // Load page
         $indexCall = true;
@@ -25,7 +23,8 @@ class DefaultPageController
         return;
     }
 
-    public function categories() {
+    public function categories()
+    {
         $urlParams = new UrlParameters();
 
         if ($urlParams->action == 'grabcats') {

@@ -1,25 +1,6 @@
 <?php
-
 /**
- * Handle internal mail system
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- * The full GPLv3 license is available in LICENSE.md in the root.
- *
- * @author Lee Keitel
- *         @date June 2014
- *
+ * Internal mail system
  */
 namespace Dandelion\Mail;
 
@@ -27,11 +8,15 @@ use \Dandelion\Storage\Contracts\DatabaseConn;
 
 class mail
 {
-    public function __construct(DatabaseConn $db) {
+    public function __construct(DatabaseConn $db)
+    {
         $this->dbConn = $db;
         return;
     }
 
+    /**
+     * Check for any new mail
+     */
     public function checkNewMail($forced = false, $sent = false)
     {
         $mailCount = -255;
@@ -64,6 +49,9 @@ class mail
         return (int) $mailCount;
     }
 
+    /**
+     * Get list of all mail items
+     */
     public function getMailList($sent = false, $unread = false)
     {
         $toFrom = ($sent) ? 'fromUser' : 'toUser';
@@ -78,6 +66,9 @@ class mail
         return $this->dbConn->get($params);
     }
 
+    /**
+     * Get information for a single piece of mail
+     */
     public function getFullMailInfo($mailId)
     {
         $this->dbConn->select('m.*, u.realname')
@@ -89,6 +80,9 @@ class mail
         return $this->dbConn->get($params);
     }
 
+    /**
+     * Get list of users as recipients
+     */
     public function getUserList()
     {
         $this->dbConn->select('userid, realname')
@@ -97,6 +91,9 @@ class mail
         return $this->dbConn->get();
     }
 
+    /**
+     * Get list of mail marked as trash
+     */
     public function getTrashCan()
     {
         $this->dbConn->select('m.*, u.realname')
@@ -109,6 +106,9 @@ class mail
         return $this->dbConn->get($params);
     }
 
+    /**
+     * Send new mail to user
+     */
     public function newMail($subject, $body, $to, $from)
     {
         if (!empty($subject) && !empty($body) && !empty($to) && !empty($from)) {
@@ -143,6 +143,9 @@ class mail
         return $response;
     }
 
+    /**
+     * Set mail as read
+     */
     public function setReadMail($mid)
     {
         $this->dbConn->update(DB_PREFIX.'mail')
@@ -154,6 +157,9 @@ class mail
         return $this->dbConn->go($params);
     }
 
+    /**
+     * Delete a piece of mail
+     */
     public function deleteMail($mailId, $trueDelete = false)
     {
         if ($mailId === -1) {
