@@ -19,7 +19,9 @@
   * @author Lee Keitel
   * @date Jan 2015
 ***/
-namespace Dandelion;
+namespace Dandelion\Controllers;
+
+use \Dandelion\Routes;
 
 /**
  * DandelionApplication represents an instance of Dandelion.
@@ -34,7 +36,7 @@ class AppController
     public function __construct() {
         // Load installer if necassary
         if (!INSTALLED) {
-            redirect('installer');
+            \Dandelion\redirect('installer');
         }
         $this->url = $_SERVER['REQUEST_URI'];
     }
@@ -46,14 +48,7 @@ class AppController
      */
     public function run() {
         include ROOT.'/routes.php';
-        \Dandelion\Routes::route($this->url);
+        Routes::route($this->url);
         return;
-    }
-
-    /**
-     * Gotta make sure the session is written and closed
-     */
-    public function __destruct() {
-        session_write_close();
     }
 }

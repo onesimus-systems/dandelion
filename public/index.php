@@ -11,6 +11,8 @@
 ***/
 namespace Dandelion;
 
+use \Dandelion\Controllers\AppController;
+
 require __DIR__.'/../bootstrap/autoloader.php';
 
 require __DIR__.'/../bootstrap/bootstrap.php';
