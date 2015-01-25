@@ -110,12 +110,12 @@ class ApiController
             $userRights = null;
         }
 
-        $databaseConn = \Dandelion\Storage\mySqlDatabase::getInstance();
+        $DatabaseConn = \Dandelion\Storage\MySqlDatabase::getInstance();
         $urlParams = new \Dandelion\UrlParameters();
 
         // Call the requested function (as defined by the last part of the URL)
         $className = '\Dandelion\API\Module\\' . $module . 'API';
-        $ApiModule = new $className($databaseConn, $userRights, $urlParams);
+        $ApiModule = new $className($DatabaseConn, $userRights, $urlParams);
 
         if ($ApiModule instanceof \Dandelion\API\Module\BaseModule) {
             $data = $ApiModule->$request();
@@ -140,7 +140,7 @@ class ApiController
             exit(self::makeDAPI(1, 'API key is not valid', 'api'));
         }
 
-        $conn = \Dandelion\Storage\mySqlDatabase::getInstance();
+        $conn = \Dandelion\Storage\MySqlDatabase::getInstance();
 
         // Search for key with case sensitive collation
         $conn->select()

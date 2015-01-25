@@ -16,7 +16,7 @@ interface repoSocket {
 // Represents a connection to some database
 // The required functions reflect the typicall CRUD and allow
 // queries to be written in quasi-SQL form for clarity
-interface databaseConn {
+interface DatabaseConn {
     public function insert();
     public function update($table);
     public function delete($joinCols = '');

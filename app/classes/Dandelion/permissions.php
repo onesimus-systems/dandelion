@@ -23,7 +23,7 @@ namespace Dandelion;
 
 class permissions
 {
-    public function __construct(databaseConn $dbConn) {
+    public function __construct(DatabaseConn $dbConn) {
         $this->dbConn = $dbConn;
         return;
     }

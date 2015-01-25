@@ -11,9 +11,10 @@
 
 namespace Dandelion\Storage;
 
-class mySqlDatabase implements \Dandelion\databaseConn {
+class MySqlDatabase implements \Dandelion\DatabaseConn {
     private $currentConn;
     private static $instance;
+    public static $dbPrefix;
     public static $connInfo = array(); // Loaded from bootstrap file
     private $command;
     private $rawStatment;

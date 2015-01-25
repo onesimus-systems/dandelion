@@ -22,7 +22,7 @@
 namespace Dandelion;
 
 class logs {
-    public function __construct(databaseConn $dbConn, $ur = null) {
+    public function __construct(DatabaseConn $dbConn, $ur = null) {
         $this->db = $dbConn;
         $this->ur = $ur;
         return;

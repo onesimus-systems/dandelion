@@ -3,7 +3,7 @@ namespace Dandelion\Controllers;
 
 use \Dandelion\UrlParameters;
 use \Dandelion\Categories;
-use \Dandelion\Storage\mySqlDatabase;
+use \Dandelion\Storage\MySqlDatabase;
 
 class DefaultPageController
 {
@@ -29,7 +29,7 @@ class DefaultPageController
 
         if ($urlParams->action == 'grabcats') {
             $past = json_decode(stripslashes($urlParams->pastSelections));
-            $displayCats = new Categories(mySqlDatabase::getInstance());
+            $displayCats = new Categories(MySqlDatabase::getInstance());
             echo $displayCats->getChildren($past);
         }
         return;

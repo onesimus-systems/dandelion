@@ -25,7 +25,7 @@ class categories
 {
     private $database;
 
-    public function __construct(databaseConn $db) {
+    public function __construct(DatabaseConn $db) {
         $this->database = $db;
     }
 

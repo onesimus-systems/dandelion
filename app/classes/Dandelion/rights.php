@@ -23,7 +23,7 @@ class rights
      * @param int $userid - ID of user
      */
     public function __construct($userid) {
-      $conn = Storage\mySqlDatabase::getInstance();
+      $conn = Storage\MySqlDatabase::getInstance();
 
       $this->userid = $userid;
       $conn->select('r.permissions')

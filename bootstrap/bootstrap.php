@@ -12,25 +12,28 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Logging;
+use \Dandelion\Utils\Updater;
+use \Dandelion\Storage\MySqlDatabase;
+use \Dandelion\Session\SessionManager;
+
 // Get and define root path of application
+define('D_VERSION', '6.0.0-dev');
 define('BASE_DIR', dirname(dirname(__FILE__)));
 define('ROOT', BASE_DIR.DIRECTORY_SEPARATOR.'app');
 
-/**
- * Check running PHP version
- * The password compatibility library requires PHP version 5.3.7 or above
- */
-if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.3.7', '<')) {
+// Check PHP version, Dandelion supports only PHP 5.4 and above
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.4.0', '<')) {
     require ROOT. '/lib/phpVersionError.php';
     PHPVersionError('site');
 }
 
-require ROOT . '/lib/interfaces.php';
+// Load password comapatability library if version is less than 5.5
+if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+    require ROOT . '/lib/password-compat/password.php';
+}
 
-// Setup error logging
-require ROOT . '/lib/logging.php';
-error_reporting(-1);
-ini_set('log_errors', true);
+require ROOT . '/lib/interfaces.php';
 
 // Load configuration
 if (file_exists(ROOT . '/config/config.php')) {
@@ -42,44 +45,31 @@ else {
     exit(1);
 }
 
+// Register logging system
+Logging::register();
+
 // Define constants
-define('D_VERSION', '6.0.0 dev');
 define('DB_PREFIX', $DBCONFIG['db_prefix']);
 
-// Display errors if in debug mode
-if (DEBUG_ENABLED) {
-    ini_set('display_errors', true);
-    ini_set('display_startup_errors', true);
-}
-
 // Give database class the info to connect
-Storage\mySqlDatabase::$connInfo = $DBCONFIG;
+MySqlDatabase::$connInfo = $DBCONFIG;
+MySqlDatabase::$dbPrefix = $DBCONFIG['db_prefix'];
 
 // Check for and apply updates
-require ROOT . '/lib/update.php';
-update();
+Updater::checkForUpdate();
 
 // Setup session manager
-$timeout = 21600; // 6 hours
-ini_set('session.gc_maxlifetime', $timeout);
-require ROOT . '/lib/session_manager.php';
-new SessionSaveHandler();
-session_name(PHP_SESSION_NAME);
-session_start();
+SessionManager::register();
+SessionManager::startSession();
 
 // Load helper scripts
 require ROOT . '/lib/helperScripts.php';
 require ROOT . '/lib/themes.php';
 require ROOT . '/lib/javascript.php';
 
-// Load password comapatability library if version is less than 5.5
-if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-    require ROOT . '/lib/password-compat/password.php';
-}
-
 // Load application settings
 if (!isset($_SESSION['app_settings'])) {
-    $conn = Storage\mySqlDatabase::getInstance();
+    $conn = MySqlDatabase::getInstance();
     $app_settings = $conn->selectAll('settings')->get();
     foreach ($app_settings as $setting) {
         $_SESSION['app_settings'][$setting['name']] = $setting['value'];

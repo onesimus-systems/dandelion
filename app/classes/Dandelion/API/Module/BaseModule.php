@@ -28,7 +28,7 @@ class BaseModule {
     protected $ur;
     protected $up;
 
-    public function __construct(\Dandelion\databaseConn $db, $ur, $urlParameters) {
+    public function __construct(\Dandelion\DatabaseConn $db, $ur, $urlParameters) {
         $this->db = $db;
         $this->ur = $ur;
         $this->up = $urlParameters;
