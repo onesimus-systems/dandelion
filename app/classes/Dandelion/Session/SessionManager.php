@@ -11,10 +11,20 @@ class SessionManager implements \SessionHandlerInterface
     private $sessionName;
     private $dbc;
     private static $instance;
+    public static $session = [];
 
     private function __construct() {}
     private function __clone() {}
     private function __wakeup() {}
+
+    public static function get($name) {
+        return $session[$name];
+    }
+
+    public static function set($name, $value) {
+        $session[$name] = $value;
+        return;
+    }
 
     public static function register()
     {
@@ -31,10 +41,11 @@ class SessionManager implements \SessionHandlerInterface
         return;
     }
 
-    public static function startSession()
+    public static function startSession($name)
     {
-        session_name(PHP_SESSION_NAME);
+        session_name($name);
         session_start();
+        self::$session = $_SESSION;
         return;
     }
 

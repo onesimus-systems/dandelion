@@ -63,8 +63,6 @@ class AdminActions
         );
         $this->dbConn->go($params);
 
-        $_SESSION['app_settings']['default_theme'] = $data;
-
         return 'Default theme set successfully';
     }
 
@@ -86,8 +84,6 @@ class AdminActions
         );
         $this->dbConn->go($params);
 
-        $_SESSION['app_settings']['cheesto_enabled'] = $enabled;
-
         return 'Settings set successfully';
     }
 
@@ -107,8 +103,6 @@ class AdminActions
             'enabled' => $enabled
         );
         $this->dbConn->go($params);
-
-        $_SESSION['app_settings']['public_api'] = $enabled;
 
         return 'Setting saved';
     }

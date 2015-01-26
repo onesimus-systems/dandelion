@@ -1,5 +1,7 @@
 <?php
 namespace Dandelion;
+
+use \Dandelion\Utils\View;
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,5 +25,5 @@ namespace Dandelion;
             </form>
         </div>
     </body>
-    <?= loadJS('jquery', 'login'); ?>
+    <?= View::loadJS('jquery', 'login'); ?>
 </html>

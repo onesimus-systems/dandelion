@@ -4,18 +4,20 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Utils\View;
+
 $addLink = '';
 if ($User_Rights->authorized('createlog')) {
 	$addLink = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 }
 
 $requiredCssFiles = array("cheesto","jqueryui",);
-include ROOT.'/pages/includes/head.php';
+include $paths['app'].'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="divMain">
     <?php
-    if ($_SESSION['app_settings']['cheesto_enabled'] && $User_Rights->authorized('viewcheesto')) {
+    if (CHEESTO_ENABLED && $User_Rights->authorized('viewcheesto')) {
     ?>
     <div id="presence">
         <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="/assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
@@ -54,7 +56,7 @@ include ROOT.'/pages/includes/head.php';
     <?php } ?>
 </div>
 
-<?php echo loadJS("jquery","jqueryui","tinymce","cheesto","catManage","logs","mail")?>
+<?php echo View::loadJS("jquery","jqueryui","tinymce","cheesto","catManage","logs","mail")?>
 <script type="text/javascript">
     refreshFun.runFirst();
     presence.checkstat(0);
@@ -62,4 +64,4 @@ include ROOT.'/pages/includes/head.php';
     $('#presence').draggable();
 </script>
 <!-- End Page Body -->
-<?php include ROOT.'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/pages/includes/footer.php'; ?>

@@ -4,8 +4,10 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Utils\View;
+
 $requiredCssFiles = array("jqueryui", "permissions.css");
-include ROOT.'/pages/includes/head.php';
+include $paths['app'].'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="dialog" title="Alert"></div>
@@ -97,9 +99,9 @@ include ROOT.'/pages/includes/head.php';
     </form>
 </div>
 
-<?php echo loadJS('permissions','jquery','jqueryui'); ?>
+<?php echo View::loadJS('permissions','jquery','jqueryui'); ?>
 <script type="text/javascript">
     permissions.getList();
 </script>
 <!-- End Page Body -->
-<?php include ROOT.'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/pages/includes/footer.php'; ?>

@@ -4,8 +4,10 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Utils\View;
+
 $requiredCssFiles = array();
-include ROOT.'/pages/includes/head.php';
+include $paths['app'].'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <p>This is your first time logging into Dandelion. Please reset your password:</p>
@@ -25,6 +27,6 @@ include ROOT.'/pages/includes/head.php';
     </form>
 </div>
 
-<?= loadJS('jquery','reset'); ?>
+<?= View::loadJS('jquery','reset'); ?>
 <!-- End Page Body -->
-<?php include ROOT.'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/pages/includes/footer.php'; ?>

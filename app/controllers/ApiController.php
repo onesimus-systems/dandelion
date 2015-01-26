@@ -4,16 +4,18 @@
  */
 namespace Dandelion\Controllers;
 
+use \Dandelion\Application;
 use \Dandelion\Auth\GateKeeper;
 use \Dandelion\API\Module\BaseModule;
 use \Dandelion\Storage\MySqlDatabase;
 
 class ApiController
 {
-    public function __construct()
+    public function __construct(Application $app)
     {
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
+        $this->app = $app;
     }
 
     /**
@@ -26,7 +28,7 @@ class ApiController
      */
     public function apiCall($module, $method)
     {
-        if ($_SESSION['app_settings']['public_api']) {
+        if ($this->app->config['publicApiEnabled']) {
             $apikey = isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : '';
             echo $this->processRequest($apikey, false, $module, $method);
         }

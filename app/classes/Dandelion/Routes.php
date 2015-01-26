@@ -76,11 +76,14 @@ class Routes
         $cleanUrl = self::cleanUrl($url);
         $httpmethod = $_SERVER['REQUEST_METHOD'];
 
-        if (self::exactMatch($cleanUrl, $httpmethod)) {
-            return true;
+        $exact = self::exactMatch($cleanUrl, $httpmethod);
+        if ($exact) {
+            return $exact;
         }
-        if (self::launchRoute($cleanUrl, $httpmethod)) {
-            return true;
+
+        $best = self::launchRoute($cleanUrl, $httpmethod);
+        if ($best) {
+            return $best;
         }
 
         // No route found
@@ -108,9 +111,7 @@ class Routes
             return false;
         }
 
-        $controller = new $routeClass();
-        $controller->$routeMethod();
-        return true;
+        return array($routeClass, $routeMethod, []);
     }
 
     /**
@@ -157,10 +158,7 @@ class Routes
         }
 
         $params = self::getVars($pattern, $url);
-        $controller = new $routeClass();
-        call_user_func_array(array($controller, $routeMethod), $params);
-
-        return true;
+        return array($routeClass, $routeMethod, $params);
     }
 
     /**

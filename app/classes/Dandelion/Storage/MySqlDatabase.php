@@ -59,14 +59,14 @@ class MySqlDatabase implements DatabaseConn
                 \PDO::ATTR_PERSISTENT => true
             ));
 
-            if (DEBUG_ENABLED) {
+            if (true) {
                 $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             }
 
             $this->currentConn = $conn;
             $this->sqlStatement = $this->blankStatement;
         } catch (\PDOException $e) {
-            if (DEBUG_ENABLED) {
+            if (true) {
                 echo 'ERROR: ' . $e->getMessage();
             } else {
                 echo 'Error 0x000185: Can\'t connect to database';

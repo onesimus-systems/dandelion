@@ -4,6 +4,7 @@
  */
 namespace Dandelion\Controllers;
 
+use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\Auth\GateKeeper;
 use \Dandelion\Storage\MySqlDatabase;
@@ -16,10 +17,11 @@ class AuthController
     // URL parameters
     private $up;
 
-    public function __construct()
+    public function __construct(Application $app)
     {
         $this->db = MySqlDatabase::getInstance();
         $this->up = new UrlParameters();
+        $this->app = $app;
     }
 
     public function login()

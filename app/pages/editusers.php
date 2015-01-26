@@ -4,8 +4,10 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Utils\View;
+
 $requiredCssFiles = array("jqueryui", "datetimepicker.css");
-include ROOT.'/pages/includes/head.php';
+include $paths['app'].'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 
@@ -21,7 +23,7 @@ include ROOT.'/pages/includes/head.php';
     </form>
 </div>
 
-<?php echo loadJS('jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker.min', 'slider'); ?>
+<?php echo View::loadJS('jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker.min', 'slider'); ?>
 
 <script type="text/javascript">
     userManager.init();
@@ -29,4 +31,4 @@ include ROOT.'/pages/includes/head.php';
 
 <!-- End Page Body -->
 
-<?php include ROOT.'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/pages/includes/footer.php'; ?>

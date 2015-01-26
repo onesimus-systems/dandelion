@@ -3,6 +3,8 @@
  * Windowed version of Cheesto
  */
 namespace Dandelion;
+
+use \Dandelion\Utils\View;
 ?>
 
 <!DOCTYPE html>
@@ -21,6 +23,6 @@ namespace Dandelion;
         	<div id="mainPresence"></div>
         </div>
 
-        <?= loadJS("jquery","cheesto");?>
+        <?= View::loadJS("jquery","cheesto");?>
     </body>
 </html>

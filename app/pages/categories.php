@@ -4,8 +4,10 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Utils\View;
+
 $requiredCssFiles = array();
-include ROOT.'/pages/includes/head.php';
+include $paths['app'].'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <h3>Category Management</h3>
@@ -30,10 +32,10 @@ include ROOT.'/pages/includes/head.php';
 	?>
 </form>
 
-<?php echo loadJS("jquery", "catManage");?>
+<?php echo View::loadJS("jquery", "catManage");?>
 <script type="text/javascript">
     CategoryManage.grabNextLevel('0:0');
 </script>
 <!-- End Page Body -->
 
-<?php include ROOT.'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/pages/includes/footer.php'; ?>

@@ -4,8 +4,10 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Utils\View;
+
 $requiredCssFiles = array("jqueryui");
-include ROOT.'/pages/includes/head.php';
+include $paths['app'].'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <h2>User Settings</h2>
@@ -34,12 +36,12 @@ include ROOT.'/pages/includes/head.php';
 <form>
 	Current theme:
 
-	<?= getThemeList(); ?>
+	<?= View::getThemeList(); ?>
 
     <button type="button" class="dButton" onClick="api.saveTheme();">Save Theme</button>
 </form>
 
-<?php if ($_SESSION['app_settings']['public_api']) { ?>
+<?php if (PUBLIC_API) { ?>
     <br><hr width="350"><br>
 
     <form>
@@ -49,7 +51,7 @@ include ROOT.'/pages/includes/head.php';
 <?php
 }
 
-echo loadJS('jquery','jqueryui','settings'); ?>
+echo View::loadJS('jquery','jqueryui','settings'); ?>
 <!-- End Page Body -->
 
-<?php include ROOT.'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/pages/includes/footer.php'; ?>

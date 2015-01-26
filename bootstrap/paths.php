@@ -20,4 +20,9 @@ return array(
      */
 
     'base' => __DIR__.'/..',
+
+    /**
+     * Theme path - Path pointing to parent directory of themes
+     */
+    'themes' => __DIR__.'/../public/assets/themes'
 );

@@ -6,6 +6,8 @@ namespace Dandelion;
 
 class Logging
 {
+    private static $path;
+
     private function __construct() {}
     private function __clone() {}
     private function __wakeup() {}
@@ -13,14 +15,15 @@ class Logging
     /**
      *  Register the logging system with Dandelion
      */
-    public static function register()
+    public static function register($path)
     {
+        self::$path = $path;
         set_error_handler('\Dandelion\Logging::errorHandler');
         register_shutdown_function('\Dandelion\Logging::shutdownHandler');
         error_reporting(E_ALL);
         ini_set('log_errors', true);
 
-        if (DEBUG_ENABLED) {
+        if (true) {
             ini_set('display_errors', true);
             ini_set('display_startup_errors', true);
         } else {
@@ -124,10 +127,10 @@ class Logging
      */
     private static function logToFile($error, $errlvl)
     {
-        if (!is_dir(ROOT.'/logs')) {
-            mkdir(ROOT.'/logs', 0740);
+        if (!is_dir(self::$path)) {
+            mkdir(self::$path, 0740);
         }
-        $logpath = ROOT.'/logs/'.$errlvl.'.log';
+        $logpath = self::$path.'/'.$errlvl.'.log';
         return file_put_contents($logpath, $error.PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 }

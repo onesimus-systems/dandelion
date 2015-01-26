@@ -4,10 +4,12 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Utils\View;
+
 // Stays false unless a button or admin control is shown
 $content = false;
 $requiredCssFiles = array("jqueryui");
-include ROOT.'/pages/includes/head.php';
+include $paths['app'].'/pages/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <h2>Administration</h2>
@@ -37,22 +39,22 @@ include ROOT.'/pages/includes/head.php';
 
         Default theme:
 
-    	<?= getThemeList('', false); ?>
+    	<?= View::getThemeList('', false); ?>
 
         <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
 
         &#264;eesto:
         <select id="cheesto_enabled">
-            <option value="true" <?= $_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Enabled</option>
-            <option value="false" <?= !$_SESSION['app_settings']['cheesto_enabled'] ? 'selected' : ''; ?>>Disabled</option>
+            <option value="true" <?= CHEESTO_ENABLED ? 'selected' : ''; ?>>Enabled</option>
+            <option value="false" <?= !CHEESTO_ENABLED ? 'selected' : ''; ?>>Disabled</option>
         </select>
 
         <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save"><br><br>
 
         Public API:
         <select id="api_enabled">
-            <option value="true" <?= $_SESSION['app_settings']['public_api'] ? 'selected' : ''; ?>>Enabled</option>
-            <option value="false" <?= !$_SESSION['app_settings']['public_api'] ? 'selected' : ''; ?>>Disabled</option>
+            <option value="true" <?= PUBLIC_API ? 'selected' : ''; ?>>Enabled</option>
+            <option value="false" <?= !PUBLIC_API ? 'selected' : ''; ?>>Disabled</option>
         </select>
 
         <input type="button" class="dButton" onClick="adminAction.saveApiSetting();" value="Save">
@@ -69,7 +71,7 @@ if (!$content) {
 	echo 'Your account doesn\'t have rights to administrative controls.';
 }
 
-echo loadJS('jquery','admin');
+echo View::loadJS('jquery','admin');
 
-include ROOT.'/pages/includes/footer.php';
+include $paths['app'].'/pages/includes/footer.php';
 ?>

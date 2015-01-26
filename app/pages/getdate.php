@@ -3,6 +3,8 @@
  * Dialog to get time and message for Cheesto
  */
 namespace Dandelion;
+
+use \Dandelion\Utils\View;
 ?>
 <html>
     <head>
@@ -50,6 +52,6 @@ namespace Dandelion;
             <input type="button" onclick="giveTime();" value="Done">
         </form>
 
-        <?= loadJS("jquery","jqueryui","timepicker.min","slider","cheestoGetDate");?>
+        <?= View::loadJS("jquery","jqueryui","timepicker.min","slider","cheestoGetDate");?>
     </body>
 </html>
