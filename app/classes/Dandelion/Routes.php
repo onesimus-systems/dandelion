@@ -58,7 +58,8 @@ class Routes
 
         $options['use'] = explode('@', $options['use']);
         $url = self::cleanUrl($url);
-        self::$routeList[$url] = array(
+        $routeName = $url.'@'.$method;
+        self::$routeList[$routeName] = array(
             'httpmethod' => $method,
             'class' => $options['use'][0],
             'method' => $options['use'][1],
@@ -66,6 +67,14 @@ class Routes
             'before' => $options['before']
         );
         return;
+    }
+
+    /**
+     * Get array of current routes
+     */
+    public static function getRoutes()
+    {
+        return self::$routeList;
     }
 
     /**
@@ -95,19 +104,20 @@ class Routes
      */
     private static function exactMatch($url, $method)
     {
-        if (!isset(self::$routeList[$url])) {
+        $routeName = $url.'@'.$method;
+        if (!isset(self::$routeList[$routeName])) {
             return false;
         }
 
-        $routeHttpMethod = self::$routeList[$url]['httpmethod'];
-        $routeClass = self::$routeList[$url]['class'];
-        $routeMethod = self::$routeList[$url]['method'];
+        $routeHttpMethod = self::$routeList[$routeName]['httpmethod'];
+        $routeClass = self::$routeList[$routeName]['class'];
+        $routeMethod = self::$routeList[$routeName]['method'];
 
         if ($routeHttpMethod != '*' && $routeHttpMethod != $method) {
             return false;
         }
 
-        if (!self::handleBefore(self::$routeList[$url]['before'])) {
+        if (!self::handleBefore(self::$routeList[$routeName]['before'])) {
             return false;
         }
 
