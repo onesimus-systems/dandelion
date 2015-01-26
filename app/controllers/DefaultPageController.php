@@ -51,7 +51,11 @@ class DefaultPageController
             'paths' => array(
                 'app' => $this->app->paths['app']
                 ),
-            'User_Rights' => $User_Rights
+            'User_Rights' => $User_Rights,
+            'appTitle' => $this->app->config['appTitle'],
+            'tagline' => $this->app->config['tagline'],
+            'pageTitle' => ucfirst($page),
+            'cheestoEnabled' => $this->app->config['cheestoEnabled']
             )
         );
     }

@@ -18,10 +18,11 @@ use \Dandelion\Session\SessionManager;
  */
 class Application
 {
+    const VERSION = '6.0.0-dev';
+    
     public $url;
     public $paths = [];
     public $config;
-    public $version = '6.0.0-dev';
 
     /**
      *  @param $url string - The request URI
@@ -76,12 +77,9 @@ class Application
     {
         // Define constants
         define('DB_PREFIX', $this->config['db']['db_prefix']);
-        define('D_VERSION', $this->version);
         define('PUBLIC_DIR', $this->paths['public']);
         define('THEME_DIR', 'assets/themes');
         define('DEFAULT_THEME', $this->config['defaultTheme']);
-        define('PUBLIC_API', true);
-        define('CHEESTO_ENABLED', true);
 
         // Give database class the info to connect
         MySqlDatabase::$connInfo = $this->config['db'];

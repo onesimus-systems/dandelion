@@ -34,32 +34,7 @@ include $paths['app'].'/pages/includes/head.php';
 	if ($User_Rights->authorized('admin')) {
 		$content = true;
 	?>
-		<input type="button" class="dButton adminButton" value="Edit Site Slogan" onClick="adminAction.editSlogan('<?= addslashes($_SESSION['app_settings']['slogan']); ?>');"><br>
-		<br><hr width="350"><br>
-
-        Default theme:
-
-    	<?= View::getThemeList('', false); ?>
-
-        <input type="button" class="dButton" onClick="adminAction.saveDefaultTheme();" value="Save Theme"><br><br>
-
-        &#264;eesto:
-        <select id="cheesto_enabled">
-            <option value="true" <?= CHEESTO_ENABLED ? 'selected' : ''; ?>>Enabled</option>
-            <option value="false" <?= !CHEESTO_ENABLED ? 'selected' : ''; ?>>Disabled</option>
-        </select>
-
-        <input type="button" class="dButton" onClick="adminAction.saveCheesto();" value="Save"><br><br>
-
-        Public API:
-        <select id="api_enabled">
-            <option value="true" <?= PUBLIC_API ? 'selected' : ''; ?>>Enabled</option>
-            <option value="false" <?= !PUBLIC_API ? 'selected' : ''; ?>>Disabled</option>
-        </select>
-
-        <input type="button" class="dButton" onClick="adminAction.saveApiSetting();" value="Save">
-
-        <br><br><hr width="350">
+		<br><hr width="350">
 		<h3>Database Administration</h3>
 		<input type="button" class="dButton adminButton" value="Export Database to File" onClick="adminAction.backupDB();" title="Creates a single file backup of the Dandelion database tables.&#013;If you have a lot of log entries, the file will be large."><br>
 	<?php } ?>

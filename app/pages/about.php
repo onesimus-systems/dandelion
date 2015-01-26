@@ -4,6 +4,8 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Application;
+
 $requiredCssFiles = array("tutorial");
 include $paths['app'].'/pages/includes/head.php';
 ?>
@@ -12,7 +14,7 @@ include $paths['app'].'/pages/includes/head.php';
 	<h2 class="t_cen">About</h2>
 
 	<p class="le" style="text-indent:0;">
-		Version: <?= D_VERSION;?>
+		Version: <?= Application::VERSION;?>
 	</p>
 
     <h3>What is Dandelion:</h3>

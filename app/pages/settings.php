@@ -12,7 +12,7 @@ include $paths['app'].'/pages/includes/head.php';
 <!-- Begin Page Body -->
 <h2>User Settings</h2>
 
-<div id="passwordResetDialog">
+<div id="passwordResetDialogSettings">
     <h2>Reset Password for <?= $_SESSION['userInfo']['realname']; ?>:</h2>
     <form>
         <table>
@@ -45,7 +45,7 @@ include $paths['app'].'/pages/includes/head.php';
     <br><hr width="350"><br>
 
     <form>
-        API Key: <span id="apiKey"></span>
+        <span id="apiKey"></span>
         <br><br><button type="button" class="dButton" onClick="api.generateKey();">Generate New Key</button>
     </form>
 <?php

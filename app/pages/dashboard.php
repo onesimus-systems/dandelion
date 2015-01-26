@@ -17,7 +17,7 @@ include $paths['app'].'/pages/includes/head.php';
 <!-- Begin Page Body -->
 <div id="divMain">
     <?php
-    if (CHEESTO_ENABLED && $User_Rights->authorized('viewcheesto')) {
+    if ($cheestoEnabled && $User_Rights->authorized('viewcheesto')) {
     ?>
     <div id="presence">
         <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="/assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
