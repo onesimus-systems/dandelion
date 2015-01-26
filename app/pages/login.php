@@ -9,7 +9,7 @@ use \Dandelion\Utils\View;
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="/assets/favicon.ico">
-        <?= loadCssSheets(); ?>
+        <?= View::loadCssSheets(); ?>
         <title>Dandelion Web Log</title>
     </head>
     <body>

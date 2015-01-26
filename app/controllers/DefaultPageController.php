@@ -9,7 +9,8 @@ use \Dandelion\Storage\MySqlDatabase;
 
 class DefaultPageController
 {
-    public function __construct(Application $app) {
+    public function __construct(Application $app)
+    {
         $this->app = $app;
     }
 
