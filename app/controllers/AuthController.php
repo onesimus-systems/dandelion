@@ -4,6 +4,7 @@
  */
 namespace Dandelion\Controllers;
 
+use \Dandelion\Utils\View;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\Auth\GateKeeper;
@@ -47,6 +48,6 @@ class AuthController
         }
         session_destroy();
 
-        \Dandelion\redirect('index');
+        View::redirect('index');
     }
 }

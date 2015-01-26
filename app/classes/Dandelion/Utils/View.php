@@ -214,4 +214,34 @@ class view
 
         return $cssList;
     }
+
+    public static function redirect($page)
+    {
+        $allPages = array(
+            'home' => '',
+            'homepage' => '',
+            'index' => '',
+            'dashboard' => '',
+            'userSettings' => 'settings',
+            'adminSettings' => 'admin',
+            'tutorial' => 'tutorial',
+            'logout' => 'logout',
+            'about' => 'about',
+            'adminCategories' => 'categories',
+            'adminGroups' => 'editgroups',
+            'adminUsers' => 'editusers',
+            'installer' => 'install/index.php',
+            'mailbox' => 'mail',
+            'resetPassword' => 'reset',
+        );
+
+        if (!array_key_exists($page, $allPages)) {
+            trigger_error($page . ' is not an available redirect page.');
+            return;
+        }
+
+        $newPath = '/' . $allPages[$page];
+        header("Location: $newPath");
+        return;
+    }
 }

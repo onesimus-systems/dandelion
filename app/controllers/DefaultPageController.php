@@ -1,6 +1,7 @@
 <?php
 namespace Dandelion\Controllers;
 
+use \Dandelion\View;
 use \Dandelion\Categories;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
@@ -9,6 +10,8 @@ use \Dandelion\Storage\MySqlDatabase;
 
 class DefaultPageController
 {
+    private $app;
+
     public function __construct(Application $app)
     {
         $this->app = $app;
@@ -16,17 +19,14 @@ class DefaultPageController
 
     public function render($page = '')
     {
-        global $User_Rights;
         $page = $page ?: 'dashboard';
-        $paths = $this->app->paths;
 
-        // Load page
-        $indexCall = true;
-        if (is_file($paths['app'].'/pages/'.$page.'.php') && GateKeeper::authenticated()) {
-            include $paths['app'].'/pages/'.$page.'.php';
+        if (GateKeeper::authenticated()) {
+            $this->showPage($page);
         } else {
-            include $paths['app'].'/pages/login.php';
+            $this->showLogin();
         }
+
         return;
     }
 
@@ -40,5 +40,26 @@ class DefaultPageController
             echo $displayCats->getChildren($past);
         }
         return;
+    }
+
+    public function showPage($page)
+    {
+        global $User_Rights;
+        $template = new View();
+        $template->setTemplatesDirectory($this->app->paths['app'].'/pages');
+        $template->display($page.'.php', array(
+            'paths' => array(
+                'app' => $this->app->paths['app']
+                ),
+            'User_Rights' => $User_Rights
+            )
+        );
+    }
+
+    public function showLogin()
+    {
+        $template = new View();
+        $template->setTemplatesDirectory($this->app->paths['app'].'/pages');
+        $template->display('login.php');
     }
 }
