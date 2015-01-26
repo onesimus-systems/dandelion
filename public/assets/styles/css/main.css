@@ -177,6 +177,9 @@ a:active {
 #dialog {
   text-align: left;
 }
+#passwordResetDialogSettings {
+  display: none;
+}
 /** Footer */
 #credits {
   font-size: .75em;

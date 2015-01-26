@@ -4,21 +4,20 @@
 
 $(function(){
     api.getApiKey();
-    $("#passwordResetDialog").css("display", "none");
 });
 
 var api = {
     getApiKey: function() {
         $.getJSON("api/i/keyManager/getKey",
             function(data) {
-                $("#apiKey").html(data.data.key);
+                $("#apiKey").html('API Key: '+data.data.key);
         });
     },
 
     generateKey: function() {
         $.getJSON("api/i/keyManager/newKey",
             function(data) {
-                $("#apiKey").html(data.data.key);
+                $("#apiKey").html('API Key: '+data.data.key);
         });
     },
 
