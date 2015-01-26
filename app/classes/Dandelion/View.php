@@ -136,15 +136,20 @@ class View
      */
     protected function render($template, $data = null)
     {
-        $templatePathname = $this->getTemplatePathname($template);
-        if (!is_file($templatePathname)) {
-            throw new \RuntimeException("View cannot render `$template` because the template does not exist");
-        }
+        try {
+            $templatePathname = $this->getTemplatePathname($template);
+            if (!is_file($templatePathname)) {
+                throw new \RuntimeException("View cannot render `$template` because the template does not exist");
+            }
 
-        $data = array_merge($this->all(), (array) $data);
-        extract($data);
-        ob_start();
-        require $templatePathname;
-        return ob_get_clean();
+            $data = array_merge($this->all(), (array) $data);
+            extract($data);
+            ob_start();
+            require $templatePathname;
+            return ob_get_clean();
+        } catch (\Exception $e) {
+            // Eventually show some error page
+            return $e;
+        }
     }
 }
