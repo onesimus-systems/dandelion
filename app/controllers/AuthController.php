@@ -4,7 +4,8 @@
  */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Utils\View;
+use \Dandelion\View;
+use \Dandelion\Utils\View as Vutils;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\Auth\GateKeeper;
@@ -25,6 +26,18 @@ class AuthController
         $this->app = $app;
     }
 
+    public function loginPage()
+    {
+        if (GateKeeper::authenticated()) {
+            Vutils::redirect('dashboard');
+            return;
+        }
+
+        $template = new View();
+        $template->setTemplatesDirectory($this->app->paths['app'].'/pages');
+        $template->display('login.php');
+    }
+
     public function login()
     {
         $auth = new GateKeeper($this->db);
@@ -32,7 +45,13 @@ class AuthController
         if ($this->up->remember == 'true') {
             $rem = true;
         }
-        echo json_encode($auth->login($this->up->user, $this->up->pass, $rem));
+
+        $tryAuth = $auth->login($this->up->user, $this->up->pass, $rem);
+        if (!$tryAuth) {
+            Vutils::redirect('login');
+        } else {
+            echo json_encode($tryAuth);
+        }
         return;
     }
 
@@ -48,6 +67,6 @@ class AuthController
         }
         session_destroy();
 
-        View::redirect('index');
+        Vutils::redirect('login');
     }
 }

@@ -18,6 +18,10 @@ class GateKeeper
      */
     public function login($user, $pass, $remember = false)
     {
+        if (empty($user) || empty($pass)) {
+            return false;
+        }
+        
         $userInfo = $this->isUser($user, $pass);
 
         if (!$userInfo) {
@@ -41,10 +45,10 @@ class GateKeeper
 
         switch($userInfo['firsttime']) {
             case 2:
-                return '1';
+                return '2';
                 break;
             default:
-                return '0';
+                return '1';
                 break;
         }
 

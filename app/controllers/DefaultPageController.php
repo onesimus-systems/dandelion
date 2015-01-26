@@ -2,6 +2,7 @@
 namespace Dandelion\Controllers;
 
 use \Dandelion\View;
+use \Dandelion\Utils\View as Vutils;
 use \Dandelion\Categories;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
@@ -21,12 +22,12 @@ class DefaultPageController
     {
         $page = $page ?: 'dashboard';
 
-        if (GateKeeper::authenticated()) {
-            $this->showPage($page);
-        } else {
-            $this->showLogin();
+        if (!GateKeeper::authenticated()) {
+            Vutils::redirect('login');
+            return;
         }
 
+        $this->showPage($page);
         return;
     }
 
@@ -58,12 +59,5 @@ class DefaultPageController
             'cheestoEnabled' => $this->app->config['cheestoEnabled']
             )
         );
-    }
-
-    public function showLogin()
-    {
-        $template = new View();
-        $template->setTemplatesDirectory($this->app->paths['app'].'/pages');
-        $template->display('login.php');
     }
 }

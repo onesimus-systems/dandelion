@@ -226,13 +226,14 @@ class view
             'adminSettings' => 'admin',
             'tutorial' => 'tutorial',
             'logout' => 'logout',
+            'login' => 'login',
             'about' => 'about',
             'adminCategories' => 'categories',
             'adminGroups' => 'editgroups',
             'adminUsers' => 'editusers',
             'installer' => 'install/index.php',
             'mailbox' => 'mail',
-            'resetPassword' => 'reset',
+            'resetPassword' => 'reset'
         );
 
         if (!array_key_exists($page, $allPages)) {

@@ -11,16 +11,16 @@ function attemptLogin() {
         return false;
     }
 
-    $.post("do/login", { user: user, pass: pass, remember: remember }, null, 'json')
+    $.post("/login", { user: user, pass: pass, remember: remember }, null, 'json')
         .done(function( response ) {
-            if (response != '0' && response != '1') {
+            if (response != '1' && response != '2') {
                 alert(response);
                 return;
             }
 
-            if (response == '1') {
+            if (response == '2') {
                 location.assign('/reset');
-            } else if (response == '0') {
+            } else if (response == '1') {
                 location.assign('/');
             }
         });
