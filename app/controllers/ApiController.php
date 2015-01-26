@@ -87,6 +87,9 @@ class ApiController
 
         // Call the requested function (as defined by the last part of the URL)
         $className = '\Dandelion\API\Module\\' . $module . 'API';
+        if (!class_exists($className)) {
+            return self::makeDAPI(6, 'Module not found', 'API', '');
+        }
         $ApiModule = new $className($DatabaseConn, $userRights, $urlParams);
 
         if ($ApiModule instanceof BaseModule) {
