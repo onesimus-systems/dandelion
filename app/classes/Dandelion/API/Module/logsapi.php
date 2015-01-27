@@ -45,7 +45,7 @@ class logsAPI extends BaseModule
         );
 
         $logs = new Logs($this->db, $this->ur);
-        $return = json_decode($logs->getJSON($limit, $offset), true);
+        $return = $logs->getLogList($limit, $offset);
         $return['metadata'] = $metaData;
         return $return;
     }

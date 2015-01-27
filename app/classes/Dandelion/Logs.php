@@ -43,7 +43,7 @@ class Logs
      * @param int $limit - Number of logs to get
      * @param int $offset - Offset for pagination
      */
-    public function getJSON($limit = 25, $offset = 0)
+    public function getLogList($limit = 25, $offset = 0)
     {
         $this->db->select('l.*, u.realname')
                  ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
@@ -66,7 +66,7 @@ class Logs
                 $get_logs[$key]['canEdit'] = false;
             }
         }
-        return json_encode($get_logs);
+        return $get_logs;
     }
 
     /**
