@@ -5,6 +5,7 @@ use \Dandelion\View;
 use \Dandelion\Rights;
 use \Dandelion\Utils\View as Vutils;
 use \Dandelion\Categories;
+use \Dandelion\Template;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\Auth\GateKeeper;
@@ -62,6 +63,22 @@ class DefaultPageController
             'pageTitle' => ucfirst($page),
             'cheestoEnabled' => $this->app->config['cheestoEnabled'],
             'publicApiEnabled' => $this->app->config['publicApiEnabled']
+            )
+        );
+    }
+
+    public function tutorial()
+    {
+        $template = new Template();
+        $template->setTemplatesDirectory($this->app->paths['app'].'/templates');
+        $template->display('tutorial.php', array(
+            'paths' => array(
+                'app' => $this->app->paths['app']
+                ),
+            'test' => 'Hello World',
+            'appTitle' => $this->app->config['appTitle'],
+            'tagline' => $this->app->config['tagline'],
+            'pageTitle' => 'Tutorial'
             )
         );
     }

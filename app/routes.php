@@ -6,6 +6,7 @@ namespace Dandelion;
 
 Routes::get('/{page}', '\Dandelion\Controllers\DefaultPageController@render');
 
+Routes::get('/tutorial', '\Dandelion\Controllers\DefaultPageController@tutorial');
 Routes::get('/login', '\Dandelion\Controllers\AuthController@loginPage');
 Routes::post('/login', '\Dandelion\Controllers\AuthController@login');
 Routes::get('/logout', '\Dandelion\Controllers\AuthController@logout');
