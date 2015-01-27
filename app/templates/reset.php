@@ -7,7 +7,7 @@ namespace Dandelion;
 use \Dandelion\Utils\View;
 
 $requiredCssFiles = array();
-include $paths['app'].'/pages/includes/head.php';
+include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <p>This is your first time logging into Dandelion. Please reset your password:</p>
@@ -29,4 +29,4 @@ include $paths['app'].'/pages/includes/head.php';
 
 <?= View::loadJS('jquery','reset'); ?>
 <!-- End Page Body -->
-<?php include $paths['app'].'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/templates/includes/footer.php'; ?>

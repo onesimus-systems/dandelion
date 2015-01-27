@@ -12,7 +12,7 @@ if ($User_Rights->authorized('createlog')) {
 }
 
 $requiredCssFiles = array("cheesto","jqueryui",);
-include $paths['app'].'/pages/includes/head.php';
+include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="divMain">
@@ -64,4 +64,4 @@ include $paths['app'].'/pages/includes/head.php';
     $('#presence').draggable();
 </script>
 <!-- End Page Body -->
-<?php include $paths['app'].'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/templates/includes/footer.php'; ?>

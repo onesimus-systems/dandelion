@@ -7,7 +7,7 @@ namespace Dandelion;
 use \Dandelion\Utils\View;
 
 $requiredCssFiles = array("jqueryui", "permissions.css");
-include $paths['app'].'/pages/includes/head.php';
+include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="dialog" title="Alert"></div>
@@ -104,4 +104,4 @@ include $paths['app'].'/pages/includes/head.php';
     permissions.getList();
 </script>
 <!-- End Page Body -->
-<?php include $paths['app'].'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/templates/includes/footer.php'; ?>

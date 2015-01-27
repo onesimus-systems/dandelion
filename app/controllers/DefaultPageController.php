@@ -47,7 +47,7 @@ class DefaultPageController
     {
         global $User_Rights;
         $template = new View();
-        $template->setTemplatesDirectory($this->app->paths['app'].'/pages');
+        $template->setTemplatesDirectory($this->app->paths['app'].'/templates');
         $template->display($page.'.php', array(
             'paths' => array(
                 'app' => $this->app->paths['app']

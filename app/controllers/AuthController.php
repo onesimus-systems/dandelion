@@ -34,7 +34,7 @@ class AuthController
         }
 
         $template = new View();
-        $template->setTemplatesDirectory($this->app->paths['app'].'/pages');
+        $template->setTemplatesDirectory($this->app->paths['app'].'/templates');
         $template->display('login.php');
     }
 

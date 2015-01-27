@@ -9,7 +9,7 @@ use \Dandelion\Utils\View;
 // Stays false unless a button or admin control is shown
 $content = false;
 $requiredCssFiles = array("jqueryui");
-include $paths['app'].'/pages/includes/head.php';
+include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <h2>Administration</h2>
@@ -48,5 +48,5 @@ if (!$content) {
 
 echo View::loadJS('jquery','admin');
 
-include $paths['app'].'/pages/includes/footer.php';
+include $paths['app'].'/templates/includes/footer.php';
 ?>

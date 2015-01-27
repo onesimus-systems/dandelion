@@ -7,7 +7,7 @@ namespace Dandelion;
 use \Dandelion\Utils\View;
 
 $requiredCssFiles = array("jqueryui");
-include $paths['app'].'/pages/includes/head.php';
+include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <h2>User Settings</h2>
@@ -54,4 +54,4 @@ include $paths['app'].'/pages/includes/head.php';
 echo View::loadJS('jquery','jqueryui','settings'); ?>
 <!-- End Page Body -->
 
-<?php include $paths['app'].'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/templates/includes/footer.php'; ?>

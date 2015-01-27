@@ -7,7 +7,7 @@ namespace Dandelion;
 use \Dandelion\Utils\View;
 
 $requiredCssFiles = array("jqueryui","mail");
-include $paths['app'].'/pages/includes/head.php';
+include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="mailDialog" title="View Mail"></div>
@@ -44,4 +44,4 @@ include $paths['app'].'/pages/includes/head.php';
 
 <?= View::loadJS("jquery", "jqueryui", "mail", "tinymce");?>
 <!-- End Page Body -->
-<?php include $paths['app'].'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/templates/includes/footer.php'; ?>

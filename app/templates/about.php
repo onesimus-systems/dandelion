@@ -7,7 +7,7 @@ namespace Dandelion;
 use \Dandelion\Application;
 
 $requiredCssFiles = array("tutorial");
-include $paths['app'].'/pages/includes/head.php';
+include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="content">
@@ -46,4 +46,4 @@ include $paths['app'].'/pages/includes/head.php';
     </p>
 </div>
 <!-- End Page Body -->
-<?php include $paths['app'].'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/templates/includes/footer.php'; ?>

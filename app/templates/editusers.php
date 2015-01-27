@@ -7,7 +7,7 @@ namespace Dandelion;
 use \Dandelion\Utils\View;
 
 $requiredCssFiles = array("jqueryui", "datetimepicker.css");
-include $paths['app'].'/pages/includes/head.php';
+include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 
@@ -31,4 +31,4 @@ include $paths['app'].'/pages/includes/head.php';
 
 <!-- End Page Body -->
 
-<?php include $paths['app'].'/pages/includes/footer.php'; ?>
+<?php include $paths['app'].'/templates/includes/footer.php'; ?>
