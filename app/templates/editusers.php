@@ -2,12 +2,7 @@
 /**
  * User management page
  */
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-
-$requiredCssFiles = array("jqueryui", "datetimepicker.css");
-include $paths['app'].'/templates/includes/head.php';
+$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "datetimepicker.css"]]);
 ?>
 <!-- Begin Page Body -->
 
@@ -23,12 +18,9 @@ include $paths['app'].'/templates/includes/head.php';
     </form>
 </div>
 
-<?php echo View::loadJS('jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker.min', 'slider'); ?>
-
+<?= $this->loadJS(['jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker.min', 'slider']) ?>
 <script type="text/javascript">
     userManager.init();
 </script>
 
 <!-- End Page Body -->
-
-<?php include $paths['app'].'/templates/includes/footer.php'; ?>

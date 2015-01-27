@@ -2,12 +2,7 @@
 /**
  * Mailbox page
  */
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-
-$requiredCssFiles = array("jqueryui","mail");
-include $paths['app'].'/templates/includes/head.php';
+$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui","mail"]]);
 ?>
 <!-- Begin Page Body -->
 <div id="mailDialog" title="View Mail"></div>
@@ -42,6 +37,5 @@ include $paths['app'].'/templates/includes/head.php';
   <div id="mailList"></div>
 </div>
 
-<?= View::loadJS("jquery", "jqueryui", "mail", "tinymce");?>
+<?= $this->loadJS(["jquery", "jqueryui", "mail", "tinymce"]) ?>
 <!-- End Page Body -->
-<?php include $paths['app'].'/templates/includes/footer.php'; ?>

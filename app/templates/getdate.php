@@ -1,16 +1,9 @@
-<?php
-/**
- * Dialog to get time and message for Cheesto
- */
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-?>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="IE=9">
-        <?= loadCssSheets("cheestoWin","jqueryui","datetimepicker.css",false); ?>
+        <?= $this->getCssSheets(["cheestoWin","jqueryui","datetimepicker.css",false]) ?>
         <title>Dandelion cxeesto</title>
     </head>
 
@@ -52,6 +45,6 @@ use \Dandelion\Utils\View;
             <input type="button" onclick="giveTime();" value="Done">
         </form>
 
-        <?= View::loadJS("jquery","jqueryui","timepicker.min","slider","cheestoGetDate");?>
+        <?= $this->loadJS(["jquery","jqueryui","timepicker.min","slider","cheestoGetDate"]) ?>
     </body>
 </html>

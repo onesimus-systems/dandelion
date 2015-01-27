@@ -2,12 +2,7 @@
 /**
  * Rights group management page
  */
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-
-$requiredCssFiles = array("jqueryui", "permissions.css");
-include $paths['app'].'/templates/includes/head.php';
+$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "permissions.css"]]);
 ?>
 <!-- Begin Page Body -->
 <div id="dialog" title="Alert"></div>
@@ -99,9 +94,8 @@ include $paths['app'].'/templates/includes/head.php';
     </form>
 </div>
 
-<?php echo View::loadJS('permissions','jquery','jqueryui'); ?>
+<?= $this->loadJS(['permissions','jquery','jqueryui']) ?>
 <script type="text/javascript">
     permissions.getList();
 </script>
 <!-- End Page Body -->
-<?php include $paths['app'].'/templates/includes/footer.php'; ?>

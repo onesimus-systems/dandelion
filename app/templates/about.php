@@ -2,19 +2,14 @@
 /**
  * Dandelion About page
  */
-namespace Dandelion;
-
-use \Dandelion\Application;
-
-$requiredCssFiles = array("tutorial");
-include $paths['app'].'/templates/includes/head.php';
+$this->layout('layouts::main', ['requiredCssFiles' => ['tutorial']]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
 	<h2 class="t_cen">About</h2>
 
 	<p class="le" style="text-indent:0;">
-		Version: <?= Application::VERSION;?>
+		Version: <?= $this->e($appVersion) ?>
 	</p>
 
     <h3>What is Dandelion:</h3>
@@ -25,6 +20,11 @@ include $paths['app'].'/templates/includes/head.php';
     <h3>Creator:</h3>
     <p class="le">
     	Lee Keitel, Onesimus Computer Systems &lt;keitellf@gmail.com&gt;
+    </p>
+
+    <h3>Source:</h3>
+    <p class="le">
+        The source code for Dandelion is availabe on <a href="https://github.com/dragonrider23/dandelion" target="_blank">GitHub</a>.
     </p>
 
 	<h3>Copyright:</h3>
@@ -46,4 +46,3 @@ include $paths['app'].'/templates/includes/head.php';
     </p>
 </div>
 <!-- End Page Body -->
-<?php include $paths['app'].'/templates/includes/footer.php'; ?>

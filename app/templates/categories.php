@@ -2,12 +2,7 @@
 /**
  * Category management page
  */
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-
-$requiredCssFiles = array();
-include $paths['app'].'/templates/includes/head.php';
+$this->layout('layouts::main', ['requiredCssFiles' => []]);
 ?>
 <!-- Begin Page Body -->
 <h3>Category Management</h3>
@@ -32,10 +27,8 @@ include $paths['app'].'/templates/includes/head.php';
 	?>
 </form>
 
-<?php echo View::loadJS("jquery", "catManage");?>
+<?= $this->loadJS(['jquery','catManage']) ?>
 <script type="text/javascript">
     CategoryManage.grabNextLevel('0:0');
 </script>
 <!-- End Page Body -->
-
-<?php include $paths['app'].'/templates/includes/footer.php'; ?>
