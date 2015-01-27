@@ -9,7 +9,7 @@ include $paths['app'].'/templates/includes/head.php';
 ?>
 <!-- Begin Page Body -->
 <div id="content">
-	<h2 class="t_cen">Tutorial {{test}}</h2>
+	<h2 class="t_cen">Tutorial</h2>
 
     <p class="le">Welcome to the Dandelion Web Log. This brief tutorial will walk you through how to do all the basic tasks in Dandelion.</p>
 

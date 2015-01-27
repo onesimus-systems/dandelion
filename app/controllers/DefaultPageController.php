@@ -51,7 +51,7 @@ class DefaultPageController
             $userRights = new Rights($_SESSION['userInfo']['userid']);
         }
 
-        $template = new View();
+        $template = new Template();
         $template->setTemplatesDirectory($this->app->paths['app'].'/templates');
         $template->display($page.'.php', array(
             'paths' => array(
@@ -63,22 +63,6 @@ class DefaultPageController
             'pageTitle' => ucfirst($page),
             'cheestoEnabled' => $this->app->config['cheestoEnabled'],
             'publicApiEnabled' => $this->app->config['publicApiEnabled']
-            )
-        );
-    }
-
-    public function tutorial()
-    {
-        $template = new Template();
-        $template->setTemplatesDirectory($this->app->paths['app'].'/templates');
-        $template->display('tutorial.php', array(
-            'paths' => array(
-                'app' => $this->app->paths['app']
-                ),
-            'test' => 'Hello World',
-            'appTitle' => $this->app->config['appTitle'],
-            'tagline' => $this->app->config['tagline'],
-            'pageTitle' => 'Tutorial'
             )
         );
     }

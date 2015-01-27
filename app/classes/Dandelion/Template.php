@@ -35,7 +35,7 @@ class Template extends View
     		if (is_array($value)) {
     			continue;
     		}
-    		$template = preg_replace("/\{\{$key\}\}/", $value, $template);
+    		$template = preg_replace("/\{\{\s*{$key}\s*\}\}/", $value, $template);
     	}
     	return $template;
     }

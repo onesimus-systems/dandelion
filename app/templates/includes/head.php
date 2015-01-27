@@ -16,12 +16,12 @@ namespace Dandelion;
             $requiredCssFiles = array();
         }
         echo call_user_func_array(array('\Dandelion\Utils\View', 'loadCssSheets'), $requiredCssFiles);?>
-        <title><?= $appTitle; ?> - <?= $pageTitle; ?></title>
+        <title>{{ appTitle }} - {{ pageTitle }}</title>
     </head>
     <body>
         <header>
-            <h1 class="t_cen"><?= $appTitle; ?></h1>
-            <h4 class="t_cen"><?= $tagline; ?></h4>
+            <h1 class="t_cen">{{ appTitle }}</h1>
+            <h4 class="t_cen">{{ tagline }}</h4>
 
             <nav class="t_cen" id="nav_link">
                 <a href="/">Dashboard</a><a href="/settings">Settings</a><a href="/admin">Administration</a><a href="/tutorial">Tutorial</a><a href="/logout">Logout</a>
