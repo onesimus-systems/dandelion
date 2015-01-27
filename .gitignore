@@ -5,5 +5,4 @@ docs/
 logs/
 backups/
 vendor/
-*.lock
 node_modules/
