@@ -34,7 +34,7 @@ class Logs
         );
         $edit_log_info = $this->db->get($params);
 
-        return json_encode($edit_log_info[0]);
+        return $edit_log_info[0];
     }
 
     /**
@@ -143,7 +143,7 @@ class Logs
                  ->where('cat LIKE :filter')
                  ->orderBy('logid', 'DESC');
         $params = array('filter' => "%{$f}%");
-        return json_encode($this->db->get($params));
+        return $this->db->get($params);
     }
 
     /**
@@ -178,6 +178,6 @@ class Logs
             );
         }
 
-        return json_encode($this->db->get($params));
+        return $this->db->get($params);
     }
 }

@@ -26,7 +26,7 @@ class mailAPI extends BaseModule
         $mail = $myMail->getFullMailInfo($this->up->mid);
         $myMail->setReadMail($this->up->mid);
 
-        return json_encode($mail);
+        return $mail;
     }
 
     /**
@@ -39,7 +39,7 @@ class mailAPI extends BaseModule
         $count = $myMail->checkNewMail(true);
         $count = array( 'count' => $count);
 
-        return json_encode($count);
+        return $count;
     }
 
     /**
@@ -52,7 +52,7 @@ class mailAPI extends BaseModule
         $perm = ($this->up->permenant === 'true') ? true : false;
         $response = $myMail->deleteMail($this->up->mid, $perm);
 
-        return json_encode($response);
+        return $response;
     }
 
     /**
@@ -64,7 +64,7 @@ class mailAPI extends BaseModule
 
         $toUsers = $myMail->getUserList();
 
-        return json_encode($toUsers);
+        return $toUsers;
     }
 
     /**
@@ -81,7 +81,7 @@ class mailAPI extends BaseModule
             $mailItems = $myMail->getMailList();
         }
 
-        return json_encode($mailItems);
+        return $mailItems;
     }
 
     /**
@@ -99,6 +99,6 @@ class mailAPI extends BaseModule
             $_SESSION['userInfo']['userid']
         );
 
-        return json_encode($response);
+        return $response;
     }
 }

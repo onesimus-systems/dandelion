@@ -63,8 +63,6 @@ class keyManagerAPI extends BaseModule
      */
     private function encodeKey($key)
     {
-        return json_encode(array (
-            "key" => $key
-        ));
+        return array("key" => $key);
     }
 }

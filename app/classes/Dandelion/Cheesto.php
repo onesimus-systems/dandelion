@@ -151,8 +151,11 @@ class Cheesto
             'dmodified' => $date,
             'uid' => $userId
         );
-        $this->dbConn->go($params);
-
-        return json_encode('User status updated');
+        
+        if ($this->dbConn->go($params)) {
+            return 'User status updated';
+        } else {
+            return 'Error updating user status';
+        }
     }
 }

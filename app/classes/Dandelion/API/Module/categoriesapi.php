@@ -28,7 +28,7 @@ class categoriesAPI extends BaseModule
         $parent = $this->up->parentID;
         $desc = $this->up->catDesc;
         $createCat = new Categories($this->db);
-        return json_encode($createCat->addCategory($parent, $desc));
+        return $createCat->addCategory($parent, $desc);
     }
 
     /**
@@ -45,7 +45,7 @@ class categoriesAPI extends BaseModule
         $cid = $this->up->cid;
         $desc = $this->up->catDesc;
         $editCat = new Categories($this->db);
-        return json_encode($editCat->editCategory($cid, $desc));
+        return $editCat->editCategory($cid, $desc);
     }
 
     /**
@@ -61,7 +61,7 @@ class categoriesAPI extends BaseModule
 
         $cat = $this->up->cid;
         $deleteCat = new Categories($this->db);
-        return json_encode($deleteCat->delCategory($cat));
+        return $deleteCat->delCategory($cat);
     }
 
     /**

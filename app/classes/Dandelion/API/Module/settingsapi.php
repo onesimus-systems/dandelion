@@ -17,17 +17,17 @@ class settingsAPI extends BaseModule
     public function saveLogLimit()
     {
         $settings = new UserSettings($this->db);
-        return json_encode($settings->saveLogLimit($this->up->limit));
+        return $settings->saveLogLimit($this->up->limit);
     }
 
     public function saveTheme()
     {
         $settings = new UserSettings($this->db);
-        return json_encode($settings->saveTheme($this->up->theme));
+        return $settings->saveTheme($this->up->theme);
     }
 
     public function getThemeList()
     {
-        return json_encode(\Dandelion\getThemeListArray());
+        return \Dandelion\getThemeListArray();
     }
 }

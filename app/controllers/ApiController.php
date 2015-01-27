@@ -45,9 +45,8 @@ class ApiController
      */
     public function internalApiCall($module, $method)
     {
-        $returnObj = json_decode($this->processRequest($_SESSION['userInfo']['userid'], true, $module, $method), true);
-        $returnObj['iapi'] = true;
-        echo json_encode($returnObj);
+        $returnObj = $this->processRequest($_SESSION['userInfo']['userid'], true, $module, $method);
+        echo $returnObj;
         return;
     }
 
@@ -101,7 +100,7 @@ class ApiController
         }
 
         // Return DAPI object
-        return self::makeDAPI(0, 'Completed', $module, json_decode($data));
+        return self::makeDAPI(0, 'Completed', $module, $data);
     }
 
     /**

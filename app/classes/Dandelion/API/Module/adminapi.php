@@ -65,6 +65,6 @@ class adminAPI extends BaseModule
 
         $action = new AdminActions($this->db);
         $response = $action->$func($data);
-        return json_encode($response);
+        return $response;
     }
 }

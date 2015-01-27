@@ -47,7 +47,7 @@ class logsAPI extends BaseModule
         $logs = new Logs($this->db, $this->ur);
         $return = json_decode($logs->getJSON($limit, $offset), true);
         $return['metadata'] = $metaData;
-        return json_encode($return);
+        return $return;
     }
 
     /**
@@ -77,7 +77,7 @@ class logsAPI extends BaseModule
         $cat = rtrim($this->up->cat, ':');
 
         $logs = new Logs($this->db);
-        return json_encode($logs->addLog($title, $body, $cat, USER_ID));
+        return $logs->addLog($title, $body, $cat, USER_ID);
     }
 
     /**
@@ -103,7 +103,7 @@ class logsAPI extends BaseModule
         //$cat = rtrim($cat, ':');
 
         $logs = new Logs($this->db);
-        return json_encode($logs->editLog($lid, $title, $body));
+        return $logs->editLog($lid, $title, $body);
     }
 
     /**

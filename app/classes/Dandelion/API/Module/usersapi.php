@@ -39,7 +39,7 @@ class usersAPI extends BaseModule
 
         // Do action
         $user = new Users($this->db, $userid);
-        return json_encode($user->resetPassword($newPass));
+        return $user->resetPassword($newPass);
     }
 
     /**
@@ -58,7 +58,7 @@ class usersAPI extends BaseModule
         //$cheesto = $this->up->makecheesto;
 
         $user = new Users($this->db);
-        return json_encode($user->createUser($username, $password, $realname, $role));
+        return $user->createUser($username, $password, $realname, $role);
     }
 
     /**
@@ -80,7 +80,7 @@ class usersAPI extends BaseModule
         $user->userInfo['role']       = $this->up->get('role', $user->userInfo['role']);
         $user->userInfo['firsttime']  = $this->up->get('prompt', $user->userInfo['firsttime']);
         $user->userInfo['theme']      = $this->up->get('theme', $user->userInfo['theme']);
-        return json_encode($user->saveUser());
+        return $user->saveUser();
     }
 
     /**
@@ -100,7 +100,7 @@ class usersAPI extends BaseModule
         }
 
         $user = new Users($this->db);
-        return json_encode($user->deleteUser($userid));
+        return $user->deleteUser($userid);
     }
 
     /**
@@ -115,7 +115,7 @@ class usersAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
         $list = new Users($this->db);
-        return json_encode($list->getUserList());
+        return $list->getUserList();
     }
 
     /**
@@ -136,6 +136,6 @@ class usersAPI extends BaseModule
         }
 
         $user = new Users($this->db);
-        return json_encode($user->getUser($uid));
+        return $user->getUser($uid);
     }
 }

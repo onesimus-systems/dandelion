@@ -26,7 +26,7 @@ class cheestoAPI extends BaseModule
         }
 
         $cheesto = new Cheesto($this->db);
-        return json_encode($cheesto->getAllStatuses());
+        return $cheesto->getAllStatuses();
     }
 
     /**
@@ -39,7 +39,7 @@ class cheestoAPI extends BaseModule
         }
 
         $cheesto = new Cheesto($this->db);
-        return json_encode($cheesto->getUserStatus($this->up->uid));
+        return $cheesto->getUserStatus($this->up->uid);
     }
 
     /**
@@ -48,7 +48,7 @@ class cheestoAPI extends BaseModule
     public function statusTexts()
     {
         $cheesto = new Cheesto($this->db);
-        return json_encode($cheesto->getStatusText());
+        return $cheesto->getStatusText();
     }
 
     /**

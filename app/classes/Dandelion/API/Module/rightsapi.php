@@ -24,7 +24,7 @@ class rightsAPI extends BaseModule
         foreach ($allGroups as $key => $value) {
             $allGroups[$key]['permissions'] = unserialize($allGroups[$key]['permissions']);
         }
-        return json_encode($allGroups);
+        return $allGroups;
     }
 
     /**
@@ -34,7 +34,7 @@ class rightsAPI extends BaseModule
     {
         $permissions = new Permissions($this->db);
         $gid = $this->up->groupid;
-        return json_encode(unserialize($permissions->getGroupList($gid)[0]['permissions']));
+        return unserialize($permissions->getGroupList($gid)[0]['permissions']);
     }
 
     /**
@@ -51,7 +51,7 @@ class rightsAPI extends BaseModule
         $rights = json_decode($this->up->rights, true);
 
         if ($permissions->editGroup($gid, $rights)) {
-            return json_encode('User group saved');
+            return 'User group saved';
         } else {
             exit(ApiController::makeDAPI(5, 'Error saving user group', 'rights'));
         }
@@ -71,7 +71,7 @@ class rightsAPI extends BaseModule
         $rights = json_decode($this->up->rights, true);
 
         if (is_numeric($permissions->createGroup($name, $rights))) {
-            return json_encode('User group created successfully');
+            return 'User group created successfully';
         } else {
             exit(ApiController::makeDAPI(5, 'Error creating user group', 'rights'));
         }
@@ -91,11 +91,11 @@ class rightsAPI extends BaseModule
         $users = $permissions->usersInGroup($gid);
 
         if (isset($users[0])) {
-            return json_encode('This group is assigned to users.<br>Can not delete this group.');
+            return 'This group is assigned to users.<br>Can not delete this group.';
         }
         else {
             $permissions->deleteGroup($gid);
-            return json_encode('Group deleted successfully.');
+            return 'Group deleted successfully.';
         }
     }
 
@@ -104,6 +104,6 @@ class rightsAPI extends BaseModule
      */
     public function getUsersRights()
     {
-        return json_encode($this->ur->getRightsForUser());
+        return $this->ur->getRightsForUser();
     }
 }
