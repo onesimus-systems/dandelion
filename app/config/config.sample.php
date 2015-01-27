@@ -3,17 +3,17 @@ return array(
     // Database Configuration
     'db' => array(
         // Database type: mysql
-        'db_type' => '',
+        'type' => '',
         // Database name of mysql
-        'db_name' => '',
+        'dbname' => '',
         // Database hostname/IP for mysql
-        'db_host' => '',
+        'hostname' => '',
         // User for mysql
-        'db_user' => '',
+        'username' => '',
         // Password for above user
-        'db_pass' => '',
+        'password' => '',
         // Database table prefix
-        'db_prefix' => 'dan_',
+        'tablePrefix' => 'dan_',
     ),
 
     // Application configuration

@@ -8,13 +8,41 @@ use \Dandelion\Storage\Contracts\DatabaseConn;
 
 class MySqlDatabase implements DatabaseConn
 {
+    // Current database socket connection
     private $currentConn;
+
+    // Singleton instance of database object
     private static $instance;
-    public static $dbPrefix;
-    public static $connInfo = array(); // Loaded from bootstrap file
+
+    // Table prefix for database
+    public $dbPrefix;
+
+    /**
+      * Connection information in associative array containing:
+      *
+      * array(
+      *  'db_type' => '',
+      *  'db_name' => '',
+      *  'db_host' => '',
+      *  'db_user' => '',
+      *  'db_pass' => '',
+      *  'db_prefix' => '',
+      * )
+      */
+    public $connInfo = array();
+
+    // If the database connection has been initialized yet.
+    // The user is responsible for calling the init() function
+    // after suppling a configuration
+    private $initialized = false;
+
+    // The type of statement being processed
     private $command;
+
+    // Variable for a user provided SQL statement to be executed directly
     private $rawStatment;
-    private $sqlStatement;
+
+    // A blank SQL statement, mainly used to clear out old statement
     private $blankStatement = array(
             'select' => '',
             'insert' => array(),
@@ -25,6 +53,9 @@ class MySqlDatabase implements DatabaseConn
             'limit'  => '',
             'collate' => ''
         );
+
+    // Array representing an SQL statement modeled after $blankStatement
+    private $sqlStatement;
 
     // Prevent something from accidentally making multiple instances of the class
     private function __construct() {}
@@ -43,19 +74,25 @@ class MySqlDatabase implements DatabaseConn
     {
         if (self::$instance === null) {
             self::$instance = new self();
-            self::$instance->init();
         }
 
         return self::$instance;
     }
 
     // Connect to the database and set the connection variable
-    private function init()
+    public function init()
     {
-        try {
-            $db_connect = 'mysql:host=' . self::$connInfo['db_host'] . ';dbname=' . self::$connInfo['db_name'];
+        if ($this->initialized) {
+            return;
+        }
+        if (empty($this->connInfo)) {
+            return false;
+        }
 
-            $conn = new \PDO($db_connect, self::$connInfo['db_user'], self::$connInfo['db_pass'], array(
+        try {
+            $db_connect = 'mysql:host=' . $this->connInfo['hostname'] . ';dbname=' . $this->connInfo['dbname'];
+
+            $conn = new \PDO($db_connect, $this->connInfo['username'], $this->connInfo['password'], array(
                 \PDO::ATTR_PERSISTENT => true
             ));
 
@@ -65,6 +102,7 @@ class MySqlDatabase implements DatabaseConn
 
             $this->currentConn = $conn;
             $this->sqlStatement = $this->blankStatement;
+            $this->initialized = true;
         } catch (\PDOException $e) {
             if (true) {
                 echo 'ERROR: ' . $e->getMessage();
@@ -73,6 +111,21 @@ class MySqlDatabase implements DatabaseConn
             }
         }
         return;
+    }
+
+    public function getTablePrefix()
+    {
+        return $this->dbPrefix;
+    }
+
+    public function setTablePrefix($prefix)
+    {
+        $this->dbPrefix = $prefix;
+    }
+
+    public function setConfiguration($config)
+    {
+        $this->connInfo = $config;
     }
 
     private function clearStatement()

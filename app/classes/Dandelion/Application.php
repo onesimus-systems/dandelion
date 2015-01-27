@@ -63,14 +63,16 @@ class Application
     public function loadLegacyCode()
     {
         // Define constants
-        define('DB_PREFIX', $this->config['db']['db_prefix']);
+        define('DB_PREFIX', $this->config['db']['tablePrefix']);
         define('PUBLIC_DIR', $this->paths['public']);
         define('THEME_DIR', 'assets/themes');
         define('DEFAULT_THEME', $this->config['defaultTheme']);
 
         // Give database class the info to connect
-        MySqlDatabase::$connInfo = $this->config['db'];
-        MySqlDatabase::$dbPrefix = $this->config['db']['db_prefix'];
+        $db = MySqlDatabase::getInstance();
+        $db->setConfiguration($this->config['db']);
+        $db->setTablePrefix($this->config['db']['tablePrefix']);
+        $db->init();
         return;
     }
 
