@@ -4,6 +4,7 @@
  */
 namespace Dandelion\Controllers;
 
+use \Dandelion\Rights;
 use \Dandelion\Application;
 use \Dandelion\Auth\GateKeeper;
 use \Dandelion\API\Module\BaseModule;
@@ -78,7 +79,7 @@ class ApiController
                 define('USER_ID', $key);
             }
 
-            $userRights = new \Dandelion\rights(USER_ID);
+            $userRights = new Rights(USER_ID);
         } else {
             $userRights = null;
         }

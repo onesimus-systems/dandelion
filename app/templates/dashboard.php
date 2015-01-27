@@ -7,7 +7,7 @@ namespace Dandelion;
 use \Dandelion\Utils\View;
 
 $addLink = '';
-if ($User_Rights->authorized('createlog')) {
+if ($userRights->authorized('createlog')) {
 	$addLink = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 }
 
@@ -17,7 +17,7 @@ include $paths['app'].'/templates/includes/head.php';
 <!-- Begin Page Body -->
 <div id="divMain">
     <?php
-    if ($cheestoEnabled && $User_Rights->authorized('viewcheesto')) {
+    if ($cheestoEnabled && $userRights->authorized('viewcheesto')) {
     ?>
     <div id="presence">
         <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="/assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
@@ -27,7 +27,7 @@ include $paths['app'].'/templates/includes/head.php';
     <?php
     }
 
-    if ($User_Rights->authorized('viewlog')) { ?>
+    if ($userRights->authorized('viewlog')) { ?>
         <div id="controlPanel">
             <form id="category" method="post">
                 <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';" />

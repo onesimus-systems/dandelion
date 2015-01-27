@@ -31,7 +31,6 @@ class view
 
     private static function isBuiltinJsFile($name)
     {
-        global $User_Rights;
         $include = '';
 
         switch (strtolower($name)) {
@@ -46,9 +45,7 @@ class view
                 $include .= '<script src="/assets/js/vendor/tinymce/js/tinymce.min.js"></script>';
                 break;
             case 'cheesto':
-                if ($User_Rights->authorized('viewcheesto')) {
-                    $include .= '<script src="/assets/js/presence.js"></script>';
-                }
+                $include .= '<script src="/assets/js/presence.js"></script>';
                 break;
         }
         return $include;

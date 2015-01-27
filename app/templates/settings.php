@@ -41,7 +41,7 @@ include $paths['app'].'/templates/includes/head.php';
     <button type="button" class="dButton" onClick="api.saveTheme();">Save Theme</button>
 </form>
 
-<?php if (PUBLIC_API) { ?>
+<?php if ($publicApiEnabled) { ?>
     <br><hr width="350"><br>
 
     <form>

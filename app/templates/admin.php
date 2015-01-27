@@ -16,22 +16,22 @@ include $paths['app'].'/templates/includes/head.php';
 
 <form name="admin_form" method="post" action="lib/admin_actions.php">
 	<?php
-	if ($User_Rights->authorized(array('adduser', 'edituser', 'deleteuser'))) {
+	if ($userRights->authorized(array('adduser', 'edituser', 'deleteuser'))) {
 		echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers\'"><br>';
 		$content = true;
 	}
 
-	if ($User_Rights->authorized(array('addgroup', 'editgroup', 'deletegroup'))) {
+	if ($userRights->authorized(array('addgroup', 'editgroup', 'deletegroup'))) {
 		echo '<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location=\'editgroups\'"><br>';
 		$content = true;
 	}
 
-	if ($User_Rights->authorized(array('addcat', 'editcat', 'deletecat'))) {
+	if ($userRights->authorized(array('addcat', 'editcat', 'deletecat'))) {
 		echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories\'"><br>';
 		$content = true;
 	}
 
-	if ($User_Rights->authorized('admin')) {
+	if ($userRights->authorized('admin')) {
 		$content = true;
 	?>
 		<br><hr width="350">

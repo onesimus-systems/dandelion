@@ -18,15 +18,15 @@ include $paths['app'].'/templates/includes/head.php';
 	<div name="categorySelects" id="categorySelects"></div><br><br>
 
 	<?php
-	if ($User_Rights->authorized('addcat')) {
+	if ($userRights->authorized('addcat')) {
 		echo '<input type="button" class="dButton" onClick="CategoryManage.createNew();" value="Add Category">';
 	}
 
-	if ($User_Rights->authorized('editcat')) {
+	if ($userRights->authorized('editcat')) {
 		echo '<input type="button" class="dButton" onClick="CategoryManage.editCat();" value="Edit Category">';
 	}
 
-	if ($User_Rights->authorized('deletecat')) {
+	if ($userRights->authorized('deletecat')) {
 		echo '<input type="button" class="dButton" onClick="CategoryManage.deleteCat();" value="Delete Category">';
 	}
 	?>

@@ -28,15 +28,15 @@ include $paths['app'].'/templates/includes/head.php';
     <div name="categorySelects" id="categorySelects"></div><br>
 
     <?php
-    if ($User_Rights->authorized('addgroup')) {
+    if ($userRights->authorized('addgroup')) {
         echo '<input type="button" class="dButton" onClick="permissions.createNew();" value="Add Group">';
     }
 
-    if ($User_Rights->authorized('editgroup')) {
+    if ($userRights->authorized('editgroup')) {
         echo '<input type="button" class="dButton" onClick="permissions.getPermissions();" value="Edit Group">';
     }
 
-    if ($User_Rights->authorized('deletegroup')) {
+    if ($userRights->authorized('deletegroup')) {
         echo '<input type="button" class="dButton" onClick="permissions.deleteGroup();" value="Delete Group">';
     }
     ?>

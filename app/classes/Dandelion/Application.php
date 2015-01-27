@@ -5,10 +5,8 @@
 namespace Dandelion;
 
 use \Dandelion\Routes;
-use \Dandelion\Rights;
 use \Dandelion\Logging;
 use \Dandelion\Utils\Updater;
-use \Dandelion\Auth\GateKeeper;
 use \Dandelion\Utils\Configuration;
 use \Dandelion\Storage\MySqlDatabase;
 use \Dandelion\Session\SessionManager;
@@ -54,22 +52,11 @@ class Application
         SessionManager::register();
         SessionManager::startSession($this->config['phpSessionName']);
 
-        $this->loadGlobalRights();
-
         include $this->paths['app'] . '/routes.php';
         list($class, $method, $params) = Routes::route($this->url);
 
         $controller = new $class($this);
         call_user_func_array(array($controller, $method), $params);
-        return;
-    }
-
-    public function loadGlobalRights()
-    {
-        global $User_Rights;
-        if (GateKeeper::authenticated()) {
-            $User_Rights = new Rights($_SESSION['userInfo']['userid']);
-        }
         return;
     }
 
