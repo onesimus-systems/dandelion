@@ -2,22 +2,17 @@
 /**
  * Dashboard page
  */
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-
 $addLink = '';
 if ($userRights->authorized('createlog')) {
 	$addLink = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
 }
 
-$requiredCssFiles = array("cheesto","jqueryui",);
-include $paths['app'].'/templates/includes/head.php';
+$this->layout('layouts::main', ['requiredCssFiles' => ['cheesto','jqueryui']]);
 ?>
 <!-- Begin Page Body -->
 <div id="divMain">
     <?php
-    if ($cheestoEnabled && $userRights->authorized('viewcheesto')) {
+    if ($cheestoEnabled && $userRights->authorized('viewcheesto')):
     ?>
     <div id="presence">
         <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="/assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
@@ -25,9 +20,9 @@ include $paths['app'].'/templates/includes/head.php';
     	<div id="mainPresence"></div>
     </div>
     <?php
-    }
+    endif;
 
-    if ($userRights->authorized('viewlog')) { ?>
+    if ($userRights->authorized('viewlog')): ?>
         <div id="controlPanel">
             <form id="category" method="post">
                 <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';" />
@@ -37,7 +32,7 @@ include $paths['app'].'/templates/includes/head.php';
                 <div id="categorySelects"></div>
 
                 <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');" />
-                <?php echo $addLink; ?>
+                <?= $addLink ?>
             </form>
 
             <div id="add_edit" title="">
@@ -53,10 +48,10 @@ include $paths['app'].'/templates/includes/head.php';
         </div>
 
         <div id="refreshed"></div>
-    <?php } ?>
+    <?php endif; ?>
 </div>
 
-<?php echo View::loadJS("jquery","jqueryui","tinymce","cheesto","catManage","logs","mail")?>
+<?= $this->loadJS(["jquery","jqueryui","tinymce","cheesto","catManage","logs","mail"]) ?>
 <script type="text/javascript">
     refreshFun.runFirst();
     presence.checkstat(0);
@@ -64,4 +59,3 @@ include $paths['app'].'/templates/includes/head.php';
     $('#presence').draggable();
 </script>
 <!-- End Page Body -->
-<?php include $paths['app'].'/templates/includes/footer.php'; ?>

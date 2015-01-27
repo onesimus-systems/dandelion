@@ -1,18 +1,9 @@
-<?php
-/**
- * Windowed version of Cheesto
- */
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-?>
-
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-		<?= loadCssSheets("cheesto","cheestoWin"); ?>
+        <?= $this->getCssSheets(['cheesto','cheestoWin']) ?>
 		<title>Dandelion Presence</title>
 	</head>
 
@@ -23,6 +14,6 @@ use \Dandelion\Utils\View;
         	<div id="mainPresence"></div>
         </div>
 
-        <?= View::loadJS("jquery","cheesto");?>
+        <?= $this->loadJS(['jquery','cheesto']) ?>
     </body>
 </html>

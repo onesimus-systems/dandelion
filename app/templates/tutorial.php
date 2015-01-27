@@ -2,10 +2,7 @@
 /**
  * Tutorial page
  */
-namespace Dandelion;
-
-$requiredCssFiles = array("tutorial");
-include $paths['app'].'/templates/includes/head.php';
+$this->layout('layouts::main', ['requiredCssFiles' => ['tutorial']]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
@@ -75,4 +72,3 @@ include $paths['app'].'/templates/includes/head.php';
         </ol></p>
 </div>
 <!-- End Page Body -->
-<?php include $paths['app'].'/templates/includes/footer.php'; ?>

@@ -2,14 +2,9 @@
 /**
  * Administration dashboard
  */
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-
 // Stays false unless a button or admin control is shown
 $content = false;
-$requiredCssFiles = array("jqueryui");
-include $paths['app'].'/templates/includes/head.php';
+$this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui']]);
 ?>
 <!-- Begin Page Body -->
 <h2>Administration</h2>
@@ -31,13 +26,13 @@ include $paths['app'].'/templates/includes/head.php';
 		$content = true;
 	}
 
-	if ($userRights->authorized('admin')) {
+	if ($userRights->authorized('admin')):
 		$content = true;
 	?>
 		<br><hr width="350">
 		<h3>Database Administration</h3>
 		<input type="button" class="dButton adminButton" value="Export Database to File" onClick="adminAction.backupDB();" title="Creates a single file backup of the Dandelion database tables.&#013;If you have a lot of log entries, the file will be large."><br>
-	<?php } ?>
+	<?php endif; ?>
 </form>
 <!-- End Page Body -->
 
@@ -45,8 +40,6 @@ include $paths['app'].'/templates/includes/head.php';
 if (!$content) {
 	echo 'Your account doesn\'t have rights to administrative controls.';
 }
-
-echo View::loadJS('jquery','admin');
-
-include $paths['app'].'/templates/includes/footer.php';
 ?>
+
+<?= $this->loadJS(['jquery','admin']) ?>

@@ -1,16 +1,11 @@
-<?php
-namespace Dandelion;
-
-use \Dandelion\Utils\View;
-?>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="/assets/favicon.ico">
-        <?= View::loadCssSheets(); ?>
-        <title>Dandelion Web Log</title>
+        <?= $this->getCssSheets() ?>
+        <title>Dandelion Web Log - Login</title>
     </head>
     <body>
         <div id="login">
@@ -25,5 +20,5 @@ use \Dandelion\Utils\View;
             </form>
         </div>
     </body>
-    <?= View::loadJS('jquery', 'login'); ?>
+    <?= $this->loadJS() ?>
 </html>

@@ -10,6 +10,7 @@ use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\Auth\GateKeeper;
 use \Dandelion\Storage\MySqlDatabase;
+use \League\Plates\Engine;
 
 class AuthController
 {
@@ -33,9 +34,15 @@ class AuthController
             return;
         }
 
-        $template = new View();
-        $template->setTemplatesDirectory($this->app->paths['app'].'/templates');
-        $template->display('login.php');
+        $templates = new Engine($this->app->paths['app'].'/templates');
+        $templates->registerFunction('getCssSheets', function() {
+            return Vutils::loadCssSheets();
+        });
+        $templates->registerFunction('loadJS', function() {
+            return Vutils::loadJS('jquery','login');
+        });
+
+        echo $templates->render('login');
     }
 
     public function login()
