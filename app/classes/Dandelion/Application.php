@@ -17,7 +17,7 @@ use \Dandelion\Session\SessionManager;
 class Application
 {
     const VERSION = '6.0.0-dev';
-    
+
     public $url;
     public $paths = [];
     public $config;
@@ -62,17 +62,14 @@ class Application
 
     public function loadLegacyCode()
     {
+        // Give database class the info to connect
+        $db = MySqlDatabase::getInstance($this->config['db']);
+
         // Define constants
-        define('DB_PREFIX', $this->config['db']['tablePrefix']);
+        define('DB_PREFIX', $db->getTablePrefix());
         define('PUBLIC_DIR', $this->paths['public']);
         define('THEME_DIR', 'assets/themes');
         define('DEFAULT_THEME', $this->config['defaultTheme']);
-
-        // Give database class the info to connect
-        $db = MySqlDatabase::getInstance();
-        $db->setConfiguration($this->config['db']);
-        $db->setTablePrefix($this->config['db']['tablePrefix']);
-        $db->init();
         return;
     }
 

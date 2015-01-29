@@ -15,7 +15,7 @@ class MySqlDatabase implements DatabaseConn
     private static $instance;
 
     // Table prefix for database
-    public $dbPrefix;
+    protected $dbPrefix;
 
     /**
       * Connection information in associative array containing:
@@ -29,7 +29,7 @@ class MySqlDatabase implements DatabaseConn
       *  'db_prefix' => '',
       * )
       */
-    public $connInfo = array();
+    protected $connInfo = array();
 
     // If the database connection has been initialized yet.
     // The user is responsible for calling the init() function
@@ -70,10 +70,14 @@ class MySqlDatabase implements DatabaseConn
     /**
      * Returns the an instance of the MySqlDatabase class. If one is already created, it will return it.
      */
-    public static function getInstance()
+    public static function getInstance(array $config = [])
     {
         if (self::$instance === null) {
             self::$instance = new self();
+            if ($config) {
+                self::$instance->setConfiguration($config);
+                self::$instance->init();
+            }
         }
 
         return self::$instance;
@@ -115,12 +119,12 @@ class MySqlDatabase implements DatabaseConn
 
     public function getTablePrefix()
     {
-        return $this->dbPrefix;
+        return $this->connInfo['tablePrefix'];
     }
 
     public function setTablePrefix($prefix)
     {
-        $this->dbPrefix = $prefix;
+        $this->connInfo['tablePrefix'] = $prefix;
     }
 
     public function setConfiguration($config)
