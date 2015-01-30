@@ -4,8 +4,7 @@
  */
 namespace Dandelion\Controllers;
 
-use \Dandelion\View;
-use \Dandelion\Utils\View as Vutils;
+use \Dandelion\Utils\View;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\Auth\GateKeeper;
@@ -22,24 +21,24 @@ class AuthController extends BaseController
 
     public function __construct(Application $app)
     {
+        parent::__construct($app);
         $this->db = MySqlDatabase::getInstance();
         $this->up = new UrlParameters();
-        $this->app = $app;
     }
 
     public function loginPage()
     {
         if (GateKeeper::authenticated()) {
-            Vutils::redirect('dashboard');
+            View::redirect('dashboard');
             return;
         }
 
         $templates = new Engine($this->app->paths['app'].'/templates');
         $templates->registerFunction('getCssSheets', function() {
-            return Vutils::loadCssSheets();
+            return View::loadCssSheets();
         });
         $templates->registerFunction('loadJS', function() {
-            return Vutils::loadJS('jquery','login');
+            return View::loadJS('jquery','login');
         });
 
         echo $templates->render('login');
@@ -55,7 +54,7 @@ class AuthController extends BaseController
 
         $tryAuth = $auth->login($this->up->user, $this->up->pass, $rem);
         if (!$tryAuth) {
-            Vutils::redirect('login');
+            View::redirect('login');
         } else {
             echo json_encode($tryAuth);
         }
@@ -74,6 +73,6 @@ class AuthController extends BaseController
         }
         session_destroy();
 
-        Vutils::redirect('login');
+        View::redirect('login');
     }
 }

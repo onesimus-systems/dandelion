@@ -6,7 +6,6 @@ namespace Dandelion\Controllers;
 
 use \Dandelion\Rights;
 use \Dandelion\Application;
-use \Dandelion\Auth\GateKeeper;
 use \Dandelion\API\Module\BaseModule;
 use \Dandelion\Storage\MySqlDatabase;
 
@@ -14,9 +13,9 @@ class ApiController extends BaseController
 {
     public function __construct(Application $app)
     {
+        parent::__construct($app);
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
-        $this->app = $app;
     }
 
     /**

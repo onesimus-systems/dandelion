@@ -12,6 +12,11 @@ body {
 	color: white;
 }
 
+a:visited, a:hover, a:link, a:active {
+	color: #00BFFF;
+	text-decoration: none;
+}
+
 #login, #divMain #refreshed_core {
 	background-color: @mainBody;
 	color: @mainText;
@@ -21,7 +26,7 @@ body {
 	a:visited, a:link, a:active {
 		.buttonRegular;
 	}
-	
+
 	a:hover {
 		.buttonHover;
 	}
@@ -29,11 +34,11 @@ body {
 
 .pagination {
 	background-color: @button;
-	
+
 	input {
 		.buttonRegular;
 	}
-	
+
 	input:hover {
 		.buttonHover;
 	}
@@ -41,7 +46,7 @@ body {
 
 .dButton, #login_button, .logentry input {
 	.buttonRegular;
-	
+
 	&:hover {
 		.buttonHover;
 	}

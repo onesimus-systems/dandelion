@@ -24,6 +24,13 @@ body {
   background-color: #2e2e2e;
   color: white;
 }
+a:visited,
+a:hover,
+a:link,
+a:active {
+  color: #00BFFF;
+  text-decoration: none;
+}
 #login,
 #divMain #refreshed_core {
   background-color: #1f1f1f;

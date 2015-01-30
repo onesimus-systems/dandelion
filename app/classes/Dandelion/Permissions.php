@@ -23,7 +23,7 @@ class Permissions
     {
         if ($groupID === null) {
             $this->dbConn->selectAll('rights');
-            $params = null;
+            $params = [];
         } else {
             $this->dbConn->select()
                          ->from(DB_PREFIX.'rights')

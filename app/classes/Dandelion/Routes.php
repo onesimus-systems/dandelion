@@ -168,7 +168,7 @@ class Routes
 
             $candidate = true;
             foreach ($value['pattern'] as $pkey => $pvalue) {
-                if ($pvalue != $url[$pkey] && $pvalue[0] != '{') {
+                if ($pvalue != $url[$pkey] && substr($pvalue, 0, 1) != '{') {
                     $candidate = false;
                     break;
                 }

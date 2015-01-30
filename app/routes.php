@@ -4,16 +4,32 @@
  */
 namespace Dandelion;
 
+// Available routes without prior authentication
 Routes::group(['rprefix' => '\Dandelion\Controllers\\'], [
-	['get', '/{page}', 'DefaultPageController@render'],
 	['get', '/login', 'AuthController@loginPage'],
 	['post', '/login', 'AuthController@login'],
 	['get', '/logout', 'AuthController@logout'],
+
 	['any', '/api/{module}/{method}', 'ApiController@apiCall']
 ]);
 
+// Authentication required for these routes
 Routes::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'auth'], [
+	['get', '/', 'DashboardController@dashboard'],
+	['get', '/{page}', 'PageController@render'],
+	['get', '/dashboard', 'DashboardController@dashboard'],
+	['get', '/settings', 'SettingsController@settings'],
+
 	['any', '/api/i/{module}/{method}', 'ApiController@internalApiCall'],
+
 	// Temporary route for categories
-	['any', '/lib/categories', 'DefaultPageController@categories']
+	['any', '/lib/categories', 'PageController@categories'],
+]);
+
+// Group for Administration pages, requires authentication
+Routes::group(['rprefix' => '\Dandelion\Controllers\AdminController', 'filter' => 'auth'], [
+	['get', '/admin', '@admin'],
+	['get', '/editusers', '@editUsers'],
+	['get', '/editgroups', '@editGroups'],
+	['get', '/categories', '@editCategories'],
 ]);

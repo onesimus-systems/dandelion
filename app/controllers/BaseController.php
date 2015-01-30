@@ -4,10 +4,15 @@
  */
 namespace Dandelion\Controllers;
 
+use \Dandelion\Application;
+
 class BaseController
 {
-	public function __construct()
-	{
+	// Instance of running application
+	protected $app;
 
+	public function __construct(Application $app)
+	{
+		$this->app = $app;
 	}
 }
