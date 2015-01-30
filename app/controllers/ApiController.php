@@ -10,7 +10,7 @@ use \Dandelion\Auth\GateKeeper;
 use \Dandelion\API\Module\BaseModule;
 use \Dandelion\Storage\MySqlDatabase;
 
-class ApiController
+class ApiController extends BaseController
 {
     public function __construct(Application $app)
     {

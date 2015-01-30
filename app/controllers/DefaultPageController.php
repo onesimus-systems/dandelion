@@ -12,7 +12,7 @@ use \Dandelion\Auth\GateKeeper;
 use \Dandelion\Storage\MySqlDatabase;
 use \League\Plates\Engine;
 
-class DefaultPageController
+class DefaultPageController extends BaseController
 {
     private $app;
 

@@ -12,7 +12,7 @@ use \Dandelion\Auth\GateKeeper;
 use \Dandelion\Storage\MySqlDatabase;
 use \League\Plates\Engine;
 
-class AuthController
+class AuthController extends BaseController
 {
     // Database connection
     private $db;
