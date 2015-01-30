@@ -83,6 +83,7 @@ class Categories
      */
     public function addCategory($parent, $description)
     {
+        $description = str_replace(':', '_', $description);
         $this->database->insert()
                        ->into(DB_PREFIX.'category', array('description', 'pid'))
                        ->values(array(':description', ':parentid'));
@@ -149,11 +150,12 @@ class Categories
      */
     public function editCategory($cid, $desc)
     {
+        $desc = str_replace(':', '_', $desc);
         $this->database->update(DB_PREFIX.'category')
                        ->set('description = :desc')
                        ->where('cid = :cid');
         $params = array(
-                'desc' => urldecode($desc),
+                'desc' => $desc,
                 'cid' => $cid
         );
 
