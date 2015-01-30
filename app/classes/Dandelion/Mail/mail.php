@@ -43,7 +43,7 @@ class mail
             $params = array (
                 'id' => $_SESSION['userInfo']['userid']
             );
-            $mailCount = $this->dbConn->get($params)[0]['mailCount'];
+            $mailCount = $this->dbConn->getFirst($params)['mailCount'];
         }
 
         return (int) $mailCount;

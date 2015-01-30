@@ -60,6 +60,6 @@ class UserSettings
                  ->where('userid = :id');
 
         $params = array('id' => $id);
-        return $this->db->get($params)[0][$setting];
+        return $this->db->getFirst($params)[$setting];
     }
 }

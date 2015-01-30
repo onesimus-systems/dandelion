@@ -30,8 +30,8 @@ class Rights
       	'userid' => $userid
       );
 
-      $rights = $conn->get($params);
-      $this->permissions = (array) unserialize($rights[0]['permissions']);
+      $rights = $conn->getFirst($params);
+      $this->permissions = (array) unserialize($rights['permissions']);
     }
 
     /**

@@ -53,7 +53,7 @@ class Cheesto
                      ->from(DB_PREFIX.'presence')
                      ->where('uid = :uid');
         $params = array("uid" => $uid);
-        $userStatus = $this->dbConn->get($params)[0];
+        $userStatus = $this->dbConn->getFirst($params);
 
         $userStatus['statusInfo'] = $this->statusType($userStatus['status']);
         $userStatus['statusOptions'] = $this->getStatusText();
@@ -151,7 +151,7 @@ class Cheesto
             'dmodified' => $date,
             'uid' => $userId
         );
-        
+
         if ($this->dbConn->go($params)) {
             return 'User status updated';
         } else {

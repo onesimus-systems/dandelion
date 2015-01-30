@@ -21,10 +21,10 @@ class KeyManager
             "id" => $uid
         );
 
-        $key = $this->db->get($params);
+        $key = $this->db->getFirst($params);
 
-        if (!empty($key[0]) && !$force) {
-            return $key[0]['keystring'];
+        if (!empty($key) && !$force) {
+            return $key['keystring'];
         } else {
             // Clear database of old keys for user
             $this->db->delete()->from(DB_PREFIX.'apikeys')->where('user = :id');

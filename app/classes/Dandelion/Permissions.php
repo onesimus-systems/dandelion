@@ -106,7 +106,7 @@ class Permissions
        $params = array(
             'userrole' => $userrole
        );
-       return unserialize($this->dbConn->get($params)[0]['permissions']);
+       return unserialize($this->dbConn->getFirst($params)['permissions']);
     }
 
     /**

@@ -116,7 +116,7 @@ class Categories
             'catid' => $cid
         );
 
-        $newParent = $this->database->get($params)[0]['pid'];
+        $newParent = $this->database->getFirst($params)['pid'];
 
         // Delete category from DB
         $this->database->delete()

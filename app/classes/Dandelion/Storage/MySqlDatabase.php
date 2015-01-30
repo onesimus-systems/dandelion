@@ -240,6 +240,16 @@ class MySqlDatabase implements DatabaseConn
         return $this->queryDB($stmt, $params, $type, true);
     }
 
+    public function getFirst($params = [], $type = \PDO::PARAM_STR)
+    {
+        $stmt = $this->prepareStatement();
+        $response = $this->queryDB($stmt, $params, $type, true);
+        if (count($response) >= 1) {
+            return $response[0];
+        }
+        return [];
+    }
+
     public function go($params = [], $type = \PDO::PARAM_STR)
     {
         $stmt = $this->prepareStatement();

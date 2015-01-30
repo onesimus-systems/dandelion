@@ -59,9 +59,9 @@ class Users
             'userid' => $this->userInfo['userid']
         );
 
-        $allUserInfo = $this->db->get($params);
+        $allUserInfo = $this->db->getFirst($params);
 
-        foreach ($allUserInfo[0] as $key => $value) {
+        foreach ($allUserInfo as $key => $value) {
             $infoType = substr($key, 0, 2);
             $key = substr_replace($key, '', 0, 2);
 
@@ -217,7 +217,7 @@ class Users
         $params = array(
             'userid' => $uid
         );
-        $userRole = $this->db->get($params)[0]['role'];
+        $userRole = $this->db->getFirst($params)['role'];
 
         $perms = new Permissions($this->db);
         $isAdmin = (array) $perms->loadRights($userRole);
@@ -276,6 +276,6 @@ class Users
                  ->from(DB_PREFIX.'users')
                  ->where('userid = :uid');
         $params = array('uid' => $uid);
-        return $this->db->get($params)[0];
+        return $this->db->getFirst($params);
     }
 }

@@ -21,7 +21,7 @@ class GateKeeper
         if (empty($user) || empty($pass)) {
             return false;
         }
-        
+
         $userInfo = $this->isUser($user, $pass);
 
         if (!$userInfo) {
@@ -70,10 +70,10 @@ class GateKeeper
                  ->from(DB_PREFIX.'users')
                  ->where('username = :user');
         $param = array('user' => $user);
-        $user = $this->db->get($param);
+        $user = $this->db->getFirst($param);
 
-        if (!empty($user[0]['password']) && password_verify($pass, $user[0]['password'])) { // Check if password is correct
-            return $user[0];
+        if (!empty($user['password']) && password_verify($pass, $user['password'])) { // Check if password is correct
+            return $user;
         }
 
         return false;
