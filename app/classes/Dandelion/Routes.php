@@ -10,6 +10,8 @@ class Routes
 {
     private static $routeList = [];
 
+    private static $filters = [];
+
     /**
      *  I feel Routes is a natural singleton object.
      *  There should be no need to have more than one global instance.
@@ -194,6 +196,11 @@ class Routes
         return array($routeClass, $routeMethod, $params);
     }
 
+    public static function filter($name, \Closure $callback)
+    {
+        self::$filters[$name] = $callback;
+    }
+
     /**
      *  Perform any before actions on the route
      */
@@ -203,9 +210,9 @@ class Routes
             return true;
         }
 
-        switch ($action) {
-            case 'auth':
-                return GateKeeper::authenticated();
+        if (array_key_exists($action, self::$filters)) {
+            $callback = self::$filters[$action];
+            return $callback();
         }
 
         return false;

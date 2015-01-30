@@ -53,6 +53,7 @@ class Application
         SessionManager::startSession($this->config['phpSessionName']);
 
         include $this->paths['app'] . '/routes.php';
+        include $this->paths['app'] . '/filters.php';
         list($class, $method, $params) = Routes::route($this->url);
 
         if (!$class) {
