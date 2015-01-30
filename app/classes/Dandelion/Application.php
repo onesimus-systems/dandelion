@@ -55,6 +55,12 @@ class Application
         include $this->paths['app'] . '/routes.php';
         list($class, $method, $params) = Routes::route($this->url);
 
+        if (!$class) {
+            // Show error page
+            echo 'Houstin, we have a problem.';
+            return;
+        }
+
         $controller = new $class($this);
         call_user_func_array(array($controller, $method), $params);
         return;

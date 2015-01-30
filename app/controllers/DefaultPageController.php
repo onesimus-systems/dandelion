@@ -79,6 +79,10 @@ class DefaultPageController
 
         $templates->addData($data);
 
-        echo $templates->render($page);
+        try {
+            echo $templates->render($page);
+        } catch (\Exception $e) {
+            $this->showTemplate('dashboard');
+        }
     }
 }

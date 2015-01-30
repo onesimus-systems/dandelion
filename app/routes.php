@@ -4,20 +4,16 @@
  */
 namespace Dandelion;
 
-Routes::get('/{page}', '\Dandelion\Controllers\DefaultPageController@render');
+Routes::group(['rprefix' => '\Dandelion\Controllers\\'], [
+	['get', '/{page}', 'DefaultPageController@render'],
+	['get', '/login', 'AuthController@loginPage'],
+	['post', '/login', 'AuthController@login'],
+	['get', '/logout', 'AuthController@logout'],
+	['any', '/api/{module}/{method}', 'ApiController@apiCall']
+]);
 
-Routes::get('/login', '\Dandelion\Controllers\AuthController@loginPage');
-Routes::post('/login', '\Dandelion\Controllers\AuthController@login');
-Routes::get('/logout', '\Dandelion\Controllers\AuthController@logout');
-
-Routes::any(
-    '/api/i/{module}/{method}',
-    array(
-        'before' => 'auth',
-        'use' => '\Dandelion\Controllers\ApiController@internalApiCall'
-    ));
-
-Routes::any('/api/{module}/{method}', '\Dandelion\Controllers\ApiController@apiCall');
-
-// Temporary route for categories
-Routes::any('/lib/categories', '\Dandelion\Controllers\DefaultPageController@categories');
+Routes::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'auth'], [
+	['any', '/api/i/{module}/{method}', 'ApiController@internalApiCall'],
+	// Temporary route for categories
+	['any', '/lib/categories', 'DefaultPageController@categories']
+]);

@@ -48,12 +48,35 @@ class Routes
     }
 
     /**
+     * Register a group of functions
+     */
+    public static function group(array $properties, array $routes)
+    {
+        // $routes: [0] = HTTP method, [1] = pattern, [2] = controller/method route
+        $baseProperties = ['filter' => '', 'prefix' => '', 'rprefix' => ''];
+        $properties = array_merge($baseProperties, $properties);
+
+        foreach ($routes as $route) {
+            if (!method_exists(__CLASS__, $route[0])) {
+                continue;
+            }
+
+            $options = [
+                'use' => $properties['rprefix'].$route[2],
+                'filter' => $properties['filter']
+            ];
+            $route[1] = $baseProperties['prefix'].$route[1];
+            self::$route[0]($route[1], $options);
+        }
+    }
+
+    /**
      *  Common register function, adds route to $routeList
      */
     private static function register($method, $url, $options)
     {
         if (!is_array($options)) {
-            $options = array('use' => $options, 'before' => '');
+            $options = array('use' => $options, 'filter' => '');
         }
 
         $options['use'] = explode('@', $options['use']);
@@ -64,7 +87,7 @@ class Routes
             'class' => $options['use'][0],
             'method' => $options['use'][1],
             'pattern' => explode('/', $url),
-            'before' => $options['before']
+            'filter' => $options['filter']
         );
         return;
     }
@@ -117,7 +140,7 @@ class Routes
             return false;
         }
 
-        if (!self::handleBefore(self::$routeList[$routeName]['before'])) {
+        if (!self::handleFilter(self::$routeList[$routeName]['filter'])) {
             return false;
         }
 
@@ -163,7 +186,7 @@ class Routes
         $routeClass = self::$routeList[$route]['class'];
         $routeMethod = self::$routeList[$route]['method'];
 
-        if (!self::handleBefore(self::$routeList[$route]['before'])) {
+        if (!self::handleFilter(self::$routeList[$route]['filter'])) {
             return false;
         }
 
@@ -174,7 +197,7 @@ class Routes
     /**
      *  Perform any before actions on the route
      */
-    private static function handleBefore($action)
+    private static function handleFilter($action)
     {
         if (!$action) {
             return true;
