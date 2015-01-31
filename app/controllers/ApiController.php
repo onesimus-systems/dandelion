@@ -6,6 +6,7 @@ namespace Dandelion\Controllers;
 
 use \Dandelion\Rights;
 use \Dandelion\Application;
+use \Dandelion\UrlParameters;
 use \Dandelion\API\Module\BaseModule;
 use \Dandelion\Storage\MySqlDatabase;
 
@@ -29,7 +30,8 @@ class ApiController extends BaseController
     public function apiCall($module, $method)
     {
         if ($this->app->config['publicApiEnabled']) {
-            $apikey = isset($_REQUEST['apikey']) ? $_REQUEST['apikey'] : '';
+            $urlParams = new UrlParameters();
+            $apikey = $urlParams->get('apikey');
             echo $this->processRequest($apikey, false, $module, $method);
         }
         return;
@@ -73,8 +75,7 @@ class ApiController extends BaseController
         if ($module != 'auth') {
             if (!$localCall) {
                 define('USER_ID', $this->verifyKey($key));
-            }
-            else {
+            } else {
                 define('USER_ID', $key);
             }
 
@@ -84,7 +85,7 @@ class ApiController extends BaseController
         }
 
         $DatabaseConn = MySqlDatabase::getInstance();
-        $urlParams = new \Dandelion\UrlParameters();
+        $urlParams = new UrlParameters();
 
         // Call the requested function (as defined by the last part of the URL)
         $className = '\Dandelion\API\Module\\' . $module . 'API';
@@ -94,10 +95,10 @@ class ApiController extends BaseController
         //$ApiModule = new $className($DatabaseConn, $userRights, $urlParams);
         $ApiModule = new $className($this->app, $userRights, $urlParams);
 
-        if ($ApiModule instanceof BaseModule) {
+        if ($ApiModule instanceof BaseModule && method_exists($ApiModule, $request)) {
             $data = $ApiModule->$request();
         } else {
-            return self::makeDAPI(6, 'Internal Server Error', 'API', '');
+            return self::makeDAPI(5, 'Bad API call', 'API', '');
         }
 
         // Return DAPI object
@@ -118,7 +119,7 @@ class ApiController extends BaseController
             exit(self::makeDAPI(1, 'API key is not valid', 'api'));
         }
 
-        $conn = \Dandelion\Storage\MySqlDatabase::getInstance();
+        $conn = MySqlDatabase::getInstance();
 
         // Search for key with case sensitive collation
         $conn->select()
