@@ -19,6 +19,6 @@ interface DatabaseConn
     public function where($conditions);
     public function selectAll($table);
     public function raw($sql);
-    public function get($params = null, $type = \PDO::PARAM_STR);
-    public function go($params = null, $type = \PDO::PARAM_STR);
+    public function get(array $params = [], $type = \PDO::PARAM_STR);
+    public function go(array $params = [], $type = \PDO::PARAM_STR);
 }

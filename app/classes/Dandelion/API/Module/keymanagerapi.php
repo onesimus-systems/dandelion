@@ -7,13 +7,8 @@ namespace Dandelion\API\Module;
 use \Dandelion\KeyManager;
 use \Dandelion\Controllers\ApiController;
 
-class keyManagerAPI extends BaseModule
+class KeyManagerAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params)
-    {
-        parent::__construct($db, $ur, $params);
-    }
-
     /**
      *  Retrieve key from database for current user.
      *  If a key isn't present, create one
@@ -24,7 +19,7 @@ class keyManagerAPI extends BaseModule
      */
     public function getKey($force = false)
     {
-        $key = new KeyManager($this->db);
+        $key = new KeyManager($this->repo);
         return SELF::encodeKey($key->getKey($_SESSION['userInfo']['userid'], $force));
     }
 
@@ -52,7 +47,7 @@ class keyManagerAPI extends BaseModule
             }
         }
 
-        $key = new KeyManager($this->db);
+        $key = new KeyManager($this->repo);
         return SELF::encodeKey($key->revoke($userid));
     }
 

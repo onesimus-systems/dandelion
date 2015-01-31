@@ -14,9 +14,6 @@ class MySqlDatabase implements DatabaseConn
     // Singleton instance of database object
     private static $instance;
 
-    // Table prefix for database
-    protected $dbPrefix;
-
     /**
       * Connection information in associative array containing:
       *
@@ -234,13 +231,13 @@ class MySqlDatabase implements DatabaseConn
     }
 
     // Perform query
-    public function get($params = [], $type = \PDO::PARAM_STR)
+    public function get(array $params = [], $type = \PDO::PARAM_STR)
     {
         $stmt = $this->prepareStatement();
         return $this->queryDB($stmt, $params, $type, true);
     }
 
-    public function getFirst($params = [], $type = \PDO::PARAM_STR)
+    public function getFirst(array $params = [], $type = \PDO::PARAM_STR)
     {
         $stmt = $this->prepareStatement();
         $response = $this->queryDB($stmt, $params, $type, true);
@@ -250,7 +247,7 @@ class MySqlDatabase implements DatabaseConn
         return [];
     }
 
-    public function go($params = [], $type = \PDO::PARAM_STR)
+    public function go(array $params = [], $type = \PDO::PARAM_STR)
     {
         $stmt = $this->prepareStatement();
         return $this->queryDB($stmt, $params, $type);

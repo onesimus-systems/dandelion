@@ -4,66 +4,46 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Storage\Contracts\DatabaseConn;
+use \Dandelion\Repos\Interfaces\KeyManagerRepo;
 
 class KeyManager
 {
-    public function __construct(DatabaseConn $db)
+    private $repo;
+
+    public function __construct(KeyManagerRepo $repo)
     {
-        $this->db = $db;
+        $this->repo = $repo;
         return;
     }
 
     public function getKey($uid, $force = false)
     {
-        $this->db->select('keystring')->from(DB_PREFIX.'apikeys')->where('user = :id');
-        $params = array (
-            "id" => $uid
-        );
-
-        $key = $this->db->getFirst($params);
+        $key = $this->repo->getKeyForUser($uid);
 
         if (!empty($key) && !$force) {
             return $key['keystring'];
+        }
+
+        // Clear database of old keys for user
+        $this->repo->deleteKeyForUser($uid);
+
+        // Generate new key
+        $newKey = $this->generateKey(15);
+        if (!$newKey) {
+            return 'Error generating key.';
+        }
+
+        // Insert new key
+        if ($this->repo->saveKeyForUser($uid, $newKey)) {
+            return $newKey;
         } else {
-            // Clear database of old keys for user
-            $this->db->delete()->from(DB_PREFIX.'apikeys')->where('user = :id');
-            $params = array (
-                "id" => $uid
-            );
-            $this->db->go($params);
-
-            // Generate new key
-            $newKey = $this->generateKey(15);
-            if (!$newKey) {
-                return 'Error generating key.';
-            }
-
-            // Insert new key
-            $this->db->insert()->into(DB_PREFIX.'apikeys', array('keystring', 'user'))->values(array(':newkey', ':uid'));
-            $params = array (
-                "newkey" => $newKey,
-                "uid" => $uid
-            );
-
-            if ($this->db->go($params)) {
-                return $newKey;
-            } else {
-                return 'Error generating key.';
-            }
+            return 'Error generating key.';
         }
     }
 
     public function revoke($uid)
     {
-        $this->db->delete()
-                 ->from(DB_PREFIX.'apikeys')
-                 ->where('user = :id');
-        $params = array(
-            "id" => $uid
-        );
-
-        return $this->db->go($params);
+        return $this->repo->revoke($uid);
     }
 
     /**

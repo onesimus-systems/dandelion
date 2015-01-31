@@ -7,13 +7,8 @@ namespace Dandelion\API\Module;
 use \Dandelion\Mail\Mail;
 use \Dandelion\Controllers\ApiController;
 
-class mailAPI extends BaseModule
+class MailAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params)
-    {
-        parent::__construct($db, $ur, $params);
-    }
-
     /**
      * Grab JSON array of all cheesto users and statuses
      *
@@ -21,7 +16,7 @@ class mailAPI extends BaseModule
      */
     public function read()
     {
-        $myMail = new Mail($this->db);
+        $myMail = new Mail($this->repo);
 
         $mail = $myMail->getFullMailInfo($this->up->mid);
         $myMail->setReadMail($this->up->mid);
@@ -34,7 +29,7 @@ class mailAPI extends BaseModule
      */
     public function mailCount()
     {
-        $myMail = new Mail($this->db);
+        $myMail = new Mail($this->repo);
 
         $count = $myMail->checkNewMail(true);
         $count = array( 'count' => $count);
@@ -47,7 +42,7 @@ class mailAPI extends BaseModule
      */
     public function delete()
     {
-        $myMail = new Mail($this->db);
+        $myMail = new Mail($this->repo);
 
         $perm = ($this->up->permenant === 'true') ? true : false;
         $response = $myMail->deleteMail($this->up->mid, $perm);
@@ -60,7 +55,7 @@ class mailAPI extends BaseModule
      */
     public function getUserList()
     {
-        $myMail = new Mail($this->db);
+        $myMail = new Mail($this->repo);
 
         $toUsers = $myMail->getUserList();
 
@@ -72,7 +67,7 @@ class mailAPI extends BaseModule
      */
     public function getAllMail()
     {
-        $myMail = new Mail($this->db);
+        $myMail = new Mail($this->repo);
 
         if ($this->up->trash) {
             $mailItems = $myMail->getTrashCan();
@@ -89,7 +84,7 @@ class mailAPI extends BaseModule
      */
     public function send()
     {
-        $myMail = new Mail($this->db);
+        $myMail = new Mail($this->repo);
 
         $piece = json_decode($this->up->mail, true);
         $response = $myMail->newMail(
