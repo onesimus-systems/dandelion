@@ -7,14 +7,13 @@ namespace Dandelion\Controllers;
 use \Dandelion\Rights;
 use \Dandelion\Template;
 use \Dandelion\Utils\View;
+use \Dandelion\Utils\Repos;
 
 class SettingsController extends BaseController
 {
 	public function settings()
 	{
-        $dbtype = ucfirst($this->app->config['db']['type']);
-        $repo = "\\Dandelion\\Repos\\{$dbtype}\\RightsRepo";
-        $rightsRepo = new $repo();
+        $rightsRepo = Repos::makeRepo($this->app->config['db']['type'], 'Rights');
         $userRights = new Rights($_SESSION['userInfo']['userid'], $rightsRepo);
 
         $template = new Template($this->app);

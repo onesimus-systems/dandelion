@@ -6,7 +6,7 @@ namespace Dandelion\Repos\Mysql;
 
 use \Dandelion\Storage\MySqlDatabase;
 
-class BaseMySqlRepo
+abstract class BaseMySqlRepo
 {
     protected $database;
 

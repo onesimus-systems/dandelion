@@ -5,6 +5,7 @@
 namespace Dandelion\Controllers;
 
 use \Dandelion\Rights;
+use \Dandelion\Utils\Repos;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\API\Module\BaseModule;
@@ -79,9 +80,7 @@ class ApiController extends BaseController
                 define('USER_ID', $key);
             }
 
-            $dbtype = ucfirst($this->app->config['db']['type']);
-            $repo = "\\Dandelion\\Repos\\{$dbtype}\\RightsRepo";
-            $rightsRepo = new $repo();
+            $rightsRepo = Repos::makeRepo($this->app->config['db']['type'], 'Rights');
             $userRights = new Rights(USER_ID, $rightsRepo);
         } else {
             $userRights = null;

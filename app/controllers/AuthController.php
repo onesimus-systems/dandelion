@@ -5,10 +5,10 @@
 namespace Dandelion\Controllers;
 
 use \Dandelion\Utils\View;
+use \Dandelion\Utils\Repos;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\Auth\GateKeeper;
-use \Dandelion\Storage\MySqlDatabase;
 use \League\Plates\Engine;
 
 class AuthController extends BaseController
@@ -23,9 +23,7 @@ class AuthController extends BaseController
     {
         parent::__construct($app);
 
-        $dbtype = ucfirst($this->app->config['db']['type']);
-        $repo = "\\Dandelion\\Repos\\{$dbtype}\\AuthRepo";
-        $this->repo = new $repo();
+        $this->repo = Repos::makeRepo($this->app->config['db']['type'], 'Auth');
 
         $this->up = new UrlParameters();
     }

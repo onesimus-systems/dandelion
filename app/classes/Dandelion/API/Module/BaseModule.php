@@ -7,6 +7,7 @@ namespace Dandelion\API\Module;
 use \Dandelion\Rights;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
+use \Dandelion\Utils\Repos;
 use \Dandelion\Controllers\ApiController;
 
 abstract class BaseModule
@@ -40,9 +41,9 @@ abstract class BaseModule
         // Database type
         $dbtype = ucfirst($this->app->config['db']['type']);
 
-        $repo = "\\Dandelion\\Repos\\{$dbtype}\\{$module}Repo";
-        if (class_exists($repo)) {
-            return new $repo();
+        $repo = Repos::makeRepo($dbtype, $module);
+        if ($repo) {
+            return $repo;
         } else {
             exit(ApiController::makeDAPI(6, 'Error initializing API request', 'api'));
         }
