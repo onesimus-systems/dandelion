@@ -8,17 +8,12 @@ use \Dandelion\Logs;
 use \Dandelion\UserSettings;
 use \Dandelion\Controllers\ApiController;
 
-class logsAPI extends BaseModule
+class LogsAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params)
-    {
-        parent::__construct($db, $ur, $params);
-    }
-
     /**
      *  Grab JSON array of logs
      *
-     *  @return JSON
+     *  @return array
      */
     public function read()
     {
@@ -26,13 +21,13 @@ class logsAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $userLimit = new UserSettings($this->db);
+        $userLimit = new UserSettings($this->makeRepo('UserSettings'));
         $limit = $userLimit->getSetting('showlimit', USER_ID);
         $limit = (int) $this->up->get('limit', $limit);
         $offset = (int) $this->up->get('offset', 0);
         $offset = $offset < 0 ? 0 : $offset;
 
-        $logSize = (int) $this->db->numOfRows('log');
+        $logSize = $this->repo->numOfLogs();
 
         if ($offset > $logSize) {
             $offset = $offset - $limit;
@@ -44,7 +39,7 @@ class logsAPI extends BaseModule
             'logSize' => $logSize
         );
 
-        $logs = new Logs($this->db, $this->ur);
+        $logs = new Logs($this->repo, $this->ur);
         $return = $logs->getLogList($limit, $offset);
         $return['metadata'] = $metaData;
         return $return;
@@ -59,7 +54,7 @@ class logsAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $logs = new Logs($this->db);
+        $logs = new Logs($this->repo);
         return $logs->getLogInfo($this->up->logid);
     }
 
@@ -76,7 +71,7 @@ class logsAPI extends BaseModule
         $body = $this->up->body;
         $cat = rtrim($this->up->cat, ':');
 
-        $logs = new Logs($this->db);
+        $logs = new Logs($this->repo);
         return $logs->addLog($title, $body, $cat, USER_ID);
     }
 
@@ -88,7 +83,7 @@ class logsAPI extends BaseModule
         $lid = $this->up->logid;
 
         if (!$this->ur->isAdmin()) {
-            $log = json_decode(self::readOne($this->db, $this->ur), true);
+            $log = json_decode($this->readOne(), true);
 
             if (!$this->ur->authorized('editlog') || $log['usercreated'] != USER_ID) {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
@@ -102,7 +97,7 @@ class logsAPI extends BaseModule
 
         //$cat = rtrim($cat, ':');
 
-        $logs = new Logs($this->db);
+        $logs = new Logs($this->repo);
         return $logs->editLog($lid, $title, $body);
     }
 
@@ -118,7 +113,7 @@ class logsAPI extends BaseModule
         $filter = $this->up->filter;
         $filter = rtrim($filter, ':');
 
-        $logs = new Logs($this->db);
+        $logs = new Logs($this->repo);
         return $logs->filter($filter);
     }
 
@@ -134,7 +129,7 @@ class logsAPI extends BaseModule
         $kw = $this->up->kw;
         $date = $this->up->date;
 
-        $logs = new Logs($this->db);
+        $logs = new Logs($this->repo);
         return $logs->search($kw, $date);
     }
 }

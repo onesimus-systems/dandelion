@@ -4,13 +4,13 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Storage\Contracts\DatabaseConn;
+use \Dandelion\Repos\Interfaces\LogsRepo;
 
 class Logs
 {
-    public function __construct(DatabaseConn $dbConn, $ur = null)
+    public function __construct(LogsRepo $repo, Rights $ur = null)
     {
-        $this->db = $dbConn;
+        $this->repo = $repo;
         $this->ur = $ur;
         return;
     }
@@ -20,21 +20,13 @@ class Logs
      *
      * @param int $logid Row id number for desired log
      *
-     * @return JSON encoded array with log data
+     * @return array with log data
      */
     public function getLogInfo($logid)
     {
         $logid = isset($logid) ? $logid : '';
 
-        $this->db->select()
-                 ->from(DB_PREFIX.'log')
-                 ->where('logid = :logid');
-        $params = array(
-            'logid' => $logid
-        );
-        $edit_log_info = $this->db->get($params);
-
-        return $edit_log_info[0];
+        return $this->repo->getLogInfo($logid);
     }
 
     /**
@@ -45,28 +37,16 @@ class Logs
      */
     public function getLogList($limit = 25, $offset = 0)
     {
-        $this->db->select('l.*, u.realname')
-                 ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
-                 ->orderBy('l.logid', 'DESC')
-                 ->limit(':pO,:lim');
+        $getLogs = $this->repo->getLogList($offset, $limit);
 
-        $params = array(
-            'pO' => ((int) $offset),
-            'lim' => ((int) $limit)
-        );
-
-        // When using an SQL LIMIT, the parameter MUST be an integer.
-        // To accomplish this the PDO constant PARAM_INT is passed
-        $get_logs = $this->db->get($params, \PDO::PARAM_INT);
-
-        foreach ($get_logs as $key => $value) {
+        foreach ($getLogs as $key => $value) {
             if ($this->ur->isAdmin() || $value['usercreated'] == $this->ur->userid) {
-                $get_logs[$key]['canEdit'] = true;
+                $getLogs[$key]['canEdit'] = true;
             } else {
-                $get_logs[$key]['canEdit'] = false;
+                $getLogs[$key]['canEdit'] = false;
             }
         }
-        return $get_logs;
+        return $getLogs;
     }
 
     /**
@@ -86,21 +66,10 @@ class Logs
         }
 
         $datetime = getdate();
-        $new_date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
-        $new_time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
+        $date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
+        $time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
 
-        $this->db->insert()
-                 ->into(DB_PREFIX.'log', array('datec', 'timec', 'title', 'entry', 'usercreated', 'cat'))
-                 ->values(array(':datec', ':timec', ':title', ':entry', ':usercreated', ':cat'));
-        $params = array(
-            'datec' => $new_date,
-            'timec' => $new_time,
-            'title' => $title,
-            'entry' => $body,
-            'usercreated' => $uid,
-            'cat' => $cat
-        );
-        if ($this->db->go($params)) {
+        if ($this->repo->addLog($uid, $title, $body, $cat, $date, $time)) {
             return 'Log entry created successfully.';
         } else {
             return 'An error occured saving the log entry.';
@@ -110,7 +79,7 @@ class Logs
     /**
      * Update log in database
      *
-     * @param json $logData JSON encoded log title, entry, and id
+     *
      *
      * @return string Confirmation message or error message
      */
@@ -120,30 +89,19 @@ class Logs
             return 'Log entries require a title, category, and body.';
         }
 
-        $this->db->update(DB_PREFIX.'log')
-                 ->set('title = :title, entry = :entry, edited = 1')
-                 ->where('logid = :lid');
-        $params = array(
-            'title' => $title,
-            'entry' => $body,
-            'lid' => $lid
-        );
-        $this->db->go($params);
-
-        return "\"{$title}\" edited successfully.";
+        if ($this->repo->updateLog($lid, $title, $body)) {
+            return "\"{$title}\" edited successfully.";
+        } else {
+            return 'There was an error saving the log.';
+        }
     }
 
     /**
      * Filter logs by category
      */
-    public function filter($f)
+    public function filter($filter)
     {
-        $this->db->select('l.*, u.realname')
-                 ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
-                 ->where('cat LIKE :filter')
-                 ->orderBy('logid', 'DESC');
-        $params = array('filter' => "%{$f}%");
-        return $this->db->get($params);
+        return $this->repo->getLogsByFilter($filter);
     }
 
     /**
@@ -152,32 +110,10 @@ class Logs
      * @param string $kw - Keywords
      * @param string $date - Date of creation
      *
-     * @return Json
+     * @return
      */
     public function search($kw = '', $date = '')
     {
-        $this->db->select('l.*, u.realname')
-                 ->from(DB_PREFIX.'log AS l LEFT JOIN '.DB_PREFIX.'users AS u ON l.usercreated = u.userid')
-                 ->orderBy('logid', 'DESC');
-
-        if ($date == '') {
-            $this->db->where('title LIKE :keyw or entry LIKE :keyw');
-            $params = array(
-                'keyw' => "%{$kw}%"
-            );
-        } elseif ($kw == '') {
-            $this->db->where('datec=:dates');
-            $params = array(
-                'dates' => $date
-            );
-        } else {
-            $this->db->where('(title LIKE :keyw or entry LIKE :keyw) and datec=:dates');
-            $params = array(
-                'keyw' => "%{$kw}%",
-                'dates' => $date
-            );
-        }
-
-        return $this->db->get($params);
+        return $this->repo->getLogsBySearch($kw, $date);
     }
 }
