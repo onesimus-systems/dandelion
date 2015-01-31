@@ -64,7 +64,7 @@ var api = {
 
     saveLogLimit: function() {
         var limit = $('#show_limit').val();
-        $.post('api/i/settings/saveLogLimit', {'limit': limit}, null, "json")
+        $.post('api/i/usersettings/saveLogLimit', {'limit': limit}, null, "json")
             .done(function(msg) {
                 alert(msg.data);
             });
@@ -72,7 +72,7 @@ var api = {
 
     saveTheme: function() {
         var theme = $('#userTheme').val();
-        $.post('api/i/settings/saveTheme', {'theme': theme}, null, "json")
+        $.post('api/i/usersettings/saveTheme', {'theme': theme}, null, "json")
             .done(function(msg) {
                 alert(msg.data);
                 document.location.reload(true);

@@ -4,13 +4,13 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Storage\Contracts\DatabaseConn;
+use \Dandelion\Repos\Interfaces\UserSettingsRepo;
 
 class UserSettings
 {
-    public function __construct(DatabaseConn $db)
+    public function __construct(UserSettingsRepo $repo)
     {
-        $this->db = $db;
+        $this->repo = $repo;
     }
 
     public function saveLogLimit($limit)
@@ -21,14 +21,7 @@ class UserSettings
           $limit = 500;
         }
 
-        $this->db->update(DB_PREFIX.'users')
-                 ->set('showlimit = :newlimit')
-                 ->where('userid = :myID');
-        $params = array(
-            'newlimit' => $limit,
-            'myID' => $_SESSION['userInfo']['userid']
-        );
-        $this->db->go($params);
+        $this->repo->saveLogViewLimit($_SESSION['userInfo']['userid'], $limit);
 
         $_SESSION['userInfo']['showlimit'] = $limit;
 
@@ -37,29 +30,17 @@ class UserSettings
 
     public function saveTheme($theme)
     {
-        $newTheme = isset($theme) ? $theme : 'default';
+        $theme = isset($theme) ? $theme : 'default';
 
-        $this->db->update(DB_PREFIX.'users')
-                 ->set('theme = :theme')
-                 ->where('userid = :myID');
-        $params = array(
-            'theme' => $newTheme,
-            'myID' => $_SESSION['userInfo']['userid']
-        );
-        $this->db->go($params);
+        $this->repo->saveUserTheme($_SESSION['userInfo']['userid'], $theme);
 
-        $_SESSION['userInfo']['theme'] = $newTheme;
+        $_SESSION['userInfo']['theme'] = $theme;
 
         return 'Theme saved successfully';
     }
 
     public function getSetting($setting, $id)
     {
-        $this->db->select($setting)
-                 ->from(DB_PREFIX.'users')
-                 ->where('userid = :id');
-
-        $params = array('id' => $id);
-        return $this->db->getFirst($params)[$setting];
+        return $this->repo->getUserSetting($id, $setting);
     }
 }
