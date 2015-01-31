@@ -7,19 +7,14 @@ namespace Dandelion\API\Module;
 use \Dandelion\Permissions;
 use \Dandelion\Controllers\ApiController;
 
-class rightsAPI extends BaseModule
+class RightsAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params)
-    {
-        parent::__construct($db, $ur, $params);
-    }
-
     /**
      * Gets the list of rights groups
      */
     public function getList()
     {
-        $permissions = new Permissions($this->db);
+        $permissions = new Permissions($this->repo);
         $allGroups = $permissions->getGroupList();
         foreach ($allGroups as $key => $value) {
             $allGroups[$key]['permissions'] = unserialize($allGroups[$key]['permissions']);
@@ -32,9 +27,9 @@ class rightsAPI extends BaseModule
      */
     public function getGroup()
     {
-        $permissions = new Permissions($this->db);
+        $permissions = new Permissions($this->repo);
         $gid = $this->up->groupid;
-        return unserialize($permissions->getGroupList($gid)[0]['permissions']);
+        return unserialize($permissions->getGroupList($gid)['permissions']);
     }
 
     /**
@@ -46,7 +41,7 @@ class rightsAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
         }
 
-        $permissions = new Permissions($this->db);
+        $permissions = new Permissions($this->repo);
         $gid = $this->up->groupid;
         $rights = json_decode($this->up->rights, true);
 
@@ -66,7 +61,7 @@ class rightsAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
         }
 
-        $permissions = new Permissions($this->db);
+        $permissions = new Permissions($this->repo);
         $name = $this->up->name;
         $rights = json_decode($this->up->rights, true);
 
@@ -86,7 +81,7 @@ class rightsAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
         }
 
-        $permissions = new Permissions($this->db);
+        $permissions = new Permissions($this->repo);
         $gid = $this->up->groupid;
         $users = $permissions->usersInGroup($gid);
 

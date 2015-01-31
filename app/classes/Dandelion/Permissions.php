@@ -4,13 +4,13 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Storage\Contracts\DatabaseConn;
+use \Dandelion\Repos\Interfaces\RightsRepo;
 
 class Permissions
 {
-    public function __construct(DatabaseConn $dbConn)
+    public function __construct(RightsRepo $repo)
     {
-        $this->dbConn = $dbConn;
+        $this->repo = $repo;
         return;
     }
     /**
@@ -22,37 +22,23 @@ class Permissions
     public function getGroupList($groupID = null)
     {
         if ($groupID === null) {
-            $this->dbConn->selectAll('rights');
-            $params = [];
+            return $this->repo->getAllGroupLists();
         } else {
-            $this->dbConn->select()
-                         ->from(DB_PREFIX.'rights')
-                         ->where(array('id = :id'));
-            $params = array(
-                'id' => $groupID
-            );
+            return $this->repo->getGroupList($groupID);
         }
-        return $this->dbConn->get($params);
     }
 
     /**
      * Save a new group to database
      *
      * @param string $name - Name of new group
-     * @param array $rightsArray - Array containing rights
+     * @param array $rights - Array containing rights
      * @return int - ID of new group
      */
-    public function createGroup($name, $rightsArray)
+    public function createGroup($name, $rights)
     {
-        $this->dbConn->insert()
-                     ->into(DB_PREFIX.'rights', array('role', 'permissions'))
-                     ->values(array(':role', ':rights'));
-        $params = array(
-            'role' => strtolower($name),
-            'rights' => serialize($rightsArray)
-        );
-        $this->dbConn->go($params);
-        return $this->dbConn->lastInsertId();
+        $rights = serialize($rights);
+        return $this->repo->createGroup(strtolower($name), $rights);
     }
 
     /**
@@ -61,15 +47,9 @@ class Permissions
      * @param int $id - ID number of group
      * @return bool - Status of query
      */
-    public function deleteGroup($id)
+    public function deleteGroup($gid)
     {
-        $this->dbConn->delete()
-                     ->from(DB_PREFIX.'rights')
-                     ->where(array('id = :id'));
-        $params = array(
-            'id' => $id
-        );
-        return $this->dbConn->go($params);
+        return $this->repo->deleteGroup($gid);
     }
 
     /**
@@ -82,14 +62,7 @@ class Permissions
     public function editGroup($gid, $rights)
     {
         $rights = serialize($rights);
-        $this->dbConn->update(DB_PREFIX.'rights')
-                     ->set(array('permissions = :newPerm'))
-                     ->where(array('id = :gid'));
-        $params = array(
-            'gid' => $gid,
-            'newPerm' => $rights
-        );
-        return $this->dbConn->go($params);
+        return $this->repo->editGroup($gid, $rights);
     }
 
     /**
@@ -98,15 +71,9 @@ class Permissions
      * @param string $userrole - Name of permisions group
      * @return array - Permissions
      */
-    public function loadRights($userrole)
+    public function loadRights($role)
     {
-       $this->dbConn->select('permissions')
-                    ->from(DB_PREFIX.'rights')
-                    ->where(array('role = :userrole'));
-       $params = array(
-            'userrole' => $userrole
-       );
-       return unserialize($this->dbConn->getFirst($params)['permissions']);
+       return unserialize($this->repo->loadRights($role));
     }
 
     /**
@@ -118,13 +85,8 @@ class Permissions
     public function usersInGroup($gid)
     {
         // Get name of group to search users table
-        $groupName = $this->getGroupList($gid)[0]['role'];
-        $this->dbConn->select('userid')
-                     ->from(DB_PREFIX.'users')
-                     ->where(array('role = :role'));
-        $params = array(
-            'role' => $groupName
-        );
-        return $this->dbConn->get($params);
+        $groupName = $this->getGroupList($gid)['role'];
+
+        return $this->repo->usersInGroup($groupName);
     }
 }
