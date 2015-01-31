@@ -10,6 +10,7 @@ class SessionManager implements \SessionHandlerInterface
 {
     private $sessionName;
     private $timeout;
+    private $gcLotto;
     private $repo;
     private $app;
 
@@ -19,11 +20,13 @@ class SessionManager implements \SessionHandlerInterface
     private function __construct() {}
     private function __clone() {}
 
-    public static function get($name) {
+    public static function get($name)
+    {
         return self::$session[$name];
     }
 
-    public static function set($name, $value) {
+    public static function set($name, $value)
+    {
         self::$session[$name] = $value;
         return;
     }
@@ -36,8 +39,9 @@ class SessionManager implements \SessionHandlerInterface
             return;
         }
 
-        self::$instance->timeout = 21600; // 6 hours
+        self::$instance->timeout = $app->config['sessionTimeout'] * 60; // 6 hours
         self::$instance->app = $app;
+        self::$instance->gcLotto = $app->config['gcLottery'];
 
         session_set_save_handler(self::$instance, true);
         return;
@@ -63,7 +67,13 @@ class SessionManager implements \SessionHandlerInterface
 
     public function close()
     {
-        $this->gc($this->timeout);
+        $odds = $this->gcLotto[0];
+        $max = $this->gcLotto[1];
+
+        if (mt_rand(0, $max - 1) < $odds) {
+            $this->gc($this->timeout);
+        }
+
         unset($this->repo);
         return true;
     }
@@ -75,8 +85,7 @@ class SessionManager implements \SessionHandlerInterface
         if (count($r) == 1) {
             $data = $r[0]["data"];
             return $data;
-        }
-        else {
+        } else {
             return '';
         }
     }

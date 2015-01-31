@@ -21,6 +21,11 @@ return array(
     'hostname' => 'http://localhost',
     // Name of PHP session for Dandelion, make unique for each instance of Dandelion
     'phpSessionName' => 'dan_session_1',
+    // Garbage collection lottery, the odds that a GC run will happen on a session close
+    // Default is 2 out of 100.
+    'gcLottery' => [2, 100],
+    // Session timeout in minutes. Default is 6 hours
+    'sessionTimeout' => 360,
     // Debug mode => set to false in prod
     'debugEnabled' => false,
     // Is the app installed, set to false to rerun install script
