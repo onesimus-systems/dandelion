@@ -4,6 +4,7 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Logging;
 use \Dandelion\Application;
 use \League\Plates\Engine;
 
@@ -42,7 +43,7 @@ class Template
         try {
             echo $this->template->render($page);
         } catch (\Exception $e) {
-            $this->render('error');
+            Logging::errorPage($e, '404: Page not found. Please check your address.');
         }
         return;
     }

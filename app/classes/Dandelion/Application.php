@@ -41,7 +41,7 @@ class Application
     public function run()
     {
         // Register logging system
-        Logging::register($this->paths['app'].'/logs');
+        Logging::register($this, $this->paths['app'].'/logs');
 
         // Load application configuration
         $this->config = Configuration::load($this->paths);
@@ -56,14 +56,17 @@ class Application
         include $this->paths['app'] . '/filters.php';
         list($class, $method, $params) = Routes::route($this->url);
 
-        if (!$class) {
-            // Show error page
-            echo 'Houstin, we have a problem.';
+        if (!$class || !class_exists($class)) {
+            Logging::errorPage("Controller '{$class}' wasn't found.");
             return;
         }
 
         $controller = new $class($this);
-        call_user_func_array(array($controller, $method), $params);
+        if (method_exists($controller, $method)) {
+            call_user_func_array(array($controller, $method), $params);
+        } else {
+            Logging::errorPage("Method '{$method}' wasn't found in Class '{$class}'.");
+        }
         return;
     }
 

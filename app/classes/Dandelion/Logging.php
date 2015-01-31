@@ -4,9 +4,13 @@
  */
 namespace Dandelion;
 
+use \Dandelion\Template;
+use \Dandelion\Application;
+
 class Logging
 {
     private static $path;
+    private static $app;
 
     private function __construct() {}
     private function __clone() {}
@@ -15,9 +19,10 @@ class Logging
     /**
      *  Register the logging system with Dandelion
      */
-    public static function register($path)
+    public static function register(Application $app, $path)
     {
         self::$path = $path;
+        self::$app = $app;
         set_error_handler('\Dandelion\Logging::errorHandler');
         register_shutdown_function('\Dandelion\Logging::shutdownHandler');
         error_reporting(E_ALL);
@@ -132,5 +137,19 @@ class Logging
         }
         $logpath = self::$path.'/'.$errlvl.'.log';
         return file_put_contents($logpath, $error.PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+
+    public static function errorPage($debug = '', $message = '')
+    {
+        $debug = $debug ?: 'Debug Message: An error has occured. But I don\'t know what.';
+        $message = $message ?: 'An internal server error has occured.';
+
+        $errorPage = new Template(self::$app);
+        if (self::$app->config['debugEnabled']) {
+            $errorPage->addData(['message' => $debug]);
+        } else {
+            $errorPage->addData(['message' => $message]);
+        }
+        $errorPage->render('error');
     }
 }
