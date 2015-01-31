@@ -4,16 +4,12 @@
  */
 namespace Dandelion\API\Module;
 
+use Dandelion\Permissions;
 use \Dandelion\Users;
 use \Dandelion\Controllers\ApiController;
 
-class usersAPI extends BaseModule
+class UsersAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params)
-    {
-        parent::__construct($db, $ur, $params);
-    }
-
     /**
      * Reset a user's password
      */
@@ -34,11 +30,10 @@ class usersAPI extends BaseModule
         $newPass = $this->up->pw;
         if ($newPass == '' || $newPass == null) {
             exit(ApiController::makeDAPI(5, 'New password cannot be empty', 'users'));
-            return;
         }
 
         // Do action
-        $user = new Users($this->db, $userid);
+        $user = new Users($this->repo, $userid);
         return $user->resetPassword($newPass);
     }
 
@@ -54,10 +49,10 @@ class usersAPI extends BaseModule
         $username = $this->up->username;
         $password = $this->up->password;
         $realname = $this->up->fullname;
-        $role     = $this->up->role;
+        $role = $this->up->role;
         //$cheesto = $this->up->makecheesto;
 
-        $user = new Users($this->db);
+        $user = new Users($this->repo);
         return $user->createUser($username, $password, $realname, $role);
     }
 
@@ -75,11 +70,11 @@ class usersAPI extends BaseModule
             exit(ApiController::makeDAPI(5, 'No user id received.', 'users'));
         }
 
-        $user = new Users($this->db, $uid, true);
-        $user->userInfo['realname']   = $this->up->get('fullname', $user->userInfo['realname']);
-        $user->userInfo['role']       = $this->up->get('role', $user->userInfo['role']);
-        $user->userInfo['firsttime']  = $this->up->get('prompt', $user->userInfo['firsttime']);
-        $user->userInfo['theme']      = $this->up->get('theme', $user->userInfo['theme']);
+        $user = new Users($this->repo, $uid, true);
+        $user->userInfo['realname'] = $this->up->get('fullname', $user->userInfo['realname']);
+        $user->userInfo['role'] = $this->up->get('role', $user->userInfo['role']);
+        $user->userInfo['firsttime'] = $this->up->get('prompt', $user->userInfo['firsttime']);
+        $user->userInfo['theme'] = $this->up->get('theme', $user->userInfo['theme']);
         return $user->saveUser();
     }
 
@@ -99,8 +94,9 @@ class usersAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
-        $user = new Users($this->db);
-        return $user->deleteUser($userid);
+        $user = new Users($this->repo);
+        $permissions = new Permissions($this->makeRepo('Rights'));
+        return $user->deleteUser($userid, $permissions);
     }
 
     /**
@@ -109,12 +105,10 @@ class usersAPI extends BaseModule
     public function getUsersList()
     {
         // Check permissions
-        if ($this->ur->authorized('edituser')) {
-            $userid = $this->up->uid;
-        } else {
+        if (!$this->ur->authorized('edituser')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
-        $list = new Users($this->db);
+        $list = new Users($this->repo);
         return $list->getUserList();
     }
 
@@ -124,9 +118,7 @@ class usersAPI extends BaseModule
     public function getUserInfo()
     {
         // Check permissions
-        if ($this->ur->authorized('edituser')) {
-            $userid = $this->up->uid;
-        } else {
+        if (!$this->ur->authorized('edituser')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 
@@ -135,7 +127,7 @@ class usersAPI extends BaseModule
             exit(ApiController::makeDAPI(5, 'No user id received.', 'users'));
         }
 
-        $user = new Users($this->db);
+        $user = new Users($this->repo);
         return $user->getUser($uid);
     }
 }

@@ -81,7 +81,7 @@ userManager.uiforms = {
             });
 
         // Load theme list
-        $.ajax('api/i/settings/getthemelist', {
+        $.ajax('api/i/usersettings/getthemelist', {
             async: false,
             dataType: 'json'
         })

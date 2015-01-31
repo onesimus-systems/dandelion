@@ -5,7 +5,7 @@
 namespace Dandelion\API\Module;
 
 use \Dandelion\UserSettings;
-use \Dandelion\Controllers\ApiController;
+use \Dandelion\Utils\View;
 
 class UserSettingsAPI extends BaseModule
 {
@@ -23,6 +23,6 @@ class UserSettingsAPI extends BaseModule
 
     public function getThemeList()
     {
-        return \Dandelion\getThemeListArray();
+        return View::getThemeListArray();
     }
 }

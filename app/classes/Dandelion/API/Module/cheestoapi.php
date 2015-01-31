@@ -63,7 +63,7 @@ class CheestoAPI extends BaseModule
         $returntime = $this->up->get('returntime', '00:00:00');
         $userid = USER_ID;
 
-        if (isset($this->up->uid)) { // A status of another user is trying to be updated
+        if ($this->up->uid) { // A status of another user is trying to be updated
             if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
                 $userid = $this->up->uid;
             } else {

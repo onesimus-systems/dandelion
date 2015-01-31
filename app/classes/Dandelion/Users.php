@@ -4,8 +4,7 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Permissions;
-use \Dandelion\Storage\Contracts\DatabaseConn;
+use \Dandelion\Repos\Interfaces\UsersRepo;
 
 class Users
 {
@@ -14,8 +13,9 @@ class Users
     public $userCheesto = array();
     public $userApi = array();
 
-    public function __construct(DatabaseConn $db, $uid = -1, $load = false) {
-        $this->db = $db;
+    public function __construct(UsersRepo $repo, $uid = -1, $load = false)
+    {
+        $this->repo = $repo;
 
         if ($uid >= 0) {
             $this->userInfo['userid'] = $uid;
@@ -31,35 +31,9 @@ class Users
         return true;
     }
 
-    public function loadUser() {
-        $this->db->select('u.userid AS u_userid,
-                            u.username AS u_username,
-                            u.realname AS u_realname,
-                            u.role AS u_role,
-                            u.firsttime AS u_firsttime,
-                            u.theme AS u_theme,
-                            u.datecreated AS u_datecreated,
-                        p.id AS p_id,
-                            p.status AS p_status,
-                            p.message AS p_message,
-                            p.returntime AS p_returntime,
-                        a.keystring AS a_keystring,
-                            a.expires AS a_expires,
-                        r.permissions AS u_permissions')
-                 ->from(DB_PREFIX . 'users AS u
-                    LEFT JOIN ' . DB_PREFIX . 'presence AS p
-                        ON p.uid = u.userid
-                    LEFT JOIN ' . DB_PREFIX . 'apikeys AS a
-                        ON a.user = u.userid
-                    LEFT JOIN ' . DB_PREFIX . 'rights AS r
-                        ON r.role = u.role')
-                 ->where('u.userid = :userid');
-
-        $params = array(
-            'userid' => $this->userInfo['userid']
-        );
-
-        $allUserInfo = $this->db->getFirst($params);
+    public function loadUser()
+    {
+        $allUserInfo = $this->repo->getFullUser($this->userInfo['userid']);
 
         foreach ($allUserInfo as $key => $value) {
             $infoType = substr($key, 0, 2);
@@ -68,7 +42,7 @@ class Users
             switch ($infoType) {
                 case 'u_':
                     if ($key == 'permissions') {
-                        $value = (array) unserialize($value);
+                        $value = (array)unserialize($value);
                     }
                     $this->userInfo[$key] = $value;
                     break;
@@ -84,45 +58,41 @@ class Users
         return true;
     }
 
-    public function saveUser() {
+    public function saveUser()
+    {
         if (empty($this->userInfo['realname'])
             || empty($this->userInfo['role'])
             || (empty($this->userInfo['firsttime']) && $this->userInfo['firsttime'] != 0)
-            || empty($this->userInfo['userid'])) {
+            || empty($this->userInfo['userid'])
+        ) {
             return 'Something is empty';
         }
 
         $this->userInfo['role'] = strtolower($this->userInfo['role']);
         // Update main user row
-        $this->db->update(DB_PREFIX.'users')
-                 ->set('realname = :realname, role = :role, firsttime = :first, theme = :theme')
-                 ->where('userid = :userid');
-        $params = array(
-            'realname' => $this->userInfo['realname'],
-            'role' => $this->userInfo['role'],
-            'first' => $this->userInfo['firsttime'],
-            'userid' => $this->userInfo['userid'],
-            'theme' => $this->userInfo['theme']
+        $userSaved = $this->repo->saveUser(
+            $this->userInfo['userid'],
+            $this->userInfo['realname'],
+            $this->userInfo['role'],
+            $this->userInfo['theme'],
+            $this->userInfo['firsttime']
         );
-        $this->db->go($params);
 
         // Update Cheesto information
-        $this->db->update(DB_PREFIX.'presence')
-                 ->set('realname = :realname')
-                 ->where('uid = :userid');
-        $params = array(
-            'realname' => $this->userInfo['realname'],
-            'userid' => $this->userInfo['userid']
+        $userCheestoSaved = $this->repo->saveUserCheesto(
+            $this->userInfo['realname'],
+            $this->userInfo['userid']
         );
 
-        if (!$this->db->go($params)) {
-            return 'There was an error saving the user';
+        if ($userSaved && $userCheestoSaved) {
+            return true;
+        } else {
+            return 'There was an error saving user';
         }
-
-        return true;
     }
 
-    public function createUser($username, $password, $realname, $role, $cheesto = true) {
+    public function createUser($username, $password, $realname, $role, $cheesto = true)
+    {
         $date = new \DateTime();
 
         // Error checking
@@ -134,73 +104,50 @@ class Users
         }
 
         $role = strtolower($role);
-        // Create row in users table
-        $this->db->insert()
-                 ->into(DB_PREFIX.'users', array('username', 'password', 'realname', 'role', 'datecreated', 'theme'))
-                 ->values(array(':username', ':password', ':realname', ':role', ':datecreated', '\'\''));
-        $params = array(
-            'username' => $username,
-            'password' => password_hash($password, PASSWORD_BCRYPT),
-            'realname' => $realname,
-            'role' => $role,
-            'datecreated' => $date->format('Y-m-d')
-        );
-        $this->db->go($params);
+        $password = password_hash($password, PASSWORD_BCRYPT);
 
+        // Create row in users table
+        $userCreated = $this->repo->createUser($username, $password, $realname, $role, $date->format('Y-m-d'));
+
+        $userCheestoCreated = true;
         if ($cheesto) {
-            $lastID = $this->db->lastInsertId();
+            $lastID = $this->repo->lastCreatedUserId();
 
             // Create row in presence table
-            $this->db->insert()
-                     ->into(DB_PREFIX.'presence', array('uid', 'realname', 'status', 'message', 'returntime', 'dmodified'))
-                     ->values(array(':uid', ':real', 0, '\'\'', '\'00:00:00\'', ':date'));
-            $params = array(
-                'uid' => $lastID,
-                'real' => $realname,
-                'date' => $date->format('Y-m-d H:i:s')
-            );
-
-            $this->db->go($params);
+            $userCheestoCreated = $this->repo->createUserCheesto($lastID, $realname, $date->format('Y-m-d H:i:s'));
         }
 
-        return true;
+        if ($userCreated && $userCheestoCreated) {
+            return true;
+        } else {
+            return 'Error saving user';
+        }
     }
 
-    private function isUser($username) {
-        $this->db->select()
-                 ->from(DB_PREFIX.'users')
-                 ->where('username = :username');
-        $params = array(
-            'username' => $username
-        );
-        $row = $this->db->get($params);
-        return !empty($row);
+    private function isUser($username)
+    {
+        return $this->repo->isUser($username);
     }
 
-    public function resetPassword($pass = '') {
+    public function resetPassword($pass = '')
+    {
         $uid = $this->userInfo['userid'];
 
-        if (empty($uid) || empty($pass)) {
+        if (!$uid || !$pass) {
             return 'Something is empty';
         }
 
         $pass = password_hash($pass, PASSWORD_BCRYPT);
 
-        $this->db->update(DB_PREFIX.'users')->set('password = :newpass, firsttime = 0')->where('userid = :id');
-        $params = array(
-            'newpass' => $pass,
-            'id' => $uid
-        );
-
-        if ($this->db->go($params)) {
+        if ($this->repo->resetPassword($uid, $pass)) {
             return true;
-        }
-        else {
+        } else {
             return 'Error changing password.';
         }
     }
 
-    public function deleteUser($uid) {
+    public function deleteUser($uid, Permissions $permissions)
+    {
         if (empty($uid)) {
             if (!empty($this->userInfo['userid'])) {
                 $uid = $this->userInfo['userid'];
@@ -210,17 +157,8 @@ class Users
         }
 
         $delete = false;
-
-        $this->db->select('role')
-                 ->from(DB_PREFIX.'users')
-                 ->where('userid = :userid');
-        $params = array(
-            'userid' => $uid
-        );
-        $userRole = $this->db->getFirst($params)['role'];
-
-        $perms = new Permissions($this->db);
-        $isAdmin = (array) $perms->loadRights($userRole);
+        $userRole = $this->repo->getUserRole($uid);
+        $isAdmin = (array)$permissions->loadRights($userRole);
 
         if (!$isAdmin['admin']) {
             // If the account being deleted isn't an admin, then there's nothing to worry about
@@ -228,16 +166,10 @@ class Users
         } else {
             // If the account IS an admin, check all other users to make sure
             // there's at least one other user with the admin rights flag
-            $this->db->select('role')
-                     ->from(DB_PREFIX.'users')
-                     ->where('userid != :userid');
-            $params = array(
-                'userid' => $uid
-            );
-            $otherUsers = $this->db->get($params);
+            $otherUsers = $this->repo->getUserRole($uid, true);
 
             foreach ($otherUsers as $areTheyAdmin) {
-                $isAdmin = (array) $perms->loadRights($areTheyAdmin['role']);
+                $isAdmin = (array)$permissions->loadRights($areTheyAdmin['role']);
 
                 if ($isAdmin['admin']) {
                     // If one is found, stop for loop and allow the delete
@@ -248,14 +180,7 @@ class Users
         }
 
         if ($delete) {
-            $this->db->delete('u, p, a, m')
-                     ->from(DB_PREFIX . 'users AS u LEFT JOIN ' . DB_PREFIX . 'presence AS p ON p.uid = u.userid LEFT JOIN ' . DB_PREFIX . 'apikeys AS a ON a.user = u.userid LEFT JOIN ' . DB_PREFIX . 'mail AS m ON m.toUser = u.userid')
-                     ->where('u.userid = :userid');
-            $params = array(
-                'userid' => $uid
-            );
-
-            if ($this->db->go($params)) {
+            if ($this->repo->deleteUser($uid)) {
                 return true;
             } else {
                 return 'Error deleting user';
@@ -265,17 +190,13 @@ class Users
         }
     }
 
-    public function getUserList() {
-        $this->db->select('userid, realname, username, role, datecreated, theme, firsttime')
-                 ->from(DB_PREFIX.'users');
-        return $this->db->get();
+    public function getUserList()
+    {
+        return $this->repo->getUserList();
     }
 
-    public function getUser($uid) {
-        $this->db->select('userid, realname, username, role, datecreated, theme, firsttime')
-                 ->from(DB_PREFIX.'users')
-                 ->where('userid = :uid');
-        $params = array('uid' => $uid);
-        return $this->db->getFirst($params);
+    public function getUser($uid)
+    {
+        return $this->repo->getUser($uid);
     }
 }
