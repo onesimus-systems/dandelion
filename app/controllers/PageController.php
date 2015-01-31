@@ -7,7 +7,7 @@ namespace Dandelion\Controllers;
 use \Dandelion\Template;
 use \Dandelion\Categories;
 use \Dandelion\UrlParameters;
-use \Dandelion\Storage\MySqlDatabase;
+use \Dandelion\Repos\Mysql\CategoriesRepo;
 
 class PageController extends BaseController
 {
@@ -24,7 +24,8 @@ class PageController extends BaseController
 
         if ($urlParams->action == 'grabcats') {
             $past = json_decode(stripslashes($urlParams->pastSelections));
-            $displayCats = new Categories(MySqlDatabase::getInstance());
+            $catRepo = new CategoriesRepo();
+            $displayCats = new Categories($catRepo);
             echo $displayCats->getChildren($past);
         }
         return;

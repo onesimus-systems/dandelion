@@ -4,15 +4,15 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Storage\Contracts\DatabaseConn;
+use \Dandelion\Repos\Interfaces\CategoriesRepo;
 
 class Categories
 {
-    private $database;
+    private $repo;
 
-    public function __construct(DatabaseConn $db)
+    public function __construct(CategoriesRepo $repo)
     {
-        $this->database = $db;
+        $this->repo = $repo;
     }
 
     /**
@@ -25,7 +25,7 @@ class Categories
      */
     public function getChildren($past)
     {
-        $cat = $this->database->selectAll('category')->get();
+        $cat = $this->repo->getAllCategories();
 
         $response = '';
 
@@ -84,15 +84,8 @@ class Categories
     public function addCategory($parent, $description)
     {
         $description = str_replace(':', '_', $description);
-        $this->database->insert()
-                       ->into(DB_PREFIX.'category', array('description', 'pid'))
-                       ->values(array(':description', ':parentid'));
-        $params = array(
-            'description' => $description,
-            'parentid'	  => $parent
-        );
 
-        if ($this->database->go($params)) {
+        if ($this->repo->addCategory($description, $parent)) {
             return 'Category added successfully';
         } else {
             return 'Error adding category';
@@ -109,33 +102,13 @@ class Categories
     public function delCategory($cid)
     {
         // Get the category's current parent to reassign children
-        $this->database->select('pid')
-                       ->from(DB_PREFIX.'category')
-                       ->where('cid = :catid');
-        $params = array(
-            'catid' => $cid
-        );
-
-        $newParent = $this->database->getFirst($params)['pid'];
+        $newParent = $this->repo->getCategoryParent($cid);
 
         // Delete category from DB
-        $this->database->delete()
-                       ->from(DB_PREFIX.'category')
-                       ->where('cid = :catid');
-        $params = array(
-            'catid' => $cid
-        );
-        $this->database->go($params);
+        $this->repo->deleteCategory($cid);
 
         // Reassign children
-        $this->database->update(DB_PREFIX.'category')
-                       ->set('pid = :newp')
-                       ->where('pid = :oldp');
-        $params = array(
-            'newp' => $newParent,
-            'oldp' => $cid
-        );
-        $this->database->go($params);
+        $this->repo->adoptChildren($newParent, $cid);
 
         return 'Category deleted successfully';
     }
@@ -151,15 +124,8 @@ class Categories
     public function editCategory($cid, $desc)
     {
         $desc = str_replace(':', '_', $desc);
-        $this->database->update(DB_PREFIX.'category')
-                       ->set('description = :desc')
-                       ->where('cid = :cid');
-        $params = array(
-                'desc' => $desc,
-                'cid' => $cid
-        );
 
-        if ($this->database->go($params)) {
+        if ($this->repo->updateCategory($desc, $cid)) {
             return 'Category updated successfully';
         } else {
             return 'Error saving category';

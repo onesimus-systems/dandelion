@@ -7,13 +7,8 @@ namespace Dandelion\API\Module;
 use \Dandelion\Categories;
 use \Dandelion\Controllers\ApiController;
 
-class categoriesAPI extends BaseModule
+class CategoriesAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params)
-    {
-        parent::__construct($db, $ur, $params);
-    }
-
     /**
      *  Add new category
      *
@@ -27,7 +22,7 @@ class categoriesAPI extends BaseModule
 
         $parent = $this->up->parentID;
         $desc = $this->up->catDesc;
-        $createCat = new Categories($this->db);
+        $createCat = new Categories($this->repo);
         return $createCat->addCategory($parent, $desc);
     }
 
@@ -44,7 +39,7 @@ class categoriesAPI extends BaseModule
 
         $cid = $this->up->cid;
         $desc = $this->up->catDesc;
-        $editCat = new Categories($this->db);
+        $editCat = new Categories($this->repo);
         return $editCat->editCategory($cid, $desc);
     }
 
@@ -60,7 +55,7 @@ class categoriesAPI extends BaseModule
         }
 
         $cat = $this->up->cid;
-        $deleteCat = new Categories($this->db);
+        $deleteCat = new Categories($this->repo);
         return $deleteCat->delCategory($cat);
     }
 
