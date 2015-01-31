@@ -4,8 +4,6 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Routes;
-use \Dandelion\Logging;
 use \Dandelion\Utils\Updater;
 use \Dandelion\Utils\Configuration;
 use \Dandelion\Storage\MySqlDatabase;
@@ -49,7 +47,7 @@ class Application
         $this->loadLegacyCode();
 
         // Setup session manager
-        SessionManager::register();
+        SessionManager::register($this);
         SessionManager::startSession($this->config['phpSessionName']);
 
         include $this->paths['app'] . '/routes.php';
@@ -73,10 +71,9 @@ class Application
     public function loadLegacyCode()
     {
         // Give database class the info to connect
-        $db = MySqlDatabase::getInstance($this->config['db']);
+        MySqlDatabase::getInstance($this->config['db'], true);
 
         // Define constants
-        define('DB_PREFIX', $db->getTablePrefix());
         define('PUBLIC_DIR', $this->paths['public']);
         define('THEME_DIR', 'assets/themes');
         define('DEFAULT_THEME', $this->config['defaultTheme']);

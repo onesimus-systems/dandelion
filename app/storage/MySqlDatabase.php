@@ -11,6 +11,8 @@ class MySqlDatabase implements DatabaseConn
     // Current database socket connection
     private $currentConn;
 
+    private $debug;
+
     // Singleton instance of database object
     private static $instance;
 
@@ -57,7 +59,6 @@ class MySqlDatabase implements DatabaseConn
     // Prevent something from accidentally making multiple instances of the class
     private function __construct() {}
     private function __clone() {}
-    private function __wakeup() {}
     public function __destruct()
     {
         $this->currentConn = null;
@@ -67,12 +68,13 @@ class MySqlDatabase implements DatabaseConn
     /**
      * Returns the an instance of the MySqlDatabase class. If one is already created, it will return it.
      */
-    public static function getInstance(array $config = [])
+    public static function getInstance(array $config = [], $debug = false)
     {
         if (self::$instance === null) {
             self::$instance = new self();
             if ($config) {
                 self::$instance->setConfiguration($config);
+                self::$instance->debug = $debug;
                 self::$instance->init();
             }
         }
@@ -84,7 +86,7 @@ class MySqlDatabase implements DatabaseConn
     public function init()
     {
         if ($this->initialized) {
-            return;
+            return true;
         }
         if (empty($this->connInfo)) {
             return false;
@@ -111,7 +113,7 @@ class MySqlDatabase implements DatabaseConn
                 echo 'Error 0x000185: Can\'t connect to database';
             }
         }
-        return;
+        return true;
     }
 
     public function getTablePrefix()
@@ -330,7 +332,7 @@ class MySqlDatabase implements DatabaseConn
                 return $success;
             }
         } catch (\PDOException $e) {
-            if (DEBUG_ENABLED) {
+            if ($this->debug) {
                 echo 'ERROR: ' . $e->getMessage();
             } else {
                 echo 'Error 0x000186: Error processing query';
