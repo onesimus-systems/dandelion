@@ -27,7 +27,7 @@ class ApiController extends BaseController
      *
      * @return Nothing
      */
-    public function apiCall($module, $method)
+    public function apiCall($module, $method = '')
     {
         if ($this->app->config['publicApiEnabled']) {
             $urlParams = new UrlParameters();

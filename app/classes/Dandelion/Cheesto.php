@@ -4,7 +4,7 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Storage\Contracts\DatabaseConn;
+use \Dandelion\Repos\Interfaces\CheestoRepo;
 
 class Cheesto
 {
@@ -23,9 +23,9 @@ class Cheesto
         "Vacation"
     );
 
-    public function __construct(DatabaseConn $dbConn)
+    public function __construct(CheestoRepo $repo)
     {
-        $this->dbConn = $dbConn;
+        $this->repo = $repo;
         return;
     }
 
@@ -36,7 +36,7 @@ class Cheesto
      */
     public function getAllStatuses()
     {
-        $statuses = $this->dbConn->selectAll('presence')->get();
+        $statuses = $this->repo->getAllStatuses();
 
         foreach ($statuses as &$row) {
             $row['statusInfo'] = $this->statusType($row['status']);
@@ -49,11 +49,7 @@ class Cheesto
 
     public function getUserStatus($uid)
     {
-        $this->dbConn->select()
-                     ->from(DB_PREFIX.'presence')
-                     ->where('uid = :uid');
-        $params = array("uid" => $uid);
-        $userStatus = $this->dbConn->getFirst($params);
+        $userStatus = $this->repo->getUserStatus($uid);
 
         $userStatus['statusInfo'] = $this->statusType($userStatus['status']);
         $userStatus['statusOptions'] = $this->getStatusText();
@@ -136,23 +132,12 @@ class Cheesto
      *
      * @return string
      */
-    public function updateStatus($message, $status, $return, $userId)
+    public function updateStatus($message, $status, $return, $uid)
     {
         $date = new \DateTime();
         $date = $date->format('Y-m-d H:i:s');
 
-        $this->dbConn->update(DB_PREFIX.'presence')
-                     ->set(array('message = :message', 'status = :setorno', 'returntime = :returntime', 'dmodified = :dmodified'))
-                     ->where('uid = :uid');
-        $params = array(
-            'message' => $message,
-            'setorno' => $status,
-            'returntime' => $return,
-            'dmodified' => $date,
-            'uid' => $userId
-        );
-
-        if ($this->dbConn->go($params)) {
+        if ($this->repo->updateStatus($uid, $status, $message, $return, $date)) {
             return 'User status updated';
         } else {
             return 'Error updating user status';

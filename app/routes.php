@@ -10,7 +10,8 @@ Routes::group(['rprefix' => '\Dandelion\Controllers\\'], [
 	['post', '/login', 'AuthController@login'],
 	['get', '/logout', 'AuthController@logout'],
 
-	['any', '/api/{module}/{method}', 'ApiController@apiCall']
+	['any', '/api/{module}/{method}', 'ApiController@apiCall'],
+	['any', '/api/{module}', 'ApiController@apiCall']
 ]);
 
 // Authentication required for these routes

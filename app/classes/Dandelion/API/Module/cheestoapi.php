@@ -7,13 +7,8 @@ namespace Dandelion\API\Module;
 use \Dandelion\Cheesto;
 use \Dandelion\Controllers\ApiController;
 
-class cheestoAPI extends BaseModule
+class CheestoAPI extends BaseModule
 {
-    public function __construct($db, $ur, $params)
-    {
-        parent::__construct($db, $ur, $params);
-    }
-
     /**
      *  Grab JSON array of all cheesto users and statuses
      *
@@ -25,7 +20,7 @@ class cheestoAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
-        $cheesto = new Cheesto($this->db);
+        $cheesto = new Cheesto($this->repo);
         return $cheesto->getAllStatuses();
     }
 
@@ -38,7 +33,7 @@ class cheestoAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
-        $cheesto = new Cheesto($this->db);
+        $cheesto = new Cheesto($this->repo);
         return $cheesto->getUserStatus($this->up->uid);
     }
 
@@ -47,7 +42,7 @@ class cheestoAPI extends BaseModule
      */
     public function statusTexts()
     {
-        $cheesto = new Cheesto($this->db);
+        $cheesto = new Cheesto($this->repo);
         return $cheesto->getStatusText();
     }
 
@@ -62,7 +57,7 @@ class cheestoAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
 
-        $cheesto = new Cheesto($this->db);
+        $cheesto = new Cheesto($this->repo);
         $message = $this->up->message;
         $status = $this->up->get('status', -1);
         $returntime = $this->up->get('returntime', '00:00:00');

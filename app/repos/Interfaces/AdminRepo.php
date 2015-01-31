@@ -2,7 +2,7 @@
 /**
  * Interface for administration module
  */
-namespace Dandelion\Repos\Interfaces
+namespace Dandelion\Repos\Interfaces;
 
 interface AdminRepo
 {

@@ -145,7 +145,7 @@ class MySqlDatabase implements DatabaseConn
 
     public function selectAll($table)
     {
-        $this->select()->from(DB_PREFIX.$table);
+        $this->select()->from($this->getTablePrefix().$table);
         return $this;
     }
 
@@ -366,7 +366,7 @@ class MySqlDatabase implements DatabaseConn
      */
     public function numOfRows($table)
     {
-        $this->select('COUNT(*)')->from(DB_PREFIX.$table);
+        $this->select('COUNT(*)')->from($this->getTablePrefix().$table);
         return $this->get()[0]['COUNT(*)'];
     }
 }
