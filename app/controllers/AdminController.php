@@ -11,7 +11,10 @@ class AdminController extends BaseController
 {
 	public function admin($page = 'admin', $title = 'Administration')
 	{
-        $userRights = new Rights($_SESSION['userInfo']['userid']);
+        $dbtype = ucfirst($this->app->config['db']['type']);
+        $repo = "\\Dandelion\\Repos\\{$dbtype}\\RightsRepo";
+        $rightsRepo = new $repo();
+        $userRights = new Rights($_SESSION['userInfo']['userid'], $rightsRepo);
 
         $template = new Template($this->app);
         $template->addData(['userRights' => $userRights]);

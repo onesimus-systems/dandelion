@@ -4,8 +4,7 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Permissions;
-use \Dandelion\Storage\MySqlDatabase;
+use \Dandelion\Repos\Interfaces\RightsRepo;
 
 class Rights
 {
@@ -16,22 +15,10 @@ class Rights
      *
      * @param int $userid - ID of user
      */
-    public function __construct($userid)
+    public function __construct($userid, RightsRepo $repo)
     {
-      $conn = MySqlDatabase::getInstance();
-
-      $this->userid = $userid;
-      $conn->select('r.permissions')
-           ->from(DB_PREFIX.'rights AS r
-              LEFT JOIN '.DB_PREFIX.'users AS u
-                  ON u.role = r.role')
-           ->where('u.userid = :userid');
-      $params = array(
-      	'userid' => $userid
-      );
-
-      $rights = $conn->getFirst($params);
-      $this->permissions = (array) unserialize($rights['permissions']);
+        $this->userid = $userid;
+        $this->permissions = (array)unserialize($repo->getRightsForUser($userid));
     }
 
     /**

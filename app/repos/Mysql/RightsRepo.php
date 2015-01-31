@@ -25,8 +25,8 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function createGroup($name, $rights)
     {
         $this->database->insert()
-                       ->into($this->prefix . 'rights', ['role', 'permissions'])
-                       ->values([':role', ':rights']);
+            ->into($this->prefix . 'rights', ['role', 'permissions'])
+            ->values([':role', ':rights']);
 
         $this->database->go(['role' => $name, 'rights' => $rights]);
         return $this->database->lastInsertId();
@@ -41,8 +41,8 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function deleteGroup($gid)
     {
         $this->database->delete()
-                       ->from($this->prefix . 'rights')
-                       ->where(['id = :id']);
+            ->from($this->prefix . 'rights')
+            ->where(['id = :id']);
 
         return $this->database->go(['id' => $gid]);
     }
@@ -57,8 +57,8 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function editGroup($gid, $rights)
     {
         $this->database->update($this->prefix . 'rights')
-                       ->set(['permissions = :rights'])
-                       ->where(['id = :gid']);
+            ->set(['permissions = :rights'])
+            ->where(['id = :gid']);
 
         return $this->database->go(['gid' => $gid, 'rights' => $rights]);
     }
@@ -72,8 +72,8 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function loadRights($role)
     {
         $this->database->select('permissions')
-                       ->from($this->prefix . 'rights')
-                       ->where(['role = :role']);
+            ->from($this->prefix . 'rights')
+            ->where(['role = :role']);
 
         return $this->database->getFirst(['role' => $role])['permissions'];
     }
@@ -87,9 +87,20 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function usersInGroup($role)
     {
         $this->database->select('userid')
-                       ->from($this->prefix . 'users')
-                       ->where(['role = :role']);
+            ->from($this->prefix . 'users')
+            ->where(['role = :role']);
 
         return $this->database->get(['role' => $role]);
+    }
+
+    public function getRightsForUser($uid)
+    {
+        $this->database->select('r.permissions')
+            ->from($this->prefix . 'rights AS r
+              LEFT JOIN ' . $this->prefix . 'users AS u
+                  ON u.role = r.role')
+            ->where('u.userid = :uid');
+
+        return $this->database->getFirst(['uid' => $uid])['permissions'];
     }
 }

@@ -79,7 +79,10 @@ class ApiController extends BaseController
                 define('USER_ID', $key);
             }
 
-            $userRights = new Rights(USER_ID);
+            $dbtype = ucfirst($this->app->config['db']['type']);
+            $repo = "\\Dandelion\\Repos\\{$dbtype}\\RightsRepo";
+            $rightsRepo = new $repo();
+            $userRights = new Rights(USER_ID, $rightsRepo);
         } else {
             $userRights = null;
         }
@@ -123,7 +126,7 @@ class ApiController extends BaseController
 
         // Search for key with case sensitive collation
         $conn->select()
-             ->from(DB_PREFIX.'apikeys')
+             ->from($this->app->config['db']['tablePrefix'].'apikeys')
              ->where('keystring = :key')
              ->collate('latin1_general_cs');
         $params = array (

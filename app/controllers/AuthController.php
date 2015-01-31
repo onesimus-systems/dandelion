@@ -13,8 +13,8 @@ use \League\Plates\Engine;
 
 class AuthController extends BaseController
 {
-    // Database connection
-    private $db;
+    // Repo for authentication object
+    private $repo;
 
     // URL parameters
     private $up;
@@ -22,7 +22,11 @@ class AuthController extends BaseController
     public function __construct(Application $app)
     {
         parent::__construct($app);
-        $this->db = MySqlDatabase::getInstance();
+
+        $dbtype = ucfirst($this->app->config['db']['type']);
+        $repo = "\\Dandelion\\Repos\\{$dbtype}\\AuthRepo";
+        $this->repo = new $repo();
+
         $this->up = new UrlParameters();
     }
 
@@ -46,7 +50,7 @@ class AuthController extends BaseController
 
     public function login()
     {
-        $auth = new GateKeeper($this->db);
+        $auth = new GateKeeper($this->repo);
         $rem = false;
         if ($this->up->remember == 'true') {
             $rem = true;
