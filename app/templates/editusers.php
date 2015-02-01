@@ -18,7 +18,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "datetimepick
     </form>
 </div>
 
-<?= $this->loadJS(['jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker.min', 'slider']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker.min']) ?>
 <script type="text/javascript">
     userManager.init();
 </script>

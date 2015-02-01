@@ -2,17 +2,12 @@
 /**
  * Dashboard page
  */
-$addLink = '';
-if ($userRights->authorized('createlog')) {
-	$addLink = '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry" />';
-}
-
 $this->layout('layouts::main', ['requiredCssFiles' => ['cheesto','jqueryui']]);
 ?>
 <!-- Begin Page Body -->
 <div id="divMain">
     <?php
-    if ($cheestoEnabled && $userRights->authorized('viewcheesto')):
+    if ($showCheesto):
     ?>
     <div id="presence">
         <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="/assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
@@ -22,17 +17,21 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['cheesto','jqueryui']]);
     <?php
     endif;
 
-    if ($userRights->authorized('viewlog')): ?>
+    if ($showLog): ?>
         <div id="controlPanel">
             <form id="category" method="post">
-                <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);" /><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';" />
-                <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();" /><br />
+                <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);"><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';">
+                <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();"><br>
 
                 Filter:
                 <div id="categorySelects"></div>
 
-                <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');" />
-                <?= $addLink ?>
+                <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');">
+                <?php
+                if ($showCreateButton) {
+                    echo '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry">';
+                }
+                ?>
             </form>
 
             <div id="add_edit" title="">
@@ -40,8 +39,8 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['cheesto','jqueryui']]);
                     Title: <input type="text" id="logTitle" name="logTitle" value="" size="60"><br><br>
                     <textarea id="logEntry" name="logEntry" cols="80" rows="10"></textarea><br>
                     Category: <span id="catSpace"></span>
-                    <div id="messages" style="display: none;"></div>
                 </form>
+                <div id="messages">Hello</div>
             </div>
 
             <div id="dialog"></div>

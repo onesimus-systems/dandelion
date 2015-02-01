@@ -13,14 +13,14 @@ class view
 
         foreach ($scripts as $file) {
             // Check for a keyworded include
-            $builtin = self::isBuiltinJsFile($file);
+            $builtin = self::isVenderJS($file);
             if ($builtin) {
                 $scriptList .= $builtin;
                 continue;
             }
 
             // Otherwise check for a custom file
-            $custom = self::isCustomJsFile($file);
+            $custom = self::isJSFile($file);
             if ($custom) {
                 $scriptList .= $custom;
                 continue;
@@ -29,7 +29,7 @@ class view
         return $scriptList;
     }
 
-    private static function isBuiltinJsFile($name)
+    private static function isVenderJS($name)
     {
         $include = '';
 
@@ -44,23 +44,20 @@ class view
                 $include .= '<script src="/assets/js/vendor/tinymce/js/jquery.tinymce.min.js"></script>';
                 $include .= '<script src="/assets/js/vendor/tinymce/js/tinymce.min.js"></script>';
                 break;
-            case 'cheesto':
-                $include .= '<script src="source/js/presence.js"></script>';
-                break;
         }
         return $include;
     }
 
-    private static function isCustomJsFile($name)
+    private static function isJSFile($name)
     {
         // Normalize name
-        if (substr($name, -3) != '.js') {
-            $name .= '.js';
+        if (substr($name, -7) != '.min.js') {
+            $name .= '.min.js';
         }
         $include = '';
 
-        if (is_file('source/js/'.$name)) {
-            $include .= '<script src="source/js/'.$name.'"></script>';
+        if (is_file('build/js/'.$name)) {
+            $include .= '<script src="build/js/'.$name.'"></script>';
         } elseif (is_file('assets/js/vendor/jquery/js/'.$name)) {
             $include .= '<script src="/assets/js/vendor/jquery/js/'.$name.'"></script>';
         } else {

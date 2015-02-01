@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var less = require('gulp-less');
-var concat = require('gulp-concat');
+//var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var changed = require('gulp-changed');
@@ -14,9 +14,11 @@ var paths = {
 
 gulp.task('less', function() {
    gulp.src(paths.styles)
+       .pipe(sourcemaps.init())
        .pipe(less())
        .pipe(minifycss())
        .pipe(rename({extname: ".min.css"}))
+       .pipe(sourcemaps.write('maps'))
        .pipe(gulp.dest('public/build/css'));
 });
 
@@ -24,7 +26,7 @@ gulp.task('scripts', function() {
    gulp.src(paths.scripts)
        .pipe(sourcemaps.init())
        .pipe(uglify())
-       .pipe(concat('javascript.min.js'))
+       .pipe(rename({extname: ".min.js"}))
        .pipe(sourcemaps.write('maps'))
        .pipe(gulp.dest('public/build/js'));
 });
@@ -32,7 +34,11 @@ gulp.task('scripts', function() {
 gulp.task('changedStyles', function() {
    return gulp.src(paths.styles)
        .pipe(changed('public/build/css'))
+       .pipe(sourcemaps.init())
        .pipe(less())
+       .pipe(minifycss())
+       .pipe(rename({extname: ".min.css"}))
+       .pipe(sourcemaps.write('maps'))
        .pipe(gulp.dest('public/build/css'));
 });
 

@@ -45,6 +45,6 @@
             <input type="button" onclick="giveTime();" value="Done">
         </form>
 
-        <?= $this->loadJS(["jquery","jqueryui","timepicker.min","slider","cheestoGetDate"]) ?>
+        <?= $this->loadJS(["jquery","jqueryui","timepicker.min","cheestoGetDate"]) ?>
     </body>
 </html>

@@ -34,5 +34,3 @@ if (!$content) {
 	echo 'Your account doesn\'t have rights to administrative controls.';
 }
 ?>
-
-<?= $this->loadJS([]) ?>

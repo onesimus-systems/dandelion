@@ -15,11 +15,16 @@ class DashboardController extends BaseController
         $rightsRepo = Repos::makeRepo($this->app->config['db']['type'], 'Rights');
         $userRights = new Rights($_SESSION['userInfo']['userid'], $rightsRepo);
 
+        $showCheesto = ($this->app->config['cheestoEnabled'] && $userRights->authorized('viewcheesto'));
+        $showLog = $userRights->authorized('viewlog');
+        $showCreateButton = $userRights->authorized('createlog');
+
         $template = new Template($this->app);
 
         $template->addData([
-            'cheestoEnabled' => $this->app->config['cheestoEnabled'],
-            'userRights' => $userRights
+            'showCheesto' => $showCheesto,
+            'showLog' => $showLog,
+            'showCreateButton' => $showCreateButton
         ]);
 
         $template->render('dashboard');
