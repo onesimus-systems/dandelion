@@ -74,6 +74,7 @@ class Application
         MySqlDatabase::getInstance($this->config['db'], true);
 
         // Define constants
+        define('DEBUG_ENABLED', $this->config['debugEnabled']);
         define('PUBLIC_DIR', $this->paths['public']);
         define('THEME_DIR', 'assets/themes');
         define('DEFAULT_THEME', $this->config['defaultTheme']);

@@ -45,7 +45,7 @@ class view
                 $include .= '<script src="/assets/js/vendor/tinymce/js/tinymce.min.js"></script>';
                 break;
             case 'cheesto':
-                $include .= '<script src="/assets/js/presence.js"></script>';
+                $include .= '<script src="source/js/presence.js"></script>';
                 break;
         }
         return $include;
@@ -59,8 +59,8 @@ class view
         }
         $include = '';
 
-        if (is_file('assets/js/'.$name)) {
-            $include .= '<script src="/assets/js/'.$name.'"></script>';
+        if (is_file('source/js/'.$name)) {
+            $include .= '<script src="source/js/'.$name.'"></script>';
         } elseif (is_file('assets/js/vendor/jquery/js/'.$name)) {
             $include .= '<script src="/assets/js/vendor/jquery/js/'.$name.'"></script>';
         } else {
@@ -155,7 +155,7 @@ class view
         }
 
         if ($main) {
-            $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/styles/css/main.css">';
+            $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/main.css">';
             $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/main.css">';
         }
 
@@ -163,8 +163,8 @@ class view
         foreach ($optionalSheets as $sheet) {
             // Load manual filenames if given
             if (substr($sheet, -4) == '.css') {
-                if (is_file('assets/styles/css/'.$sheet))
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/styles/css/'.$sheet.'">';
+                if (is_file('build/css/'.$sheet))
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/'.$sheet.'">';
                 continue;
             }
 
@@ -176,7 +176,7 @@ class view
                 case "cheesto":
                     // no break
                 case 'presence':
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/styles/css/presence.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presence.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
                     break;
 
@@ -184,7 +184,7 @@ class view
                 case "cheestowin":
                     // no break
                 case "presencewin":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/styles/css/presenceWin.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presenceWin.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
                     break;
 
@@ -197,13 +197,13 @@ class view
 
                 // CSS for Tutorial
                 case "tutorial":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/styles/css/tutorial.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/tutorial.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/tutorial.css">';
                     break;
 
                 // CSS for MailBox
                 case "mail":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/styles/css/mail.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/mail.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/mail.css">';
                     break;
             }

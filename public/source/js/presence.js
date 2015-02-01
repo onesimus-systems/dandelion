@@ -76,9 +76,6 @@ var presence =
         statusSelect.append('<option value="-1">Set Status:</option>');
 
         for (var key2 in dataObj.statusOptions) {
-            if (!dataObj.hasOwnProperty(key2))
-                continue;
-
             var html = '<option>' + dataObj.statusOptions[key2] + '</option>';
             statusSelect.append(html);
         }
