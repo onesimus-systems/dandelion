@@ -2,7 +2,7 @@
 /**
  * User management page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "datetimepicker.css"]]);
+$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "datetimepicker.min.css"]]);
 ?>
 <!-- Begin Page Body -->
 
@@ -18,7 +18,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "datetimepick
     </form>
 </div>
 
-<?= $this->loadJS(['jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker.min']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui',  'userManager', 'userManagerForms', 'timepicker']) ?>
 <script type="text/javascript">
     userManager.init();
 </script>

@@ -158,23 +158,15 @@ class view
 
         // Other stylesheets
         foreach ($optionalSheets as $sheet) {
-            // Load manual filenames if given
-            if (substr($sheet, -4) == '.css') {
-                if (is_file('build/css/'.$sheet))
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/'.$sheet.'">';
-                continue;
-            }
-
-            $sheet = strtolower($sheet);
-
             // Load keyworded stylesheets
-            switch($sheet) {
+            switch (strtolower($sheet)) {
                 // CSS for Cheesto presence system
                 case "cheesto":
                     // no break
                 case 'presence':
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presence.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/' . THEME_DIR . '/' . $theme . '/cheesto.css">';
+                    continue;
                     break;
 
                 // CSS for Cheesto presence system (windowed)
@@ -182,7 +174,8 @@ class view
                     // no break
                 case "presencewin":
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presenceWin.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/' . THEME_DIR . '/' . $theme . '/presenceWin.css">';
+                    continue;
                     break;
 
                 // CSS for jQueryUI
@@ -190,19 +183,30 @@ class view
                     // no break
                 case "jqueryui":
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+                    continue;
                     break;
 
                 // CSS for Tutorial
                 case "tutorial":
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/tutorial.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/tutorial.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/' . THEME_DIR . '/' . $theme . '/tutorial.css">';
+                    continue;
                     break;
 
                 // CSS for MailBox
                 case "mail":
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/mail.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/mail.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/' . THEME_DIR . '/' . $theme . '/mail.css">';
+                    continue;
                     break;
+            }
+
+            // Load manual filenames if given
+            if (substr($sheet, -8) != '.min.css') {
+                $sheet .= '.min.css';
+            }
+            if (is_file('build/css/' . $sheet)) {
+                $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/' . $sheet . '">';
             }
         }
 

@@ -2,7 +2,7 @@
 /**
  * Rights group management page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "permissions.css"]]);
+$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "permissions"]]);
 ?>
 <!-- Begin Page Body -->
 <div id="dialog" title="Alert"></div>

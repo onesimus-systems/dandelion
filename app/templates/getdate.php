@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="IE=9">
-        <?= $this->getCssSheets(["cheestoWin","jqueryui","datetimepicker.css",false]) ?>
+        <?= $this->getCssSheets(["cheestoWin","jqueryui","datetimepicker.min.css",false]) ?>
         <title>Dandelion cxeesto</title>
     </head>
 
@@ -45,6 +45,6 @@
             <input type="button" onclick="giveTime();" value="Done">
         </form>
 
-        <?= $this->loadJS(["jquery","jqueryui","timepicker.min","cheestoGetDate"]) ?>
+        <?= $this->loadJS(["jquery","jqueryui","timepicker","cheestoGetDate"]) ?>
     </body>
 </html>
