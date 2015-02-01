@@ -22,9 +22,7 @@ Routes::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'auth'], [
 	['get', '/settings', 'SettingsController@settings'],
 
 	['any', '/api/i/{module}/{method}', 'ApiController@internalApiCall'],
-
-	// Temporary route for categories
-	['any', '/lib/categories', 'PageController@categories'],
+	['any', '/render/{item}', 'RenderController@render']
 ]);
 
 // Group for Administration pages, requires authentication

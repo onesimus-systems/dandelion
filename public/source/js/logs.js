@@ -6,8 +6,9 @@ var filt = false,
     refreshc;
 
 $(document).ready(function() {
-    $( "#datesearch" ).datepicker();
-    $( "#datesearch" ).change(function() {
+    var dateSearch = $( "#datesearch" );
+    dateSearch.datepicker();
+    dateSearch.change(function() {
         $( "#datesearch" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
         });
 
@@ -74,11 +75,12 @@ var refreshFun =
 
 var view = {
     makeLogView:function(data) {
-        $('#refreshed').empty();
-        if (filt) { $('#refreshed').append(view.showFilterMessage()); }
-        $('#refreshed').append(view.pageControls(data.metadata));
-        $('#refreshed').append(view.displayLogs(data));
-        $('#refreshed').append(view.pageControls(data.metadata));
+        var logView = $('#refreshed');
+        logView.empty();
+        if (filt) { logView.append(view.showFilterMessage()); }
+        logView.append(view.pageControls(data.metadata));
+        logView.append(view.displayLogs(data));
+        logView.append(view.pageControls(data.metadata));
     },
 
     showFilterMessage: function() {
@@ -135,8 +137,7 @@ var view = {
 
             if (log.edited == "1") { html += '(Edited)'; }
 
-            html += '<br>Categorized as ' + log.cat + '\
-                     <br><a href="#" onClick="searchFun.filter(\'' + log.cat + '\');">Learn more about this system...</a>';
+            html += '<br>Categorized as ' + log.cat + '<br><a href="#" onClick="searchFun.filter(\'' + log.cat + '\');">Learn more about this system...</a>';
 
             if (log.canEdit) { html += '<input type="button" value="Edit" onClick="editFun.grabedit(' + log.logid + ');" class="flri">'; }
 
@@ -173,8 +174,9 @@ var view = {
 var addFun =
 {
     showaddinputs: function() {
+        var entryBox = $("textarea#logEntry");
         $("#add_edit_form")[0].reset();
-        $("textarea#logEntry").html("");
+        entryBox.html("");
 
         $( "#add_edit" ).dialog({
 			height: 575,
@@ -190,7 +192,7 @@ var addFun =
 			},
 			buttons: {
 				"Add Log": function() {
-					addFun.addlog();
+					addFun.sendLog(true);
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -200,7 +202,7 @@ var addFun =
 			}
         });
 
-        $("textarea#logEntry").tinymce({
+        entryBox.tinymce({
             browser_spellcheck: true,
 			forced_root_block: false,
 			resize: false,
@@ -213,48 +215,61 @@ var addFun =
 				]
         });
 
-        CategoryManage.addLog = true;
+        CategoryManage.addEditLog = true;
         CategoryManage.grabNextLevel('0:0');
     },
 
-    addlog: function() {
+    sendLog: function(isnew, id) {
+        var urlvars = {};
+        var url = '';
         var title = $("input#logTitle").val();
         title = encodeURIComponent(title);
         var entry = $("textarea#logEntry").val();
         entry = encodeURIComponent(entry);
         var cat = CategoryManage.getCatString();
 
+        if (isnew) {
+            urlvars = { title: title, body: entry, cat: cat };
+            url = 'api/i/logs/create';
+        } else {
+            urlvars = { logid: id, title: title, body: entry, cat: cat };
+            url = 'api/i/logs/edit';
+        }
+
 		if (title !== "" && entry !== "" && cat !== "") {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 
-			$.post("api/i/logs/create", { title: title, body: entry, cat: cat }, null, 'json')
+			$.post(url, urlvars, null, 'json')
 				.done(function( html ) {
 					refreshFun.refreshLog();
-					CategoryManage.addLog = false;
+					CategoryManage.addEditLog = false;
 					CategoryManage.grabNextLevel('0:0');
 					showDialog(html.data);
 				});
-        }
-        else {
-			$("input#logTitle").val( decodeURIComponent(title) );
-			$("textarea#logEntry").html( decodeURIComponent(entry) );
+        } else {
 			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
-			CategoryManage.addLog = true;
+			CategoryManage.addEditLog = true;
 			CategoryManage.grabNextLevel('0:0');
 			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
         }
-    },
+    }
 }; //addFun
 
 var editFun =
 {
     showeditinputs: function(log_info) {
         var linfo = log_info.data;
+        var entryBox = $("textarea#logEntry");
 
         $("input#logTitle").val( linfo.title );
-        $("textarea#logEntry").val( linfo.entry );
-        $("#catSpace").text( linfo.cat );
+        entryBox.val( linfo.entry );
+        $("#catSpace").text('Loading categories...');
+
+        CategoryManage.renderCategoriesFromString(linfo.cat, function(html) {
+            $("#catSpace").html(html);
+            CategoryManage.addEditLog = true;
+        });
 
         $( "#add_edit" ).dialog({
 			height: 575,
@@ -270,7 +285,7 @@ var editFun =
 			},
 			buttons: {
 				"Save Edit": function() {
-					editFun.editlogs(linfo.logid);
+                    addFun.sendLog(false, linfo.logid);
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -278,7 +293,7 @@ var editFun =
 			}
         });
 
-        $("textarea#logEntry").tinymce({
+        entryBox.tinymce({
             browser_spellcheck: true,
 			forced_root_block: false,
 			resize: false,
@@ -300,36 +315,13 @@ var editFun =
     grabedit: function(logid) {
         $.post("api/i/logs/readone", { logid: logid }, null, 'json')
             .done( editFun.showeditinputs );
-    },
-
-    //Sends the finished edited log to a PHP file for processing
-    editlogs: function(id) {
-        var editedtitle = $("input#logTitle").val();
-        editedtitle = encodeURIComponent(editedtitle);
-        var editedlog = $("textarea#logEntry").val();
-        editedlog = encodeURIComponent(editedlog);
-
-        if (editedtitle !== "" && editedlog !== "") {
-			$( "#add_edit" ).dialog( "close" );
-			$("#messages").fadeOut();
-
-			$.post("api/i/logs/edit", { logid: id, title: editedtitle, body: editedlog }, null, 'json')
-				.done(function( html ) {
-				refreshFun.refreshLog();
-				showDialog(html.data);
-			});
-		}
-
-        else {
-			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
-			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
-        }
-    },
+    }
 }; //editFun
 
 function showDialog( html ) {
-	$( "#dialog" ).html( "<p>"+html+"</p>" );
-	$( "#dialog" ).dialog({
+    var dialog = $( "#dialog" );
+	dialog.html( "<p>"+html+"</p>" );
+	dialog.dialog({
 		modal: true,
 		width: 400,
 		show: {
@@ -397,5 +389,5 @@ var searchFun =
         else {
             alert("Please select a valid filter.");
         }
-    },
+    }
 };

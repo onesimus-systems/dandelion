@@ -5,7 +5,7 @@
 var CategoryManage = {
 	currentID: -1,
 	currentSelection: [],
-	addLog: false,
+	addEditLog: false,
 
 	grabNextLevel: function(parentID, container) {
 	    var pid;
@@ -15,7 +15,7 @@ var CategoryManage = {
 			pid = parentID;
 		}
 
-		container = (this.addLog) ? '#catSpace' : '#categorySelects';
+		container = (this.addEditLog) ? '#catSpace' : '#categorySelects';
 
 		var level = pid.split(':');
 
@@ -31,7 +31,7 @@ var CategoryManage = {
 
 		$.ajax({
             type: "POST",
-            url: "lib/categories",
+            url: "render/categories",
             data: { action: "grabcats", pastSelections: JSON.stringify(this.currentSelection)},
             async: false
         })
@@ -40,12 +40,15 @@ var CategoryManage = {
                     $("#categorySelects").html("");
                     $(container).html( html );
                     CategoryManage.currentID = pid;
-
-                    for (var i=1; i<CategoryManage.currentSelection.length; i++) {
-                        $("#level"+i).val( CategoryManage.currentSelection[i] );
-                    }
                 }
             });
+	},
+
+	renderCategoriesFromString: function(str, callback) {
+		$.get('render/editcat', {catstring: str})
+			.done(function(html) {
+				callback(html);
+			});
 	},
 
 	createNew: function() {

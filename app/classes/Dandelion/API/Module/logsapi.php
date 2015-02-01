@@ -92,13 +92,11 @@ class LogsAPI extends BaseModule
 
         $title = $this->up->title;
         $body = $this->up->body;
-        // Eventually editing log categories will be a thing
-        //$cat = $this->up->cat;
-
-        //$cat = rtrim($cat, ':');
+        $cat = rtrim($this->up->cat, ':');
+        header('X-Dandelion: '.$cat);
 
         $logs = new Logs($this->repo);
-        return $logs->editLog($lid, $title, $body);
+        return $logs->editLog($lid, $title, $body, $cat);
     }
 
     /**

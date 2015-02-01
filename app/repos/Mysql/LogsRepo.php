@@ -59,15 +59,16 @@ class LogsRepo extends BaseMySqlRepo implements Interfaces\LogsRepo
         return $this->database->go($params);
     }
 
-    public function updateLog($lid, $title, $body)
+    public function updateLog($lid, $title, $body, $cat)
     {
         $this->database->update($this->prefix.'log')
-                       ->set('title = :title, entry = :entry, edited = 1')
+                       ->set('title = :title, entry = :entry, cat = :cat, edited = 1')
                        ->where('logid = :lid');
         $params = [
             'title' => $title,
             'entry' => $body,
-            'lid' => $lid
+            'lid' => $lid,
+            'cat' => $cat
         ];
 
         return $this->database->go($params);

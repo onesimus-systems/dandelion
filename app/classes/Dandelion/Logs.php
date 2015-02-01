@@ -83,13 +83,13 @@ class Logs
      *
      * @return string Confirmation message or error message
      */
-    public function editLog($lid, $title, $body)
+    public function editLog($lid, $title, $body, $cat)
     {
-        if (empty($body) || empty($title) || empty($lid)) {
+        if (empty($body) || empty($title) || empty($lid) || empty($cat)) {
             return 'Log entries require a title, category, and body.';
         }
 
-        if ($this->repo->updateLog($lid, $title, $body)) {
+        if ($this->repo->updateLog($lid, $title, $body, $cat)) {
             return "\"{$title}\" edited successfully.";
         } else {
             return 'There was an error saving the log.';

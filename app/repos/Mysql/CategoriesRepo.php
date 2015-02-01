@@ -13,6 +13,15 @@ class CategoriesRepo extends BaseMySqlRepo implements Interfaces\CategoriesRepo
         return $this->database->selectAll('category')->get();
     }
 
+    public function getIdForCategoryWithParent($cat, $pid)
+    {
+        $this->database->select('cid')
+            ->from($this->prefix.'category')
+            ->where('pid = :pid AND description = :desc');
+
+        return $this->database->getFirst(['pid' => $pid, 'desc' => $cat])['cid'];
+    }
+
     public function addCategory($name, $pid)
     {
         $this->database->insert()

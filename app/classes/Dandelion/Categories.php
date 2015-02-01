@@ -23,15 +23,18 @@ class Categories
      *
      * @return string - HTML of category select group
      */
-    public function getChildren($past)
+    public function renderChildren($past)
     {
         $cat = $this->repo->getAllCategories();
 
         $response = '';
 
-        foreach ($past as $pastSel) {
-            $pastSel = explode(':', $pastSel);
+        foreach ($past as $key => $value) {
+            $past[$key] = explode(':', $value);
+        }
 
+        $i = 0;
+        foreach ($past as $pastSel) {
             $newSel = '<select name="level'.($pastSel[1]+1).'" id="level'.($pastSel[1]+1).'" onChange="CategoryManage.grabNextLevel(this);">';
             $newSel .= '<option value="Select:">Select:</option>';
             $option = '';
@@ -50,7 +53,8 @@ class Categories
             usort($alphaList, "self::cmp");
 
             foreach ($alphaList as $children) {
-                    $option = '<option value="'.$children['cid'].':'.($pastSel[1]+1).'">'.$children['description'].'</option>';
+                    $selected = (isset($past[$i+1][0]) && ($children['cid'] == $past[$i+1][0])) ? 'selected' : '';
+                    $option = '<option value="'.$children['cid'].':'.($pastSel[1]+1).'"'.$selected.'>'.$children['description'].'</option>';
                     $newSel .= $option;
             }
 
@@ -60,9 +64,25 @@ class Categories
                 // If there are sub categories, echo the selectbox
                 $response .= $newSel;
             }
+            $i++;
         }
 
         return $response;
+    }
+
+    public function renderFromString($catstring)
+    {
+        $catstring = explode(':', $catstring);
+        $idArr = ['0:0'];
+        $parent = 0;
+
+        for ($i = 0; $i < count($catstring); $i++) {
+            $pid = $this->repo->getIdForCategoryWithParent($catstring[$i], $parent);
+            $parent = $pid;
+            array_push($idArr, $pid.':'.($i+1));
+        }
+
+        return $this->renderChildren($idArr);
     }
 
     /**

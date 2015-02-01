@@ -7,6 +7,7 @@ namespace Dandelion\Repos\Interfaces;
 interface CategoriesRepo
 {
     public function getAllCategories();
+    public function getIdForCategoryWithParent($cat, $pid);
     public function addCategory($name, $pid);
     public function updateCategory($name, $cid);
     public function getCategoryParent($cid);
