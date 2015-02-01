@@ -125,8 +125,7 @@ class ApiController extends BaseController
         // Search for key with case sensitive collation
         $conn->select()
              ->from($this->app->config['db']['tablePrefix'].'apikeys')
-             ->where('keystring = :key')
-             ->collate('latin1_general_cs');
+             ->where('keystring = :key');
         $params = array (
             "key" => $key
         );
