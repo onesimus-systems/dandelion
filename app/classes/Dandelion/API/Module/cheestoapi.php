@@ -16,6 +16,9 @@ class CheestoAPI extends BaseModule
      */
     public function readAll()
     {
+        if (!$this->app->config['cheestoEnabled']) {
+            exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
+        }
         if (!$this->ur->authorized('viewcheesto')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
@@ -29,6 +32,9 @@ class CheestoAPI extends BaseModule
      */
     public function read()
     {
+        if (!$this->app->config['cheestoEnabled']) {
+            exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
+        }
         if (!$this->ur->authorized('viewcheesto')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }
@@ -42,6 +48,9 @@ class CheestoAPI extends BaseModule
      */
     public function statusTexts()
     {
+        if (!$this->app->config['cheestoEnabled']) {
+            exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
+        }
         $cheesto = new Cheesto($this->repo);
         return $cheesto->getStatusText();
     }
@@ -53,6 +62,9 @@ class CheestoAPI extends BaseModule
      */
     public function update()
     {
+        if (!$this->app->config['cheestoEnabled']) {
+            exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
+        }
         if (!$this->ur->authorized('updatecheesto')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
         }

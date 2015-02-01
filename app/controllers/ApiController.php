@@ -94,7 +94,6 @@ class ApiController extends BaseController
         if (!class_exists($className)) {
             return self::makeDAPI(6, 'Module not found', 'API', '');
         }
-        //$ApiModule = new $className($DatabaseConn, $userRights, $urlParams);
         $ApiModule = new $className($this->app, $userRights, $urlParams);
 
         if ($ApiModule instanceof BaseModule && method_exists($ApiModule, $request)) {
