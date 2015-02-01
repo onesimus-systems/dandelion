@@ -4,6 +4,8 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var changed = require('gulp-changed');
+var minifycss = require('gulp-minify-css');
+var rename = require('gulp-rename');
 
 var paths = {
     scripts: 'public/source/js/*.js',
@@ -13,6 +15,8 @@ var paths = {
 gulp.task('less', function() {
    gulp.src(paths.styles)
        .pipe(less())
+       .pipe(minifycss())
+       .pipe(rename({extname: ".min.css"}))
        .pipe(gulp.dest('public/build/css'));
 });
 

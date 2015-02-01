@@ -155,7 +155,7 @@ class view
         }
 
         if ($main) {
-            $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/main.css">';
+            $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/main.min.css">';
             $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/main.css">';
         }
 
@@ -176,7 +176,7 @@ class view
                 case "cheesto":
                     // no break
                 case 'presence':
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presence.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presence.min.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/cheesto.css">';
                     break;
 
@@ -184,7 +184,7 @@ class view
                 case "cheestowin":
                     // no break
                 case "presencewin":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presenceWin.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presenceWin.min.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/presenceWin.css">';
                     break;
 
@@ -197,13 +197,13 @@ class view
 
                 // CSS for Tutorial
                 case "tutorial":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/tutorial.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/tutorial.min.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/tutorial.css">';
                     break;
 
                 // CSS for MailBox
                 case "mail":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/mail.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/mail.min.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/'.THEME_DIR.'/'.$theme.'/mail.css">';
                     break;
             }
