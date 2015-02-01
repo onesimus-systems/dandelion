@@ -6,40 +6,39 @@ var newStatus = 1;
 
 var presence =
 {
-    timeoutId: "",
+    timeoutId: 0,
     version: 0,
+    firstgen: true,
 
-    checkstat: function(ver) {
+    checkstat: function (ver) {
         $.getJSON("api/i/cheesto/readall",
-                function(data) {
-            presence.generateView(ver, data);
-            clearTimeout(presence.timeoutId);
-            delete presence.timeoutId;
+            function (data) {
+                presence.generateView(ver, data);
+                clearTimeout(presence.timeoutId);
+                delete presence.timeoutId;
 
-            presence.version = ver;
-            presence.timeoutId = setTimeout(function() { presence.checkstat(ver); }, 30000);
-        });
+                presence.version = ver;
+                presence.timeoutId = setTimeout(function () {
+                    presence.checkstat(ver);
+                }, 30000);
+            });
     },
 
-    generateView: function(ver, dataObj) {
+    generateView: function (ver, dataObj) {
         dataObj = dataObj.data;
-        var tableView;
 
-        // Clear div area and generate new div container
-        $('#mainPresence').html('');
+        if (!this.firstgen) {
+            this.updateTableOnly(ver, dataObj);
+            return;
+        }
+
         var appendable = $('<div/>').attr('id', 'pt');
 
         // Generate select box of status options
-        var statusSelect = $('<select/>').attr('id', 'cstatus');
-        statusSelect.change(function() { presence.setStatus(ver); });
-        statusSelect.append('<option value="-1">Set Status:</option>');
+        appendable.append(presence.makeStatusSelect(ver, dataObj));
 
-        for (var key2 in dataObj.statusOptions) {
-            var html = '<option>'+dataObj.statusOptions[key2]+'</option>';
-            statusSelect.append(html);
-        }
-        appendable.append(statusSelect);
-
+        var userStatusesDiv = $('<div/>').attr('id', 'userStatuses');
+        var tableView;
         // Generate status table depending on view version
         if (ver === 0) {
             tableView = this.makeTableMini(dataObj);
@@ -47,12 +46,52 @@ var presence =
         else if (ver === 1) {
             tableView = this.makeTableFull(dataObj);
         }
-        appendable.append(tableView);
+        userStatusesDiv.append(tableView);
+        appendable.append(userStatusesDiv);
 
-        $('#mainPresence').append(appendable);
+        $('#mainPresence').html(appendable);
     },
 
-    makeTableMini: function(dataObj) {
+    updateTableOnly: function (ver, dataObj) {
+        var tableView;
+        // Generate status table depending on view version
+        if (ver === 0) {
+            tableView = this.makeTableMini(dataObj);
+        }
+        else if (ver === 1) {
+            tableView = this.makeTableFull(dataObj);
+        }
+        $('#userStatuses').html(tableView);
+    },
+
+    /**
+     * @param {{statusOptions:string}} dataObj
+     */
+    makeStatusSelect: function (ver, dataObj) {
+        var statusSelectDiv = $('<div/>').attr('id', 'statusSelect');
+        var statusSelect = $('<select/>').attr('id', 'cstatus');
+        statusSelect.change(function () {
+            presence.setStatus(ver);
+        });
+        statusSelect.append('<option value="-1">Set Status:</option>');
+
+        for (var key2 in dataObj.statusOptions) {
+            if (!dataObj.hasOwnProperty(key2))
+                continue;
+
+            var html = '<option>' + dataObj.statusOptions[key2] + '</option>';
+            statusSelect.append(html);
+        }
+
+        statusSelectDiv.append(statusSelect);
+        this.firstgen = false;
+        return statusSelectDiv;
+    },
+
+    /**
+     * @param {{statusInfo:object}} dataObj
+     */
+    makeTableMini: function (dataObj) {
         // Mini view on main page
         var table = $('<table/>');
         var tableHead = '<thead><tr>\
@@ -75,8 +114,8 @@ var presence =
                 }
 
                 var html = '<tr>\
-                    <td class="textLeft"><span title="'+user.message+'"'+classm+'>'+user.realname+'</span></td>\
-                    <td><span title="'+dataObj.statusOptions[user.status]+'&#013;Return: '+user.returntime+'" class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</td>\
+                    <td class="textLeft"><span title="' + user.message + '"' + classm + '>' + user.realname + '</span></td>\
+                    <td><span title="' + dataObj.statusOptions[user.status] + '&#013;Return: ' + user.returntime + '" class="' + user.statusInfo.color + '">' + user.statusInfo.symbol + '</td>\
                     </tr>';
 
                 table.append(html);
@@ -91,7 +130,10 @@ var presence =
         return table;
     },
 
-    makeTableFull: function(dataObj) {
+    /**
+     * @param {{realname:string}} dataObj
+     */
+    makeTableFull: function (dataObj) {
         // Windowed view
         var table = $('<table/>');
         var tableHead = '<thead><tr><td>Name</td>\
@@ -109,17 +151,17 @@ var presence =
                 var user = dataObj[key];
 
                 var html = '<tr>\
-                    <td>'+user.realname+'</td>\
-                    <td>'+user.message+'</td>\
-                    <td class="statusi"><span class="'+user.statusInfo.color+'">'+user.statusInfo.symbol+'</span></td>';
+                    <td>' + user.realname + '</td>\
+                    <td>' + user.message + '</td>\
+                    <td class="statusi"><span class="' + user.statusInfo.color + '">' + user.statusInfo.symbol + '</span></td>';
 
                 if (user.status == 0) { // jshint ignore:line
-                    html += '<td>'+dataObj.statusOptions[user.status]+'</td>';
+                    html += '<td>' + dataObj.statusOptions[user.status] + '</td>';
                 } else {
-                    html += '<td>'+dataObj.statusOptions[user.status]+'<br>Return: '+user.returntime+'</td>';
+                    html += '<td>' + dataObj.statusOptions[user.status] + '<br>Return: ' + user.returntime + '</td>';
                 }
 
-                html += '<td>'+user.dmodified+'</td></tr>';
+                html += '<td>' + user.dmodified + '</td></tr>';
 
                 table.append(html);
             }
@@ -128,7 +170,7 @@ var presence =
         return table;
     },
 
-    setStatus: function(ver) {
+    setStatus: function (ver) {
         newStatus = $("select#cstatus").prop("selectedIndex") - 1;
         $("select#cstatus").prop("selectedIndex", 0);
         var rtime;
@@ -136,7 +178,7 @@ var presence =
         if (newStatus > 0) {
             // Status requires a return time and optional status
             rtime = ""; // jshint ignore:line
-            window.open("getdate","getdate","location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
+            window.open("getdate", "getdate", "location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
         }
         else if (newStatus === 0) {
             // Status is Available
@@ -145,27 +187,27 @@ var presence =
         }
     },
 
-    popOut: function() {
-        window.open("presenceWindow","presencewin","location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
+    popOut: function () {
+        window.open("presenceWindow", "presencewin", "location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
     },
 
-    sendNewStatus: function(stat, rt, ver, message) {
-        $.post("api/i/cheesto/update", { status: stat, returntime: rt, message: message },
-                function() {
-            presence.checkstat(ver);
-        });
+    sendNewStatus: function (stat, rt, ver, message) {
+        $.post("api/i/cheesto/update", {status: stat, returntime: rt, message: message},
+            function () {
+                presence.checkstat(ver);
+            });
     },
 
-    showHideP: function() {
+    showHideP: function () {
         if ($("#showHide").html() == "[ - ]") {
-            $("#presence").css("minWidth", $("#mainPresence").prop("offsetWidth")+"px");
+            $("#presence").css("minWidth", $("#mainPresence").prop("offsetWidth") + "px");
             $("#mainPresence").css("display", "none");
-            $("#showHide").html( "[ + ]" );
+            $("#showHide").html("[ + ]");
         }
         else {
             $("#presence").css("minWidth", "0px");
             $("#mainPresence").css("display", "");
-            $("#showHide").html( "[ - ]" );
+            $("#showHide").html("[ - ]");
         }
     }
 };
