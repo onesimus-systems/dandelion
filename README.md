@@ -1,14 +1,14 @@
-Dandelion v5.0.3
-================
+Dandelion v6.0.0 Dev
+====================
 
 Dandelion is a web-based entry log application.
 
 Requirements
 ------------
 
-* Apache web server
-    - mod_rewrite must be enabled
-* PHP >= 5.3.7
+* Apache or Nginx web server
+    - mod_rewrite must be enabled for Apache
+* PHP >= 5.4.0
 * MySQL/Maria DB >= 5.0
 
 Is it any good?
@@ -117,7 +117,7 @@ v4.5.1
 
 - Added compatibility libraries for older PHP versions
     * password_combat for PHP 5.5 password_* functions
-	
+
 - Major bug fixes
     * JSON syntax error for category display
     * Incorrect boolean value for add logs

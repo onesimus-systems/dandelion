@@ -1,0 +1,14 @@
+{
+    "require": {
+        "league/plates": "3.*"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Dandelion\\": "app/classes/Dandelion/",
+            "Dandelion\\Repos\\": "app/repos",
+            "Dandelion\\Controllers\\": "app/controllers/",
+            "Dandelion\\Storage\\": "app/storage"
+        }
+    }
+}

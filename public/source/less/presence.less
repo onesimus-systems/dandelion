@@ -1,0 +1,99 @@
+/* Base theme for Cheesto in pane mode
+ *
+ * @author Lee Keitel
+ * @date Feb 2014 
+**/
+    
+#presence {
+    position: absolute;
+    float: left;
+    left: 2em;
+    top: 2em;
+    max-width: 12em;
+    border: 1px solid black;
+    padding: 5px;
+	color: black;
+	text-align: center;
+
+	h3 {
+		text-align: left;
+	}
+	
+	.linklike {
+	    margin-top: .5em;
+	    cursor: default;
+		border: none;
+		padding: .5em 1em;
+		font-size: 1em;
+		color: white;
+		
+		&:hover {
+			color: black;
+		}
+	}
+	
+	#cstatus {
+	    margin: 3px;
+	}
+	
+	/*.set {
+		padding: .25em .5em;
+	}*/
+	
+	#showHide {
+		color: black;
+		text-decoration: none;
+	}
+
+	h3 {
+	    margin: 0;
+	    margin-bottom: 5px;
+	}
+	
+	/* .tables is here to import the styles to presenceWin.less */
+	table, .tables {
+	    border-collapse: collapse;
+	    margin-top: .5em;
+	    
+		thead td {
+		    font-weight: bold;
+		}
+		    
+	    .statusi {
+		    text-align: center;
+		}
+	
+		td {
+		    border: 1px solid black;
+		    padding: 5px;
+			
+			.message {
+			    cursor: help;
+			}
+			
+			.green {
+			    color: green;
+			    cursor: help;
+			}
+			
+			.blue {
+			    color: blue;
+			    cursor: help;
+			}
+			
+			.red {
+			    color: red;
+			    cursor: help;
+			}
+			
+			&.textLeft {
+                text-align: left;
+			}
+			
+			&.cen {
+                text-align: center;
+                border: none;
+			}
+		}
+	}
+}

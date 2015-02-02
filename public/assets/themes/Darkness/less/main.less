@@ -1,0 +1,57 @@
+/* Darkness theme for Dandelion Web Log
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
+@import "colors";
+
+body {
+	background-color: @bodyBG;
+	color: white;
+}
+
+a:visited, a:hover, a:link, a:active {
+	color: #00BFFF;
+	text-decoration: none;
+}
+
+#login, #divMain #refreshed_core {
+	background-color: @mainBody;
+	color: @mainText;
+}
+
+#nav_link {
+	a:visited, a:link, a:active {
+		.buttonRegular;
+	}
+
+	a:hover {
+		.buttonHover;
+	}
+}
+
+.pagination {
+	background-color: @button;
+
+	input {
+		.buttonRegular;
+	}
+
+	input:hover {
+		.buttonHover;
+	}
+}
+
+.dButton, #login_button, .logentry input {
+	.buttonRegular;
+
+	&:hover {
+		.buttonHover;
+	}
+}
+
+.aboutlink:visited, .aboutlink:hover, .aboutlink:link, .aboutlink:active {
+	color: white;
+}
