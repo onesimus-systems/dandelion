@@ -44,7 +44,7 @@ class GateKeeper
         }
 
         switch ($userInfo['firsttime']) {
-            case 2:
+            case 1:
                 return '2';
                 break;
             default:

@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `dan_users` (
   `realname` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
   `datecreated` date NOT NULL,
-  `firsttime` tinyint(1) NOT NULL DEFAULT '2',
+  `firsttime` tinyint(1) NOT NULL DEFAULT '1',
   `showlimit` int(3) NOT NULL DEFAULT '25',
   `theme` tinytext NOT NULL,
   `mailCount` int(11) NOT NULL DEFAULT '0',
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `dan_users` (
 --
 
 INSERT INTO `dan_users` (`userid`, `username`, `password`, `realname`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`, `mailCount`) VALUES
-  (1, 'admin', '$2y$10$prAlpv4vy07ONN53Kyfgse8HZ8npUX993CeEJ5xPktvtUNDuvYgTm', 'Admininistrator', 'admin', '2015-01-01', 0, 25, '', 0);
+  (1, 'admin', '$2y$10$prAlpv4vy07ONN53Kyfgse8HZ8npUX993CeEJ5xPktvtUNDuvYgTm', 'Admininistrator', 'admin', '2015-01-01', 1, 25, '', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
