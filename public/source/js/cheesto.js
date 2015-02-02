@@ -13,6 +13,10 @@ var presence =
     checkstat: function (ver) {
         $.getJSON("api/i/cheesto/readall",
             function (data) {
+                if (data.errorcode == 5) {
+                    return;
+                }
+
                 presence.generateView(ver, data);
                 clearTimeout(presence.timeoutId);
                 delete presence.timeoutId;
