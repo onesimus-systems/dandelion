@@ -14,7 +14,7 @@ use \Dandelion\Session\SessionManager;
  */
 class Application
 {
-    const VERSION = '6.0.0-dev';
+    const VERSION = '6.0.0';
 
     public $url;
     public $paths = [];
