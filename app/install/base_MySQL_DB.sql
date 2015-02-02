@@ -1,11 +1,7 @@
--- phpMyAdmin SQL Dump
--- version 4.1.7
--- http://www.phpmyadmin.net
---
 -- Host: localhost
--- Generation Time: Jul 19, 2014 at 01:01 PM
--- Server version: 5.5.38-MariaDB-1~precise-log
--- PHP Version: 5.5.14-2+deb.sury.org~precise+1
+-- Generation Time: Feb 01, 2015 at 05:51 PM
+-- Server version: 5.5.41-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +13,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `dandyBase`
+-- Database: `dandelion_base`
 --
 
 -- --------------------------------------------------------
@@ -27,11 +23,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `dan_apikeys` (
-  `keystring` varchar(255) NOT NULL,
+  `keystring` varchar(255) COLLATE utf8_bin NOT NULL,
   `user` int(11) NOT NULL,
   `expires` int(11) NOT NULL,
   PRIMARY KEY (`keystring`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -45,7 +41,14 @@ CREATE TABLE IF NOT EXISTS `dan_category` (
   `pid` int(11) NOT NULL,
   PRIMARY KEY (`cid`),
   UNIQUE KEY `cid` (`cid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `dan_category`
+--
+
+INSERT INTO `dan_category` (`cid`, `description`, `pid`) VALUES
+  (1, 'Logs', 0);
 
 -- --------------------------------------------------------
 
@@ -64,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `dan_log` (
   `edited` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`logid`),
   UNIQUE KEY `logid` (`logid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -84,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `dan_mail` (
   `timeSent` time NOT NULL,
   PRIMARY KEY (`id`),
   KEY `to` (`toUser`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -101,14 +104,14 @@ CREATE TABLE IF NOT EXISTS `dan_presence` (
   `returntime` text NOT NULL,
   `dmodified` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `dan_presence`
 --
 
 INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `returntime`, `dmodified`) VALUES
-(1, 1, 'Admin', 1, '', '', '2014-01-01 00:00:00');
+  (1, 1, 'Admin', 0, '', '00:00:00', '2015-01-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -122,16 +125,16 @@ CREATE TABLE IF NOT EXISTS `dan_rights` (
   `permissions` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `role` (`role`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `dan_rights`
 --
 
 INSERT INTO `dan_rights` (`id`, `role`, `permissions`) VALUES
-(1, 'user', 'O:8:"stdClass":15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:6:"addcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:0;s:7:"adduser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:8:"addgroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
-(2, 'admin', 'O:8:"stdClass":15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:6:"addcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:7:"adduser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:8:"addgroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
-(3, 'guest', 'O:8:"stdClass":15:{s:9:"createlog";b:0;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:6:"addcat";b:0;s:7:"editcat";b:0;s:9:"deletecat";b:0;s:7:"adduser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:8:"addgroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:0;s:5:"admin";b:0;}');
+  (1, 'user', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:6:"addcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:0;s:7:"adduser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:8:"addgroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
+  (2, 'admin', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:6:"addcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:7:"adduser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:8:"addgroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
+  (3, 'guest', 'a:15:{s:9:"createlog";b:0;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:6:"addcat";b:0;s:7:"editcat";b:0;s:9:"deletecat";b:0;s:7:"adduser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:8:"addgroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:0;s:5:"admin";b:0;}');
 
 -- --------------------------------------------------------
 
@@ -144,31 +147,7 @@ CREATE TABLE IF NOT EXISTS `dan_sessions` (
   `data` mediumtext,
   `last_accessed` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `dan_settings`
---
-
-CREATE TABLE IF NOT EXISTS `dan_settings` (
-  `settings_id` smallint(9) NOT NULL AUTO_INCREMENT,
-  `name` tinytext NOT NULL,
-  `value` mediumtext NOT NULL,
-  PRIMARY KEY (`settings_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
-
---
--- Dumping data for table `dan_settings`
---
-
-INSERT INTO `dan_settings` (`settings_id`, `name`, `value`) VALUES
-(1, 'app_title', 'Dandelion Web Log'),
-(2, 'slogan', 'Website Slogan'),
-(3, 'default_theme', 'Halloween'),
-(4, 'cheesto_enabled', '1'),
-(5, 'public_api', '0');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -189,14 +168,14 @@ CREATE TABLE IF NOT EXISTS `dan_users` (
   `mailCount` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`userid`),
   UNIQUE KEY `userid` (`userid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `dan_users`
 --
 
 INSERT INTO `dan_users` (`userid`, `username`, `password`, `realname`, `role`, `datecreated`, `firsttime`, `showlimit`, `theme`, `mailCount`) VALUES
-(1, 'admin', '$2y$10$iMkjkCcdztMxamIul6sP2ur8IZJpNrJWYSXC6jsvl4vENwf2Vw1du', 'Admin', 'admin', '2014-01-01', 2, 25, '', 0);
+  (1, 'admin', '$2y$10$prAlpv4vy07ONN53Kyfgse8HZ8npUX993CeEJ5xPktvtUNDuvYgTm', 'Admininistrator', 'admin', '2015-01-01', 0, 25, '', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
