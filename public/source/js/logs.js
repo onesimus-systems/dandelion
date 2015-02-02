@@ -196,7 +196,7 @@ var addFun =
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
-					CategoryManage.addLog = false;
+					CategoryManage.addEditLog = false;
 					CategoryManage.grabNextLevel('0:0');
 				}
 			}
@@ -289,6 +289,8 @@ var editFun =
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
+                    CategoryManage.addEditLog = false;
+                    CategoryManage.grabNextLevel('0:0');
 				}
 			}
         });
