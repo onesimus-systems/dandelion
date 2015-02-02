@@ -38,7 +38,9 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['cheesto','jqueryui']]);
                 <form id="add_edit_form">
                     Title: <input type="text" id="logTitle" name="logTitle" value="" size="60"><br><br>
                     <textarea id="logEntry" name="logEntry" cols="80" rows="10"></textarea><br>
-                    Category: <span id="catSpace"></span>
+                    <div class="categories">
+                        Category: <span id="catSpace"></span>
+                    </div>
                 </form>
                 <div id="messages">Hello</div>
             </div>
