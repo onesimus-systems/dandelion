@@ -236,7 +236,7 @@ var addFun =
             url = 'api/i/logs/edit';
         }
 
-		if (title !== "" && entry !== "" && cat !== "") {
+		if (title !== "" && entry !== "" && cat !== "" && cat !== false) {
 			$( "#add_edit" ).dialog( "close" );
 			$("#messages").fadeOut();
 
