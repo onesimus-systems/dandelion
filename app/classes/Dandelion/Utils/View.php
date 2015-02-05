@@ -166,7 +166,7 @@ class view
                 case 'presence':
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presence.min.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/' . THEME_DIR . '/' . $theme . '/cheesto.css">';
-                    continue;
+                    continue 2;
                     break;
 
                 // CSS for Cheesto presence system (windowed)
@@ -175,7 +175,7 @@ class view
                 case "presencewin":
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/presenceWin.min.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/' . THEME_DIR . '/' . $theme . '/presenceWin.css">';
-                    continue;
+                    continue 2;
                     break;
 
                 // CSS for jQueryUI
@@ -183,21 +183,21 @@ class view
                     // no break
                 case "jqueryui":
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/assets/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
-                    continue;
+                    continue 2;
                     break;
 
                 // CSS for Tutorial
                 case "tutorial":
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/tutorial.min.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/' . THEME_DIR . '/' . $theme . '/tutorial.css">';
-                    continue;
+                    continue 2;
                     break;
 
                 // CSS for MailBox
                 case "mail":
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/build/css/mail.min.css">';
                     $cssList .= '<link rel="stylesheet" type="text/css" href="/' . THEME_DIR . '/' . $theme . '/mail.css">';
-                    continue;
+                    continue 2;
                     break;
             }
 
