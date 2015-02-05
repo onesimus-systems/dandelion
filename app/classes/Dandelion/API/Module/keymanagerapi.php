@@ -20,7 +20,7 @@ class KeyManagerAPI extends BaseModule
     public function getKey($force = false)
     {
         $key = new KeyManager($this->repo);
-        return SELF::encodeKey($key->getKey($_SESSION['userInfo']['userid'], $force));
+        return self::encodeKey($key->getKey($_SESSION['userInfo']['userid'], $force));
     }
 
     /**
@@ -28,7 +28,7 @@ class KeyManagerAPI extends BaseModule
      */
     public function newKey()
     {
-        return SELF::getKey(true);
+        return self::getKey(true);
     }
 
     /**
@@ -48,7 +48,7 @@ class KeyManagerAPI extends BaseModule
         }
 
         $key = new KeyManager($this->repo);
-        return SELF::encodeKey($key->revoke($userid));
+        return self::encodeKey($key->revoke($userid));
     }
 
     /**

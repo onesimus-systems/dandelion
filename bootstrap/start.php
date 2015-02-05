@@ -15,6 +15,8 @@ namespace Dandelion;
 use \Dandelion\Application;
 use \Dandelion\Storage\MySqlDatabase;
 
+$paths = require __DIR__.'/paths.php';
+
 // Check PHP version, Dandelion supports only PHP 5.4 and above
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.4.0', '<')) {
     exit(1);
@@ -22,11 +24,11 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.4.0',
 
 // Load password comapatability library if version is less than 5.5
 if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-    require ROOT . '/lib/password-compat/password.php';
+    require $paths['app'] . '/lib/password-compat/password.php';
 }
 
 $app = new Application();
 
-$app->bindInstallPaths(require __DIR__.'/paths.php');
+$app->bindInstallPaths($paths);
 
 return $app;
