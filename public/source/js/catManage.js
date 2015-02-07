@@ -4,50 +4,74 @@
 
 var CategoryManage = {
 	currentID: -1,
-	currentSelection: [],
+	currentSelection: [0],
 	addEditLog: false,
 
-	grabNextLevel: function(parentID, container) {
-	    var pid;
-		if (parentID.value) {
-			pid = parentID.value;
-		} else {
-			pid = parentID;
-		}
-
+	grabNextLevel: function(pid, container) {
 		container = (this.addEditLog) ? '#catSpace' : '#categorySelects';
 
-		var level = pid.split(':');
+		var pidSplit = pid.split(':');
+		var level = +pidSplit[0] + 1;
+		var cid = +pidSplit[1];
 
-		if (this.currentSelection[level[1]]) {
-			this.currentSelection.splice(level[1]);
+		if (this.currentSelection[level]) {
+			// This is to ensure that if a category is changed in the upper levels,
+			// no residual children will remain
+			this.currentSelection.splice(level);
 		}
 
-		this.currentSelection[level[1]] = pid;
+		this.currentSelection[level] = cid;
 
-        if (this.currentSelection.length === 0) {
-			this.currentSelection[0] = '0:0';
+		$.get('render/categoriesJson', {pastSelection: JSON.stringify(this.currentSelection)}, null, 'json')
+			.done(function(json) {
+				if (typeof $(container)[0] !== 'undefined') {
+					$(container).empty();
+					$(container).html(CategoryManage.renderSelectsFromJson(json));
+					CategoryManage.currentID = pid;
+				}
+			});
+	},
+
+	grabFirstLevel: function() {
+		this.grabNextLevel('-1:0');
+	},
+
+	renderSelectsFromJson: function(json) {
+		CategoryManage.currentSelection = json.currentList;
+		var div = $('<span/>');
+
+		var onChangeFunc = function() {
+			CategoryManage.grabNextLevel(this.value);
+		};
+
+		for (var key in json.levels) {
+			if (!json.levels.hasOwnProperty(key))
+				continue;
+
+			var select = $('<select/>').attr('id', 'level'+key);
+			select.change(onChangeFunc);
+			select.append('<option value="">Select:</option>');
+
+			for (var category in json.levels[key]) {
+				if (!json.levels[key].hasOwnProperty(category))
+					continue;
+
+				var cat = json.levels[key][category];
+				var option = $('<option value="'+key+':'+cat.id+'">'+cat.desc+'</option>');
+				option.attr('selected', cat.selected);
+				select.append(option);
+			}
+			div.append(select);
 		}
 
-		$.ajax({
-            type: "POST",
-            url: "render/categories",
-            data: { action: "grabcats", pastSelections: JSON.stringify(this.currentSelection)},
-            async: false
-        })
-            .done(function( html ) {
-                if (typeof $("#categorySelects")[0] !== 'undefined') {
-                    $("#categorySelects").html("");
-                    $(container).html( html );
-                    CategoryManage.currentID = pid;
-                }
-            });
+		return div;
 	},
 
 	renderCategoriesFromString: function(str, callback) {
-		$.get('render/editcat', {catstring: str})
-			.done(function(html) {
-				callback(html);
+		$.get('render/editcat', {catstring: str}, null, 'json')
+			.done(function(json) {
+				var rendered = CategoryManage.renderSelectsFromJson(json);
+				callback(rendered);
 			});
 	},
 
@@ -65,11 +89,9 @@ var CategoryManage = {
 
 			if (newCatDesc === '') {
 				alert('Please enter a category description');
-			}
-			else if (newCatDesc === null) {
+			} else if (newCatDesc === null) {
 				return false;
-			}
-			else {
+			} else {
 				this.addNew(encodeURIComponent(newCatDesc));
 				break;
 			}
@@ -78,8 +100,7 @@ var CategoryManage = {
 
 	addNew: function(catDesc) {
 		var newCatDesc = catDesc;
-		var parent = this.currentSelection[this.currentSelection.length-1].split(':');
-		parent = parent[0];
+		var parent = this.currentSelection[this.currentSelection.length-1];
 
 		$.post("api/i/categories/add", { parentID: parent, catDesc: newCatDesc }, null, 'json')
             .done(function( json ) {
@@ -89,16 +110,17 @@ var CategoryManage = {
 	},
 
 	editCat: function() {
-		var cid = this.currentSelection[this.currentSelection.length-1].split(':');
+		var cid = this.currentSelection[this.currentSelection.length-1];
+		var lvl = this.currentSelection.length-2;
 
-		var elt = $("#level"+cid[1]+" option:selected");
+		var elt = $("#level"+lvl+" option:selected");
 
 		if (typeof elt.val() !== 'undefined') {
 			var editString = elt.text();
             var editedCat = window.prompt("Edit Category Description:",editString);
 
             if (editedCat !== null && editedCat !== '') {
-                $.post("api/i/categories/edit", { cid: cid[0], catDesc: encodeURIComponent(editedCat) }, null, 'json')
+                $.post("api/i/categories/edit", { cid: cid, catDesc: encodeURIComponent(editedCat) }, null, 'json')
                     .done(function( json ) {
                         alert(json.data);
                         CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
@@ -109,8 +131,7 @@ var CategoryManage = {
 
 	deleteCat: function() {
 		var myCatString = this.getCatString();
-		var cid = this.currentSelection[this.currentSelection.length-1].split(':');
-		cid = cid[0];
+		var cid = this.currentSelection[this.currentSelection.length-1];
 
 		if (!window.confirm('Delete '+ myCatString +'?\n\nWarning: All child categories will be moved up one level!')) {
 			return false;
@@ -127,8 +148,8 @@ var CategoryManage = {
 		var catString = '';
 
 		for (var i=0; i<this.currentSelection.length; i++) {
-			if ($("#level"+(i+1))) {
-				var elt = $("#level"+(i+1)+" option:selected");
+			if ($("#level"+(i))) {
+				var elt = $("#level"+(i)+" option:selected");
 
 				if (elt.text() != 'Select:') {
 					catString += elt.text() + ':';
@@ -138,8 +159,7 @@ var CategoryManage = {
 
 		if (catString.length > 0) {
 			return catString.substring(0, catString.length - 1);
-		}
-		else {
+		} else {
 			return false;
 		}
 	},

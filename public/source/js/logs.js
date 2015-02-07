@@ -29,7 +29,7 @@ var refreshFun =
 {
     runFirst: function() {
         refreshFun.refreshLog();
-        CategoryManage.grabNextLevel('0:0');
+        CategoryManage.grabFirstLevel();
         this.startrefresh();
     },
 
@@ -197,7 +197,7 @@ var addFun =
 				Cancel: function() {
 					$( this ).dialog( "close" );
 					CategoryManage.addEditLog = false;
-					CategoryManage.grabNextLevel('0:0');
+					CategoryManage.grabFirstLevel();
 				}
 			}
         });
@@ -216,7 +216,7 @@ var addFun =
         });
 
         CategoryManage.addEditLog = true;
-        CategoryManage.grabNextLevel('0:0');
+        CategoryManage.grabFirstLevel();
     },
 
     sendLog: function(isnew, id) {
@@ -244,13 +244,13 @@ var addFun =
 				.done(function( html ) {
 					refreshFun.refreshLog();
 					CategoryManage.addEditLog = false;
-					CategoryManage.grabNextLevel('0:0');
+					CategoryManage.grabFirstLevel();
 					showDialog(html.data);
 				});
         } else {
 			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
 			CategoryManage.addEditLog = true;
-			CategoryManage.grabNextLevel('0:0');
+			CategoryManage.grabFirstLevel();
 			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
         }
     }
@@ -267,7 +267,8 @@ var editFun =
         $("#catSpace").text('Loading categories...');
 
         CategoryManage.renderCategoriesFromString(linfo.cat, function(html) {
-            $("#catSpace").html(html);
+            $('#categorySelects').empty();
+            $('#catSpace').html(html);
             CategoryManage.addEditLog = true;
         });
 
@@ -290,7 +291,7 @@ var editFun =
 				Cancel: function() {
 					$( this ).dialog( "close" );
                     CategoryManage.addEditLog = false;
-                    CategoryManage.grabNextLevel('0:0');
+                    CategoryManage.grabFirstLevel();
 				}
 			}
         });

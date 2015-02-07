@@ -17,7 +17,7 @@ class RenderController extends BaseController
     }
 
     /**
-     * Renders select boxes from a string of category names. Used when editing a log.
+     * Returns JSON with list of categories at each level
      */
     public function editcat()
     {
@@ -32,18 +32,16 @@ class RenderController extends BaseController
     }
 
     /**
-     * Renders select boxes for an array of categories in the format '[category id]:[position]'
+     * Returns JSON with list of categories at each level
      */
-    public function categories()
+    public function categoriesJson()
     {
         $urlParams = new UrlParameters();
 
-        if ($urlParams->action == 'grabcats') {
-            $past = json_decode(stripslashes($urlParams->pastSelections));
-            $catRepo = $catRepo = Repos::makeRepo($this->app->config['db']['type'], 'Categories');
-            $displayCats = new Categories($catRepo);
-            echo $displayCats->renderChildren($past);
-        }
+        $past = json_decode(stripslashes($urlParams->pastSelection));
+        $catRepo = $catRepo = Repos::makeRepo($this->app->config['db']['type'], 'Categories');
+        $displayCats = new Categories($catRepo);
+        echo $displayCats->renderChildrenJson($past);
         return;
     }
 }

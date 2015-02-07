@@ -16,73 +16,64 @@ class Categories
     }
 
     /**
-     * Get the children of a parent category and generate a <select>
-     * element with the root node and all children
+     * Get the children of a parent category and return JSON of list at each level
      *
-     * @param array $past History of category nodes in parentid:level notation
+     * @param array $cids - Category IDs of selected starting with 0 at index 0 as root
      *
      * @return string - HTML of category select group
      */
-    public function renderChildren($past)
+    public function renderChildrenJson($cids)
     {
-        $cat = $this->repo->getAllCategories();
+        $cats = $this->repo->getAllCategories();
 
-        $response = '';
+        $response = [
+            'currentList' => $cids,
+            'levels' => []
+        ];
 
-        foreach ($past as $key => $value) {
-            $past[$key] = explode(':', $value);
-        }
-
-        $i = 0;
-        foreach ($past as $pastSel) {
-            $newSel = '<select name="level'.($pastSel[1]+1).'" id="level'.($pastSel[1]+1).'" onChange="CategoryManage.grabNextLevel(this);">';
-            $newSel .= '<option value="Select:">Select:</option>';
-            $option = '';
-
+        // Cycle through each level
+        foreach ($cids as $i => $cid) {
             $alphaList = array();
-            foreach ($cat as $isChild) {
-                if($isChild['pid'] == $pastSel[0]) {
+            // Find children
+            foreach ($cats as $isChild) {
+                if($isChild['pid'] == $cid) {
                     $child = array(
-                            'cid' =>  $isChild['cid'],
-                            'description' => $isChild['description']
+                        'cid' =>  $isChild['cid'],
+                        'description' => $isChild['description']
                     );
                     array_push($alphaList, $child);
                 }
             }
 
+            // Sort children alphabetically
             usort($alphaList, "self::cmp");
 
+            // Add children to array for the level
             foreach ($alphaList as $children) {
-                    $selected = (isset($past[$i+1][0]) && ($children['cid'] == $past[$i+1][0])) ? 'selected' : '';
-                    $option = '<option value="'.$children['cid'].':'.($pastSel[1]+1).'"'.$selected.'>'.$children['description'].'</option>';
-                    $newSel .= $option;
-            }
+                $selected = (isset($cids[$i+1]) && ($children['cid'] == $cids[$i+1])) ? true : false;
 
-            $newSel .= '</select>';
-
-            if (!empty($option)) {
-                // If there are sub categories, echo the selectbox
-                $response .= $newSel;
+                $response['levels'][$i][] = [
+                    'id' => $children['cid'],
+                    'desc' => $children['description'],
+                    'selected' => $selected
+                ];
             }
-            $i++;
         }
 
-        return $response;
+        return json_encode($response);
     }
 
     public function renderFromString($catstring)
     {
         $catstring = explode(':', $catstring);
-        $idArr = ['0:0'];
-        $parent = 0;
+        $idArr = [0];
+        $pid = 0;
 
         for ($i = 0; $i < count($catstring); $i++) {
-            $pid = $this->repo->getIdForCategoryWithParent($catstring[$i], $parent);
-            $parent = $pid;
-            array_push($idArr, $pid.':'.($i+1));
+            $pid = $this->repo->getIdForCategoryWithParent($catstring[$i], $pid);
+            array_push($idArr, $pid);
         }
-
-        return $this->renderChildren($idArr);
+        return $this->renderChildrenJson($idArr);
     }
 
     /**
@@ -90,7 +81,7 @@ class Categories
      */
     private function cmp($a, $b)
     {
-        return strcmp($a['description'], $b['description']);
+        return strcasecmp($a['description'], $b['description']);
     }
 
     /**

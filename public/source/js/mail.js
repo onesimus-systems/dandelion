@@ -24,16 +24,16 @@ var mail = {
                 }
             });
 
-            setTimeout(function(){ mail.areUnread(); }, 10000);
+            setTimeout(function(){ mail.areUnread(); }, 30000);
         },
-        
+
         showFolder: function() {
             var folderName = $("#folder").val();
             switch (folderName) {
                 case "inbox":
                     this.getAllMail();
                     break;
-                    
+
                 case "trash":
                     this.getTrashCan();
                     break;
@@ -44,7 +44,7 @@ var mail = {
             $.getJSON("api/i/mail/getAllMail",
                     function(data){ mail.showMailList(data.data); });
         },
-        
+
         getTrashCan: function() {
             $.getJSON("api/i/mail/getAllMail", {"trash": "true"},
                     function(data){ mail.showMailList(data.data); });
@@ -128,7 +128,7 @@ var mail = {
                     $("#toUsersId").val(data[0].fromUser);
                     $("#toUsers").val(data[0].realname);
                     $("#toUsers").prop("readonly", true);
-                    
+
                     mail.showWriteDialog();
                 });
             }
@@ -173,7 +173,7 @@ var mail = {
                 };
             });
         },
-        
+
         showWriteDialog: function() {
             $( "#writeMail" ).dialog({
                 height: 575,
@@ -237,17 +237,17 @@ var mail = {
                 return false;
             }
         },
-        
+
         deleteMail: function() {
             var selected = this.getSelectedMailIds();
 
             if (selected.length === 1 && confirm("Delete Selected Mail?")) {
                 var permenant = false;
-                
+
                 if ($("#folder").val() == "trash") {
                     permenant = true;
                 }
-                
+
                 $.post("api/i/mail/delete", {"mid": selected[0], "permenant": permenant},
                     function(data) {
                         data = JSON.parse(data);

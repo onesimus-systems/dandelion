@@ -29,6 +29,6 @@ $this->layout('layouts::main', ['requiredCssFiles' => []]);
 
 <?= $this->loadJS(['jquery','catManage']) ?>
 <script type="text/javascript">
-    CategoryManage.grabNextLevel('0:0');
+    CategoryManage.grabFirstLevel();
 </script>
 <!-- End Page Body -->
