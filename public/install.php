@@ -47,25 +47,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Database Connection Information:</h2>
         <table>
             <tr>
-                <td class="labels">Database Type:</td>
+                <td class="labels">*Database Type:</td>
                 <td class="field"><select name="db_type" onChange="showHide(this.value);"><option value="mysql">MySQL</option><!-- <option value="sqlite">SQLite</option>--></select></td>
             </tr>
         </table>
         <table id="mysql_only" style="display:inline;">
             <tr>
-                <td class="labels">Username:</td>
+                <td class="labels">*Username:</td>
                 <td class="field"><input type="text" name="db_user"></td>
             </tr>
             <tr>
-                <td class="labels">Password:</td>
+                <td class="labels">*Password:</td>
                 <td class="field"><input type="password" name="db_pass"></td>
             </tr>
             <tr>
-                <td class="labels">Host/IP Address:</td>
+                <td class="labels">*Host/IP Address:</td>
                 <td class="field"><input type="text" name="db_host"></td>
             </tr>
             <tr>
-                <td class="labels">Database Name:</td>
+                <td class="labels">*Database Name:</td>
                 <td class="field"><input type="text" name="db_name"></td>
             </tr>
             <tr>
@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <br><br><h2>Dandelion Settings:</h2>
         <table>
             <tr>
-                <td class="labels">Application Hostname:</td>
+                <td class="labels">*Application Hostname:</td>
                 <td class="field"><input type="text" name="hostname"></td>
             </tr>
             <tr>

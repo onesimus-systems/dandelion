@@ -1,9 +1,7 @@
 Dandelion v6.0.0
 ================
 
-Dandelion is a web-based journal design to make it dead simple to keep logs. Dandelion helps you remember what you did
-four months ago. Dandelion was developed out of the mindset of IT. However, it is versatily enough to be used in just
-about any situation.
+Dandelion is a web-based journal design to make it dead simple to keep logs. Dandelion helps you remember what you did four months ago. Dandelion was developed out of the mindset of IT. However, it is versatily enough to be used in just about any situation.
 
 Requirements
 ------------
@@ -19,20 +17,53 @@ Is it any good?
 
 [Yes](https://news.ycombinator.com/item?id=3067434)
 
-Install
--------
+Install - Auto
+--------------
 
 Installing Dandelion is an easy and simple task. Just follow these steps and you'll be up and running in no time.
 
+1. Grab a copy of Dandelion of Github.
+2. Run ```composer install --no-dev``` from the root Dandelion directory. If you don't have Composer installed please see the [Getting Started](https://getcomposer.org/doc/00-intro.md#locally) guide.
+3. Create a database in MySQL/MariaDB to house Dandelion.
+4. Setup your web server to serve the ```public``` directory of Dandelion.
+5. Browse to ```http://[dandelion server]/install.php```.
+6. Fill out the information, astericks mark required fields.
+7. Click Finish Install
+8. If it was successful, you'll be redirected to the login page of Dandelion. Login with:
+
+   ```
+   Username: admin
+   Password: admin
+   ```
+   
+    and change the password when prompted.
+9. Congratulations! You've now installed Dandelion. Go and make your first log.
+
+Sample Auto Install Commands (Ubuntu, Nginx)
+--------------------------------------------
+
+```bash
+$ mkdir -p /var/www
+$ cd /var/www
+$ git clone https://github.com/dragonrider23/dandelion
+$ cd dandelion
+$ composer install --no-dev
+$ cp app/install/Nginx-sample-config.conf /etc/nginx/sites-available/default
+$ service nginx restart
+```
+
+Now browse to ```http://[dandelion hostname]/install.php``` to finish the installation.
+
+Install - Manual
+----------------
+
+Sometimes we just want to do things ourselves. And that's fine! Here's the verbose way of installing Dandelion without using our install page.
+
 1. Grab a copy of Dandelion off GitHub. Either via a source download from the web UI or from the git command.
-2. Import the file ```base_MySQL_DB.sql``` under the app/install directory. Dandelion currently only supports MySQL/MariaDB.
-Supporting other databases is in the works.
-3. Copy ```config.sample.php``` under app/config to ```config.php``` under the same folder. Use your favorite text editor
-(ie. Vim) and edit the configuration to fit your environment. The comments in the fill explain what each setting is.
+2. Import the file ```base_MySQL_DB.sql``` under the app/install directory. Dandelion currently only supports MySQL/MariaDB. Supporting other databases is in the works.
+3. Copy ```config.sample.php``` under app/config to ```config.php``` under the same folder. Use your favorite text editor (ie. Vim) and edit the configuration to fit your environment. The comments in the file explain what each setting is.
 4. Run ```composer install --no-dev``` from the root Dandelion directory. If you don't have Composer installed please see the [Getting Started](https://getcomposer.org/doc/00-intro.md) guide.
-5. Setup your web server to use the public directory under Dandelion as its root. Under the app/install directory is a
-sample configuration for Nginx and Apache2. For apache, you will need to enable mod_rewrite and install the apache2 PHP5 module.
-For Nginx, you will need to install the php-fpm package.
+5. Setup your web server to use the public directory under Dandelion as its root. Under the app/install directory is a sample configuration for Nginx and Apache2. For apache, you will need to enable mod_rewrite and install the apache2 PHP5 module. For Nginx, you will need to install the php-fpm package.
 6. Browse to your Dandelion install in a web browser and login with:
 
    ```
