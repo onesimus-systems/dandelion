@@ -3,91 +3,78 @@
  * Actual install script, again we assume absolutely nothing
  */
 
-if (!$_SERVER["REQUEST_METHOD"] == "POST") {
-    header('Location: index.php');
-}
+$configDir = __DIR__.'/../config';
 
-session_start();
-$CONFIG = array(
-    'db_type' => $_POST['dbtype'],
-    'db_user' => $_POST['dbuname'],
-    'db_pass' => $_POST['dbpass'],
-    'db_host' => $_POST['dbhost'],
-    'db_name' => $_POST['dbname']
-);
+$config = [
+    'db' => [
+        'type' => $_POST['db_type'] ?: '',
+        'dbname' => $_POST['db_name'] ?: '',
+        'hostname' => $_POST['db_host'] ?: '',
+        'username' => $_POST['db_user'] ?: '',
+        'password' => $_POST['db_pass'] ?: '',
+        'tablePrefix' => $_POST['db_prefix'] ?: 'dan_',
+    ],
 
-$hostname = rtrim($_POST['danPath'], "/");
+    'hostname' => $_POST['hostname'] ? rtrim($_POST['hostname'], '/') : 'http://localhost',
+    'phpSessionName' => 'dan_session_1',
+    'gcLottery' => [2, 100],
+    'sessionTimeout' => 360,
+    'debugEnabled' => false,
+    'installed' => true,
+    'appTitle' => $_POST['apptitle'] ?: 'Dandelion Web Log',
+    'tagline' => $_POST['tagline'] ?: '',
+    'defaultTheme' => 'Halloween',
+    'cheestoEnabled' => true,
+    'publicApiEnabled' => false
+];
 
 try {
-    if (!is_writable('../config')) { // Is it possible to write the config file?
-        echo 'Dandelion does not have sufficient write permissions to create configuration.<br />Please make the ./config directory writeable to Dandelion and try again.';
+    if (!is_writable($configDir)) { // Is it possible to write the config file?
+        throw new Exception('Dandelion does not have sufficient write permissions to create configuration.<br />Please make the app/config directory writeable to Dandelion and try again.');
     }
 
-    switch($CONFIG['db_type']) {
+    switch ($config['db']['type']) {
         case 'mysql':
-            $db_connect = (!empty($CONFIG['db_host']) && !empty($CONFIG['db_name'])) ? 'mysql:host='.$CONFIG['db_host'].';dbname='.$CONFIG['db_name'] : '';
-            $db_user = $CONFIG['db_user'];
-            $db_pass = $CONFIG['db_pass'];
-            $sqliteFileName = '';
-            break;
-
-        case 'sqliteDISABLED':
-            $db_unique_filename = mt_rand(1, 100); // To prevent overwriting an old database, generate a random number as a unique identifier
-            if (!is_dir(dirname(dirname(__FILE__)).'/database')) {
-                mkdir(dirname(dirname(__FILE__)).'/database');
+            if ($config['db']['hostname'] && $config['db']['dbname']) {
+                $db_connect = "mysql:host={$config['db']['hostname']};dbname={$config['db']['dbname']}";
+            } else {
+                throw new Exception('No hostname or database name specified');
             }
-            $sqliteFileName = 'database'.$db_unique_filename.'.sq3';
-            $db_connect = 'sqlite:'.dirname(dirname(__FILE__)).'/database/'.$sqliteFileName;
-            $db_user = null;
-            $db_pass = null;
             break;
 
         default:
-            throw new Exception('Error: No database driver loaded');
+            throw new Exception('No database driver loaded.');
             break;
     }
 
-    if ($db_connect === '') {
-        $_SESSION['error_text'] = 'Please enter MySQL database connection information:';
-        header('Location: index.php');
-    }
-
-    $conn = new PDO($db_connect, $db_user, $db_pass);
-
+    $conn = new PDO($db_connect, $config['db']['username'], $config['db']['password']);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    include $CONFIG['db_type'].'Install.php'; // Load the database specific creation commands
+    $sql = file_get_contents(__DIR__."/base_{$config['db']['type']}_db.sql");
+    // Replace the default dan_ prefix with the user defined prefix
+    $sql = str_replace('dan_', $config['db']['tablePrefix'], $sql);
+
+    $exec = $conn->prepare($sql);
+    $success = $exec->execute();
+
+    if (!$success) {
+        throw new Exception('Problem installing initial data into database.');
+    }
 
     $conn = null;
 
-    /** Write config file */
-    $newFile = "<?php
-\$DBCONFIG = array (
-'db_type' => '{$CONFIG['db_type']}',
-'sqlite_fn' => '',
-'db_name' => '{$CONFIG['db_name']}',
-'db_host' => '{$CONFIG['db_host']}',
-'db_user' => '{$CONFIG['db_user']}',
-'db_pass' => '{$CONFIG['db_pass']}',
-'db_prefix' => 'dan_'
-);
-
-define('HOSTNAME', '{$hostname}');
-define('PHP_SESSION_NAME', 'dan_session_1');
-define('DEBUG_ENABLED', true);
-define('INSTALLED', true);
-define('THEME_DIR', 'assets/themes');
-define('PUBLIC_DIR', BASE_DIR.DIRECTORY_SEPARATOR.'public');";
-
-    file_put_contents('../config/config.php', $newFile);
+    // Save as new configuration file
+    file_put_contents($configDir.'/config.php', '<?php return ' . var_export($config, true) . ';');
 
     // Change config directory to user:readonly for security
-    chmod('../config/config.php', 0400);
-    chmod('../config', 0500);
+    chmod($configDir.'/config.php', 0400);
+    chmod($configDir, 0500);
 
-    header('Location: ../logout');
+    session_destroy();
+    $_SESSION['error'] = 'Dandelion has been successfully setup! Please go to: <a href="'.$config['hostname'].'">'.$config['hostname'].'</a>';
+    header("Location: {$config['hostname']}");
 } catch (PDOException $e) {
-    echo 'Error setting up database: '.$e;
+    $_SESSION['error'] = 'Error setting up database. Please verify database name, address, username, and password. ';
 } catch (Exception $e) {
-    echo 'Error';
+    $_SESSION['error'] = 'Error: '.$e->getMessage();
 }
