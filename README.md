@@ -1,7 +1,7 @@
 Dandelion v6.0.0
 ================
 
-Dandelion is a web-based journal design to make it dead simple to keep logs. Dandelion helps you remember what you did four months ago. Dandelion was developed out of the mindset of IT. However, it is versatily enough to be used in just about any situation.
+Dandelion is a web-based journal design to make it dead simple to keep logs. Dandelion helps you remember what you did four months ago. Dandelion was developed out of the mindset of IT. However, it is versatile enough to be used in just about any situation.
 
 Requirements
 ------------
@@ -10,7 +10,8 @@ Requirements
     - mod_rewrite must be enabled for Apache
 * PHP >= 5.4.0
 * MySQL/Maria DB
-* Dandelion has only been tested on Ubuntu with Apache and Nginx. Other combos will probably work but YMMV.
+
+Dandelion has only been tested on Ubuntu with Apache and Nginx. Other combos may probably work but YMMV.
 
 Is it any good?
 ---------------
@@ -96,8 +97,7 @@ $ service nginx restart
 Chrome Extension for Cheesto
 ----------------------------
 
-I've also taken the time to develop a small Chrome extension that can be utilized
-with any Dandelion v5+ installation. The extension can be install from the [Chrome Store](https://chrome.google.com/webstore/detail/cheesto-user-status/npggfenlbmepblpeenickeifmiionmli) and is free and released under the GPL v3 like Dandelion. The source is available on [GitHub](https://github.com/dragonrider23/Cheesto-Chrome).
+I've also taken the time to develop a small Chrome extension that can be utilized with any Dandelion v5+ installation. The extension can be install from the [Chrome Store](https://chrome.google.com/webstore/detail/cheesto-user-status/npggfenlbmepblpeenickeifmiionmli) and is free and released under the GPL v3 like Dandelion. The source is available on [GitHub](https://github.com/dragonrider23/Cheesto-Chrome).
 
 Release Notes
 -------------
@@ -144,6 +144,19 @@ v5.0.0
     * Namespacing
     * Modularization
 
+Contributing
+------------
+
+Thank you for considering contributing to Dandelion, please make sure to follow these guidelines:
+
+* Use PSR-2 code style
+* For items that are not specified in PSR-2, please conform to the surrounding code
+* If you are wanting to contribute a significantly sized feature, please let me know before you start
+
+I'm using [this style of git branching](http://nvie.com/posts/a-successful-git-branching-model/). So for development, you should clone the Dandelion repository here on Github, and checkout a new feature branch off from the develop branch (rather than master) such as issue-48-feature. Commit your changes to that branch and then send pull-requests back into the develop branch.
+
+The exception to this rule is urgent hotfixes to master. To perform a hotfix, make a new branch off of master. When you're ready to submit the changes, make a pull request to both the master and develop branches.
+
 Versioning
 ----------
 
@@ -160,3 +173,19 @@ And constructed with the following guidelines:
 - Bug fixes and misc changes **bumps only the patch**
 
 For more information on SemVer, please visit <http://semver.org/>.
+
+License - GPL v3
+----------------
+
+Dandelion - Web-based entry log journal.
+Copyright (C) 2014  Lee Keitel, Onesimus Systems
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
