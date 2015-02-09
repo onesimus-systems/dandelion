@@ -67,7 +67,7 @@ class Routes
                 'use' => $properties['rprefix'].$route[2],
                 'filter' => $properties['filter']
             ];
-            $route[1] = $baseProperties['prefix'].$route[1];
+            $route[1] = $properties['prefix'].$route[1];
             self::$route[0]($route[1], $options);
         }
     }
