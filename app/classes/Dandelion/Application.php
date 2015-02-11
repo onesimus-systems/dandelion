@@ -16,19 +16,16 @@ class Application
 {
     const VERSION = '6.0.0';
 
-    public $url;
     public $paths = [];
     public $config;
 
     /**
-     *  @param $url string - The request URI
+     *
      */
     public function __construct()
     {
         // Check for and apply updates
         //Updater::checkForUpdate();
-
-        $this->url = $_SERVER['REQUEST_URI'];
     }
 
     /**
@@ -52,7 +49,7 @@ class Application
 
         include $this->paths['app'] . '/routes.php';
         include $this->paths['app'] . '/filters.php';
-        list($class, $method, $params) = Routes::route($this->url);
+        list($class, $method, $params) = Routes::route();
 
         if (!$class || !class_exists($class)) {
             Logging::errorPage("Controller '{$class}' wasn't found.");

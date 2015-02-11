@@ -11,7 +11,7 @@ function attemptLogin() {
         return false;
     }
 
-    $.post("/login", { user: user, pass: pass, remember: remember }, null, 'json')
+    $.post("login", { user: user, pass: pass, remember: remember }, null, 'json')
         .done(function( response ) {
             if (response != '1' && response != '2') {
                 alert(response);
@@ -19,9 +19,9 @@ function attemptLogin() {
             }
 
             if (response == '2') {
-                location.assign('/reset');
+                location.assign('reset');
             } else if (response == '1') {
-                location.assign('/');
+                location.assign('.');
             }
         });
 }

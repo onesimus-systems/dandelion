@@ -10,7 +10,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['cheesto','jqueryui']]);
     if ($showCheesto):
     ?>
     <div id="presence">
-        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="/assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
+        <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
 
     	<div id="mainPresence"></div>
     </div>

@@ -21,10 +21,10 @@ $this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui","mail"]]);
 
 <div id="mailbox">
   <div id="controls">
-      <a href="#" onClick="mail.writeMailDialog();"><img src="/assets/images/newmail.png" width="22" heigh="22" alt="New Mail" title="New Mail"></a>
-      <a href="#" onClick="mail.getAllMail();"><img src="/assets/images/refresh.png" width="22" heigh="22" alt="Refresh" title="Refresh"></a>
-      <a href="#" onClick="mail.replyToMail();"><img src="/assets/images/reply.png" width="22" heigh="22" alt="Reply" title="Reply"></a>
-      <a href="#" onClick="mail.deleteMail();"><img src="/assets/images/maildelete.png" width="22" heigh="22" alt="Delete" title="Delete"></a>
+      <a href="#" onClick="mail.writeMailDialog();"><img src="assets/images/newmail.png" width="22" heigh="22" alt="New Mail" title="New Mail"></a>
+      <a href="#" onClick="mail.getAllMail();"><img src="assets/images/refresh.png" width="22" heigh="22" alt="Refresh" title="Refresh"></a>
+      <a href="#" onClick="mail.replyToMail();"><img src="assets/images/reply.png" width="22" heigh="22" alt="Reply" title="Reply"></a>
+      <a href="#" onClick="mail.deleteMail();"><img src="assets/images/maildelete.png" width="22" heigh="22" alt="Delete" title="Delete"></a>
 
       Folder: <select id="folder" onChange="mail.showFolder();">
           <option value="inbox">Inbox</option>

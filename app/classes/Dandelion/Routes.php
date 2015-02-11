@@ -5,6 +5,7 @@
 namespace Dandelion;
 
 use \Dandelion\Auth\GateKeeper;
+use \Dandelion\Utils\Configuration;
 
 class Routes
 {
@@ -105,17 +106,27 @@ class Routes
     /**
      *  Initiate the routing for the given URL
      */
-    public static function route($url)
+    public static function route()
     {
-        $cleanUrl = self::cleanUrl($url);
+        $config = Configuration::getConfig();
+
+        // Build the full path in order to filter out the defined hostname
+        $scheme = !isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http' : 'https';
+        $serverName = $_SERVER['SERVER_NAME'];
+        $requestUri = self::cleanUrl($_SERVER['REQUEST_URI']);
+        $fullUrl = $scheme . '://' . $serverName . $requestUri;
+
+        // Get the requested internal URI
+        $path = str_replace(rtrim($config['hostname'], '/'), '', $fullUrl);
+
         $httpmethod = $_SERVER['REQUEST_METHOD'];
 
-        $exact = self::exactMatch($cleanUrl, $httpmethod);
+        $exact = self::exactMatch($path, $httpmethod);
         if ($exact) {
             return $exact;
         }
 
-        $best = self::launchRoute($cleanUrl, $httpmethod);
+        $best = self::launchRoute($path, $httpmethod);
         if ($best) {
             return $best;
         }
