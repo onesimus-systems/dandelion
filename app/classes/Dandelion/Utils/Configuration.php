@@ -13,7 +13,8 @@ class Configuration
     private function __clone() {}
     private function __wakeup() {}
 
-    public static function load($paths) {
+    public static function load($paths)
+    {
         if (!file_exists($paths['app'] . '/config/config.php')) {
             return false;
         }
@@ -21,6 +22,14 @@ class Configuration
         if (!self::$loaded) {
             self::$config = include $paths['app'] . '/config/config.php';
             self::$loaded = true;
+        }
+        return self::$config;
+    }
+
+    public static function getConfig()
+    {
+        if (!self::$loaded) {
+            return null;
         }
         return self::$config;
     }

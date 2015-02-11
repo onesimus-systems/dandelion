@@ -215,6 +215,7 @@ class view
 
     public static function redirect($page)
     {
+        $config = Configuration::getConfig();
         $allPages = array(
             'home' => '',
             'homepage' => '',
@@ -239,7 +240,7 @@ class view
             return;
         }
 
-        $newPath = '/' . $allPages[$page];
+        $newPath = rtrim($config['hostname'], '/') . '/' . $allPages[$page];
         header("Location: $newPath");
         return;
     }
