@@ -7,22 +7,22 @@ var CategoryManage = {
 	currentSelection: [0],
 	addEditLog: false,
 
-	grabNextLevel: function(pid, container) {
-		container = (this.addEditLog) ? '#catSpace' : '#categorySelects';
+	grabNextLevel: function(pid) {
+		var container = (CategoryManage.addEditLog) ? '#catSpace' : '#categorySelects';
 
 		var pidSplit = pid.split(':');
 		var level = +pidSplit[0] + 1;
 		var cid = +pidSplit[1];
 
-		if (this.currentSelection[level]) {
+		if (CategoryManage.currentSelection[level]) {
 			// This is to ensure that if a category is changed in the upper levels,
 			// no residual children will remain
-			this.currentSelection.splice(level);
+			CategoryManage.currentSelection.splice(level);
 		}
 
-		this.currentSelection[level] = cid;
+		CategoryManage.currentSelection[level] = cid;
 
-		$.get('render/categoriesJson', {pastSelection: JSON.stringify(this.currentSelection)}, null, 'json')
+		$.get('render/categoriesJson', {pastSelection: JSON.stringify(CategoryManage.currentSelection)}, null, 'json')
 			.done(function(json) {
 				if (typeof $(container)[0] !== 'undefined') {
 					$(container).empty();
@@ -33,7 +33,10 @@ var CategoryManage = {
 	},
 
 	grabFirstLevel: function() {
-		this.grabNextLevel('-1:0');
+		// Reset current selection
+		CategoryManage.currentSelection = [0];
+		// Get root categories
+		CategoryManage.grabNextLevel('-1:0');
 	},
 
 	renderSelectsFromJson: function(json) {
