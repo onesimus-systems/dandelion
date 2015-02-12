@@ -1,9 +1,8 @@
-/* global $, window, alert */
+/* global $, window, alert, console */
 
 "use strict"; // jshint ignore:line
 
 var CategoryManage = {
-	currentID: -1,
 	currentSelection: [0],
 	addEditLog: false,
 
@@ -27,7 +26,6 @@ var CategoryManage = {
 				if (typeof $(container)[0] !== 'undefined') {
 					$(container).empty();
 					$(container).html(CategoryManage.renderSelectsFromJson(json));
-					CategoryManage.currentID = pid;
 				}
 			});
 	},
@@ -41,7 +39,7 @@ var CategoryManage = {
 
 	renderSelectsFromJson: function(json) {
 		CategoryManage.currentSelection = json.currentList;
-		var div = $('<span/>');
+		var span = $('<span/>');
 
 		var onChangeFunc = function() {
 			CategoryManage.grabNextLevel(this.value);
@@ -64,10 +62,10 @@ var CategoryManage = {
 				option.attr('selected', cat.selected);
 				select.append(option);
 			}
-			div.append(select);
+			span.append(select);
 		}
 
-		return div;
+		return span;
 	},
 
 	renderCategoriesFromString: function(str, callback) {
@@ -149,21 +147,31 @@ var CategoryManage = {
 
 	getCatString: function() {
 		var catString = '';
-
+		/*
+		 * Note to future self: The jQuery statement below is messier than I would like. Here's the reason.
+		 * For some reason, jQuery doesn't recognize that the first select in a category has a selected option.
+		 * thus it will only return the strings from levels 1 up instead of 0 up. I also tried to select using only
+		 * the value. However jQuery then thought that there were two options with the same value despite there only
+		 * being one option with a value at all. Thus, the below query to select the id of levelX getting the first
+		 * option with the value of level : ID.
+		 *
+		 * Cause: Somehow, there's a difference between the way categories are handled when adding a new log vs editing
+		 * and existing log. However they use the same rendering function and use the same jQuery function to display
+		 * the select elements. What's weirder, is according to the dev console, the option's selected attribute is
+		 * applied appropiatly, and yet jQuery doesn't see it. I don't know. The below statement works. So that's nice.
+		 */
 		for (var i=0; i<this.currentSelection.length; i++) {
 			if ($("#level"+(i))) {
-				var elt = $("#level"+(i)+" option:selected");
-
-				if (elt.text() != 'Select:') {
-					catString += elt.text() + ':';
-				}
+				var optVal = i + ':' + this.currentSelection[i+1];
+				var elt = $('#level'+(i)+' option[value=\''+optVal+'\']:first');
+				catString += elt.text() + ':';
 			}
 		}
 
 		if (catString.length > 0) {
 			return catString.substring(0, catString.length - 1);
 		} else {
-			return false;
+			return '';
 		}
 	},
 };

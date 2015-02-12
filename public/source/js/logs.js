@@ -267,9 +267,9 @@ var editFun =
         $("#catSpace").text('Loading categories...');
 
         CategoryManage.renderCategoriesFromString(linfo.cat, function(html) {
+            CategoryManage.addEditLog = true;
             $('#categorySelects').empty();
             $('#catSpace').html(html);
-            CategoryManage.addEditLog = true;
         });
 
         $( "#add_edit" ).dialog({
