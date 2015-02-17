@@ -2,10 +2,10 @@
 /**
  * Dashboard page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['cheesto','jqueryui']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard','cheesto','jqueryui']]);
 ?>
 <!-- Begin Page Body -->
-<div id="divMain">
+<div id="dashboard">
     <?php
     if ($showCheesto):
     ?>

@@ -199,6 +199,13 @@ class view
                     $cssList .= '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/mail.css">';
                     continue 2;
                     break;
+
+                // CSS for Dashboard
+                case "dashboard":
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="build/css/dashboard.min.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/dashboard.css">';
+                    continue 2;
+                    break;
             }
 
             // Load manual filenames if given

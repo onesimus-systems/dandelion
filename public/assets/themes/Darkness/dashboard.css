@@ -1,0 +1,30 @@
+/* Darkness theme for Dandelion Web Log
+ *
+ * @author Lee Keitel
+ * @date May 2014
+ *
+ * @license GNU GPL v3 (see full license in root/LICENSE.md)
+**/
+#dashboard #refreshed_core {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+.pagination {
+  background-color: #858585;
+}
+#dashboard .pagination input {
+  background-color: #858585;
+  color: #000;
+}
+#dashboard .pagination input:hover {
+  background-color: #111111;
+  color: #ffffff;
+}
+#dashboard .logentry input {
+  background-color: #858585;
+  color: #000;
+}
+#dashboard .logentry input:hover {
+  background-color: #111111;
+  color: #ffffff;
+}

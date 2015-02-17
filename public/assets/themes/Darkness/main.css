@@ -31,8 +31,7 @@ a:active {
   color: #00BFFF;
   text-decoration: none;
 }
-#login,
-#divMain #refreshed_core {
+#login {
   background-color: #1f1f1f;
   color: #ffffff;
 }
@@ -46,26 +45,13 @@ a:active {
   background-color: #111111;
   color: #ffffff;
 }
-.pagination {
-  background-color: #858585;
-}
-#divMain .pagination input {
-  background-color: #858585;
-  color: #000;
-}
-#divMain .pagination input:hover {
-  background-color: #111111;
-  color: #ffffff;
-}
 .dButton,
-#login_button,
-#divMain .logentry input {
+#login_button {
   background-color: #858585;
   color: #000;
 }
 .dButton:hover,
-#login_button:hover,
-#divMain .logentry input:hover {
+#login_button:hover {
   background-color: #111111;
   color: #ffffff;
 }
