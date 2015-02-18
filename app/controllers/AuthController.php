@@ -37,7 +37,7 @@ class AuthController extends BaseController
 
         $templates = new Engine($this->app->paths['app'].'/templates');
         $templates->registerFunction('getCssSheets', function() {
-            return View::loadCssSheets();
+            return View::loadCssSheets('login');
         });
         $templates->registerFunction('loadJS', function() {
             return View::loadJS('jquery','login');
