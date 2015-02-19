@@ -9,17 +9,17 @@
     </head>
     <body>
         <header>
-            <h1 class="t_cen"><?= $this->e($appTitle) ?> </h1>
-            <h4 class="t_cen"><?= $this->e($tagline) ?> </h4>
+            <h1><?= $this->e($appTitle) ?> </h1>
+            <h4><?= $this->e($tagline) ?> </h4>
 
-            <nav class="t_cen" id="nav_link">
+            <nav>
                 <a href=".">Dashboard</a><a href="settings">Settings</a><a href="admin">Administration</a><a href="tutorial">Tutorial</a><a href="logout">Logout</a>
             </nav>
         </header>
 
         <?= $this->section('content') ?>
 
-        <footer id="credits" class="t_cen">
+        <footer>
             &copy; 2014 Onesimus Computer Systems | <a href="about" class="aboutlink">Dandelion v<?= $this->e($appVersion) ?></a>
         </footer>
     </body>

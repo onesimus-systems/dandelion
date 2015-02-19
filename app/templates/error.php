@@ -6,11 +6,11 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
-	<h2 class="t_cen">An Error Has Occured</h2>
+	<h2>An Error Has Occured</h2>
 
     <h3>Whoops! There appears to have been an error!</h3>
 
-    <p>
+    <p class="noindent">
         <?= $this->e($message) ?>
     </p>
 </div>

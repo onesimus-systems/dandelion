@@ -18,8 +18,20 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard','cheesto','jq
     endif;
 
     if ($showLog): ?>
+        <div id="add_edit" title="">
+            <form id="add_edit_form">
+                Title: <input type="text" id="logTitle" name="logTitle" value="" size="60"><br><br>
+                <textarea id="logEntry" name="logEntry" cols="80" rows="10"></textarea><br>
+                <div class="categories">
+                    Category: <span id="catSpace"></span>
+                </div>
+            </form>
+            <div id="messages"></div>
+        </div>
+        <div id="dialogBox"></div>
+
         <div id="controlPanel">
-            <form id="category" method="post">
+            <form>
                 <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);"><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';">
                 <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();"><br>
 
@@ -27,28 +39,11 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard','cheesto','jq
                 <div id="categorySelects"></div>
 
                 <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');">
-                <?php
-                if ($showCreateButton) {
-                    echo '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry">';
-                }
-                ?>
+                <?= $createButton ?>
             </form>
-
-            <div id="add_edit" title="">
-                <form id="add_edit_form">
-                    Title: <input type="text" id="logTitle" name="logTitle" value="" size="60"><br><br>
-                    <textarea id="logEntry" name="logEntry" cols="80" rows="10"></textarea><br>
-                    <div class="categories">
-                        Category: <span id="catSpace"></span>
-                    </div>
-                </form>
-                <div id="messages">Hello</div>
-            </div>
-
-            <div id="dialog"></div>
         </div>
 
-        <div id="refreshed"></div>
+        <div id="logs"></div>
     <?php endif; ?>
 </div>
 

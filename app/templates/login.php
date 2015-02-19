@@ -14,7 +14,7 @@
                 Username:<br><input type="text" value="" id="username" onKeyPress="check(event);" autocomplete="off"><br><br>
                 Password:<br><input type="password" value="" id="password" onKeyPress="check(event);"><br>
                 <br><label id="remember"><input type="checkbox" value="remember" id="rememberMe">Remember my username</label><br>
-                <div style="margin-top: 0em; margin-left: 2em;">
+                <div class="login_button_div">
                     <button type="button" id="login_button" onClick="attemptLogin();">Login</button>
                 </div>
             </form>

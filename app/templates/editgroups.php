@@ -5,7 +5,7 @@
 $this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "permissions"]]);
 ?>
 <!-- Begin Page Body -->
-<div id="dialog" title="Alert"></div>
+<div id="dialogBox" title="Alert"></div>
 <div id="add-form" title="Create Rights Group" style="display: none;">
     <form>
         <fieldset style="border: none;">
@@ -20,8 +20,6 @@ $this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "permissions"
 <div id="groups"></div>
 
 <form>
-    <div name="categorySelects" id="categorySelects"></div><br>
-
     <?php
     if ($userRights->authorized('addgroup')) {
         echo '<input type="button" class="dButton" onClick="permissions.createNew();" value="Add Group">';

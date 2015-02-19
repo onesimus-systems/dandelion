@@ -6,12 +6,12 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
-	<h2 class="t_cen">Tutorial</h2>
+	<h2>Tutorial</h2>
 
-    <p class="le">Welcome to the Dandelion Web Log. This brief tutorial will walk you through how to do all the basic tasks in Dandelion.</p>
+    <p class="noindent">Welcome to the Dandelion Web Log. This brief tutorial will walk you through how to do all the basic tasks in Dandelion.</p>
 
     <h3>Reset Password</h3>
-    <p class="le">To reset your password:
+    <p>To reset your password:
         <ol>
             <li>Click "Settings"</li>
             <li>Click "Reset Password"</li>
@@ -21,7 +21,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
         </ol></p>
 
     <h3>Add a log entry</h3>
-    <p class="le">To add a log entry:
+    <p>To add a log entry:
         <ol>
             <li>On the homepage, click "Add New Log entry" at the top of the page</li>
             <li>Fill in the title, entry, and category</li>
@@ -29,7 +29,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
         </ol></p>
 
     <h3>Edit a log entry</h3>
-    <p class="le">To edit a log entry:
+    <p>To edit a log entry:
         <ol>
             <li>Click "Edit" next to the entry you want to edit (you can only edit entries you entered)</li>
             <li>Edit the text as needed</li>
@@ -37,7 +37,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
         </ol></p>
 
     <h3>Search Logs</h3>
-    <p class="le">To search for a log entry:
+    <p>To search for a log entry:
         <ol>
             <li>Type in keywords in the Keyword box and/or click the Date field to select a date</li>
             <li>Click "Search Log"</li>
@@ -45,7 +45,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
         </ol></p>
 
     <h3>Filter Logs by Category</h3>
-    <p class="le">To filter the log:
+    <p>To filter the log:
         <ol>
             <li>Select the desired category by choosing from the drop down boxes next to Filter</li>
             <li>Click "Filter"</li>
@@ -53,20 +53,20 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
         </ol></p>
 
     <h3>Using &#264;eesto</h3>
-    <p class="le">To set your current status:
+    <p>To set your current status:
         <ol>
             <li>Select your status from the dropdown under Presence</li>
             <li>Click "Set"</li>
             <li>Enter any extra data as needed</li>
         </ol></p>
 
-    <p class="le">To see someone's status:
+    <p>To see someone's status:
         <ol>
             <li>Hover your mouse over the status icon to view its meaning</li>
             <li>If the person is set as Away or Out For the Day, their return time will also be shown</li>
         </ol></p>
 
-    <p class="le">To see someone's message:
+    <p>To see someone's message:
         <ol>
             <li>Hover your mouse over the person's name to view any message they left</li>
         </ol></p>

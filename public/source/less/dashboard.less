@@ -6,11 +6,6 @@
     margin: 0 auto;
     text-align: center;
 
-	header {
-		margin-bottom: 1.5em;
-		min-width: 35em;
-	}
-
 	#add_edit {
 		margin-top: 1em;
 		display: none;
@@ -18,6 +13,10 @@
 
 	#controlPanel {
 		min-width: 35em;
+
+		#searchterm, #datesearch {
+			margin-right: 1em;
+		}
 	}
 
 	.pageEntryButtons {
@@ -56,13 +55,17 @@
 		word-wrap: break-word;
 	}
 
-	#refreshed_core {
+	#logs_core {
 		padding: .5em 1.5em;
 		color: black;
 	}
 
-	#refreshed {
+	#logs {
 		min-width: 35em;
 		margin-top: 1em;
 	}
+}
+
+.categories {
+  text-align: left;
 }

@@ -66,7 +66,7 @@ var refreshFun =
                 .fail(function( jqXHR ) {
                     if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
                     {
-                        $("#refreshed").html("An error has occured. Please try logging out and back in.");
+                        $("#logs").html("An error has occured. Please try logging out and back in.");
                     }
                 });
         }
@@ -75,7 +75,7 @@ var refreshFun =
 
 var view = {
     makeLogView:function(data) {
-        var logView = $('#refreshed');
+        var logView = $('#logs');
         logView.empty();
         if (filt) { logView.append(view.showFilterMessage()); }
         logView.append(view.pageControls(data.metadata));
@@ -114,7 +114,7 @@ var view = {
     },
 
     displayLogs: function(data) {
-        var div = $('<div/>').attr('id', 'refreshed_core');
+        var div = $('<div/>').attr('id', 'logs_core');
 
         for (var key in data) {
             if (!data.hasOwnProperty(key) || key == 'metadata')
@@ -165,7 +165,7 @@ var view = {
 
             .fail(function( jqXHR ) {
                 if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404) {
-                    $("#refreshed").html("An error has occured. Please try logging out and back in.");
+                    $("#logs").html("An error has occured. Please try logging out and back in.");
                 }
             });
     }
@@ -322,7 +322,7 @@ var editFun =
 }; //editFun
 
 function showDialog( html ) {
-    var dialog = $( "#dialog" );
+    var dialog = $( "#dialogBox" );
 	dialog.html( "<p>"+html+"</p>" );
 	dialog.dialog({
 		modal: true,
@@ -385,7 +385,7 @@ var searchFun =
                 .fail(function( jqXHR ) {
                     if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
                     {
-                        $("#refreshed").html("An error has occured. Please try logging out and back in.");
+                        $("#logs").html("An error has occured. Please try logging out and back in.");
                     }
                 });
         }

@@ -41,8 +41,7 @@ userManager.uiforms = {
         roleRow.append(roleCell);
         table.append(roleRow);
 
-        $('#dialog').append(table);
-        this.showDialogBox('add', {title: 'Add new user', buttonText1: 'Add'});
+        this.showDialogBox('add', table, {title: 'Add new user', buttonText1: 'Add'});
         return;
     },
 
@@ -140,24 +139,23 @@ userManager.uiforms = {
         table.append('<tr><td>Date Created:</td><td><input type="text" value="'+userinfo.datecreated+'" readonly></td></tr>');
         table.append('<tr><td>Prompt:</td><td><input type="text" id="edit_prompt" value="'+userinfo.firsttime+'"></td></tr>');
 
-        $('#dialog').append(table);
-        this.showDialogBox('edit', {title: 'Edit user', buttonText1: 'Save', height: 330});
+        this.showDialogBox('edit', table, {title: 'Edit user', buttonText1: 'Save', height: 330});
         return;
     },
 
     delete: function() { // Delete user form
-        $('#dialog').append('Are you sure you want to delete user X?');
-        this.showDialogBox('delete', {buttonText1: 'Yes', buttonText2: 'No'});
+        var message = 'Are you sure you want to delete user?';
+        this.showDialogBox('delete', message, {buttonText1: 'Yes', buttonText2: 'No'});
         return;
     },
 
     reset: function() { // Reset user password form
         // jshint multistr:true
-        $('#dialog').append('<table>\
-                                <tr><td>New Password:</td><td><input type="password" id="pass1"></td></tr>\
-                                <tr><td>Repeat Password:</td><td><input type="password" id="pass2"></td></tr>\
-                            </table>');
-        this.showDialogBox('reset', {buttonText1: 'Reset'});
+        var resetForm = '<table>\
+                            <tr><td>New Password:</td><td><input type="password" id="pass1"></td></tr>\
+                            <tr><td>Repeat Password:</td><td><input type="password" id="pass2"></td></tr>\
+                        </table>';
+        this.showDialogBox('reset', resetForm, {buttonText1: 'Reset'});
         return;
     },
 
@@ -198,25 +196,23 @@ userManager.uiforms = {
         table.append('<tr><td>Message:</td><td><textarea cols="30" rows="5" id="status_message">'+status.data.message+'</textarea></td></tr>');
         table.append('<tr><td>Return:</td><td><input type="text" id="status_return" value="'+status.data.returntime+'"></td></tr>');
 
-        $('#dialog').append(table);
-
         $('#status_return').datetimepicker({
                         timeFormat: "HH:mm",
                         controlType: 'select',
                         stepMinute: 10
                     });
 
-        this.showDialogBox('cxeesto', {title: 'Set User Status', height: 380, width: 515, buttonText1: 'Save'});
+        this.showDialogBox('cxeesto', table, {title: 'Set User Status', height: 380, width: 515, buttonText1: 'Save'});
         return;
     },
 
     revokeKey: function() { // Confirm key revoke form
-        $('#dialog').append('Are you sure you want to revoke the API key for user X?');
-        this.showDialogBox('revokeKey', {buttonText1: 'Yes', buttonText2: 'No'});
+        var message = 'Are you sure you want to revoke the API key for user?';
+        this.showDialogBox('revokeKey', message, {buttonText1: 'Yes', buttonText2: 'No'});
         return;
     },
 
-    showDialogBox: function(func, customize) {
+    showDialogBox: function(func, html, customize) {
         // Check customization settings
         if (typeof customize == 'undefined') {
             customize = {};
@@ -251,8 +247,12 @@ userManager.uiforms = {
         };
 
         // Build and show dialog
-        $("#dialog").attr('title', customize.title);
-        $("#dialog").dialog({
+        var dialogBox = $('#dialogBox');
+
+        dialogBox.empty();
+        dialogBox.append(html);
+        dialogBox.attr('title', customize.title);
+        dialogBox.dialog({
             height: customize.height,
             width: customize.width,
             modal: true,

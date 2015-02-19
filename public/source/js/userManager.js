@@ -117,7 +117,6 @@ var userManager = {
         this.currentuid = uid;
 
         // Show dialog for action
-        $('#dialog').empty();
 		userManager.uiforms[action]();
 		return;
 	},
@@ -130,7 +129,6 @@ var userManager = {
 
         $.post('api/i/users/create', {username: username, password: password, fullname: fullname, role: group}, null, 'json')
             .done(function(data) {
-                console.log(data);
                 userManager.loadUserList();
             });
         return;
@@ -145,7 +143,6 @@ var userManager = {
 
         $.post('api/i/users/save', {uid: uid, fullname: fullname, role: group, prompt: prompt, theme: theme}, null, 'json')
             .done(function(data) {
-                console.log(data);
                 userManager.loadUserList();
             });
         return;
@@ -189,7 +186,6 @@ var userManager = {
 
         $.post('api/i/cheesto/update', {uid: uid, status: status, returntime: returntime, message: message}, null, 'json')
             .done(function(data) {
-                console.log(data);
                 userManager.loadUserList();
             });
         return;

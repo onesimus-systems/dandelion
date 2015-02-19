@@ -7,7 +7,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui']]);
 <!-- Begin Page Body -->
 <h2>User Settings</h2>
 
-<div id="passwordResetDialogSettings">
+<div id="dialogBox">
     <h2>Reset Password for <?= $_SESSION['userInfo']['realname']; ?>:</h2>
     <form>
         <table>

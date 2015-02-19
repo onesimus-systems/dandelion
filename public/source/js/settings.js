@@ -22,7 +22,7 @@ var api = {
     },
 
     showResetPasswordForm: function() {
-        $("#passwordResetDialogSettings").dialog({
+        $("#dialogBox").dialog({
             height: 300,
             width: 450,
             modal: true,

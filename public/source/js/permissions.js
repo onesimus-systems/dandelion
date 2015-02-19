@@ -156,8 +156,8 @@ var permissions = {
         $.post('api/i/rights/create',
 			{ name: $("#name").val(), rights: JSON.stringify(permissions.allPermissions) }, null, 'json')
           .done(function(response) {
-              $( "#dialog" ).html( response.data );
-              $( "#dialog" ).dialog({
+              $( "#dialogBox" ).html( response.data );
+              $( "#dialogBox" ).dialog({
                   modal: true,
                   width: 400,
                   show: {
@@ -184,8 +184,8 @@ var permissions = {
     deleteGroup: function() {
         var delGroup = $("#groupList option:selected").text();
 
-        $( "#dialog" ).html( "<p>Do you really want to delete the group '"+delGroup+"'?</p>" );
-        $( "#dialog" ).dialog({
+        $( "#dialogBox" ).html( "<p>Do you really want to delete the group '"+delGroup+"'?</p>" );
+        $( "#dialogBox" ).dialog({
           resizable: false,
           modal: true,
           buttons: {
@@ -197,8 +197,8 @@ var permissions = {
                 $.post('api/i/rights/delete', { groupid: group }, null, 'json')
                   .done(function( json ) {
 
-                      $( "#dialog" ).html( "<p>"+json.data+"</p>" );
-                      $( "#dialog" ).dialog({
+                      $( "#dialogBox" ).html( "<p>"+json.data+"</p>" );
+                      $( "#dialogBox" ).dialog({
                           modal: true,
                           width: 400,
                           show: {

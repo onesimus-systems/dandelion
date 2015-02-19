@@ -24,7 +24,7 @@ class DashboardController extends BaseController
         $template->addData([
             'showCheesto' => $showCheesto,
             'showLog' => $showLog,
-            'showCreateButton' => $showCreateButton
+            'createButton' => $showCreateButton ? '| <input type="button" class="dButton" onClick="addFun.showaddinputs();" value="Add New Log Entry">' : ''
         ]);
 
         $template->render('dashboard');

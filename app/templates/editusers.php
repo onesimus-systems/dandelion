@@ -7,7 +7,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "datetimepick
 <!-- Begin Page Body -->
 
 <div id="editusers">
-    <div id="dialog"></div>
+    <div id="dialogBox"></div>
 
     <form id="userManageForm">
         <button type="button" onClick="userManager.performAction();">Go</button>
