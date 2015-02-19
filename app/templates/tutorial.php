@@ -2,7 +2,7 @@
 /**
  * Tutorial page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['tutorial']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
