@@ -181,10 +181,10 @@ class view
 
     public static function findThemeStyleSheet($name, $paths, $theme)
     {
-        if (is_file($paths['themes'] . '/' . $theme . '/' . $name . '.min.css')) {
-            return '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/' . $name . '.min.css">';
-        } elseif (is_file($paths['themes'] . '/' . $theme . '/' . $name . '.css')) {
-            return '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/' . $name . '.css">';
+        if (is_file($paths['themes'] . '/' . $theme . '/css/' . $name . '.min.css')) {
+            return '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/css/' . $name . '.min.css">';
+        } elseif (is_file($paths['themes'] . '/' . $theme . '/css/' . $name . '.css')) {
+            return '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/css/' . $name . '.css">';
         }
     }
 

@@ -18,15 +18,15 @@ var themeBasePath = 'public/assets/themes/';
 var themePaths = {
     darkness: {
         less: themeBasePath + 'Darkness/less/*.less',
-        build: themeBasePath + 'Darkness'
+        build: themeBasePath + 'Darkness/css'
     },
     halloween: {
         less: themeBasePath + 'Halloween/less/*.less',
-        build: themeBasePath + 'Halloween'
+        build: themeBasePath + 'Halloween/css'
     },
     sky: {
         less: themeBasePath + 'Sky/less/*.less',
-        build: themeBasePath + 'Sky'
+        build: themeBasePath + 'Sky/css'
     },
 };
 
@@ -92,4 +92,4 @@ gulp.task('watch', function() {
     gulp.watch(paths.styles, ['changedStyles']);
 });
 
-gulp.task('default', ['scripts', 'less']);
+gulp.task('default', ['scripts', 'less', 'themes']);

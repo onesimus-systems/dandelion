@@ -8,3 +8,6 @@ vendor/
 node_modules/
 .idea/
 public/build/
+public/assets/themes/Darkness/css
+public/assets/themes/Halloween/css
+public/assets/themes/Sky/css
