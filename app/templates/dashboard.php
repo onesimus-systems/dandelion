@@ -47,7 +47,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard','cheesto','jq
     <?php endif; ?>
 </div>
 
-<?= $this->loadJS(['jquery','jqueryui','common','tinymce','cheesto','catManage','logs','mail']) ?>
+<?= $this->loadJS(['jquery','jqueryui','common','tinymce','cheesto','catManage','dashboard','mail']) ?>
 <script type="text/javascript">
     refreshFun.runFirst();
     presence.checkstat(0);
