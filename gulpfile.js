@@ -1,26 +1,66 @@
 var gulp = require('gulp');
 var less = require('gulp-less');
-//var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var changed = require('gulp-changed');
 var minifycss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var jshint = require('gulp-jshint');
+var argv = require('yargs').argv;
 
 var paths = {
     scripts: 'public/source/js/*.js',
     styles: 'public/source/less/*.less'
 };
 
-gulp.task('less', function() {
-   gulp.src(paths.styles)
+var themeBasePath = 'public/assets/themes/';
+
+var themePaths = {
+    darkness: {
+        less: themeBasePath + 'Darkness/less/*.less',
+        build: themeBasePath + 'Darkness/css'
+    },
+    halloween: {
+        less: themeBasePath + 'Halloween/less/*.less',
+        build: themeBasePath + 'Halloween/css'
+    },
+    sky: {
+        less: themeBasePath + 'Sky/less/*.less',
+        build: themeBasePath + 'Sky/css'
+    },
+};
+
+function minifyLess(src, dest) {
+    gulp.src(src)
        .pipe(sourcemaps.init())
        .pipe(less())
        .pipe(minifycss())
        .pipe(rename({extname: ".min.css"}))
        .pipe(sourcemaps.write('maps'))
-       .pipe(gulp.dest('public/build/css'));
+       .pipe(gulp.dest(dest));
+}
+
+function minifyTheme(theme) {
+    minifyLess(themePaths[theme].less, themePaths[theme].build)
+}
+
+gulp.task('less', function() {
+    minifyLess(paths.styles, 'public/build/css');
+});
+
+gulp.task('themes', function() {
+    // Compile single theme
+    if (argv.t) {
+        minifyTheme(argv.t);
+        return;
+    }
+
+    // Compile all the themes
+    for (var theme in themePaths) {
+        if (themePaths.hasOwnProperty(theme)) {
+            minifyTheme(theme);
+        }
+    }
 });
 
 gulp.task('scripts', function() {
@@ -37,7 +77,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('changedStyles', function() {
-   return gulp.src(paths.styles)
+    gulp.src(paths.styles)
        .pipe(changed('public/build/css'))
        .pipe(sourcemaps.init())
        .pipe(less())
@@ -52,4 +92,4 @@ gulp.task('watch', function() {
     gulp.watch(paths.styles, ['changedStyles']);
 });
 
-gulp.task('default', ['scripts', 'less']);
+gulp.task('default', ['scripts', 'less', 'themes']);

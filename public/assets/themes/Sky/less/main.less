@@ -1,4 +1,4 @@
-/* Sky theme for Dandelion Web Log
+/* Darkness theme for Dandelion Web Log
  *
  * @author Lee Keitel
  * @date May 2014
@@ -9,40 +9,38 @@
 
 body {
 	background-color: @bodyBG;
-	color: black;
+	color: white;
 }
 
-#login, #divMain #refreshed_core {
+a:visited, a:hover, a:link, a:active {
+	text-decoration: none;
+}
+
+#login {
 	background-color: @mainBody;
 	color: @mainText;
 }
 
-#nav_link {
+nav {
 	a:visited, a:link, a:active {
 		.buttonRegular;
 	}
-	
+
 	a:hover {
 		.buttonHover;
 	}
 }
 
-.pagination {
-	background-color: @button;
-	
-	input {
-		.buttonRegular;
-	}
-	
-	input:hover {
+.dButton, #login_button {
+	.buttonRegular;
+
+	&:hover {
 		.buttonHover;
 	}
 }
 
-.dButton, #login_button, .logentry input {
-	.buttonRegular;
-	
-	&:hover {
-		.buttonHover;
+footer {
+	.aboutlink:visited, .aboutlink:hover, .aboutlink:link, .aboutlink:active {
+		color: white;
 	}
 }

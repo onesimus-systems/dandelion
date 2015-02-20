@@ -2,7 +2,7 @@
 /**
  * Reset user password on first login page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => []]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui']]);
 ?>
 <!-- Begin Page Body -->
 <p>This is your first time logging into Dandelion. Please reset your password:</p>
@@ -22,5 +22,5 @@ $this->layout('layouts::main', ['requiredCssFiles' => []]);
     </form>
 </div>
 
-<?= $this->loadJS(['jquery','reset']) ?>
+<?= $this->loadJS(['jquery','jqueryui','common','reset']) ?>
 <!-- End Page Body -->

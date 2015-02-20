@@ -4,6 +4,8 @@
  */
 namespace Dandelion\Utils;
 
+use Dandelion\Application;
+
 class view
 {
     public static function loadJS()
@@ -142,75 +144,48 @@ class view
         $optionalSheets = func_get_args();
         $theme = self::getTheme();
         $cssList = '';
-        $main = true;
+        $paths = Application::getPaths();
 
-        // Base/main CSS
-        if (count($optionalSheets) > 0) {
-            if ($optionalSheets[count($optionalSheets)-1] === false) {
-                $main = false;
-            }
-        }
-
-        if ($main) {
-            $cssList .= '<link rel="stylesheet" type="text/css" href="build/css/main.min.css">';
-            $cssList .= '<link rel="stylesheet" type="text/css" href="'.THEME_DIR.'/'.$theme.'/main.css">';
+        if (count($optionalSheets) == 0 || $optionalSheets[count($optionalSheets)-1] !== false) {
+            $cssList .= self::findStyleSheet('main', $paths);
+            $cssList .= self::findThemeStyleSheet('main', $paths, $theme);
         }
 
         // Other stylesheets
         foreach ($optionalSheets as $sheet) {
-            // Load keyworded stylesheets
-            switch (strtolower($sheet)) {
-                // CSS for Cheesto presence system
-                case "cheesto":
-                    // no break
-                case 'presence':
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="build/css/presence.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/cheesto.css">';
-                    continue 2;
-                    break;
+            $normalized = strtolower($sheet);
+            $normalized = str_replace('.min.css', '', $normalized);
+            $normalized = str_replace('.css', '', $normalized);
 
-                // CSS for Cheesto presence system (windowed)
-                case "cheestowin":
-                    // no break
-                case "presencewin":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="build/css/presenceWin.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/presenceWin.css">';
-                    continue 2;
-                    break;
-
-                // CSS for jQueryUI
-                case "jquery":
-                    // no break
-                case "jqueryui":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="assets/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
-                    continue 2;
-                    break;
-
-                // CSS for Tutorial
-                case "tutorial":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="build/css/tutorial.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/tutorial.css">';
-                    continue 2;
-                    break;
-
-                // CSS for MailBox
-                case "mail":
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="build/css/mail.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/mail.css">';
-                    continue 2;
-                    break;
+            // Special case for jQueryUI styles
+            if ($normalized == 'jqueryui') {
+                $cssList .= '<link rel="stylesheet" type="text/css" href="assets/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+                continue;
             }
 
-            // Load manual filenames if given
-            if (substr($sheet, -8) != '.min.css') {
-                $sheet .= '.min.css';
-            }
-            if (is_file('build/css/' . $sheet)) {
-                $cssList .= '<link rel="stylesheet" type="text/css" href="build/css/' . $sheet . '">';
-            }
+            $cssList .= self::findStyleSheet($normalized, $paths);
+            $cssList .= self::findThemeStyleSheet($normalized, $paths, $theme);
         }
 
         return $cssList;
+    }
+
+    public static function findStyleSheet($name, $paths)
+    {
+        if (is_file($paths['public'] . '/build/css/' . $name . '.min.css')) {
+            return '<link rel="stylesheet" type="text/css" href="build/css/' . $name . '.min.css">';
+        } elseif (is_file($paths['public'] . '/build/css/' . $name . '.css')) {
+            return '<link rel="stylesheet" type="text/css" href="build/css/' . $name . '.css">';
+        }
+    }
+
+    public static function findThemeStyleSheet($name, $paths, $theme)
+    {
+        if (is_file($paths['themes'] . '/' . $theme . '/css/' . $name . '.min.css')) {
+            return '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/css/' . $name . '.min.css">';
+        } elseif (is_file($paths['themes'] . '/' . $theme . '/css/' . $name . '.css')) {
+            return '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/css/' . $name . '.css">';
+        }
     }
 
     public static function redirect($page)

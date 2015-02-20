@@ -1,14 +1,14 @@
-/* global $, window, alert, console */
+/* global $, window, console */
 
 "use strict"; // jshint ignore:line
 
 var CategoryManage = {
-	currentSelection: [0],
+	currentSelection: [],
 	addEditLog: false,
 
 	grabNextLevel: function(pid) {
 		var container = (CategoryManage.addEditLog) ? '#catSpace' : '#categorySelects';
-
+		console.log(pid);
 		var pidSplit = pid.split(':');
 		var level = +pidSplit[0] + 1;
 		var cid = +pidSplit[1];
@@ -32,7 +32,7 @@ var CategoryManage = {
 
 	grabFirstLevel: function() {
 		// Reset current selection
-		CategoryManage.currentSelection = [0];
+		CategoryManage.currentSelection = [];
 		// Get root categories
 		CategoryManage.grabNextLevel('-1:0');
 	},
@@ -89,7 +89,7 @@ var CategoryManage = {
 			var newCatDesc = window.prompt(message+catString);
 
 			if (newCatDesc === '') {
-				alert('Please enter a category description');
+				$.alert('Please enter a category description', 'Categories');
 			} else if (newCatDesc === null) {
 				return false;
 			} else {
@@ -105,8 +105,8 @@ var CategoryManage = {
 
 		$.post("api/i/categories/add", { parentID: parent, catDesc: newCatDesc }, null, 'json')
             .done(function( json ) {
-                alert(json.data);
-				CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
+                $.alert(json.data, 'Categories');
+                CategoryManage.getCatsAfterAction();
             });
 	},
 
@@ -123,8 +123,8 @@ var CategoryManage = {
             if (editedCat !== null && editedCat !== '') {
                 $.post("api/i/categories/edit", { cid: cid, catDesc: encodeURIComponent(editedCat) }, null, 'json')
                     .done(function( json ) {
-                        alert(json.data);
-                        CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
+                        $.alert(json.data, 'Categories');
+                        CategoryManage.getCatsAfterAction();
                     });
             }
 		}
@@ -134,15 +134,23 @@ var CategoryManage = {
 		var myCatString = this.getCatString();
 		var cid = this.currentSelection[this.currentSelection.length-1];
 
-		if (!window.confirm('Delete '+ myCatString +'?\n\nWarning: All child categories will be moved up one level!')) {
+		if (!window.confirm('Delete "'+ myCatString +'"?\n\nChildren categories will be reassigned one level up')) {
 			return false;
 		}
 
         $.post("api/i/categories/delete", { cid: cid }, null ,'json')
             .done(function( json ) {
-                alert(json.data);
-                CategoryManage.grabNextLevel(CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
+                $.alert(json.data, 'Categories');
+                CategoryManage.getCatsAfterAction();
             });
+	},
+
+	getCatsAfterAction: function() {
+        if (CategoryManage.currentSelection.length <= 2) {
+        	CategoryManage.grabFirstLevel();
+        } else {
+			CategoryManage.grabNextLevel((CategoryManage.currentSelection.length-3)+':'+CategoryManage.currentSelection[CategoryManage.currentSelection.length-2]);
+		}
 	},
 
 	getCatString: function() {
@@ -169,7 +177,7 @@ var CategoryManage = {
 		}
 
 		if (catString.length > 0) {
-			return catString.substring(0, catString.length - 1);
+			return catString.substring(0, catString.length - 2);
 		} else {
 			return '';
 		}

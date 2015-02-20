@@ -19,6 +19,8 @@ class Application
     public $paths = [];
     public $config;
 
+    private static $instance;
+
     /**
      *
      */
@@ -26,6 +28,9 @@ class Application
     {
         // Check for and apply updates
         //Updater::checkForUpdate();
+        if (is_null($instance)) {
+            self::$instance = $this;
+        }
     }
 
     /**
@@ -82,5 +87,10 @@ class Application
     {
         $this->paths = array_merge($this->paths, $paths);
         return;
+    }
+
+    public static function getPaths()
+    {
+        return self::$instance->paths;
     }
 }

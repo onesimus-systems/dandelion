@@ -2,7 +2,7 @@
 /**
  * Mailbox page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui","mail"]]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui','mail']]);
 ?>
 <!-- Begin Page Body -->
 <div id="mailDialog" title="View Mail"></div>
@@ -37,5 +37,5 @@ $this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui","mail"]]);
   <div id="mailList"></div>
 </div>
 
-<?= $this->loadJS(["jquery", "jqueryui", "mail", "tinymce"]) ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'common', 'mail', 'tinymce']) ?>
 <!-- End Page Body -->

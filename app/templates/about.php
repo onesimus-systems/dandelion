@@ -2,33 +2,33 @@
 /**
  * Dandelion About page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['tutorial']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
-	<h2 class="t_cen">About</h2>
+	<h2>About</h2>
 
-	<p class="le" style="text-indent:0;">
+	<p class="noindent">
 		Version: <?= $this->e($appVersion) ?>
 	</p>
 
     <h3>What is Dandelion:</h3>
-    <p class="le">
+    <p>
     	Dandelion is designed to be a manual logging platform that can be used in a wide variety of environments. It was inspired and conceived out of an IT environment with the need to log changes to infrastructure. Dandelion provides a clean, easy to use interface for creating log entries so you remember what you did last Tuesday.
     </p>
 
     <h3>Creator:</h3>
-    <p class="le">
+    <p>
     	Lee Keitel, Onesimus Computer Systems &lt;keitellf@gmail.com&gt;
     </p>
 
     <h3>Source:</h3>
-    <p class="le">
+    <p>
         The source code for Dandelion is availabe on <a href="https://github.com/dragonrider23/dandelion" target="_blank">GitHub</a>.
     </p>
 
 	<h3>Copyright:</h3>
-    <p class="le" style="text-indent:0;">
+    <p class="noindent">
     	Dandelion - Web-based entry log journal.<br>
 		Copyright &copy; 2014  Lee Keitel, Onesimus Computer Systems<br><br>
 

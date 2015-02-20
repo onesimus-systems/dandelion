@@ -140,9 +140,9 @@ class Users
         $pass = password_hash($pass, PASSWORD_BCRYPT);
 
         if ($this->repo->resetPassword($uid, $pass)) {
-            return true;
+            return 'Password changed successfully';
         } else {
-            return 'Error changing password.';
+            return 'Error changing password';
         }
     }
 

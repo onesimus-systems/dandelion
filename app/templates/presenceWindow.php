@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="IE=9">
-        <?= $this->getCssSheets(['cheesto','cheestoWin']) ?>
+        <?= $this->getCssSheets(['cheesto','cheestowin']) ?>
 		<title>Dandelion Presence</title>
 	</head>
 

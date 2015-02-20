@@ -2,7 +2,7 @@
 /**
  * Category management page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => []]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui']]);
 ?>
 <!-- Begin Page Body -->
 <h3>Category Management</h3>
@@ -27,7 +27,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => []]);
 	?>
 </form>
 
-<?= $this->loadJS(['jquery','catManage']) ?>
+<?= $this->loadJS(['jquery','jqueryui','common','catManage']) ?>
 <script type="text/javascript">
     CategoryManage.grabFirstLevel();
 </script>

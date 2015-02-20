@@ -1,4 +1,4 @@
-/* global $, document, setTimeout, alert, confirm */
+/* global $, document, setTimeout, confirm */
 /* jshint multistr: true */
 
 "use strict"; // jshint ignore:line
@@ -227,13 +227,13 @@ var mail = {
                 $.post("api/i/mail/send", {mail: mailPiece},
                         function(data) {
                     data = JSON.parse(data);
-                    alert(data.data);
+                    $.alert(data.data, 'Mail');
                 });
 
                 return true;
             }
             else {
-                alert("Error: You need a subject, body, and recipient.");
+                $.alert('Error: You need a subject, body, and recipient.', 'Mail');
                 return false;
             }
         },
@@ -252,7 +252,7 @@ var mail = {
                     function(data) {
                         data = JSON.parse(data);
                         mail.showFolder();
-                        alert(data.data);
+                        $.alert(data.data, 'Mail');
                 });
             }
         },
