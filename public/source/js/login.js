@@ -1,4 +1,4 @@
-/* global $, document, alert, location, unescape */
+/* global $, document, location, unescape */
 
 "use strict"; // jshint ignore:line
 
@@ -14,7 +14,7 @@ function attemptLogin() {
     $.post("login", { user: user, pass: pass, remember: remember }, null, 'json')
         .done(function( response ) {
             if (response != '1' && response != '2') {
-                alert(response);
+                $.alert(response, 'Dandelion Login');
                 return;
             }
 

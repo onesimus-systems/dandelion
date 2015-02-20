@@ -46,5 +46,5 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui']]);
 <?php
 endif;
 
-echo $this->loadJS(['jquery','jqueryui','settings']); ?>
+echo $this->loadJS(['jquery','jqueryui','common','settings']); ?>
 <!-- End Page Body -->

@@ -1,4 +1,4 @@
-/* global $, alert, console */
+/* global $ */
 
 "use strict"; // jshint ignore:line
 
@@ -21,7 +21,7 @@ var userManager = {
             	if (json.errorcode === 0) {
 					userManager.rights = json.data;
             	} else {
-            		alert(json.status);
+            		$.alert(json.status, 'User Management');
             	}
             	return;
             });
@@ -152,8 +152,10 @@ var userManager = {
         $.post('api/i/users/delete', {uid: userManager.currentuid}, null, 'json')
             .done(function(data) {
                 if (data.errorcode === 0 && data.data === true) {
-                    console.log('Success');
+                    $.alert('User deleted', 'User Management');
                     userManager.loadUserList();
+                } else {
+                    $.alert('Error deleting user', 'User Management');
                 }
             });
         return;
@@ -168,12 +170,10 @@ var userManager = {
         if (pass1 === pass2 && pass1 !== "") {
             $.post('api/i/users/resetPassword', {pw: pass1, uid: userManager.currentuid}, null, "json")
                 .done(function(data) {
-                    if (data.errorcode === 0 && data.data === true) {
-                        console.log('Success');
-                    }
+                    $.alert(data.data, 'User Management');
                 });
         } else {
-            alert('Passwords do not match or are empty');
+            $.alert('Passwords do not match or are empty', 'User Management');
         }
         return;
 	},
@@ -195,7 +195,9 @@ var userManager = {
 		$.post('api/i/keymanager/revokekey', {uid: userManager.currentuid}, null, 'json')
             .done(function(data) {
                 if (data.errorcode === 0 && data.data.key === true) {
-                    console.log('Success');
+                    $.alert('API key revoked', 'User Management');
+                } else {
+                    $.alert('Error revoking API key', 'User Management');
                 }
             });
         return;

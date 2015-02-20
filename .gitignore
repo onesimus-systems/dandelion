@@ -7,3 +7,4 @@ backups/
 vendor/
 node_modules/
 .idea/
+public/build/

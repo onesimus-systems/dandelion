@@ -1,4 +1,4 @@
-/* global $, alert, userManager */
+/* global $, userManager */
 
 "use strict"; // jshint ignore:line
 
@@ -14,7 +14,7 @@ userManager.uiforms = {
                 if (json.errorcode === 0) {
                     rightsList = json.data;
                 } else {
-                    alert(json.status);
+                    $.alert(json.status, 'User Management');
                 }
                 return;
             });
@@ -60,7 +60,7 @@ userManager.uiforms = {
                 if (json.errorcode === 0) {
                     userinfo = json.data;
                 } else {
-                    alert(json.status);
+                    $.alert(json.status, 'User Management');
                 }
                 return;
             });
@@ -74,7 +74,7 @@ userManager.uiforms = {
                 if (json.errorcode === 0) {
                     rightsList = json.data;
                 } else {
-                    alert(json.status);
+                    $.alert(json.status, 'User Management');
                 }
                 return;
             });
@@ -88,7 +88,7 @@ userManager.uiforms = {
                 if (json.errorcode === 0) {
                     themeList = json.data;
                 } else {
-                    alert(json.status);
+                    $.alert(json.status, 'User Management');
                 }
                 return;
             });
@@ -172,7 +172,7 @@ userManager.uiforms = {
                 if (json.errorcode === 0) {
                     status = json;
                 } else {
-                    alert(json.status);
+                    $.alert(json.status, 'User Management');
                 }
                 return;
             });

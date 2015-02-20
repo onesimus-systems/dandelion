@@ -2,7 +2,7 @@
 /**
  * Rights group management page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "permissions"]]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui', 'permissions']]);
 ?>
 <!-- Begin Page Body -->
 <div id="dialogBox" title="Alert"></div>
@@ -92,7 +92,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ["jqueryui", "permissions"
     </form>
 </div>
 
-<?= $this->loadJS(['permissions','jquery','jqueryui']) ?>
+<?= $this->loadJS(['jquery','jqueryui','common','permissions']) ?>
 <script type="text/javascript">
     permissions.getList();
 </script>

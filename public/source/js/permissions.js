@@ -1,4 +1,4 @@
-/* global $, alert */
+/* global $ */
 
 "use strict"; // jshint ignore:line
 
@@ -79,7 +79,7 @@ var permissions = {
 
 			$.post('api/i/rights/save', { rights: newPermissionsJson, groupid: group }, null, 'json')
 				.done(function( json ) {
-					alert(json.data);
+					$.alert(json.data, 'User Groups');
 					$("#permissionsForm")[0].reset();
 					$("#permissionsBlock").css( "display", "none" );
 					$("#groupList").val( 0 );

@@ -1,4 +1,4 @@
-/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, alert, tinymce */
+/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, tinymce */
 
 "use strict"; // jshint ignore:line
 
@@ -390,7 +390,7 @@ var searchFun =
                 });
         }
         else {
-            alert("Please select a valid filter.");
+            $.alert('Please select a valid filter', 'Error');
         }
     }
 };

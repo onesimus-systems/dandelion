@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="assets/favicon.ico">
-        <?= $this->getCssSheets() ?>
+        <?= $this->getCssSheets() // Special function defined in auth controller ?>
         <title>Dandelion Web Log - Login</title>
     </head>
     <body>
@@ -20,5 +20,5 @@
             </form>
         </div>
     </body>
-    <?= $this->loadJS() ?>
+    <?= $this->loadJS() // Special function defined in auth controller ?>
 </html>

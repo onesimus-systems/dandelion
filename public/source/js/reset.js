@@ -1,4 +1,4 @@
-/* global $, location, alert*/
+/* global $, location */
 
 "use strict"; // jshint ignore:line
 
@@ -12,11 +12,10 @@ var api = {
         if (pw1 === pw2 && pw1 !== "") {
             $.post('api/i/users/resetPassword', {'pw': pw1}, null, "json")
                 .done(function(msg) {
-                    alert('Password changed');
-                    location.assign('/logout');
+                    $.alert(msg.data, 'Password Reset', function() {location.assign('./logout');});
                 });
         } else {
-            alert('Passwords do not match or are empty');
+            $.alert('Passwords do not match or are empty', 'Password Reset');
         }
     }
 };
