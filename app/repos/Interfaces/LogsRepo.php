@@ -11,6 +11,5 @@ interface LogsRepo
     public function getLogList($offset, $limit);
     public function addLog($uid, $title, $body, $cat, $date, $time);
     public function updateLog($lid, $title, $body, $cat);
-    public function getLogsByFilter($filter);
-    public function getLogsBySearch($kw, $date);
+    public function getLogsBySearch($query, $limit, $offset);
 }

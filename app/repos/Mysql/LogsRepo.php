@@ -8,6 +8,61 @@ use \Dandelion\Repos\Interfaces;
 
 class LogsRepo extends BaseMySqlRepo implements Interfaces\LogsRepo
 {
+    private $searchWhereClauses = [
+        'title' => [
+            'clause' => 'title %LIKE% :title',
+            'like' => 'both'
+        ],
+        'body' => [
+            'clause' => 'entry %LIKE% :body',
+            'like' => 'both'
+        ],
+        'log' => [
+            'clause' => 'title %LIKE% :log %OR% entry %LIKE% :log',
+            'like' => 'both'
+        ],
+        'category' => [
+            'clause' => 'cat %LIKE% :category',
+            'like' => 'right'
+        ],
+        'date' => [
+            'clause' => 'datec = :date',
+            'like' => 'none'
+        ],
+        'daterange' => [
+            'clause' => 'datec >= :date1 && datec <= :date2',
+            'like' => 'none'
+        ],
+        'datenotrange' => [
+            'clause' => 'datec < :date1 OR datec > :date2',
+            'like' => 'none'
+        ],
+        'notdate' => [
+            'clause' => 'datec != :notdate',
+            'like' => 'none'
+        ],
+        'afterondate' => [
+            'clause' => 'datec >= :afterondate',
+            'like' => 'none'
+        ],
+        'afterdate' => [
+            'clause' => 'datec > :afterdate',
+            'like' => 'none'
+        ],
+        'beforeondate' => [
+            'clause' => 'datec <= :beforeondate',
+            'like' => 'none'
+        ],
+        'beforedate' => [
+            'clause' => 'datec < :beforedate',
+            'like' => 'none'
+        ],
+        'author' => [
+            'clause' => '',
+            'like' => 'none'
+        ]
+    ];
+
     public function numOfLogs()
     {
         return (int) $this->database->numOfRows('log');
@@ -29,10 +84,10 @@ class LogsRepo extends BaseMySqlRepo implements Interfaces\LogsRepo
                             LEFT JOIN '.$this->prefix.'users AS u
                                 ON l.usercreated = u.userid')
                        ->orderBy('l.logid', 'DESC')
-                       ->limit(':pO,:lim');
+                       ->limit(':offset,:lim');
 
         $params = [
-            'pO' => ((int) $offset),
+            'offset' => ((int) $offset),
             'lim' => ((int) $limit)
         ];
 
@@ -74,42 +129,62 @@ class LogsRepo extends BaseMySqlRepo implements Interfaces\LogsRepo
         return $this->database->go($params);
     }
 
-    public function getLogsByFilter($filter)
+    public function getLogsBySearch($query, $limit, $offset)
     {
-        $this->database->select('l.*, u.realname')
-                       ->from($this->prefix.'log AS l
-                            LEFT JOIN '.$this->prefix.'users AS u
-                                ON l.usercreated = u.userid')
-                       ->where('cat LIKE :filter')
-                       ->orderBy('logid', 'DESC');
-
-        return $this->database->get(['filter' => "%{$filter}%"]);
-    }
-
-    public function getLogsBySearch($kw, $date)
-    {
+        $params = [];
+        $whereClause = '';
         $this->database->select('l.*, u.realname')
                        ->from($this->prefix.'log AS l LEFT JOIN '.$this->prefix.'users AS u ON l.usercreated = u.userid')
-                       ->orderBy('logid', 'DESC');
+                       ->orderBy('logid', 'DESC')
+                       ->limit(':offset,:lim');
 
-        if ($date == '') {
-            $this->database->where('title LIKE :keyw or entry LIKE :keyw');
-            $params = array(
-                'keyw' => "%{$kw}%"
-            );
-        } elseif ($kw == '') {
-            $this->database->where('datec=:dates');
-            $params = array(
-                'dates' => $date
-            );
-        } else {
-            $this->database->where('(title LIKE :keyw or entry LIKE :keyw) and datec=:dates');
-            $params = array(
-                'keyw' => "%{$kw}%",
-                'dates' => $date
-            );
+        foreach ($query as $command => $struct) {
+            $clause = $this->searchWhereClauses[$command]['clause'];
+
+            // Special case for date ranges, they use arrays, not a single string
+            if ($command == 'daterange' || $command == 'datenotrange') {
+                $params['date1'] = $struct['text'][0];
+                $params['date2'] = $struct['text'][1];
+                $whereClause .= $clause . ' && ';
+                continue;
+            }
+
+            // Generate where clause, replacing logic variables with their appropiate values
+            if ($struct['negate'] === true) {
+                // Replace logic variables with their inverses
+                $clause = str_replace('%LIKE%', 'NOT LIKE', $clause);
+                $clause = str_replace('%OR%', 'AND', $clause);
+                $clause = str_replace('%AND%', 'OR', $clause);
+            } else {
+                $clause = str_replace('%LIKE%', 'LIKE', $clause);
+                $clause = str_replace('%OR%', 'OR', $clause);
+                $clause = str_replace('%AND%', 'AND', $clause);
+            }
+
+            $whereClause .= $clause . ' && ';
+
+            // Format paramter given the type used for LIKE
+            switch ($this->searchWhereClauses[$command]['like']) {
+                case 'both':
+                    $params[$command] = "%{$struct['text']}%";
+                    break;
+                case 'left':
+                    $params[$command] = "%{$struct['text']}";
+                    break;
+                case 'right':
+                    $params[$command] = "{$struct['text']}%";
+                    break;
+                default: // 'none' or invalid like type
+                    $params[$command] = $struct['text'];
+                    break;
+            }
         }
 
-        return $this->database->get($params);
+        $whereClause = trim($whereClause, '& ');
+        $this->database->where($whereClause);
+        $params['offset'] = (int) $offset;
+        $params['lim'] = (int) $limit;
+
+        return $this->database->get($params, \PDO::PARAM_INT);
     }
 }

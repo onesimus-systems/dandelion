@@ -12,22 +12,24 @@
     color: @mainText;
 }
 
-.pagination {
-    background-color: @button;
+#dashboard {
+    .pagination {
+        background-color: @button;
 
-    input {
+        input {
+            .buttonRegular;
+
+            &:hover {
+                .buttonHover;
+            }
+        }
+    }
+
+    .logentry input {
         .buttonRegular;
-    }
 
-    &:hover {
-        .buttonHover;
-    }
-}
-
-.logentry input {
-    .buttonRegular;
-
-    &:hover {
-        .buttonHover;
+        &:hover {
+            .buttonHover;
+        }
     }
 }

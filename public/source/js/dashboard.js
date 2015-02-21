@@ -2,21 +2,22 @@
 
 "use strict"; // jshint ignore:line
 
-var filt = false,
+var search = false,
     refreshc;
 
 $(document).ready(function() {
-    var dateSearch = $( "#datesearch" );
+    var dateSearch = $('#datesearch');
     dateSearch.datepicker();
     dateSearch.change(function() {
-        $( "#datesearch" ).datepicker( "option", "dateFormat", "yy-mm-dd" );
+        $('#datesearch').datepicker('option', 'dateFormat', 'yy-mm-dd');
         });
 
-    $("#add_edit").css("display", "none");
+    searchFun.enableclear();
+    searchFun.focusOut();
 });
 
-$(document).on("focusin", function(e) {
-	if ($(e.target).closest(".mce-window").length) {
+$(document).on('focusin', function(e) {
+	if ($(e.target).closest('.mce-window').length) {
 		e.stopImmediatePropagation();
 	}
 });
@@ -29,8 +30,7 @@ var refreshFun =
 {
     runFirst: function() {
         refreshFun.refreshLog();
-        CategoryManage.grabFirstLevel();
-        this.startrefresh();
+        refreshFun.startrefresh();
     },
 
     startrefresh: function() {
@@ -41,32 +41,21 @@ var refreshFun =
         clearInterval(refreshc);
     },
 
-    refreshLog: function(clearfilter) {
-        if (clearfilter) {
-            filt=false;
-            $("#searchterm").val("Keyword");
-            $("#datesearch").val("Date");
+    refreshLog: function(clearSearch) {
+        if (clearSearch) {
+            searchFun.enableclear();
             refreshFun.startrefresh();
         }
 
-        if (!filt) {
-            $.ajax({
-                type: "POST",
-                url: "api/i/logs/read",
-                async: false,
-                dataType: "json"
-            })
-                .done(function( html ) {
-                    if (html === "") {
-                        window.location.reload(true);
-                    }
-                    view.makeLogView(html.data);
+        if (!search) {
+            $.get('api/i/logs/read', {}, null, 'json')
+                .done(function(json) {
+                    view.makeLogView(json.data);
                 })
-
-                .fail(function( jqXHR ) {
-                    if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
+                .fail(function(response) {
+                    if (typeof response !== 'undefined' && response.readyState===4 && response.status===404)
                     {
-                        $("#logs").html("An error has occured. Please try logging out and back in.");
+                        $('#logs').html('An error has occured. Please try logging out and back in.');
                     }
                 });
         }
@@ -77,36 +66,38 @@ var view = {
     makeLogView:function(data) {
         var logView = $('#logs');
         logView.empty();
-        if (filt) { logView.append(view.showFilterMessage()); }
-        logView.append(view.pageControls(data.metadata));
+        logView.append(view.pageControls(data.metadata, 'top'));
         logView.append(view.displayLogs(data));
-        logView.append(view.pageControls(data.metadata));
+        logView.append(view.pageControls(data.metadata, 'bottom'));
     },
 
-    showFilterMessage: function() {
-        var clearForm = $('<form/>');
-        // jshint multistr:true
-        var html = '<h3>You are viewing filtered results\
-                    <button type="button" onClick="refreshFun.refreshLog(true)">Clear Results</button></h3>';
-       clearForm.append(html);
-       return clearForm;
-    },
-
-    pageControls: function(data) {
-        if (filt) {
-            return false;
-        }
-
+    pageControls: function(data, pos) {
         var div = $('<div/>').attr('class', 'pagination');
+        var clickAction;
 
         var html = '<form method="post">';
         if (data.offset > 0) {
             var prevPage = data.offset-data.limit;
-            html += '<input type="button" value="Previous '+data.limit+'" onClick="view.pagentation('+prevPage+');" class="flle">';
+            if (search) {
+                clickAction = 'searchFun.searchlog('+ prevPage +');';
+            } else {
+                clickAction = 'view.pagentation('+ prevPage +');';
+            }
+            html += '<input type="button" value="Previous" onClick="'+ clickAction +'" class="flle">';
         }
-        if (data.offset+data.limit < data.logSize) {
+
+        if (data.offset+data.limit < data.logSize && data.resultCount == data.limit) {
             var nextPage = data.offset+data.limit;
-            html += '<input type="button" value="Next '+data.limit+'" onClick="view.pagentation('+ nextPage +');" class="flri">';
+            if (search) {
+                clickAction = 'searchFun.searchlog('+ nextPage +');';
+            } else {
+                clickAction = 'view.pagentation('+ nextPage +');';
+            }
+            html += '<input type="button" value="Next" onClick="'+ clickAction +'" class="flri">';
+        }
+
+        if (search && pos == 'top') {
+            html += '<input type="button" value="Clear Search" onClick="refreshFun.refreshLog(true);" class="flri">';
         }
         html += '</form></div>';
         div.append(html);
@@ -149,8 +140,8 @@ var view = {
     },
 
     pagentation: function(pageOffset) {
-        $.post("api/i/logs/read", { offset: pageOffset }, null, "json")
-            .done(function( html ) {
+        $.get('api/i/logs/read', { offset: pageOffset }, null, 'json')
+            .done(function(html) {
                 view.makeLogView(html.data);
 
                 if (pageOffset <= 0) {
@@ -162,10 +153,9 @@ var view = {
 
                 window.scrollTo(0,0);
             })
-
-            .fail(function( jqXHR ) {
-                if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404) {
-                    $("#logs").html("An error has occured. Please try logging out and back in.");
+            .fail(function(jqXHR) {
+                if (typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404) {
+                    $('#logs').html('An error has occured. Please try logging out and back in.');
                 }
             });
     }
@@ -174,28 +164,28 @@ var view = {
 var addFun =
 {
     showaddinputs: function() {
-        var entryBox = $("textarea#logEntry");
-        $("#add_edit_form")[0].reset();
-        entryBox.html("");
+        var entryBox = $('textarea#logEntry');
+        $('#add_edit_form')[0].reset();
+        entryBox.html('');
 
-        $( "#add_edit" ).dialog({
+        $('#add_edit').dialog({
 			height: 575,
 			width: 800,
 			modal: true,
 			show: {
-				effect: "fade",
+				effect: 'fade',
 				duration: 500
 			},
 			hide: {
-				effect: "fade",
+				effect: 'fade',
 				duration: 500
 			},
 			buttons: {
-				"Add Log": function() {
+				'Add Log': function() {
 					addFun.sendLog(true);
 				},
 				Cancel: function() {
-					$( this ).dialog( "close" );
+					$(this).dialog('close');
 					CategoryManage.addEditLog = false;
 					CategoryManage.grabFirstLevel();
 				}
@@ -206,12 +196,12 @@ var addFun =
             browser_spellcheck: true,
 			forced_root_block: false,
 			resize: false,
-			menubar: "edit format view insert tools",
-			toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
+			menubar: 'edit format view insert tools',
+			toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor',
 			plugins: [
-				"autolink link lists hr anchor pagebreak",
-				"searchreplace wordcount code insertdatetime",
-				"template paste textcolor"
+				'autolink link lists hr anchor pagebreak',
+				'searchreplace wordcount code insertdatetime',
+				'template paste textcolor'
 				]
         });
 
@@ -222,9 +212,9 @@ var addFun =
     sendLog: function(isnew, id) {
         var urlvars = {};
         var url = '';
-        var title = $("input#logTitle").val();
+        var title = $('input#logTitle').val();
         title = encodeURIComponent(title);
-        var entry = $("textarea#logEntry").val();
+        var entry = $('textarea#logEntry').val();
         entry = encodeURIComponent(entry);
         var cat = CategoryManage.getCatString();
 
@@ -236,22 +226,22 @@ var addFun =
             url = 'api/i/logs/edit';
         }
 
-		if (title !== "" && entry !== "" && cat !== "" && cat !== false) {
-			$( "#add_edit" ).dialog( "close" );
-			$("#messages").fadeOut();
+		if (title !== '' && entry !== '' && cat !== '' && cat !== false) {
+			$('#add_edit').dialog('close');
+			$('#messages').fadeOut();
 
 			$.post(url, urlvars, null, 'json')
-				.done(function( html ) {
+				.done(function(html) {
 					refreshFun.refreshLog();
 					CategoryManage.addEditLog = false;
 					CategoryManage.grabFirstLevel();
 					showDialog(html.data);
 				});
         } else {
-			$("#messages").html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
+			$('#messages').html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
 			CategoryManage.addEditLog = true;
 			CategoryManage.grabFirstLevel();
-			setTimeout(function() { $("#messages").fadeOut(); }, 10000);
+			setTimeout(function() { $('#messages').fadeOut(); }, 10000);
         }
     }
 }; //addFun
@@ -260,11 +250,11 @@ var editFun =
 {
     showeditinputs: function(log_info) {
         var linfo = log_info.data;
-        var entryBox = $("textarea#logEntry");
+        var entryBox = $('textarea#logEntry');
 
-        $("input#logTitle").val( linfo.title );
-        entryBox.val( linfo.entry );
-        $("#catSpace").text('Loading categories...');
+        $('input#logTitle').val(linfo.title);
+        entryBox.val(linfo.entry);
+        $('#catSpace').text('Loading categories...');
 
         CategoryManage.renderCategoriesFromString(linfo.cat, function(html) {
             CategoryManage.addEditLog = true;
@@ -272,24 +262,24 @@ var editFun =
             $('#catSpace').html(html);
         });
 
-        $( "#add_edit" ).dialog({
+        $('#add_edit').dialog({
 			height: 575,
 			width: 800,
 			modal: true,
 			show: {
-				effect: "fade",
+				effect: 'fade',
 				duration: 500
 			},
 			hide: {
-				effect: "fade",
+				effect: 'fade',
 				duration: 500
 			},
 			buttons: {
-				"Save Edit": function() {
+				'Save Edit': function() {
                     addFun.sendLog(false, linfo.logid);
 				},
 				Cancel: function() {
-					$( this ).dialog( "close" );
+					$(this).dialog('close');
                     CategoryManage.addEditLog = false;
                     CategoryManage.grabFirstLevel();
 				}
@@ -300,12 +290,12 @@ var editFun =
             browser_spellcheck: true,
 			forced_root_block: false,
 			resize: false,
-			menubar: "edit format view insert tools",
-			toolbar: "undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor",
+			menubar: 'edit format view insert tools',
+			toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor',
 			plugins: [
-				"autolink link lists hr anchor pagebreak",
-				"searchreplace wordcount code insertdatetime",
-				"template paste textcolor"
+				'autolink link lists hr anchor pagebreak',
+				'searchreplace wordcount code insertdatetime',
+				'template paste textcolor'
 				]
         });
     },
@@ -316,28 +306,28 @@ var editFun =
      * the fields.
      */
     grabedit: function(logid) {
-        $.post("api/i/logs/readone", { logid: logid }, null, 'json')
-            .done( editFun.showeditinputs );
+        $.post('api/i/logs/readone', { logid: logid }, null, 'json')
+            .done(editFun.showeditinputs);
     }
 }; //editFun
 
-function showDialog( html ) {
-    var dialog = $( "#dialogBox" );
-	dialog.html( "<p>"+html+"</p>" );
+function showDialog(html) {
+    var dialog = $('#dialogBox');
+	dialog.html('<p>'+html+'</p>');
 	dialog.dialog({
 		modal: true,
 		width: 400,
 		show: {
-			effect: "fade",
+			effect: 'fade',
 			duration: 500
 		},
 		hide: {
-			effect: "fade",
+			effect: 'fade',
 			duration: 500
 		},
 		buttons: {
 			Ok: function() {
-				$( this ).dialog( "close" );
+				$(this).dialog('close');
 			}
 		}
 	});
@@ -349,48 +339,41 @@ var searchFun =
     check: function(e) {
         if (e.keyCode == 13) {
             searchFun.searchlog();
+            e.preventDefault();
         }
+    },
+
+    enableclear: function() {
+        search = false;
+        $('#searchquery').val('Search');
+        $('#searchquery').click(function() {
+            var search = $('#searchquery');
+            search.val('');
+            search.off('click');
+        });
+    },
+
+    focusOut: function() {
+        $('#searchquery').focusout(function () {
+            var search = $('#searchquery');
+            if (search.val() === '') {
+                searchFun.enableclear();
+            }
+        });
     },
 
     // Search for keyword or datestamp
-    searchlog :function() {
-        var keyword = $("input#searchterm").val();
-        var dateSearch   = $("input#datesearch").val();
-        if (keyword === 'Keyword') { keyword = ''; }
-        if (dateSearch === 'Date') { dateSearch = ''; }
+    searchlog: function(offset) {
+        if (typeof offset === 'undefined') {
+            offset = 0;
+        }
+        var query = $('input#searchquery').val();
 
-        keyword = encodeURIComponent(keyword);
-
-        $.post("api/i/logs/search", { kw: keyword, date: dateSearch })
-            .done(function( html ) {
-                filt=true;
+        $.post('api/i/logs/search', {query: query, offset: offset}, null, 'json')
+            .done(function(json) {
+                search = true;
                 refreshFun.stoprefresh();
-                view.makeLogView(html.data);
+                view.makeLogView(json.data, true);
             });
-    },
-
-    // Search for a category of logs
-    filter: function(cat) {
-        if (cat === '') { cat = CategoryManage.getCatString(); }
-
-        if (cat)
-        {
-            $.post("api/i/logs/filter", { filter: cat }, null, 'json')
-                .done(function( html ) {
-                    filt=true;
-                    refreshFun.stoprefresh();
-                    view.makeLogView(html.data);
-                })
-
-                .fail(function( jqXHR ) {
-                    if ( typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404)
-                    {
-                        $("#logs").html("An error has occured. Please try logging out and back in.");
-                    }
-                });
-        }
-        else {
-            $.alert('Please select a valid filter', 'Error');
-        }
     }
 };

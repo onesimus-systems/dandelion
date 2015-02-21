@@ -8,7 +8,7 @@ var CategoryManage = {
 
 	grabNextLevel: function(pid) {
 		var container = (CategoryManage.addEditLog) ? '#catSpace' : '#categorySelects';
-		console.log(pid);
+
 		var pidSplit = pid.split(':');
 		var level = +pidSplit[0] + 1;
 		var cid = +pidSplit[1];

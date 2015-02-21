@@ -32,18 +32,13 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard','cheesto','jq
 
         <div id="controlPanel">
             <form>
-                <input type="text" id="searchterm" size="40" value="Keyword" onClick="this.value='';" onKeyPress="return searchFun.check(event);"><input type="text" id="datesearch" size="10" value="Date" onClick="this.value='';">
-                <input type="button" value="Search Log" class="dButton" onClick="searchFun.searchlog();"><br>
-
-                Filter:
-                <div id="categorySelects"></div>
-
-                <input type="button" value="Filter" class="dButton" onClick="searchFun.filter('');">
-                <?= $createButton ?>
+                <input type="search" id="searchquery" size="40" onKeyPress="return searchFun.check(event);" autocomplete="off"><!--
+                --><input type="button" value="Search" class="dButton cpButton" onClick="searchFun.searchlog();"><!--
+                --><?= $createButton ?>
             </form>
         </div>
 
-        <div id="logs"></div>
+        <div id="logs"><img src="assets/images/loaderAnimation.gif" alt="Loading content"> Loading content...</div>
     <?php endif; ?>
 </div>
 

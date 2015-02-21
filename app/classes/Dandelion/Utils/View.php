@@ -146,6 +146,7 @@ class view
         $cssList = '';
         $paths = Application::getPaths();
 
+        $cssList .= self::findStyleSheet('normalize', $paths);
         if (count($optionalSheets) == 0 || $optionalSheets[count($optionalSheets)-1] !== false) {
             $cssList .= self::findStyleSheet('main', $paths);
             $cssList .= self::findThemeStyleSheet('main', $paths, $theme);

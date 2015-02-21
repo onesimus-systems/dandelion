@@ -95,25 +95,4 @@ class Logs
             return 'There was an error saving the log.';
         }
     }
-
-    /**
-     * Filter logs by category
-     */
-    public function filter($filter)
-    {
-        return $this->repo->getLogsByFilter($filter);
-    }
-
-    /**
-     * Search logs by title and content
-     *
-     * @param string $kw - Keywords
-     * @param string $date - Date of creation
-     *
-     * @return
-     */
-    public function search($kw = '', $date = '')
-    {
-        return $this->repo->getLogsBySearch($kw, $date);
-    }
 }

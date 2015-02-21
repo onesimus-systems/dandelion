@@ -22,7 +22,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui']]);
     <br><br><hr width="350"><br>
 
     How many logs do you want to see on the main page:<br />
-    <input type="text" id="show_limit" size="3" value="<?= $_SESSION['userInfo']['showlimit']; ?>">
+    <input type="text" id="show_limit" size="3" value="<?= $_SESSION['userInfo']['showlimit'] ?>">
     <button type="button" class="dButton" onClick="api.saveLogLimit();">Save Limit</button>
 </form>
 
@@ -41,7 +41,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui']]);
 
     <form>
         <span id="apiKey"></span>
-        <br><br><button type="button" class="dButton" onClick="api.generateKey();">Generate New Key</button>
+        <br><button type="button" class="dButton" onClick="api.generateKey();">Regenerate Key</button>
     </form>
 <?php
 endif;

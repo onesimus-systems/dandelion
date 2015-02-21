@@ -5,6 +5,7 @@
 namespace Dandelion\API\Module;
 
 use \Dandelion\Logs;
+use \Dandelion\LogSearch;
 use \Dandelion\UserSettings;
 use \Dandelion\Controllers\ApiController;
 
@@ -21,27 +22,12 @@ class LogsAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $userLimit = new UserSettings($this->makeRepo('UserSettings'));
-        $limit = $userLimit->getSetting('showlimit', USER_ID);
-        $limit = (int) $this->up->get('limit', $limit);
-        $offset = (int) $this->up->get('offset', 0);
-        $offset = $offset < 0 ? 0 : $offset;
-
-        $logSize = $this->repo->numOfLogs();
-
-        if ($offset > $logSize) {
-            $offset = $offset - $limit;
-        }
-
-        $metaData = array(
-            'offset' => $offset,
-            'limit'  => $limit,
-            'logSize' => $logSize
-        );
+        $metadata = $this->offsetLimitCommon();
 
         $logs = new Logs($this->repo, $this->ur);
-        $return = $logs->getLogList($limit, $offset);
-        $return['metadata'] = $metaData;
+        $return = $logs->getLogList($metadata['limit'], $metadata['offset']);
+        $metadata['resultCount'] = count($return);
+        $return['metadata'] = $metadata;
         return $return;
     }
 
@@ -100,23 +86,8 @@ class LogsAPI extends BaseModule
     }
 
     /**
-     *  Filter logs by category
-     */
-    public function filter()
-    {
-        if (!$this->ur->authorized('viewlog')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
-        }
-
-        $filter = $this->up->filter;
-        $filter = rtrim($filter, ':');
-
-        $logs = new Logs($this->repo);
-        return $logs->filter($filter);
-    }
-
-    /**
-     *  Search logs by title, content, and date
+     * Search logs using provided query string
+     * @return array
      */
     public function search()
     {
@@ -124,10 +95,41 @@ class LogsAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
         }
 
-        $kw = $this->up->kw;
-        $date = $this->up->date;
+        $query = $this->up->query;
 
-        $logs = new Logs($this->repo);
-        return $logs->search($kw, $date);
+        $metadata = $this->offsetLimitCommon();
+
+        $logs = new LogSearch($this->repo);
+        $return = $logs->search($query, $metadata['limit']+1, $metadata['offset']);
+        $metadata['resultCount'] = count($return)-1;
+        unset($return[$metadata['limit']]);
+
+        $return['metadata'] = $metadata;
+        return $return;
+    }
+
+    /**
+     * Processes and compiles the offset, limit, and logsize used for paging
+     * @return array Metadata used in the query and returned to client
+     */
+    private function offsetLimitCommon()
+    {
+        $userLimit = new UserSettings($this->makeRepo('UserSettings'));
+        $limit = $userLimit->getSetting('showlimit', USER_ID);
+        $limit = (int) $this->up->get('limit', $limit);
+        $offset = (int) $this->up->get('offset', 0);
+        $offset = $offset < 0 ? 0 : $offset;
+
+        $logSize = $this->repo->numOfLogs();
+
+        if ($offset > $logSize) {
+            $offset = $offset - $limit;
+        }
+
+        return [
+            'offset' => $offset,
+            'limit'  => $limit,
+            'logSize' => $logSize
+        ];
     }
 }
