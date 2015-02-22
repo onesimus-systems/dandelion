@@ -117,6 +117,10 @@ v6.0.0
     * New routing functionality
     * Better templating
     * Cleaner bootstrap and application initialization
+- Unified, simplified, and more powerful search!!!
+    * Search now uses a simple syntax to search any part of a log
+    * Sample syntax: ```title:"router 1" categories:"Configuration:Routes"```
+    * See below for complete documentation
 
 v5.0.2
 
@@ -148,6 +152,29 @@ v5.0.0
     * Namespacing
     * Modularization
 
+Searching In Dandelion
+----------------------
+
+**Search syntax**: ```field:"query"```
+
+**Available fields**: ```title```, ```body```, ```log``` (both title and body), ```date```, ```category```
+
+**Escaped characters**
+* backslash ```\```
+* double quote ```"```
+* exclamation mark ```!``` (if at beginning of query and not for negation, e.g. ```title:"\!query"```)
+
+**Operators**
+* ```!``` - All fields can take this operator, negates query for that field
+* ```<``` - Date only, return logs with date created older than query
+* ```<=``` - Date only, return logs with date created older than or on query
+* ```>``` - Date only, return logs with date created younger than query
+* ```>=``` - Date only, return logs with date created younger than or on query
+
+**Special Syntax**
+* Date range: ```date:"2015-01-01 to 2015-01-30"``` returns logs with date in the range. This also takes the negation operator returning then the logs whose date is not in the range.
+* Date keywords: The date fields takes the words ```today```, ```yesterday```, and ```last week``` as queries. They will be translated into the appropriate date format as of the day the query is given.
+
 Contributing
 ------------
 
@@ -157,7 +184,7 @@ Thank you for considering contributing to Dandelion, please make sure to follow 
 * For items that are not specified in PSR-2, please conform to the surrounding code
 * If you are wanting to contribute a significantly sized feature, please let me know before you start
 
-I'm using [this style of git branching](http://nvie.com/posts/a-successful-git-branching-model/). So for development, you should clone the Dandelion repository here on Github, and checkout a new feature branch off from the develop branch (rather than master) such as issue-48-feature. Commit your changes to that branch and then send pull-requests back into the develop branch.
+I'm using [this style of git branching](http://nvie.com/posts/a-successful-git-branching-model/). So for development, you should clone the Dandelion repository, and checkout a new feature branch off of the develop branch (not the master) and name it appropiatly such as "issue-48-feature". Commit your changes to that branch and then send pull-requests back into the develop branch.
 
 The exception to this rule is urgent hotfixes to master. To perform a hotfix, make a new branch off of master. When you're ready to submit the changes, make a pull request to both the master and develop branches.
 
