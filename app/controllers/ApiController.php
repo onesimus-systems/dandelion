@@ -161,26 +161,26 @@ class ApiController extends BaseController
      *
      * @param int $ecode - Error code
      * @param string $status - Text status message
-     * @param string $subsystem - API where DAPI was created
+     * @param string $module - API where DAPI was created
      * @param array $data - Data returned from API
      *
      * @return JSON DAPI object
      */
-    public static function makeDAPI($ecode, $status, $subsystem, $data = '')
+    public static function makeDAPI($ecode, $status, $module, $data = '')
     {
         /**
          * DAPI array composition:
          *
          * errorcode - Integer code corresponding to some error
          * status - String message of error or feedback
-         * apisub - String name of the API subsystem that was called
-         * data - Array/String of data returned by API subsystem
+         * module - String name of the API module that was called
+         * data - Array/String of data returned by API module
          *
          * Error Code Meanings:
          *
          * 0 - Successful API call
          * 1 - Invalid API key
-         * 2 - Calling API subsystem from outside API
+         * 2 - Reserved for future use
          * 3 - Action requires active login
          * 4 - Insufficient permissions
          * 5 - General error
@@ -189,7 +189,7 @@ class ApiController extends BaseController
         $response = array (
             'errorcode' => $ecode,
             'status' => $status,
-            'apisub' => $subsystem,
+            'module' => $module,
             'data' => $data
         );
         return json_encode($response);
