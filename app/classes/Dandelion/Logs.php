@@ -61,7 +61,7 @@ class Logs
      */
     public function addLog($title, $body, $cat, $uid)
     {
-        if (empty($title) || empty($body) || empty($cat) || $cat == 'Select:') {
+        if (!$title || !$body || !$cat || strtolower($cat) == 'select') {
             return 'Log entries require a title, category, and body.';
         }
 
