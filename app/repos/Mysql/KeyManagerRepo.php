@@ -17,15 +17,6 @@ class KeyManagerRepo extends BaseMySqlRepo implements Interfaces\KeyManagerRepo
         return $this->database->getFirst(['id' => $uid]);
     }
 
-    public function deleteKeyForUser($uid)
-    {
-        $this->database->delete()
-                       ->from($this->prefix.'apikeys')
-                       ->where('user = :id');
-
-        return $this->database->go(['id' => $uid]);
-    }
-
     public function saveKeyForUser($uid, $key)
     {
         $this->database->insert()

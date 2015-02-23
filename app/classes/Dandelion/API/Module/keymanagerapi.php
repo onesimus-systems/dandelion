@@ -17,10 +17,13 @@ class KeyManagerAPI extends BaseModule
      *
      *  @return JSON - API Key or error message
      */
-    public function getKey($force = false)
+    public function getKey($user = null, $force = false)
     {
+        if (!$user) {
+            $user = USER_ID;
+        }
         $key = new KeyManager($this->repo);
-        return self::encodeKey($key->getKey($_SESSION['userInfo']['userid'], $force));
+        return self::encodeKey($key->getKey($user, $force));
     }
 
     /**
@@ -28,7 +31,7 @@ class KeyManagerAPI extends BaseModule
      */
     public function newKey()
     {
-        return self::getKey(true);
+        return self::getKey(USER_ID, true);
     }
 
     /**

@@ -7,7 +7,6 @@ namespace Dandelion\Repos\Interfaces;
 interface KeyManagerRepo
 {
     public function getKeyForUser($uid);
-    public function deleteKeyForUser($uid);
     public function saveKeyForUser($uid, $key);
     public function revoke($uid);
 }

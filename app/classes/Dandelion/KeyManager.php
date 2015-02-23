@@ -25,7 +25,7 @@ class KeyManager
         }
 
         // Clear database of old keys for user
-        $this->repo->deleteKeyForUser($uid);
+        $this->revoke($uid);
 
         // Generate new key
         $newKey = $this->generateKey(15);
