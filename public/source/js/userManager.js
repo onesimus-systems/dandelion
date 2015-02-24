@@ -1,27 +1,34 @@
-/* global $ */
+/* global document, $ */
 
 "use strict"; // jshint ignore:line
+
+$(document).on('click', function(event) {
+    if (!$(event.target).closest('#userManageForm').length) {
+        userManager.highlightrow(null);
+    }
+});
 
 var userManager = {
 	rights: {},
     currentuid: null,
+    rows: [],
 
 	init: function() {
-		this.getUsersRights();
-		this.loadCommandList();
-		this.loadUserList();
+		this.getUsersRights(function() {
+            userManager.loadCommandList();
+            userManager.loadUserList();
+        });
 	},
 
-	getUsersRights: function() {
-        $.ajax('api/i/rights/getUsersRights', {
-        	async: false, // To ensure permissions are loaded before command list is generated
-        	dataType: 'json'
-        })
+	getUsersRights: function(callback) {
+        $.get('api/i/rights/getuserrights', {}, null, 'json')
             .done(function(json) {
             	if (json.errorcode === 0) {
 					userManager.rights = json.data;
+                    callback();
             	} else {
             		$.alert(json.status, 'User Management');
+                    $('#userManageForm').html('<h3>Error loading users list</h3>');
             	}
             	return;
             });
@@ -31,37 +38,38 @@ var userManager = {
 	loadCommandList: function() {
 		var commands = $('<select/>').attr('id', 'commands');
 
-		commands.append('<option value="">Select Command:</option>');
+		commands.append('<option value="">Command:</option>');
 
 	    if (this.rights.adduser) {
             commands.append('<option value="add">Add User</option>');
         }
 
         if (this.rights.deleteuser) {
-            commands.append('<option value="delete">Delete</option>');
+            commands.append('<option value="delete">Delete User</option>');
         }
 
         if (this.rights.edituser) {
-            commands.append('<option value="edit">Edit</option>');
+            commands.append('<option value="edit">Edit User</option>');
             commands.append('<option value="reset">Reset Password</option>');
             commands.append('<option value="cxeesto">Change &#264;eesto</option>');
             commands.append('<option value="revokeKey">Revoke API Key</option>');
         }
 
+        $('#userManageForm').prepend('<button type="button" class="dButton" onClick="userManager.performAction();">Go</button>');
         $('#userManageForm').prepend(commands);
         return;
 	},
 
 	loadUserList: function() {
 		$.getJSON("api/i/users/getUsersList",
-                    function(data){
-                    	if (data.errorcode === 0) {
-                    		userManager.displayUserList(data.data);
-                    	} else {
-                    		$('#userlist').html(data.status);
-                    	}
-                    	return;
-                	});
+            function(data){
+            	if (data.errorcode === 0) {
+            		userManager.displayUserList(data.data);
+            	} else {
+            		$('#userlist').html(data.status);
+            	}
+            	return;
+        	});
 		return;
 	},
 
@@ -69,13 +77,12 @@ var userManager = {
 		var userTable = $('<table/>');
         // jshint multistr:true
 		var header = '<tr>\
-		                <th>&nbsp;</th>\
-		                <th>Real Name</th>\
+		                <th>Full Name</th>\
 		                <th>Username</th>\
 		                <th>Role</th>\
-		                <th>Date Created</th>\
+		                <th>Created</th>\
 		                <th>Theme</th>\
-		                <th>First Login</th>\
+		                <th><span title="Has the user logged in for the first time?">First Login</span></th>\
 		            </tr>';
         userTable.append(header);
 
@@ -84,14 +91,16 @@ var userManager = {
                 continue;
 
 			var user = userdata[key];
-            var html = '<tr>\
-	                    	<td><input type="radio" name="uid" value="' + user.userid + '"></td>\
+            var rowname = 'user' + user.userid;
+            userManager.rows.push(rowname);
+            var firstlogin = (user.firsttime === '0') ? 'Yes' : 'No';
+            var html = '<tr id="' + rowname + '" onClick="userManager.highlightrow(' + user.userid + ');">\
 	                    	<td style="text-align: left;">' + user.realname + '</td>\
 	                    	<td>' + user.username + '</td>\
 	                    	<td>' + user.role + '</td>\
 	                    	<td>' + user.datecreated + '</td>\
 	                    	<td>' + user.theme + '</td>\
-	                    	<td>' + user.firsttime + '</td>\
+	                    	<td>' + firstlogin + '</td>\
                     	</tr>';
         	userTable.append(html);
         }
@@ -100,6 +109,19 @@ var userManager = {
         $('#userlist').append(userTable);
         return;
 	},
+
+    highlightrow: function(row) {
+        this.currentuid = row;
+
+        for (var i = userManager.rows.length - 1; i >= 0; i--) {
+            var rowname = 'user' + row;
+            if (userManager.rows[i] === rowname) {
+                $('#'+rowname).addClass('highlighted');
+            } else {
+                $('#'+userManager.rows[i]).removeClass('highlighted');
+            }
+        }
+    },
 
 	performAction: function() {
         // Get the action to perform
@@ -110,11 +132,9 @@ var userManager = {
 		}
 
         // Make sure a user is selected
-        var uid = $('input[name=uid]:checked').val();
-        if (typeof uid == 'undefined' && action != 'add') {
+        if (this.currentuid === null && action != 'add') {
             return false;
         }
-        this.currentuid = uid;
 
         // Show dialog for action
 		userManager.uiforms[action]();

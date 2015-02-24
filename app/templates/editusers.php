@@ -2,7 +2,7 @@
 /**
  * User management page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui', 'datetimepicker.min.css']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui', 'datetimepicker.min.css', 'editusers']]);
 ?>
 <!-- Begin Page Body -->
 
@@ -10,10 +10,6 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui', 'datetimepick
     <div id="dialogBox"></div>
 
     <form id="userManageForm">
-        <button type="button" onClick="userManager.performAction();">Go</button>
-
-        <br><br>
-
         <div id="userlist"></div>
     </form>
 </div>

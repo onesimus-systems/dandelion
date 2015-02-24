@@ -97,7 +97,7 @@ class RightsAPI extends BaseModule
     /**
      * Gets the rights for the current user
      */
-    public function getUsersRights()
+    public function getUserRights()
     {
         return $this->ur->getRightsForUser();
     }
