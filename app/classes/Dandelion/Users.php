@@ -42,7 +42,7 @@ class Users
             switch ($infoType) {
                 case 'u_':
                     if ($key == 'permissions') {
-                        $value = (array)unserialize($value);
+                        $value = (array) unserialize($value);
                     }
                     $this->userInfo[$key] = $value;
                     break;
@@ -60,10 +60,10 @@ class Users
 
     public function saveUser()
     {
-        if (empty($this->userInfo['realname'])
-            || empty($this->userInfo['role'])
-            || (empty($this->userInfo['firsttime']) && $this->userInfo['firsttime'] != 0)
-            || empty($this->userInfo['userid'])
+        if (!$this->userInfo['realname']
+            || !$this->userInfo['role']
+            || (!$this->userInfo['firsttime'] && $this->userInfo['firsttime'] != 0)
+            || !$this->userInfo['userid']
         ) {
             return 'Something is empty';
         }
@@ -85,7 +85,7 @@ class Users
         );
 
         if ($userSaved && $userCheestoSaved) {
-            return true;
+            return 'User saved successfully';
         } else {
             return 'There was an error saving user';
         }
@@ -96,7 +96,7 @@ class Users
         $date = new \DateTime();
 
         // Error checking
-        if (empty($username) || empty($password) || empty($realname) || empty($role)) {
+        if (!$username || !$password || !$realname || !$role) {
             return 'Something is empty';
         }
         if ($this->isUser($username)) {
@@ -118,7 +118,7 @@ class Users
         }
 
         if ($userCreated && $userCheestoCreated) {
-            return true;
+            return 'User created successfully';
         } else {
             return 'Error saving user';
         }
@@ -148,8 +148,8 @@ class Users
 
     public function deleteUser($uid, Permissions $permissions)
     {
-        if (empty($uid)) {
-            if (!empty($this->userInfo['userid'])) {
+        if (!$uid) {
+            if ($this->userInfo['userid']) {
                 $uid = $this->userInfo['userid'];
             } else {
                 return 'No user id provided';
@@ -158,7 +158,7 @@ class Users
 
         $delete = false;
         $userRole = $this->repo->getUserRole($uid);
-        $isAdmin = (array)$permissions->loadRights($userRole);
+        $isAdmin = (array) $permissions->loadRights($userRole);
 
         if (!$isAdmin['admin']) {
             // If the account being deleted isn't an admin, then there's nothing to worry about
@@ -169,7 +169,7 @@ class Users
             $otherUsers = $this->repo->getUserRole($uid, true);
 
             foreach ($otherUsers as $areTheyAdmin) {
-                $isAdmin = (array)$permissions->loadRights($areTheyAdmin['role']);
+                $isAdmin = (array) $permissions->loadRights($areTheyAdmin['role']);
 
                 if ($isAdmin['admin']) {
                     // If one is found, stop for loop and allow the delete
@@ -181,7 +181,7 @@ class Users
 
         if ($delete) {
             if ($this->repo->deleteUser($uid)) {
-                return true;
+                return 'User deleted successfully';
             } else {
                 return 'Error deleting user';
             }
@@ -192,11 +192,11 @@ class Users
 
     public function getUserList()
     {
-        return $this->repo->getUserList();
+        return $this->repo->getUsers();
     }
 
     public function getUser($uid)
     {
-        return $this->repo->getUser($uid);
+        return $this->repo->getUsers($uid);
     }
 }

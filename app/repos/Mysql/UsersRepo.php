@@ -148,19 +148,16 @@ class UsersRepo extends BaseMySqlRepo implements Interfaces\UsersRepo
         }
     }
 
-    public function getUserList()
+    public function getUsers($uid = null)
     {
         $this->database->select('userid, realname, username, role, datecreated, theme, firsttime')
             ->from($this->prefix . 'users');
-        return $this->database->get();
-    }
 
-    public function getUser($uid)
-    {
-        $this->database->select('userid, realname, username, role, datecreated, theme, firsttime')
-            ->from($this->prefix . 'users')
-            ->where('userid = :uid');
-
-        return $this->database->getFirst(['uid' => $uid]);
+        if ($uid) {
+            $this->database->where('userid = :uid');
+            return $this->database->getFirst(['uid' => $uid]);
+        } else {
+            return $this->database->get();
+        }
     }
 }

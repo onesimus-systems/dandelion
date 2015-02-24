@@ -19,6 +19,5 @@ interface UsersRepo
     public function resetPassword($uid, $pass);
     public function deleteUser($uid);
     public function getUserRole($uid, $invert = false);
-    public function getUserList();
-    public function getUser($uid);
+    public function getUsers($uid);
 }

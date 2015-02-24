@@ -19,7 +19,7 @@ class UsersAPI extends BaseModule
 
         // Check permissions
         if (isset($this->up->uid)) {
-            if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
+            if ($this->up->uid == USER_ID || $this->ur->authorized('edituser')) {
                 $userid = $this->up->uid;
             } else {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
@@ -28,8 +28,8 @@ class UsersAPI extends BaseModule
 
         // Validate password
         $newPass = $this->up->pw;
-        if ($newPass == '' || $newPass == null) {
-            exit(ApiController::makeDAPI(5, 'New password cannot be empty', 'users'));
+        if (!$newPass) {
+            exit(ApiController::makeDAPI(5, 'New password is invalid', 'users'));
         }
 
         // Do action
@@ -50,10 +50,10 @@ class UsersAPI extends BaseModule
         $password = $this->up->password;
         $realname = $this->up->fullname;
         $role = $this->up->role;
-        //$cheesto = $this->up->makecheesto;
+        $cheesto = $this->up->get('cheesto', true);
 
         $user = new Users($this->repo);
-        return $user->createUser($username, $password, $realname, $role);
+        return $user->createUser($username, $password, $realname, $role, $cheesto);
     }
 
     /**
@@ -66,8 +66,8 @@ class UsersAPI extends BaseModule
         }
 
         $uid = $this->up->uid;
-        if (empty($uid)) {
-            exit(ApiController::makeDAPI(5, 'No user id received.', 'users'));
+        if (!$uid) {
+            exit(ApiController::makeDAPI(5, 'No user id given.', 'users'));
         }
 
         $user = new Users($this->repo, $uid, true);
@@ -88,7 +88,7 @@ class UsersAPI extends BaseModule
         }
 
         // Check permissions
-        if ($this->ur->authorized('edituser')) {
+        if ($this->ur->authorized('deleteuser')) {
             $userid = $this->up->uid;
         } else {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
@@ -123,8 +123,8 @@ class UsersAPI extends BaseModule
         }
 
         $uid = $this->up->uid;
-        if (empty($uid)) {
-            exit(ApiController::makeDAPI(5, 'No user id received.', 'users'));
+        if (!$uid) {
+            exit(ApiController::makeDAPI(5, 'No user id given.', 'users'));
         }
 
         $user = new Users($this->repo);
