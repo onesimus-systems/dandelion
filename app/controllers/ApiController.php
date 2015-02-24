@@ -65,9 +65,9 @@ class ApiController extends BaseController
      */
     private function processRequest($key, $localCall, $module, $request)
     {
-        if ($module == 'apitest') {
+        if ($module == 'testkey') {
             // Checks for a good API key and notifies requester
-            return $this->apitest($key);
+            return $this->testkey($key);
         }
 
         /*
@@ -147,7 +147,7 @@ class ApiController extends BaseController
      *
      * @return DAPI object
      */
-    private function apitest($key)
+    private function testkey($key)
     {
         if ($this->verifyKey($key)) {
             return self::makeDAPI(0, 'API key is good', 'api');
