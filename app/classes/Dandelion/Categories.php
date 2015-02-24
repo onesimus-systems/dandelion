@@ -116,12 +116,16 @@ class Categories
         $newParent = $this->repo->getCategoryParent($cid);
 
         // Delete category from DB
-        $this->repo->deleteCategory($cid);
+        $deleted = $this->repo->deleteCategory($cid);
 
         // Reassign children
-        $this->repo->adoptChildren($newParent, $cid);
+        $reassigned = $this->repo->adoptChildren($newParent, $cid);
 
-        return 'Category deleted successfully';
+        if ($deleted && $reassigned) {
+            return 'Category deleted successfully';
+        } else {
+            return 'An error occured deleting a category';
+        }
     }
 
     /**

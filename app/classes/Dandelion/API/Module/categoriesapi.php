@@ -20,8 +20,8 @@ class CategoriesAPI extends BaseModule
             exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to add a category.', 'categories'));
         }
 
-        $parent = $this->up->parentID;
-        $desc = $this->up->catDesc;
+        $parent = $this->up->pid;
+        $desc = $this->up->description;
         $createCat = new Categories($this->repo);
         return $createCat->addCategory($parent, $desc);
     }
@@ -38,7 +38,7 @@ class CategoriesAPI extends BaseModule
         }
 
         $cid = $this->up->cid;
-        $desc = $this->up->catDesc;
+        $desc = $this->up->description;
         $editCat = new Categories($this->repo);
         return $editCat->editCategory($cid, $desc);
     }

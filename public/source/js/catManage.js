@@ -99,11 +99,11 @@ var CategoryManage = {
 		}
 	},
 
-	addNew: function(catDesc) {
-		var newCatDesc = catDesc;
+	addNew: function(description) {
+		var newCatDesc = description;
 		var parent = this.currentSelection[this.currentSelection.length-1];
 
-		$.post("api/i/categories/add", { parentID: parent, catDesc: newCatDesc }, null, 'json')
+		$.post("api/i/categories/add", { pid: parent, description: newCatDesc }, null, 'json')
             .done(function( json ) {
                 $.alert(json.data, 'Categories');
                 CategoryManage.getCatsAfterAction();
@@ -121,7 +121,7 @@ var CategoryManage = {
             var editedCat = window.prompt("Edit Category Description:",editString);
 
             if (editedCat !== null && editedCat !== '') {
-                $.post("api/i/categories/edit", { cid: cid, catDesc: encodeURIComponent(editedCat) }, null, 'json')
+                $.post("api/i/categories/edit", { cid: cid, description: encodeURIComponent(editedCat) }, null, 'json')
                     .done(function( json ) {
                         $.alert(json.data, 'Categories');
                         CategoryManage.getCatsAfterAction();
