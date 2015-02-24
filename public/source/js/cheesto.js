@@ -11,7 +11,7 @@ var presence =
     firstgen: true,
 
     checkstat: function (ver) {
-        $.getJSON("api/i/cheesto/readall",
+        $.getJSON("api/i/cheesto/read",
             function (data) {
                 if (data.errorcode == 5) {
                     return;

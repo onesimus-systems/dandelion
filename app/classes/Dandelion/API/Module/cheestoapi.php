@@ -14,7 +14,7 @@ class CheestoAPI extends BaseModule
      *
      *  @return JSON
      */
-    public function readAll()
+    public function read()
     {
         if (!$this->app->config['cheestoEnabled']) {
             exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
@@ -30,7 +30,7 @@ class CheestoAPI extends BaseModule
     /**
      *  Get Cheesto status of a single user
      */
-    public function read()
+    public function readone()
     {
         if (!$this->app->config['cheestoEnabled']) {
             exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
@@ -70,13 +70,13 @@ class CheestoAPI extends BaseModule
         }
 
         $cheesto = new Cheesto($this->repo);
-        $message = $this->up->message;
-        $status = $this->up->get('status', -1);
+        $message = $this->up->get('message', '');
+        $status = $this->up->get('status', 0);
         $returntime = $this->up->get('returntime', '00:00:00');
         $userid = USER_ID;
 
         if ($this->up->uid) { // A status of another user is trying to be updated
-            if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
+            if ($this->up->uid == USER_ID || $this->ur->authorized('edituser')) {
                 $userid = $this->up->uid;
             } else {
                 exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
