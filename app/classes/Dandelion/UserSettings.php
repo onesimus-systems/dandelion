@@ -13,7 +13,7 @@ class UserSettings
         $this->repo = $repo;
     }
 
-    public function saveLogLimit($limit)
+    public function saveLogLimit($limit = 25, $user = null)
     {
         if ($limit < 5) {
           $limit = 5;
@@ -21,22 +21,26 @@ class UserSettings
           $limit = 500;
         }
 
-        $this->repo->saveLogViewLimit($_SESSION['userInfo']['userid'], $limit);
+        $user = $user ?: $_SESSION['userInfo']['userid'];
 
-        $_SESSION['userInfo']['showlimit'] = $limit;
-
-        return 'Show limit changed successfully';
+        if ($this->repo->saveLogViewLimit($user, $limit)) {
+            $_SESSION['userInfo']['showlimit'] = $limit;
+            return 'Show limit changed successfully';
+        } else {
+            return 'An error occured saving your settings';
+        }
     }
 
-    public function saveTheme($theme)
+    public function saveTheme($theme = 'default', $user = null)
     {
-        $theme = isset($theme) ? $theme : 'default';
+        $user = $user ?: $_SESSION['userInfo']['userid'];
 
-        $this->repo->saveUserTheme($_SESSION['userInfo']['userid'], $theme);
-
-        $_SESSION['userInfo']['theme'] = $theme;
-
-        return 'Theme saved successfully';
+        if ($this->repo->saveUserTheme($user, $theme)) {
+            $_SESSION['userInfo']['theme'] = $theme;
+            return 'Theme saved successfully';
+        } else {
+            return 'An error occured saving your settings';
+        }
     }
 
     public function getSetting($setting, $id)
