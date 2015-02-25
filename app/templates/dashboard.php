@@ -38,7 +38,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard','cheesto','jq
             </form>
         </div>
 
-        <div id="logs"><img src="assets/images/loaderAnimation.gif" alt="Loading content"> Loading content...</div>
+        <div id="logs">Loading journal...</div>
     <?php endif; ?>
 </div>
 
