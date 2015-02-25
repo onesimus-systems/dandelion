@@ -92,4 +92,4 @@ gulp.task('watch', function() {
     gulp.watch(paths.styles, ['changedStyles']);
 });
 
-gulp.task('default', ['scripts', 'less', 'themes']);
+gulp.task('default', ['scripts', 'styles', 'themes']);
