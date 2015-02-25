@@ -44,7 +44,7 @@ function minifyTheme(theme) {
     minifyLess(themePaths[theme].less, themePaths[theme].build)
 }
 
-gulp.task('less', function() {
+gulp.task('styles', function() {
     minifyLess(paths.styles, 'public/build/css');
 });
 
