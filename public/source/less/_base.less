@@ -1,0 +1,10 @@
+
+#dandelion-lib {
+	@screen-large-size: 999px;
+	@screen-small-size: 610px;
+
+	.media-query(@device; @size; @rules) {
+		@type: "@{device}-@{size}-size";
+		@media @device and (max-width: @@type) { @rules(); }
+	}
+}

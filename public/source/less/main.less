@@ -4,13 +4,14 @@
  * @date Feb 2014
 **/
 
+@import (reference) "_base";
+
 body {
     margin: 0 auto;
     text-align: center;
-    //width: 60%;
-	font-family: sans-serif;
-	font-size: 15px;
-	color: black;
+    font-family: sans-serif;
+    font-size: 15px;
+    color: black;
 }
 
 button, html input[type=button], input[type=reset], input[type=submit] {
@@ -19,28 +20,35 @@ button, html input[type=button], input[type=reset], input[type=submit] {
 
 h1 {
     margin-bottom: 0;
-	text-align: center;
+    text-align: center;
 }
 
 h4 {
-	margin-top: .75em;
+    margin-top: .75em;
     margin-bottom: .65em;
-	text-align: center;
+    text-align: center;
 }
 
-a:visited, a:hover, a:link, a:active {
-	color: blue;
-	text-decoration: none;
+a {
+    &:visited, &:hover, &:link, &:active {
+        color: blue;
+        text-decoration: none;
+    }
 }
 
 /** Navigation */
 nav {
-    a:visited, a:link, a:active {
-    	color: black;
-    	text-decoration: none;
-    	padding: 10px 20px;
+    a {
+        &:visited, &:link, &:active {
+            color: black;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
     }
     margin: 20px 0;
+    #dandelion-lib > .media-query(screen, small, {
+        a { display: block; }
+    });
 }
 
 /** Footer */
@@ -48,39 +56,41 @@ footer {
     font-size: .75em;
     margin: 20px;
 
-    .aboutlink:visited, .aboutlink:hover, .aboutlink:link, .aboutlink:active {
-        color: black;
-        text-decoration: none;
+    .aboutlink {
+        &:visited, &:hover, &:link, &:active {
+            color: black;
+            text-decoration: none;
+        }
     }
 }
 
 /** Floats */
 .flri {
-	float: right;
-	margin-right: 15px;
+    float: right;
+    margin-right: 15px;
 }
 
 .flle {
-	float: left;
-	margin-left: 15px;
+    float: left;
+    margin-left: 15px;
 }
 
 /** Button styles */
 .dButton {
-	border: none;
-	padding: .25em .5em;
-	margin: .25em .15em;
-	font-size: 1em;
-	color: white;
+    border: none;
+    padding: .25em .5em;
+    margin: .25em .15em;
+    font-size: 1em;
+    color: white;
 }
 
 .adminButton {
-	width: 15em;
+    width: 15em;
 }
 
 /** Dialog box styles */
 #dialogBox {
-	text-align: left;
+    text-align: left;
     display: none;
 }
 

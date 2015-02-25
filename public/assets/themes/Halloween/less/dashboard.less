@@ -16,7 +16,7 @@
     .pagination {
         background-color: @button;
 
-        input {
+        input, button {
             .buttonRegular;
 
             &:hover {
@@ -25,11 +25,13 @@
         }
     }
 
-    .logentry input {
-        .buttonRegular;
+    .logentry {
+        input, button {
+            .buttonRegular;
 
-        &:hover {
-            .buttonHover;
+            &:hover {
+                .buttonHover;
+            }
         }
     }
 }

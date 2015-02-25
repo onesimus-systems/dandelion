@@ -1,9 +1,11 @@
 /* Base theme for Cheesto in pane mode
  *
  * @author Lee Keitel
- * @date Feb 2014 
+ * @date Feb 2014
 **/
-    
+
+@import (reference) "_base";
+
 #presence {
     position: absolute;
     float: left;
@@ -15,10 +17,31 @@
 	color: black;
 	text-align: center;
 
+    #dandelion-lib > .media-query(screen, large, {
+        float: initial;
+        position: initial;
+        left: initial;
+        top: initial;
+        max-width: initial;
+        text-align: left;
+        margin: 0 auto;
+        border: none;
+        margin-top: .5em;
+        width: 500px;
+    });
+
+    #dandelion-lib > .media-query(screen, small, {
+        width: auto;
+    });
+
 	h3 {
 		text-align: left;
+
+	    #dandelion-lib > .media-query(screen, large, {
+	    	text-align: center;
+	    });
 	}
-	
+
 	.linklike {
 	    margin-top: .5em;
 	    cursor: default;
@@ -26,20 +49,16 @@
 		padding: .5em 1em;
 		font-size: 1em;
 		color: white;
-		
+
 		&:hover {
 			color: black;
 		}
 	}
-	
+
 	#cstatus {
 	    margin: 3px;
 	}
-	
-	/*.set {
-		padding: .25em .5em;
-	}*/
-	
+
 	#showHide {
 		color: black;
 		text-decoration: none;
@@ -49,47 +68,50 @@
 	    margin: 0;
 	    margin-bottom: 5px;
 	}
-	
+
 	/* .tables is here to import the styles to presenceWin.less */
-	table, .tables {
+	.userStatusTable {
 	    border-collapse: collapse;
 	    margin-top: .5em;
-	    
+	    #dandelion-lib > .media-query(screen, large, {
+	    	margin: 0 auto;
+	    });
+
 		thead td {
 		    font-weight: bold;
 		}
-		    
+
 	    .statusi {
 		    text-align: center;
 		}
-	
+
 		td {
 		    border: 1px solid black;
 		    padding: 5px;
-			
+
 			.message {
 			    cursor: help;
 			}
-			
+
 			.green {
 			    color: green;
 			    cursor: help;
 			}
-			
+
 			.blue {
 			    color: blue;
 			    cursor: help;
 			}
-			
+
 			.red {
 			    color: red;
 			    cursor: help;
 			}
-			
+
 			&.textLeft {
                 text-align: left;
 			}
-			
+
 			&.cen {
                 text-align: center;
                 border: none;

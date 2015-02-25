@@ -2,10 +2,20 @@
  * Styles for main dashboard page
  */
 
+@import (reference) "_base";
+
 #dashboard {
     margin: 0 auto;
     text-align: center;
     width: 60%;
+
+    #dandelion-lib > .media-query(screen, large, {
+    	width: 90%;
+    });
+
+    #dandelion-lib > .media-query(screen, small, {
+    	width: initial;
+    });
 
 	#add_edit {
 		margin-top: 1em;
@@ -13,8 +23,8 @@
 	}
 
 	#controlPanel {
-		.commonStyles {
-			display:inline-block;
+		.commonStyles() {
+			display: inline-block;
 			border: none;
 			height: 2em;
 			margin: 0;
@@ -27,6 +37,7 @@
 		#searchquery {
 			.commonStyles;
 			color: gray;
+			width: 350px;
 
 			&:focus {
 			    outline: 1px solid #353535;
@@ -34,14 +45,25 @@
 			    box-shadow: 0px 0px 10px 0px #353535;
 			    color: black;
 			}
+
+			#dandelion-lib > .media-query(screen, small, {
+		    	width: 200px;
+		    });
 		}
 
 		.cpButton {
 			.commonStyles;
 		}
+
+		.controlButtons {
+			#dandelion-lib > .media-query(screen, small, {
+				margin: 0 auto;
+				display: block;
+			});
+		}
 	}
 
-	.pageEntryButtons {
+	.pageEntryButtons() {
 		border: none;
 		padding: 1em 2em;
 		margin: 0;
@@ -62,20 +84,24 @@
 	}
 
 	.logentry {
-	  	margin: 5px 5px 50px 5px;
+	  	margin: 5px;
 		border: 0 solid black;
 		text-align: left;
 		font-family: sans-serif;
 
-		input {
+		.editButton {
 			.pageEntryButtons;
 			padding: .5em 1.5em;
-			margin-top: .75em;
+			float: right;
+
+			#dandelion-lib > .media-query(screen, small, {
+		    	float: initial;
+		    	display: block;
+		    });
 		}
 	}
 
 	.entry {
-		max-width: 55em;
 		word-wrap: break-word;
 	}
 
@@ -85,8 +111,11 @@
 	}
 
 	#logs {
-		min-width: 35em;
+		//min-width: 35em;
 		margin-top: 1em;
+		#dandelion-lib > .media-query(screen, large, {
+			margin-top: .5em;
+		});
 	}
 }
 

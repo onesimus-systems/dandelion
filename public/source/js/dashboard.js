@@ -1,4 +1,4 @@
-/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, tinymce */
+/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, tinymce, alert */
 
 "use strict"; // jshint ignore:line
 
@@ -130,7 +130,7 @@ var view = {
 
             html += '<br>Categorized as ' + log.cat + '<br><a href="#" onClick="searchFun.filter(\'' + log.cat + '\');">Learn more about this system...</a>';
 
-            if (log.canEdit) { html += '<input type="button" value="Edit" onClick="editFun.grabedit(' + log.logid + ');" class="flri">'; }
+            if (log.canEdit) { html += '<button type="button" onClick="editFun.grabedit(' + log.logid + ');" class="editButton">Edit</button>'; }
 
             html += '</p></div></form>';
 
@@ -151,7 +151,11 @@ var view = {
                     refreshFun.stoprefresh();
                 }
 
-                window.scrollTo(0,0);
+                if ($(window).width() > 600) {
+                     window.scrollTo(0,0);
+                } else {
+                     window.scrollTo(0,610);
+                }
             })
             .fail(function(jqXHR) {
                 if (typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404) {

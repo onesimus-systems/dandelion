@@ -94,7 +94,7 @@ var presence =
      */
     makeTableMini: function (dataObj) {
         // Mini view on main page
-        var table = $('<table/>');
+        var table = $('<table/>').addClass('userStatusTable');
         var tableHead = '<thead><tr>\
             <td width="50%">Name</td>\
             <td width="50%">Status</td>\
@@ -136,7 +136,7 @@ var presence =
      */
     makeTableFull: function (dataObj) {
         // Windowed view
-        var table = $('<table/>');
+        var table = $('<table/>').addClass('userStatusTable');
         var tableHead = '<thead><tr><td>Name</td>\
             <td>Message</td>\
             <td colspan="2">Status</td>\
