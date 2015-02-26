@@ -9,15 +9,15 @@ var permissions = {
       'editlog': false,
       'viewlog': false,
 
-      'addcat': false,
+      'createcat': false,
       'editcat': false,
       'deletecat': false,
 
-      'adduser': false,
+      'createuser': false,
       'edituser': false,
       'deleteuser': false,
 
-      'addgroup': false,
+      'creategroup': false,
       'editgroup': false,
       'deletegroup': false,
 

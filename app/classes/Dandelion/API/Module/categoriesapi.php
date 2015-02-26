@@ -16,7 +16,7 @@ class CategoriesAPI extends BaseModule
      */
     public function create()
     {
-        if (!$this->ur->authorized('addcat')) {
+        if (!$this->ur->authorized('createcat')) {
             exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to create a category.', 'categories'));
         }
 

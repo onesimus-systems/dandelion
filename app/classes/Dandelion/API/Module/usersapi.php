@@ -42,7 +42,7 @@ class UsersAPI extends BaseModule
      */
     public function create()
     {
-        if (!$this->ur->authorized('adduser')) {
+        if (!$this->ur->authorized('createuser')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
         }
 

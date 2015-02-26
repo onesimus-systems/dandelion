@@ -51,7 +51,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui', 'permissions'
                 <td colspan="3">Categories:</td>
             </tr>
             <tr>
-                <td>Create: <input type="checkbox" id="addcat"></td>
+                <td>Create: <input type="checkbox" id="createcat"></td>
                 <td>Edit: <input type="checkbox" id="editcat"></td>
                 <td>Delete: <input type="checkbox" id="deletecat"></td>
             </tr>
@@ -60,7 +60,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui', 'permissions'
                 <td colspan="3">Users:</td>
             </tr>
             <tr>
-                <td>Create: <input type="checkbox" id="adduser"></td>
+                <td>Create: <input type="checkbox" id="createuser"></td>
                 <td>Edit: <input type="checkbox" id="edituser"></td>
                 <td>Delete: <input type="checkbox" id="deleteuser"></td>
             </tr>
@@ -69,7 +69,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['jqueryui', 'permissions'
                 <td colspan="3">Groups:</td>
             </tr>
             <tr>
-                <td>Create: <input type="checkbox" id="addgroup"></td>
+                <td>Create: <input type="checkbox" id="creategroup"></td>
                 <td>Edit: <input type="checkbox" id="editgroup"></td>
                 <td>Delete: <input type="checkbox" id="deletegroup"></td>
             </tr>

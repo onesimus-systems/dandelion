@@ -53,7 +53,7 @@ class RightsAPI extends BaseModule
      */
     public function create()
     {
-        if (!$this->ur->authorized('addgroup')) {
+        if (!$this->ur->authorized('creategroup')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
         }
 

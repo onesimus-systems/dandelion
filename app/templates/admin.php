@@ -11,17 +11,17 @@ $this->layout('layouts::main', ['requiredCssFiles' => []]);
 
 <form name="admin_form">
 	<?php
-	if ($userRights->authorized(array('adduser', 'edituser', 'deleteuser'))) {
+	if ($userRights->authorized(array('createuser', 'edituser', 'deleteuser'))) {
 		echo '<input type="button" class="dButton adminButton" value="Manage Users" onClick="window.location=\'editusers\'"><br>';
 		$content = true;
 	}
 
-	if ($userRights->authorized(array('addgroup', 'editgroup', 'deletegroup'))) {
+	if ($userRights->authorized(array('creategroup', 'editgroup', 'deletegroup'))) {
 		echo '<input type="button" class="dButton adminButton" value="Manage Groups" onClick="window.location=\'editgroups\'"><br>';
 		$content = true;
 	}
 
-	if ($userRights->authorized(array('addcat', 'editcat', 'deletecat'))) {
+	if ($userRights->authorized(array('createcat', 'editcat', 'deletecat'))) {
 		echo '<input type="button" class="dButton adminButton" value="Manage Categories" onClick="window.location=\'categories\'"><br>';
 		$content = true;
 	}
