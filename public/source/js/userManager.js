@@ -161,7 +161,7 @@ var userManager = {
         var group = $('#edit_group').val();
         var prompt = $('#edit_prompt').val();
 
-        $.post('api/i/users/save', {uid: uid, fullname: fullname, role: group, prompt: prompt, theme: theme}, null, 'json')
+        $.post('api/i/users/edit', {uid: uid, fullname: fullname, role: group, prompt: prompt, theme: theme}, null, 'json')
             .done(function(data) {
                 userManager.loadUserList();
             });

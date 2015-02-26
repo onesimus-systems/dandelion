@@ -14,10 +14,10 @@ class CategoriesAPI extends BaseModule
      *
      *  @return JSON
      */
-    public function add()
+    public function create()
     {
         if (!$this->ur->authorized('addcat')) {
-            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to add a category.', 'categories'));
+            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to create a category.', 'categories'));
         }
 
         $parent = $this->up->pid;
@@ -34,7 +34,7 @@ class CategoriesAPI extends BaseModule
     public function edit()
     {
         if (!$this->ur->authorized('editcat')) {
-            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to add a category.', 'categories'));
+            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to edit a category.', 'categories'));
         }
 
         $cid = $this->up->cid;
@@ -51,7 +51,7 @@ class CategoriesAPI extends BaseModule
     public function delete()
     {
         if (!$this->ur->authorized('deletecat')) {
-            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to add a category.', 'categories'));
+            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to delete a category.', 'categories'));
         }
 
         $cat = $this->up->cid;

@@ -77,7 +77,7 @@ var permissions = {
         if (group !== 0) {
 			var newPermissionsJson = JSON.stringify(newPermissions);
 
-			$.post('api/i/rights/save', { rights: newPermissionsJson, groupid: group }, null, 'json')
+			$.post('api/i/rights/edit', { rights: newPermissionsJson, groupid: group }, null, 'json')
 				.done(function( json ) {
 					$.alert(json.data, 'User Groups');
 					$("#permissionsForm")[0].reset();

@@ -17,7 +17,7 @@ class KeyManagerAPI extends BaseModule
      *
      *  @return JSON - API Key or error message
      */
-    public function getKey($user = null, $force = false)
+    public function get($user = null, $force = false)
     {
         if (!$user) {
             $user = USER_ID;
@@ -29,15 +29,15 @@ class KeyManagerAPI extends BaseModule
     /**
      *  Called to force a new key to be generated
      */
-    public function newKey()
+    public function generate()
     {
-        return self::getKey(USER_ID, true);
+        return self::get(USER_ID, true);
     }
 
     /**
      *  Delete a user's key rendering it void
      */
-    public function revokeKey()
+    public function revoke()
     {
         $userid = USER_ID;
 
@@ -46,7 +46,7 @@ class KeyManagerAPI extends BaseModule
             if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
                 $userid = $this->up->uid;
             } else {
-                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'keyManager'));
+                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'keymanager'));
             }
         }
 
@@ -61,6 +61,14 @@ class KeyManagerAPI extends BaseModule
      */
     private function encodeKey($key)
     {
-        return array("key" => $key);
+        return ['key' => $key];
+    }
+
+    /**
+     *
+     */
+    public function test() {
+        // By time the request reaches here, the key has been verified
+        return 'Key is good';
     }
 }

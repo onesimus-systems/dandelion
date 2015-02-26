@@ -65,11 +65,6 @@ class ApiController extends BaseController
      */
     private function processRequest($key, $localCall, $module, $request)
     {
-        if ($module == 'testkey') {
-            // Checks for a good API key and notifies requester
-            return $this->testkey($key);
-        }
-
         /*
          * Declare request source as the api Default value is empty in bootstrap.php
          */
@@ -88,6 +83,11 @@ class ApiController extends BaseController
 
         $DatabaseConn = MySqlDatabase::getInstance();
         $urlParams = new UrlParameters();
+
+        // Shortened alias for keymanager
+        if ($module === 'key') {
+            $module = 'keymanager';
+        }
 
         // Call the requested function (as defined by the last part of the URL)
         $className = '\Dandelion\API\Module\\' . $module . 'API';
@@ -138,22 +138,6 @@ class ApiController extends BaseController
             exit(self::makeDAPI(1, 'API key is not valid', 'api'));
         }
         return;
-    }
-
-    /**
-     * Test API key, used by extensions to verify key
-     *
-     * @param string $key - API key to test
-     *
-     * @return DAPI object
-     */
-    private function testkey($key)
-    {
-        if ($this->verifyKey($key)) {
-            return self::makeDAPI(0, 'API key is good', 'api');
-        } else {
-            return self::makeDAPI(1, 'Invalid API key', 'api');
-        }
     }
 
     /**

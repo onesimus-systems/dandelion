@@ -31,7 +31,7 @@ class RightsAPI extends BaseModule
     /**
      * Save rights for a group
      */
-    public function save()
+    public function edit()
     {
         if (!$this->ur->authorized('editgroup')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));

@@ -59,7 +59,7 @@ class UsersAPI extends BaseModule
     /**
      * Save edits to a user
      */
-    public function save()
+    public function edit()
     {
         if (!$this->ur->authorized('edituser')) {
             exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
