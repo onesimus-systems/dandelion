@@ -8,6 +8,29 @@ use \Dandelion\Repos\Interfaces\RightsRepo;
 
 class Permissions
 {
+    private $defaultPermissions = [
+        'createlog' => false,
+        'editlog' => false,
+        'viewlog' => false,
+
+        'addcat' => false,
+        'editcat' => false,
+        'deletecat' => false,
+
+        'adduser' => false,
+        'edituser' => false,
+        'deleteuser' => false,
+
+        'addgroup' => false,
+        'editgroup' => false,
+        'deletegroup' => false,
+
+        'viewcheesto' => false,
+        'updatecheesto' => false,
+
+        'admin' => false
+    ];
+
     public function __construct(RightsRepo $repo)
     {
         $this->repo = $repo;
@@ -22,9 +45,11 @@ class Permissions
     public function getGroupList($groupID = null)
     {
         if ($groupID === null) {
-            return $this->repo->getAllGroupLists();
+            return $this->repo->getGroupList();
         } else {
-            return $this->repo->getGroupList($groupID);
+            $group =  $this->repo->getGroup($groupID);
+            $group['permissions'] = unserialize($group['permissions']);
+            return $group;
         }
     }
 
@@ -37,6 +62,7 @@ class Permissions
      */
     public function createGroup($name, $rights)
     {
+        $rights = array_merge($this->defaultPermissions, $rights);
         $rights = serialize($rights);
         return $this->repo->createGroup(strtolower($name), $rights);
     }
@@ -61,6 +87,7 @@ class Permissions
      */
     public function editGroup($gid, $rights)
     {
+        $rights = array_merge($this->defaultPermissions, $rights);
         $rights = serialize($rights);
         return $this->repo->editGroup($gid, $rights);
     }
@@ -77,15 +104,19 @@ class Permissions
     }
 
     /**
-     * Determine if any users belong to group id $gid
+     * Determine if any users belong to group id/name $group
      *
-     * @param int $gid - Group ID number
+     * @param int/string $group - Group ID or name
      * @return array - Containing user IDs of users in group
      */
-    public function usersInGroup($gid)
+    public function usersInGroup($group)
     {
-        // Get name of group to search users table
-        $groupName = $this->getGroupList($gid)['role'];
+        if (is_numeric($group)) {
+            // Get name of group to search users table
+            $groupName = $this->getGroupList($group)['role'];
+        } else {
+            $groupName = $group;
+        }
 
         return $this->repo->usersInGroup($groupName);
     }

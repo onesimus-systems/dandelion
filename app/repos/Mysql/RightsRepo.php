@@ -8,7 +8,7 @@ use \Dandelion\Repos\Interfaces;
 
 class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
 {
-    public function getGroupList($gid)
+    public function getGroup($gid)
     {
         $this->database->select()
             ->from($this->prefix . 'rights')
@@ -17,9 +17,11 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
         return $this->database->getFirst(['id' => $gid]);
     }
 
-    public function getAllGroupLists()
+    public function getGroupList()
     {
-        return $this->database->selectAll('rights')->get();
+        return $this->database->select('id, role')
+            ->from($this->prefix . 'rights')
+            ->get();
     }
 
     public function createGroup($name, $rights)

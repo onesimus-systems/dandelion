@@ -55,7 +55,7 @@ var permissions = {
 
         $.get('api/i/rights/getgroup', {groupid: group}, null, 'json')
             .done(function(json) {
-                permissions.showPermissions(json.data);
+                permissions.showPermissions(json.data.permissions);
             });
     },
 

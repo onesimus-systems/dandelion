@@ -15,11 +15,7 @@ class RightsAPI extends BaseModule
     public function getList()
     {
         $permissions = new Permissions($this->repo);
-        $allGroups = $permissions->getGroupList();
-        foreach ($allGroups as $key => $value) {
-            $allGroups[$key]['permissions'] = unserialize($allGroups[$key]['permissions']);
-        }
-        return $allGroups;
+        return $permissions->getGroupList();
     }
 
     /**
@@ -29,7 +25,7 @@ class RightsAPI extends BaseModule
     {
         $permissions = new Permissions($this->repo);
         $gid = $this->up->groupid;
-        return unserialize($permissions->getGroupList($gid)['permissions']);
+        return $permissions->getGroupList($gid);
     }
 
     /**
@@ -87,8 +83,7 @@ class RightsAPI extends BaseModule
 
         if (isset($users[0])) {
             return 'This group is assigned to users.<br>Can not delete this group.';
-        }
-        else {
+        } else {
             $permissions->deleteGroup($gid);
             return 'Group deleted successfully.';
         }
