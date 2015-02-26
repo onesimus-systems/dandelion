@@ -24,23 +24,12 @@ class CheestoAPI extends BaseModule
         }
 
         $cheesto = new Cheesto($this->repo);
-        return $cheesto->getAllStatuses();
-    }
 
-    /**
-     *  Get Cheesto status of a single user
-     */
-    public function readone()
-    {
-        if (!$this->app->config['cheestoEnabled']) {
-            exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
+        if ($this->up->uid) {
+            return $cheesto->getUserStatus($this->up->uid);
+        } else {
+            return $cheesto->getAllStatuses();
         }
-        if (!$this->ur->authorized('viewcheesto')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
-        }
-
-        $cheesto = new Cheesto($this->repo);
-        return $cheesto->getUserStatus($this->up->uid);
     }
 
     /**
