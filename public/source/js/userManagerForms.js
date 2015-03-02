@@ -187,7 +187,7 @@ userManager.uiforms = {
         var statusSelect = $('<select/>').attr('id', 'status_text');
         statusSelect.append('<option value="-1">Set Status:</option>');
         for (var key in status.data.statusOptions) {
-            statusSelect.append('<option>'+status.data.statusOptions[key]+'</option>');
+            statusSelect.append('<option value="'+status.data.statusOptions[key]+'">'+status.data.statusOptions[key]+'</option>');
         }
         statusCell.append(statusSelect);
         statusRow.append(statusCell);

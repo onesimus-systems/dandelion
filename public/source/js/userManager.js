@@ -200,7 +200,7 @@ var userManager = {
 
 	cxeesto: function() { // Change user status
         var uid = $('#status_uid').val();
-        var status = $("select#status_text").prop("selectedIndex") - 1;
+        var status = $('#status_text').val();
         var message = $('#status_message').val();
         var returntime = $('#status_return').val();
 

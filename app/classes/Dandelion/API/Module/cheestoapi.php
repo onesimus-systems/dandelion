@@ -28,7 +28,7 @@ class CheestoAPI extends BaseModule
         if ($this->up->uid) {
             return $cheesto->getUserStatus($this->up->uid);
         } else {
-            return $cheesto->getAllStatuses();
+            return $cheesto->getUserStatus();
         }
     }
 
@@ -60,7 +60,7 @@ class CheestoAPI extends BaseModule
 
         $cheesto = new Cheesto($this->repo);
         $message = $this->up->get('message', '');
-        $status = $this->up->get('status', 0);
+        $status = $this->up->get('status', 'Available');
         $returntime = $this->up->get('returntime', '00:00:00');
         $userid = USER_ID;
 

@@ -15,6 +15,21 @@ $config = [
         'tablePrefix' => $_POST['db_prefix'] ?: 'dan_',
     ],
 
+    'cheesto' => [
+        'statusOptions' => [
+            'Available',
+            'Away From Desk',
+            'At Lunch',
+            'Out for Day',
+            'Out',
+            'Appointment',
+            'Do Not Disturb',
+            'Meeting',
+            'Out Sick',
+            'Vacation'
+        ]
+    ],
+
     'hostname' => $_POST['hostname'] ? rtrim($_POST['hostname'], '/') : 'http://localhost',
     'phpSessionName' => 'dan_session_1',
     'gcLottery' => [2, 100],
@@ -51,8 +66,11 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $sql = file_get_contents(__DIR__."/base_{$config['db']['type']}_db.sql");
-    // Replace the default dan_ prefix with the user defined prefix
-    $sql = str_replace('dan_', $config['db']['tablePrefix'], $sql);
+
+    if ($config['db']['tablePrefix'] != 'dan_') {
+        // Replace the default dan_ prefix with the user defined prefix
+        $sql = str_replace('dan_', $config['db']['tablePrefix'], $sql);
+    }
 
     $exec = $conn->prepare($sql);
     $success = $exec->execute();

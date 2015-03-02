@@ -80,7 +80,7 @@ var presence =
         statusSelect.append('<option value="-1">Set Status:</option>');
 
         for (var key2 in dataObj.statusOptions) {
-            var html = '<option>' + dataObj.statusOptions[key2] + '</option>';
+            var html = '<option value="' + dataObj.statusOptions[key2] + '">' + dataObj.statusOptions[key2] + '</option>';
             statusSelect.append(html);
         }
 
@@ -116,7 +116,7 @@ var presence =
 
                 var html = '<tr>\
                     <td class="textLeft"><span title="' + user.message + '"' + classm + '>' + user.realname + '</span></td>\
-                    <td><span title="' + dataObj.statusOptions[user.status] + '&#013;Return: ' + user.returntime + '" class="' + user.statusInfo.color + '">' + user.statusInfo.symbol + '</td>\
+                    <td><span title="' + user.status + '&#013;Return: ' + user.returntime + '" class="' + '' + '">' + user.status + '</td>\
                     </tr>';
 
                 table.append(html);
@@ -172,19 +172,18 @@ var presence =
     },
 
     setStatus: function (ver) {
-        newStatus = $("select#cstatus").prop("selectedIndex") - 1;
-        $("select#cstatus").prop("selectedIndex", 0);
+        newStatus = $("#cstatus").val();
+        $("#cstatus").prop("selectedIndex", 0);
         var rtime;
 
-        if (newStatus > 0) {
+        if (newStatus != 'Available') {
             // Status requires a return time and optional status
             rtime = ""; // jshint ignore:line
             window.open("getdate", "getdate", "location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
-        }
-        else if (newStatus === 0) {
+        } else {
             // Status is Available
             rtime = "00:00:00"; // jshint ignore:line
-            presence.sendNewStatus(0, rtime, ver, "");
+            presence.sendNewStatus(newStatus, rtime, ver, '');
         }
     },
 

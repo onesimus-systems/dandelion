@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `dan_presence` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `realname` text NOT NULL,
-  `status` tinyint(2) NOT NULL,
+  `status` tinytext NOT NULL,
   `message` text NOT NULL,
   `returntime` text NOT NULL,
   `dmodified` datetime NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `dan_presence` (
 --
 
 INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `returntime`, `dmodified`) VALUES
-  (1, 1, 'Admin', 0, '', '00:00:00', '2015-01-01 00:00:00');
+  (1, 1, 'Admin', 'Available', '', '00:00:00', '2015-01-01 00:00:00');
 
 -- --------------------------------------------------------
 
