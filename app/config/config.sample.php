@@ -16,6 +16,22 @@ return array(
         'tablePrefix' => 'dan_',
     ),
 
+    'cheesto' => array(
+        // Pre-made options for statuses
+        'statusOptions' => array(
+            'Available',
+            'Away From Desk',
+            'At Lunch',
+            'Out for Day',
+            'Out',
+            'Appointment',
+            'Do Not Disturb',
+            'Meeting',
+            'Out Sick',
+            'Vacation'
+        )
+    ),
+
     // Application configuration
     // FQDN/IP for the application
     'hostname' => 'http://localhost',

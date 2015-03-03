@@ -11,7 +11,7 @@ class Cheesto
 {
     public function __construct(CheestoRepo $repo)
     {
-        $this->statucOptions = Configuration::getConfig()['cheesto']['statusOptions'];
+        $this->statusOptions = Configuration::getConfig()['cheesto']['statusOptions'];
         $this->repo = $repo;
         return;
     }
