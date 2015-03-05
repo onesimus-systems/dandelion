@@ -1,0 +1,86 @@
+/**
+ * Header styles
+ */
+@import (reference) "_base";
+
+header {
+    margin-bottom: 0;
+    font-size: 0;
+
+    .title-lockup {
+        font-size: initial;
+        padding-top: 20px;
+        line-height: 50px;
+
+        .app-title {
+            font-size: 2.75em;
+            font-weight: bold;
+            padding: 20px;
+        }
+
+        .app-tagline {
+            font-size: 20px;
+        }
+
+        #dandelion-lib > .media-query(screen, small, {
+            line-height: initial;
+            padding-top: 0;
+
+            .app-title, .app-tagline {
+                padding: 10px 10px 5px 10px;
+                display: block;
+            }
+        });
+    }
+
+    nav {
+    	margin: 0;
+    	font-size: 0;
+        background-color: @navbar-bg-color;
+        width: 100%;
+
+        #dandelion-lib > .media-query(screen, small, {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        });
+
+        ul {
+            padding-left: 0;
+
+            li {
+                display: inline-block;
+                font-size: initial;
+                text-transform: uppercase;
+
+                a {
+                    display: inline-block;
+                    text-decoration: none;
+                    color: @navbar-text-color;
+                    padding: 15px 20px;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: @navbar-hover-bg-color;
+
+                    a {
+                        text-decoration: none;
+                        color: @navbar-hover-text-color;
+                    }
+                }
+
+                #dandelion-lib > .media-query(screen, small, {
+                    display: block;
+                    width: 100%;
+                    padding: 0;
+
+                    a {
+                        width: 100%;
+                        padding: 15px 0;
+                    }
+                });
+            }
+        }
+    }
+}

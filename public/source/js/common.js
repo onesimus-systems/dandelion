@@ -4,7 +4,7 @@ $.extend({ alert: function (message, title, callback) {
     if (typeof callback === 'undefined') {
         callback = function(){};
     }
-    $("<div></div>").dialog( {
+    $("<div></div>").dialog({
         buttons: { "Ok": function () { $(this).dialog("close"); } },
         close: function (event, ui) { $(this).remove(); callback(); },
         resizable: false,

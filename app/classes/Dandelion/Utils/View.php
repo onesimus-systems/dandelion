@@ -37,14 +37,13 @@ class view
 
         switch (strtolower($name)) {
             case 'jquery':
-                $include .= '<script src="assets/js/vendor/jquery/js/jquery-2.1.1.min.js"></script>';
+                $include .= '<script src="assets/js/vendor/jquery/js/jquery-2.1.3.min.js"></script>';
                 break;
             case 'jqueryui':
-                $include .= '<script src="assets/js/vendor/jquery/js/jquery-ui-1.10.4.min.js"></script>';
+                $include .= '<script src="assets/js/vendor/jquery/js/jquery-ui-1.11.3.min.js"></script>';
                 break;
-            case 'tinymce':
-                $include .= '<script src="assets/js/vendor/tinymce/js/jquery.tinymce.min.js"></script>';
-                $include .= '<script src="assets/js/vendor/tinymce/js/tinymce.min.js"></script>';
+            case 'jhtmlarea':
+                $include .= '<script src="assets/js/vendor/jhtmlarea/jHtmlArea-0.8.min.js"></script>';
                 break;
         }
         return $include;
@@ -102,7 +101,7 @@ class view
             return '';
         }
 
-        $themeList .= '<select name="userTheme" id="userTheme">';
+        $themeList .= '<select id="theme">';
         if ($showDefaultOption) {
             $themeList .= '<option value="default">Default</option>';
         }
@@ -160,7 +159,10 @@ class view
 
             // Special case for jQueryUI styles
             if ($normalized == 'jqueryui') {
-                $cssList .= '<link rel="stylesheet" type="text/css" href="assets/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="assets/js/vendor/jquery/css/jquery-ui.min.css">';
+                continue;
+            } elseif ($normalized == 'jhtmlarea') {
+                $cssList .= '<link rel="stylesheet" type="text/css" href="assets/js/vendor/jhtmlarea/styles/jHtmlArea.css">';
                 continue;
             }
 

@@ -1,0 +1,54 @@
+/**
+ *	Footer styles
+ */
+
+@import (reference) "_base";
+
+ footer {
+ 	clear: both;
+ 	background-color: @navbar-bg-color;
+ 	color: @navbar-text-color;
+ 	padding: 20px 0;
+ 	text-align: center;
+
+ 	height: 20px;
+ 	width: 100%;
+
+ 	#dandelion-lib > .media-query(screen, small, {
+		height: initial;
+		padding: 10px 0;
+	});
+
+ 	a {
+ 		text-decoration: none;
+ 		color: @dandelion-accent-light;
+
+        &:hover {
+            text-decoration: underline;
+        }
+ 	}
+
+ 	.footer-info {
+ 		box-decoration-break: clone;
+ 		-webkit-box-decoration-break: clone;
+
+ 		span.dash {
+ 			&:after {
+ 				content: " - ";
+			}
+ 		}
+
+ 		#dandelion-lib > .media-query(screen, small, {
+ 			padding: 0;
+
+ 			span {
+ 				display: block;
+ 				padding: 2px 0;
+
+ 				&.dash:after {
+ 					content: none;
+ 				}
+ 			}
+ 		});
+ 	}
+ }

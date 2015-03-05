@@ -1,10 +1,62 @@
+// Library mixins
+
+@dandelion-light-orange: #ffb732;
+@dandelion-mid-orange: #ffa500;
+@dandelion-dark-orange: #996300;
+
+@dandelion-light-grey: #c3c3c3;
+@dandelion-mid-grey: #636363;
+@dandelion-dark-grey: #363636;
+
+@dandelion-light-red: #ff3232;
+@dandelion-mid-red: #b20000;
+@dandelion-dark-red: #330000;
+
+@dandelion-accent: @dandelion-dark-orange;
+@dandelion-accent-light: @dandelion-mid-orange;
+
+@body-bg-color: lighten(@dandelion-light-grey, 10%);
+
+@navbar-bg-color: @dandelion-dark-grey;
+@navbar-hover-bg-color: @dandelion-mid-grey;
+@navbar-text-color: white;
+@navbar-hover-text-color: white;
+
+@button-text-color: white;
+@button-bg-color: @dandelion-mid-red;
+@button-hover-text-color: white;
+@button-hover-bg-color: lighten(@dandelion-mid-red, 15%);
 
 #dandelion-lib {
-	@screen-large-size: 999px;
-	@screen-small-size: 610px;
+	@screen-large-size: 960px;
+	@screen-small-size: 500px;
 
 	.media-query(@device; @size; @rules) {
 		@type: "@{device}-@{size}-size";
 		@media @device and (max-width: @@type) { @rules(); }
+	}
+
+	.button() {
+		color: @button-text-color;
+		background-color: @button-bg-color;
+        padding: 5px 10px;
+		border: 0;
+	}
+
+	.button-hover() {
+		&:hover {
+	        background-color: @button-hover-bg-color;
+	        color: @button-hover-text-color;
+	        box-shadow: none;
+	    }
+	}
+
+	.select() {
+        border: none;
+        padding: 0 .5em;
+        font-size: 1em;
+        height: 1.5em;
+        background-color: @button-bg-color;
+        color: @button-text-color;
 	}
 }

@@ -5,23 +5,40 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="assets/favicon.ico">
+
         <?= $this->getCssSheets($requiredCssFiles) ?>
         <title><?= $this->e($appTitle) ?> - <?= $this->e($pageTitle) ?></title>
     </head>
     <body>
         <header>
-            <h1><?= $this->e($appTitle) ?> </h1>
-            <h4><?= $this->e($tagline) ?> </h4>
+            <div class="title-lockup">
+                <span class="app-title"><?= $this->e($appTitle) ?></span>
+                <span class="app-tagline"><?= $this->e($tagline) ?></span>
+            </div>
 
             <nav>
-                <a href=".">Dashboard</a><a href="settings">Settings</a><a href="admin">Administration</a><a href="tutorial">Tutorial</a><a href="logout">Logout</a>
+                <ul>
+                    <li><a href="./">Dashboard</a></li>
+                    <li><a href="settings">Settings</a></li>
+                    <li><a href="messages">Messages</a></li>
+                    <li><a href="admin">Administration</a></li>
+                    <li><a href="logout">Logout</a></li>
+                </ul>
             </nav>
         </header>
 
-        <?= $this->section('content') ?>
+        <div class="main-content">
+            <?= $this->section('content') ?>
+        </div>
 
         <footer>
-            &copy; 2014 Onesimus Computer Systems | <a href="about" class="aboutlink">Dandelion v<?= $this->e($appVersion) ?></a>
+            <span class="footer-info">
+                <span class="dash">Copyright &copy;2015 Onesimus Systems</span>
+                <span class="dash">License: <a href="">GPLv3</a></span>
+                <span class="dash">Version: <?= $this->e($appVersion) ?></span>
+                <span class="dash"><a href="about.html">About</a></span>
+                <span><a href="help.html">Help</a></span>
+            </span>
         </footer>
     </body>
 </html>
