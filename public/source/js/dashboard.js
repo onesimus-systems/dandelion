@@ -2,7 +2,7 @@
  * Scripts for Dashboard
  */
 /* global document, window, searchFun, $, setInterval,
-    setTimeout, clearInterval, console, Categories, alert */
+    setTimeout, clearInterval, Categories, Cheesto */
 
 "use strict"; // jshint ignore:line
 
@@ -13,6 +13,7 @@ $(document).ready(function() {
     Refresh.init();
     View.init();
     Search.init();
+    Cheesto.dashboardInit();
 
     $('#show-cheesto-button').click(function() {
         Section.show(this, 'messages-panel');
@@ -288,7 +289,6 @@ var AddEdit =
                     $.alert(json.data, 'Create Log', function() {
                         $('#add-edit-form').dialog('close');
                     });
-                    console.log(json.data);
                 }, 'json');
         } else {
             $('#messages').html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();

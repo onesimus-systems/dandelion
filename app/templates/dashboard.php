@@ -2,9 +2,9 @@
 /**
  * Dashboard page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'jhtmlarea']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'jhtmlarea', 'datetimepicker']]);
 ?>
-<div id="add-edit-form">
+<div id="add-edit-form" class="hidden-dialog">
     <form>
         Title: <input type="text" id="log-title" value="" size="60"><br><br>
         <textarea id="log-body" cols="80" rows="10"></textarea><br>
@@ -13,12 +13,53 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     <div id="messages"></div>
 </div>
 
+<div id="cheesto-status-form" class="hidden-dialog">
+    <form>
+        <fieldset class="outer">
+            Time Quick Set:
+            <table>
+                <tr>
+                    <td>10 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(10);"></td>
+                    <td>20 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(20);"></td>
+                </tr>
+                <tr>
+                    <td>30 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(30);"></td>
+                    <td>40 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(40);"></td>
+                </tr>
+                <tr>
+                    <td>50 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(50);"></td>
+                    <td>1 Hour<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(60);">
+                </tr>
+                <tr>
+                    <td>1 Hour 15 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(75);"></td>
+                    <td>1 Hour 30 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(90);"></td>
+                </tr>
+                <tr>
+                    <td>1 Hour 45 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(105);"></td>
+                    <td>2 Hours<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(120);"></td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <fieldset class="outer">
+            <fieldset>
+                <label for="cheesto-date-pick">Return Time:</label>
+                <input type="text" id="cheesto-date-pick" value="Today">
+            </fieldset>
+            <fieldset>
+                <label for="cheesto-message-text">Message:</label>
+                <textarea id="cheesto-message-text" cols="25" rows="10"></textarea>
+            </fieldset>
+        </fieldset>
+    </form>
+</div>
+
 <button type="button" class="section-title disabled" id="show-cheesto-button">Show Message Center</button>
 
 <section id="messages-panel" class="messages-panel">
     <?php if ($showCheesto): ?>
-        <div class="messages-cheesto">
-            <div class="messages-cheesto-header">
+        <div id="messages-cheesto">
+            <div id="messages-cheesto-header">
                 <span class="messages-title">Ĉeesto</span>
 
                 <div class="messages-controls">
@@ -28,7 +69,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
                 </div>
             </div>
 
-            <div id="cheesto-status-table" class="messages-cheesto-content"></div>
+            <div id="messages-cheesto-content">Loading...</div>
         </div>
     <?php endif; ?>
 
@@ -72,4 +113,4 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     <?php endif; ?>
 </section>
 
-<?= $this->loadJS(['jquery', 'jqueryui', 'jhtmlarea', 'common', 'categories', 'dashboard']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'jhtmlarea', 'timepicker', 'common', 'categories', 'cheesto', 'dashboard']) ?>

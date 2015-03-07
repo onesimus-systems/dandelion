@@ -12,10 +12,6 @@
         height: initial;
     });
 
-    #add-edit-form {
-        display: none;
-    }
-
     .section-title {
         font-size: 1.5em;
         width: 100%;
@@ -93,7 +89,7 @@
             }
         }
 
-        .messages-cheesto {
+        #messages-cheesto {
             .messages-common-styles();
 
             #status-select {
@@ -218,6 +214,33 @@
                     }
                 }
             }
+        }
+    }
+}
+
+#cheesto-status-form {
+    fieldset {
+        border: none;
+
+        table {
+            margin-top: 10px;
+
+            td {
+                border: 1px solid black;
+                padding: 5px;
+
+                input {
+                    margin-left: 5px;
+                }
+            }
+        }
+
+        label {
+            display: block;
+        }
+
+        &.outer {
+            float: left;
         }
     }
 }
