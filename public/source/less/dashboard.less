@@ -6,6 +6,7 @@
 
 .main-content {
     margin: 0;
+    //overflow: auto;
 
     #dandelion-lib > .media-query(screen, small, {
         margin-bottom: 20px;
@@ -29,20 +30,14 @@
         });
     }
 
-    section {
-        float: left;
-
-        #dandelion-lib > .media-query(screen, small, {
-            float: none;
-        });
-    }
-
     .messages-panel {
-        width: 25%;
+        float: left;
+        width: 250px;
 
         #dandelion-lib > .media-query(screen, small, {
             width: 100%;
             display: none;
+            float: none;
         });
 
         .messages-common-styles() {
@@ -116,14 +111,13 @@
     }
 
     .logs-panel {
-        width: 75%;
-        height: 100%;
         border-left: 2px solid @dandelion-dark-grey;
-        margin-left: -2px;
+        margin-left: 250px;
 
         #dandelion-lib > .media-query(screen, small, {
-            width: 100%;
+            //width: 100%;
             display: none;
+            margin-left: 0;
         });
 
         .control-panel {

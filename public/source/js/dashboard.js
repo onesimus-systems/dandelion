@@ -62,7 +62,7 @@ var Section =
             elem.innerHTML = elem.innerHTML.replace(/^Hide\s/, 'Show ');
         }
 
-        $('#'+panel).toggle();
+        $('#'+panel).toggleClass('enabled');
     }
 };
 
