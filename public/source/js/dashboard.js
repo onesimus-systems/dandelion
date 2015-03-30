@@ -76,7 +76,10 @@ var View =
         $('#prev-page-button').click(View.loadPrevPage);
         $('#next-page-button').click(View.loadNextPage);
         $('#create-log-button').click(AddEdit.showAddInputs);
-        $('#clear-search-button').click(function() { Refresh.refreshLog(true); });
+        $('#clear-search-button').click(function() {
+            $('#search-query').val('');
+            Refresh.refreshLog(true);
+        });
     },
 
     makeLogView: function(data) {
@@ -111,7 +114,7 @@ var View =
 
             if (log.edited == "1") { html += '(Amended)'; }
 
-            html += '</span><span class="log-meta-cat">Categorized as <a href="#" onClick="searchFun.filter(\'' + log.cat + '\');">'+ log.cat +'</a></span></p></div>';
+            html += '</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink(\'' + log.cat + '\');">'+ log.cat +'</a></span></p></div>';
 
             logs += html;
         }
@@ -188,12 +191,24 @@ var Search =
         }
     },
 
-    // Search for keyword or datestamp
+    // Execute search from button or enter key
     searchLog: function(offset) {
-        if (typeof offset === 'undefined') {
-            offset = 0;
-        }
+        if (typeof offset !== 'number') { offset = 0; }
         var query = $('#search-query').val();
+        Search.exec(query, offset);
+    },
+
+    // Execute category search from link
+    searchLogLink: function(query) {
+        query = 'category:"'+query+'"';
+        $('#search-query').val(query);
+        Search.exec(query, 0);
+    },
+
+    // Send search query to server
+    exec: function(query, offset) {
+        if (typeof query === 'undefined') { return false; }
+        if (typeof offset === 'undefined') { offset = 0; }
 
         $.post('api/i/logs/search', {query: query, offset: offset}, function(json) {
             search = true;
