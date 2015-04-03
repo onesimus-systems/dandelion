@@ -21,6 +21,7 @@ class Configuration
 
         if (!self::$loaded) {
             self::$config = include $paths['app'] . '/config/config.php';
+            self::$config['hostname'] = rtrim(self::$config['hostname'], '/');
             self::$loaded = true;
         }
         return self::$config;

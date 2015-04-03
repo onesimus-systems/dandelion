@@ -37,7 +37,8 @@ class Template
             'appTitle' => $this->app->config['appTitle'],
             'tagline' => $this->app->config['tagline'],
             'appVersion' => Application::VERSION,
-            'pageTitle' => $title
+            'pageTitle' => $title,
+            'hostname' => $this->app->config['hostname']
         ]);
 
         try {

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="x-ua-compatible" content="IE=9">
-        <link rel="icon" type="image/ico" href="assets/favicon.ico">
+        <link rel="icon" type="image/ico" href="<?= $this->e($hostname) ?>/assets/favicon.ico">
 
         <?= $this->getCssSheets($requiredCssFiles) ?>
         <title><?= $this->e($appTitle) ?> - <?= $this->e($pageTitle) ?></title>
@@ -18,10 +18,10 @@
 
             <nav>
                 <ul>
-                    <li><a href="./">Dashboard</a></li>
-                    <li><a href="settings">Settings</a></li>
-                    <li><a href="admin">Administration</a></li>
-                    <li><a href="logout">Logout</a></li>
+                    <li><a href="<?= $this->e($hostname) ?>">Dashboard</a></li>
+                    <li><a href="<?= $this->e($hostname) ?>/settings">Settings</a></li>
+                    <li><a href="<?= $this->e($hostname) ?>/admin">Administration</a></li>
+                    <li><a href="<?= $this->e($hostname) ?>/logout">Logout</a></li>
                 </ul>
             </nav>
         </header>
@@ -35,8 +35,8 @@
                 <span class="dash">Copyright &copy;2015 Onesimus Systems</span>
                 <span class="dash">License: <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">GPLv3</a></span>
                 <span class="dash">Version: <?= $this->e($appVersion) ?></span>
-                <span class="dash"><a href="about">About</a></span>
-                <span><a href="help">Help</a></span>
+                <span class="dash"><a href="<?= $this->e($hostname) ?>/about">About</a></span>
+                <span><a href="<?= $this->e($hostname) ?>/help">Help</a></span>
             </span>
         </footer>
     </body>
