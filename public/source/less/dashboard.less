@@ -6,7 +6,6 @@
 
 .main-content {
     margin: 0;
-    //overflow: auto;
 
     #dandelion-lib > .media-query(screen, small, {
         margin-bottom: 20px;
@@ -92,22 +91,6 @@
                 margin-top: 5px;
             }
         }
-
-        .messages-msg {
-            .messages-common-styles();
-            border-top: 1px solid @dandelion-dark-grey;
-
-            .messages-controls {
-                margin-top: 10px;
-            }
-
-            &-content {
-                table td a {
-                    text-decoration: none;
-                    color: @dandelion-dark-orange;
-                }
-            }
-        }
     }
 
     .logs-panel {
@@ -177,9 +160,10 @@
 
         #log-list {
             margin: 0 10px;
+            padding-bottom: 10px;
 
             .log-entry {
-                margin: 0 0 20px 0;
+                margin: 20px 0 0 0;
 
                 button {
                     margin-left: 10px;
@@ -195,6 +179,8 @@
                 }
 
                 .log-metadata {
+                    margin-bottom: 0;
+
                     span {
                         display: block;
                     }

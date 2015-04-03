@@ -72,18 +72,6 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
             <div id="messages-cheesto-content">Loading...</div>
         </div>
     <?php endif; ?>
-
-    <div class="messages-msg">
-        <div class="messages-msg-header">
-            <span class="messages-title">Messages</span>
-
-            <div class="messages-controls">
-                <button class="button" id="new-msg-button">New</button>
-            </div>
-        </div>
-
-        <div id="msgs-table" class="messages-msg-content"></div>
-    </div>
 </section>
 
 

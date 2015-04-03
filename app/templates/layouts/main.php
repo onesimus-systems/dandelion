@@ -20,7 +20,6 @@
                 <ul>
                     <li><a href="./">Dashboard</a></li>
                     <li><a href="settings">Settings</a></li>
-                    <li><a href="messages">Messages</a></li>
                     <li><a href="admin">Administration</a></li>
                     <li><a href="logout">Logout</a></li>
                 </ul>
@@ -34,10 +33,10 @@
         <footer>
             <span class="footer-info">
                 <span class="dash">Copyright &copy;2015 Onesimus Systems</span>
-                <span class="dash">License: <a href="">GPLv3</a></span>
+                <span class="dash">License: <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">GPLv3</a></span>
                 <span class="dash">Version: <?= $this->e($appVersion) ?></span>
-                <span class="dash"><a href="about.html">About</a></span>
-                <span><a href="help.html">Help</a></span>
+                <span class="dash"><a href="about">About</a></span>
+                <span><a href="help">Help</a></span>
             </span>
         </footer>
     </body>
