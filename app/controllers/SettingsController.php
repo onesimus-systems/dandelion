@@ -14,8 +14,7 @@ class SettingsController extends BaseController
 {
 	public function settings()
 	{
-        $rightsRepo = Repos::makeRepo($this->app->config['db']['type'], 'Rights');
-        $userRights = new Rights($_SESSION['userInfo']['userid'], $rightsRepo);
+        $this->loadRights();
 
         $template = new Template($this->app);
 
@@ -25,15 +24,13 @@ class SettingsController extends BaseController
 
         $key = '';
         if ($this->app->config['publicApiEnabled']) {
-            $keyRepo = Repos::makeRepo($this->app->config['db']['type'], 'KeyManager');
-            $keyManager = new KeyManager($keyRepo);
+            $keyManager = new KeyManager(Repos::makeRepo('KeyManager'));
             $key = $keyManager->getKey($_SESSION['userInfo']['userid']);
         }
 
         $template->addData([
             'publicApiEnabled' => $this->app->config['publicApiEnabled'],
-            'apiKey' => $key,
-            'userRights' => $userRights
+            'apiKey' => $key
         ]);
 
         $template->render('settings', 'User Settings');

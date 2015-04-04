@@ -61,7 +61,7 @@ var Cheesto =
                     var user = dataObj[key];
 
                     var html = '<tr><td>' + user.realname + '</td>'+
-                        '<td class="status-cell" title="' + user.message + '&#013;Return: ' + user.returntime + '">'+
+                        '<td class="status-cell" title="Message: ' + user.message + '\nReturn: ' + user.returntime + '">'+
                         user.status + '</td></tr>';
 
                     table.append(html);

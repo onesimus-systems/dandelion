@@ -4,34 +4,54 @@
  */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Rights;
+use \Dandelion\Users;
 use \Dandelion\Template;
+use \Dandelion\Permissions;
 use \Dandelion\Utils\Repos;
+use \Dandelion\Utils\View;
 
 class AdminController extends BaseController
 {
 	public function admin($page = 'admin', $title = 'Administration')
 	{
-        $rightsRepo = Repos::makeRepo($this->app->config['db']['type'], 'Rights');
-        $userRights = new Rights($_SESSION['userInfo']['userid'], $rightsRepo);
+        $this->loadRights();
+        $userlist = [];
+
+        if ($this->rights->authorized(array('createuser', 'edituser', 'deleteuser'))) {
+            $userObj = new Users(Repos::makeRepo('Users'));
+            $userlist = $userObj->getUserList();
+        }
 
         $template = new Template($this->app);
-        $template->addData(['userRights' => $userRights]);
+        $template->addData([
+            'userRights' => $this->rights,
+            'userlist' => $userlist
+        ]);
         $template->render($page, $title);
 	}
 
-    public function editUsers()
+    public function editUser($uid = null)
     {
-        $this->admin('editusers', 'User Management');
-    }
+        if (!$uid) {
+            View::redirect('dashboard');
+        }
 
-    public function editGroups()
-    {
-        $this->admin('editgroups', 'Group Management');
-    }
+        $this->loadRights();
+        // Users without the proper permissions are redirected to the dashboard
+        if (!$this->rights->authorized(array('createuser', 'edituser', 'deleteuser'))) {
+            View::redirect('dashboard');
+        }
 
-    public function editCategories()
-    {
-        $this->admin('categories', 'Category Management');
+        $user = new Users(Repos::makeRepo('Users'), $uid, true);
+        $groups = new Permissions(Repos::makeRepo('Rights'));
+
+        $template = new Template($this->app);
+        $template->addData([
+            'userRights' => $this->rights,
+            'user' => $user,
+            'grouplist' => $groups->getGroupList(),
+            'statuslist' => $this->app->config['cheesto']['statusOptions']
+        ]);
+        $template->render('edituser', 'User Management');
     }
 }
