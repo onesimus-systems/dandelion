@@ -79,9 +79,9 @@ class RightsAPI extends BaseModule
 
         $permissions = new Permissions($this->repo);
         $gid = $this->up->groupid;
-        $users = $permissions->usersInGroup($gid);
+        $users = $permissions->usersExistInGroup($gid);
 
-        if (isset($users[0])) {
+        if ($users) {
             return 'This group is assigned to users.<br>Can not delete this group.';
         } else {
             $permissions->deleteGroup($gid);

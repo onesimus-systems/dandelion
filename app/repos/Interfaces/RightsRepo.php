@@ -12,6 +12,7 @@ interface RightsRepo
     public function deleteGroup($gid);
     public function editGroup($gid, $rights);
     public function loadRights($role);
+    public function userCountInGroup($role);
     public function usersInGroup($role);
     public function getRightsForUser($uid);
 }

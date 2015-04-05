@@ -84,11 +84,26 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
      * Determine if any users belong to group id $gid
      *
      * @param int $gid - Group ID number
-     * @return array - Containing user IDs of users in group
+     * @return int - Count of users in group
+     */
+    public function userCountInGroup($role)
+    {
+        $this->database->select('COUNT(*) AS "Users_in_group"')
+            ->from($this->prefix . 'users')
+            ->where(['role = :role']);
+
+        return $this->database->get(['role' => $role])['Users_in_group'];
+    }
+
+    /**
+     * Get usernames of users in a group
+     *
+     * @param  string $role Group name
+     * @return array        Usernames in group
      */
     public function usersInGroup($role)
     {
-        $this->database->select('userid')
+        $this->database->select('username')
             ->from($this->prefix . 'users')
             ->where(['role = :role']);
 

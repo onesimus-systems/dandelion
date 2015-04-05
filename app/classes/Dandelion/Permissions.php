@@ -109,6 +109,22 @@ class Permissions
      * @param int/string $group - Group ID or name
      * @return array - Containing user IDs of users in group
      */
+    public function usersExistInGroup($group)
+    {
+        if (is_numeric($group)) {
+            // Get name of group to search users table
+            $groupName = $this->getGroupList($group)['role'];
+        } else {
+            $groupName = $group;
+        }
+
+        if ($this->repo->userCountInGroup($groupName) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function usersInGroup($group)
     {
         if (is_numeric($group)) {
