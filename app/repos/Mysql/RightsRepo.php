@@ -11,7 +11,7 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function getGroupById($gid)
     {
         $this->database->select()
-            ->from($this->prefix . 'rights')
+            ->from($this->prefix . 'groups')
             ->where(['id = :id']);
 
         return $this->database->getFirst(['id' => $gid]);
@@ -20,7 +20,7 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function getGroupByName($gname)
     {
         $this->database->select()
-            ->from($this->prefix . 'rights')
+            ->from($this->prefix . 'groups')
             ->where(['role = :name']);
 
         return $this->database->getFirst(['name' => $gname]);
@@ -29,14 +29,14 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function getGroupList()
     {
         return $this->database->select('id, role')
-            ->from($this->prefix . 'rights')
+            ->from($this->prefix . 'groups')
             ->get();
     }
 
     public function createGroup($name, $rights)
     {
         $this->database->insert()
-            ->into($this->prefix . 'rights', ['role', 'permissions'])
+            ->into($this->prefix . 'groups', ['role', 'permissions'])
             ->values([':role', ':rights']);
 
         $this->database->go(['role' => $name, 'rights' => $rights]);
@@ -52,7 +52,7 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function deleteGroup($gid)
     {
         $this->database->delete()
-            ->from($this->prefix . 'rights')
+            ->from($this->prefix . 'groups')
             ->where(['id = :id']);
 
         return $this->database->go(['id' => $gid]);
@@ -67,7 +67,7 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
      */
     public function editGroup($gid, $rights)
     {
-        $this->database->update($this->prefix . 'rights')
+        $this->database->update($this->prefix . 'groups')
             ->set(['permissions = :rights'])
             ->where(['id = :gid']);
 
@@ -83,7 +83,7 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
     public function loadRights($role)
     {
         $this->database->select('permissions')
-            ->from($this->prefix . 'rights')
+            ->from($this->prefix . 'groups')
             ->where(['role = :role']);
 
         return $this->database->getFirst(['role' => $role])['permissions'];
@@ -121,10 +121,10 @@ class RightsRepo extends BaseMySqlRepo implements Interfaces\RightsRepo
 
     public function getRightsForUser($uid)
     {
-        $this->database->select('r.permissions')
-            ->from($this->prefix . 'rights AS r
+        $this->database->select('g.permissions')
+            ->from($this->prefix . 'groups AS g
               LEFT JOIN ' . $this->prefix . 'users AS u
-                  ON u.role = r.role')
+                  ON u.role = g.role')
             ->where('u.userid = :uid');
 
         return $this->database->getFirst(['uid' => $uid])['permissions'];
