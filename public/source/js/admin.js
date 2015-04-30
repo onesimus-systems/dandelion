@@ -1,4 +1,4 @@
-/* global document, $, location, console */
+/* global document, $, location, Categories */
 
 var Admin = {};
 
@@ -7,7 +7,11 @@ Admin.init = function() {
 
     $('#add-user-btn').click(Admin.showAddUserDialog);
     $('#add-role-button').click(Admin.showAddGroupDialog);
-    //Admin.loadCategoryList()
+
+    Categories.grabFirstLevel('categories');
+    $('#add-category-button').click(Categories.createNew);
+    $('#edit-category-button').click(Categories.editCat);
+    $('#delete-category-button').click(Categories.deleteCat);
 };
 
 Admin.editUser = function(userid) {

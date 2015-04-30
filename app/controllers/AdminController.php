@@ -17,7 +17,6 @@ class AdminController extends BaseController
         $this->loadRights();
         $userlist = [];
         $grouplist = [];
-        $catList = [];
 
         if ($this->rights->authorized('edituser', 'deleteuser')) {
             $userObj = new Users(Repos::makeRepo('Users'));
@@ -42,7 +41,7 @@ class AdminController extends BaseController
             'userRights' => $this->rights,
             'userlist' => $userlist,
             'grouplist' => $grouplist,
-            'catList' => $catList
+            'catList' => $this->rights->authorized('createcat', 'editcat', 'deletecat')
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
         $template->render('admin::admin', 'Administration');

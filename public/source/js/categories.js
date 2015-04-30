@@ -1,4 +1,4 @@
-/* global $, window, console */
+/* global $, window */
 
 "use strict"; // jshint ignore:line
 
@@ -73,10 +73,10 @@ var Categories =
     },
 
     createNew: function() {
-        var catString = this.getCatString();
+        var catString = Categories.getCatString();
         var message = 'Add new category\n\n';
 
-        if (this.currentSelection.length == 1) {
+        if (Categories.currentSelection.length == 1) {
             message = 'Create new root category:';
             catString = '';
         }
@@ -89,7 +89,7 @@ var Categories =
             } else if (newCatDesc === null) {
                 return false;
             } else {
-                this.addNew(encodeURIComponent(newCatDesc));
+                Categories.addNew(encodeURIComponent(newCatDesc));
                 break;
             }
         }
@@ -97,7 +97,7 @@ var Categories =
 
     addNew: function(description) {
         var newCatDesc = description;
-        var parent = this.currentSelection[this.currentSelection.length-1];
+        var parent = Categories.currentSelection[Categories.currentSelection.length-1];
 
         $.post("api/i/categories/create", { pid: parent, description: newCatDesc }, null, 'json')
             .done(function( json ) {
@@ -107,8 +107,8 @@ var Categories =
     },
 
     editCat: function() {
-        var cid = this.currentSelection[this.currentSelection.length-1];
-        var lvl = this.currentSelection.length-2;
+        var cid = Categories.currentSelection[Categories.currentSelection.length-1];
+        var lvl = Categories.currentSelection.length-2;
 
         var elt = $("#level"+lvl+" option:selected");
 
@@ -127,8 +127,8 @@ var Categories =
     },
 
     deleteCat: function() {
-        var myCatString = this.getCatString();
-        var cid = this.currentSelection[this.currentSelection.length-1];
+        var myCatString = Categories.getCatString();
+        var cid = Categories.currentSelection[Categories.currentSelection.length-1];
 
         if (!window.confirm('Delete "'+ myCatString +'"?\n\nChildren categories will be reassigned one level up')) {
             return false;
@@ -164,9 +164,9 @@ var Categories =
          * the select elements. What's weirder, is according to the dev console, the option's selected attribute is
          * applied appropiatly, and yet jQuery doesn't see it. I don't know. The below statement works. So that's nice.
          */
-        for (var i=0; i<this.currentSelection.length; i++) {
+        for (var i=0; i<Categories.currentSelection.length; i++) {
             if ($("#level"+(i))) {
-                var optVal = i + ':' + this.currentSelection[i+1];
+                var optVal = i + ':' + Categories.currentSelection[i+1];
                 var elt = $('#level'+(i)+' option[value=\''+optVal+'\']:first');
                 catString += elt.text() + ':';
             }

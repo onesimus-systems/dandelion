@@ -67,52 +67,22 @@ if ($grouplist):
 
 if ($catList):
 	$content = true; ?>
-<!-- <section id="category-mgt">
+<section id="category-mgt">
     <h2>Category Management</h2>
 
     <div class="admin-div">
         <button type="button" id="add-category-button" class="button">Add Category</button>
         <button type="button" id="edit-category-button" class="button">Edit Category</button>
-        <button type="button" id="delete-catergory-button" class="button">Delete Category</button>
+        <button type="button" id="delete-category-button" class="button">Delete Category</button>
 
-        <div id="category-selects">
-            <select id="level-1">
-                <option>Select:</option>
-                <option>Root 1</option>
-                <option>Root 2</option>
-            </select>
-
-            <select id="level-2">
-                <option>Select:</option>
-                <option>Sub 1</option>
-                <option>Sub 2</option>
-            </select>
-
-            <select id="level-3">
-                <option>Select:</option>
-                <option>Sub 1</option>
-                <option>Sub 2</option>
-            </select>
-
-            <select id="level-4">
-                <option>Select:</option>
-                <option>Sub 1</option>
-                <option>Sub 2</option>
-            </select>
-
-            <select id="level-5">
-                <option>Select:</option>
-                <option>Sub 1</option>
-                <option>Sub 2</option>
-            </select>
-        </div>
+        <div id="categories">Loading Categories...</div>
     </div>
-</section> -->
+</section>
 <?php endif;
 
 if (!$content) {
 	echo 'Your account doesn\'t have rights to administrative controls.';
 }
 
-echo $this->loadJS(['jquery', 'jqueryui', 'common', 'admin']);
+echo $this->loadJS(['jquery', 'jqueryui', 'common', 'categories', 'admin']);
 ?>
