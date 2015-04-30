@@ -14,6 +14,15 @@ $.extend({alert: function (message, title, callback) {
 }
 });
 
+$.extend({flashMessage: function (msg) {
+    var message = $('#message');
+    message.hide();
+    message.text(msg);
+    message.fadeIn();
+    setTimeout(function(){message.fadeOut();}, 5000);
+}
+});
+
 $.extend({confirmBox: function (message, title, yescallback, nocallback) {
     if (typeof yescallback === 'undefined') {
         yescallback = function(){};

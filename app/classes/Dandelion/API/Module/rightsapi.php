@@ -59,7 +59,11 @@ class RightsAPI extends BaseModule
 
         $permissions = new Permissions($this->repo);
         $name = $this->up->name;
-        $rights = json_decode($this->up->rights, true);
+        $rights = $this->up->get('rights', []);
+
+        if ($rights) {
+            $rights = json_decode($rights, true);
+        }
 
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return 'User group created successfully';

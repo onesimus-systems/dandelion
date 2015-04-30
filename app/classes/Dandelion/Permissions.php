@@ -31,6 +31,29 @@ class Permissions
         'admin' => false
     ];
 
+    private $permissionNames = [
+        'createlog' => 'Create logs',
+        'editlog' => 'Edit logs',
+        'viewlog' => 'View the log',
+
+        'createcat' => 'Create categories',
+        'editcat' => 'Edit categories',
+        'deletecat' => 'Delete categories',
+
+        'createuser' => 'Create users',
+        'edituser' => 'Edit users',
+        'deleteuser' => 'Delete users',
+
+        'creategroup' => 'Create groups',
+        'editgroup' => 'Edit groups',
+        'deletegroup' => 'Delete groups',
+
+        'viewcheesto' => 'View Cheesto',
+        'updatecheesto' => 'Update Cheesto',
+
+        'admin' => 'Is Full Admin'
+    ];
+
     public function __construct(RightsRepo $repo)
     {
         $this->repo = $repo;
@@ -47,8 +70,13 @@ class Permissions
         if ($groupID === null) {
             return $this->repo->getGroupList();
         } else {
-            $group =  $this->repo->getGroup($groupID);
+            if (is_numeric($groupID)) {
+                $group = $this->repo->getGroupById($groupID);
+            } else {
+                $group = $this->repo->getGroupByName($groupID);
+            }
             $group['permissions'] = unserialize($group['permissions']);
+            $group['permissionNames'] = $this->permissionNames;
             return $group;
         }
     }

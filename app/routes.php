@@ -26,8 +26,13 @@ Routes::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'auth'], [
 ]);
 
 // Group for Administration pages, requires authentication
-Routes::group(['rprefix' => '\Dandelion\Controllers\AdminController', 'filter' => 'auth'], [
-	['get', '/admin', '@admin'],
+Routes::group([
+	'prefix' => '/admin', // All admin pages begin with /admin/{something}
+	'rprefix' => '\Dandelion\Controllers\AdminController',
+	'filter' => 'auth'], [
+	['get', '', '@admin'],
 	['get', '/edituser/{uid}', '@editUser'],
-	['get', '/edituser', '@editUser']
+	['get', '/edituser', '@editUser'],
+	['get', '/editgroup/{gid}', '@editGroup'],
+	['get', '/editgroup', '@editGroup']
 ]);

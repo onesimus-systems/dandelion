@@ -58,4 +58,9 @@ class Template
     {
         $this->template->addData($data);
     }
+
+    public function addFolder($template, $folder)
+    {
+        $this->template->addFolder($template, $folder);
+    }
 }

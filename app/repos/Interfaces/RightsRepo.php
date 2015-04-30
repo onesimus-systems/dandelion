@@ -6,7 +6,8 @@ namespace Dandelion\Repos\Interfaces;
 
 interface RightsRepo
 {
-    public function getGroup($gid);
+    public function getGroupById($gid);
+    public function getGroupByName($gname);
     public function getGroupList();
     public function createGroup($name, $rights);
     public function deleteGroup($gid);

@@ -18,18 +18,18 @@ var UserManage =
     },
 
     confirmDeleteUser: function() {
-        $.confirmBox("Are you sure you want to user?",
+        $.confirmBox("Are you sure you want to delete this user?",
             "Delete User",
             UserManage.deleteUser
         );
     },
 
     deleteUser: function() {
-        $.post('../api/i/users/delete', {uid: $('#user-id').val()}, null, 'json')
+        $.post('../../api/i/users/delete', {uid: $('#user-id').val()}, null, 'json')
             .done(function(data) {
                 if (data.errorcode === 0) {
                     $.alert('User deleted successfully', 'User Management', function() {
-                        location.assign('../admin');
+                        location.assign('../../admin');
                     });
                 } else {
                     $.alert('Error deleting user', 'User Management');
@@ -76,7 +76,7 @@ var UserManage =
         $("#pass2").val('');
 
         if (pass1 === pass2 && pass1 !== "") {
-            $.post('../api/i/users/resetPassword', {pw: pass1, uid: $('#user-id').val()}, null, 'json')
+            $.post('../../api/i/users/resetPassword', {pw: pass1, uid: $('#user-id').val()}, null, 'json')
                 .done(function(data) {
                     $.alert(data.data, 'User Management');
                 });
@@ -94,7 +94,7 @@ var UserManage =
     },
 
     revokeKey: function() {
-        $.post('../api/i/key/revoke', {uid: $('#user-id').val()}, null, 'json')
+        $.post('../../api/i/key/revoke', {uid: $('#user-id').val()}, null, 'json')
             .done(function(data) {
                 if (data.errorcode === 0 && data.data.key === true) {
                     $.alert('API key revoked', 'User Management');
@@ -113,19 +113,19 @@ var UserManage =
         var message = $('#user-status-message').val();
         var returntime = $('#user-status-return').val();
 
-        $.post('../api/i/users/edit', {uid: userid, fullname: fullname, role: group}, null, 'json')
+        $.post('../../api/i/users/edit', {uid: userid, fullname: fullname, role: group}, null, 'json')
             .done(function(response) {
                 if (response.errorcode === 0) {
-                    $.post('../api/i/cheesto/update', {uid: userid, message: message, status: status, returntime: returntime}, null, 'json')
+                    $.post('../../api/i/cheesto/update', {uid: userid, message: message, status: status, returntime: returntime}, null, 'json')
                         .done(function(response) {
                             if (response.errorcode === 0) {
-                                flashMessage('User saved');
+                                $.flashMessage('User saved');
                             } else {
-                                flashMessage('Error saving user');
+                                $.flashMessage('Error saving user');
                             }
                         });
                 } else {
-                    flashMessage('Error saving user');
+                    $.flashMessage('Error saving user');
                 }
             });
     },
@@ -139,14 +139,6 @@ var UserManage =
         }
     }
 };
-
-function flashMessage(msg) {
-    var message = $('#message');
-    message.hide();
-    message.text(msg);
-    message.fadeIn();
-    setTimeout(function(){message.fadeOut();}, 5000);
-}
 
 (function() {
     UserManage.init();
