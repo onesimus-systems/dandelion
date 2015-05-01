@@ -37,7 +37,8 @@ class Template
             'appTitle' => $this->app->config['appTitle'],
             'tagline' => $this->app->config['tagline'],
             'appVersion' => Application::VERSION,
-            'pageTitle' => $title
+            'pageTitle' => $title,
+            'hostname' => $this->app->config['hostname']
         ]);
 
         try {
@@ -56,5 +57,10 @@ class Template
     public function addData(array $data)
     {
         $this->template->addData($data);
+    }
+
+    public function addFolder($template, $folder)
+    {
+        $this->template->addFolder($template, $folder);
     }
 }

@@ -75,7 +75,7 @@ class ApiController extends BaseController
                 define('USER_ID', $key);
             }
 
-            $rightsRepo = Repos::makeRepo($this->app->config['db']['type'], 'Rights');
+            $rightsRepo = Repos::makeRepo('Rights');
             $userRights = new Rights(USER_ID, $rightsRepo);
         } else {
             $userRights = null;

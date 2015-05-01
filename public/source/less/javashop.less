@@ -1,0 +1,46 @@
+
+#grey-out {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9000;
+    background-color: fade(grey, 50%);
+    opacity: 0;
+}
+
+#modal {
+    position: absolute;
+    z-index: 9001;
+    background-color: darken(white, 10%);
+    opacity: 0;
+    padding: 10px 20px;
+
+    .modal-title {
+        background-color: darken(white, 20%);
+        margin: -10px -20px 15px;
+        padding: 7px 20px;
+        font-weight: bold;
+        font-size: 1.25em;
+    }
+
+    .modal-buttons {
+        clear: both;
+        margin: 15px -20px -10px;
+        background-color: darken(white, 20%);
+        text-align: right;
+
+        button {
+            border: none;
+            background-color: transparent;
+            padding: 10px;
+
+            &:hover {
+                background-color: darken(white, 40%);
+            }
+        }
+    }
+}

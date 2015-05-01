@@ -72,26 +72,6 @@ CREATE TABLE IF NOT EXISTS `dan_log` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_mail`
---
-
-CREATE TABLE IF NOT EXISTS `dan_mail` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `isItRead` varchar(1) NOT NULL DEFAULT '0',
-  `toUser` smallint(6) NOT NULL,
-  `fromUser` smallint(6) NOT NULL,
-  `subject` tinytext NOT NULL,
-  `body` text NOT NULL,
-  `deleted` tinyint(4) NOT NULL DEFAULT '0',
-  `dateSent` date NOT NULL,
-  `timeSent` time NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `to` (`toUser`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `dan_presence`
 --
 

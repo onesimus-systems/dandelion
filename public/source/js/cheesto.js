@@ -1,82 +1,43 @@
-/* global $, clearTimeout, setTimeout, window */
-/* jshint multistr: true */
+/* global $, setTimeout */
 
 "use strict"; // jshint ignore:line
-var newStatus = 1;
 
-var presence =
+var Cheesto =
 {
-    timeoutId: 0,
-    version: 0,
     firstgen: true,
 
-    checkstat: function (ver) {
+    dashboardInit: function() {
+        Cheesto.getStatuses();
+    },
+
+    getStatuses: function () {
         $.getJSON("api/i/cheesto/read",
             function (data) {
                 if (data.errorcode == 5) {
                     return;
                 }
 
-                presence.generateView(ver, data);
-                clearTimeout(presence.timeoutId);
-                delete presence.timeoutId;
+                Cheesto.generateView(data.data);
 
-                presence.version = ver;
-                presence.timeoutId = setTimeout(function () {
-                    presence.checkstat(ver);
-                }, 30000);
+                if (Cheesto.firstgen) {
+                    setTimeout(Cheesto.getStatuses, 30000);
+                }
             });
     },
 
-    generateView: function (ver, dataObj) {
-        dataObj = dataObj.data;
-
-        if (!this.firstgen) {
-            this.updateTableOnly(ver, dataObj);
-            return;
+    generateView: function (dataObj) {
+        Cheesto.generateTable(dataObj);
+        if (Cheesto.firstgen) {
+            Cheesto.makeStatusSelect(dataObj);
         }
-
-        var appendable = $('<div/>').attr('id', 'pt');
-
-        // Generate select box of status options
-        appendable.append(presence.makeStatusSelect(ver, dataObj));
-
-        var userStatusesDiv = $('<div/>').attr('id', 'userStatuses');
-        var tableView;
-        // Generate status table depending on view version
-        if (ver === 0) {
-            tableView = this.makeTableMini(dataObj);
-        }
-        else if (ver === 1) {
-            tableView = this.makeTableFull(dataObj);
-        }
-        userStatusesDiv.append(tableView);
-        appendable.append(userStatusesDiv);
-
-        $('#mainPresence').html(appendable);
+        return;
     },
 
-    updateTableOnly: function (ver, dataObj) {
-        var tableView;
-        // Generate status table depending on view version
-        if (ver === 0) {
-            tableView = this.makeTableMini(dataObj);
-        }
-        else if (ver === 1) {
-            tableView = this.makeTableFull(dataObj);
-        }
-        $('#userStatuses').html(tableView);
-    },
 
-    /**
-     * @param {{statusOptions:string}} dataObj
-     */
-    makeStatusSelect: function (ver, dataObj) {
-        var statusSelectDiv = $('<div/>').attr('id', 'statusSelect');
-        var statusSelect = $('<select/>').attr('id', 'cstatus');
-        statusSelect.change(function () {
-            presence.setStatus(ver);
-        });
+    makeStatusSelect: function (dataObj) {
+        var statusSelect = $('<select/>').attr('id', 'status-select');
+        statusSelect.change(Cheesto.setStatus);
+
         statusSelect.append('<option value="-1">Set Status:</option>');
 
         for (var key2 in dataObj.statusOptions) {
@@ -84,130 +45,119 @@ var presence =
             statusSelect.append(html);
         }
 
-        statusSelectDiv.append(statusSelect);
-        this.firstgen = false;
-        return statusSelectDiv;
+        $('#status-select').replaceWith(statusSelect);
+        Cheesto.firstgen = false;
+        return;
     },
 
-    /**
-     * @param {{statusInfo:object}} dataObj
-     */
-    makeTableMini: function (dataObj) {
-        // Mini view on main page
-        var table = $('<table/>').addClass('userStatusTable');
-        var tableHead = '<thead><tr>\
-            <td width="50%">Name</td>\
-            <td width="50%">Status</td>\
-            </tr></thead>';
-
-        table.append(tableHead);
+    generateTable: function (dataObj) {
+        var div = $('<div/>').attr('id', 'messages-cheesto-content');
+        var table = $('<table/>');
+        table.append('<thead><tr><td>Name</td><td>Status</td></tr></thead><tbody>');
 
         for (var key in dataObj) {
-            if (!dataObj.hasOwnProperty(key))
-                continue;
+            if (dataObj.hasOwnProperty(key)) {
+                if (key !== "statusOptions") {
+                    var user = dataObj[key];
 
-            if (key !== "statusOptions") {
-                var user = dataObj[key];
-                var classm = '';
+                    var html = '<tr><td>' + user.realname + '</td>'+
+                        '<td class="status-cell" title="Message: ' + user.message + '\nReturn: ' + user.returntime + '">'+
+                        user.status + '</td></tr>';
 
-                if (user.message !== '') {
-                    classm = ' class="message"';
+                    table.append(html);
                 }
-
-                var html = '<tr>\
-                    <td class="textLeft"><span title="' + user.message + '"' + classm + '>' + user.realname + '</span></td>\
-                    <td><span title="' + user.status + '&#013;Return: ' + user.returntime + '" class="' + '' + '">' + user.status + '</td>\
-                    </tr>';
-
-                table.append(html);
             }
         }
 
-        var popOutButton = '<tr><td colspan="3" width="100%" class="cen">\
-            <form><input type="button" onClick="presence.popOut();" class="linklike" value="Popout &#264;eesto"></form>\
-            </td></tr>';
-        table.append(popOutButton);
+        table.append('</tbody>');
+        div.append(table);
+        $('#messages-cheesto-content').replaceWith(div);
 
-        return table;
-    },
-
-    /**
-     * @param {{realname:string}} dataObj
-     */
-    makeTableFull: function (dataObj) {
-        // Windowed view
-        var table = $('<table/>').addClass('userStatusTable');
-        var tableHead = '<thead><tr><td>Name</td>\
-            <td>Message</td>\
-            <td colspan="2">Status</td>\
-            <td>Last Changed</td>\
-            </tr></thead><tbody>';
-        table.append(tableHead);
-
-        for (var key in dataObj) { // jshint ignore:line
-            if (!dataObj.hasOwnProperty(key))
-                continue;
-
-            if (key !== "statusOptions") {
-                var user = dataObj[key];
-
-                var html = '<tr>\
-                    <td>' + user.realname + '</td>\
-                    <td>' + user.message + '</td>\
-                    <td class="statusi"><span class="' + user.statusInfo.color + '">' + user.statusInfo.symbol + '</span></td>';
-
-                if (user.status == 0) { // jshint ignore:line
-                    html += '<td>' + dataObj.statusOptions[user.status] + '</td>';
-                } else {
-                    html += '<td>' + dataObj.statusOptions[user.status] + '<br>Return: ' + user.returntime + '</td>';
-                }
-
-                html += '<td>' + user.dmodified + '</td></tr>';
-
-                table.append(html);
+        $('td.status-cell').tooltip({
+            track: true,
+            show: {
+                effect: 'fade',
+                delay: 50
             }
-        }
-
-        return table;
+        });
+        return;
     },
 
-    setStatus: function (ver) {
-        newStatus = $("#cstatus").val();
-        $("#cstatus").prop("selectedIndex", 0);
-        var rtime;
+    setStatus: function () {
+        var newStatus = $("#status-select").val();
 
         if (newStatus != 'Available') {
-            // Status requires a return time and optional status
-            rtime = ""; // jshint ignore:line
-            window.open("getdate", "getdate", "location=no,menubar=no,scrollbars=no,status=no,height=550,width=350");
+            // Status requires a return time and optional message
+            $('#cheesto-status-form').dialog({
+                height: 440,
+                width: 640,
+                title: 'Ĉeesto Status',
+                modal: true,
+                open: function(evt, ui) {
+                    $('#cheesto-date-pick').datetimepicker({
+                        timeFormat: "HH:mm",
+                        controlType: 'select',
+                        stepMinute: 10,
+                    });
+                },
+                show: {
+                    effect: 'fade',
+                    duration: 500
+                },
+                hide: {
+                    effect: 'fade',
+                    duration: 500
+                },
+                buttons: {
+                    'Save': function() {
+                        Cheesto.processStatus(newStatus);
+                    },
+                    Cancel: function() {
+                        $(this).dialog('close');
+                        $("#status-select").prop("selectedIndex", 0);
+                    }
+                }
+            });
         } else {
             // Status is Available
-            rtime = "00:00:00"; // jshint ignore:line
-            presence.sendNewStatus(newStatus, rtime, ver, '');
+            Cheesto.sendNewStatus(newStatus, '00:00:00', '');
         }
     },
 
-    popOut: function () {
-        window.open("presenceWindow", "presencewin", "location=no,menubar=no,scrollbars=no,status=no,height=500,width=950");
+    processStatus: function(status) {
+        var message = $('#cheesto-message-text');
+        var returnTime = $('#cheesto-date-pick');
+
+        Cheesto.sendNewStatus(status, returnTime.val(), message.val());
+        $('#cheesto-status-form').dialog('close');
+
+        $("#status-select").prop("selectedIndex", 0);
+        message.val('');
+        returnTime.val('Today');
     },
 
-    sendNewStatus: function (stat, rt, ver, message) {
-        $.post("api/i/cheesto/update", {status: stat, returntime: rt, message: message},
-            function () {
-                presence.checkstat(ver);
-            });
+    sendNewStatus: function (stat, rt, message) {
+        $.post('api/i/cheesto/update', {status: stat, returntime: rt, message: message})
+            .done(function() { Cheesto.getStatuses(); });
     },
 
-    showHideP: function () {
-        if ($("#showHide").html() == "[ - ]") {
-            $("#presence").css("minWidth", $("#mainPresence").prop("offsetWidth") + "px");
-            $("#mainPresence").css("display", "none");
-            $("#showHide").html("[ + ]");
+    setDateTime: function(delta) {
+        var currentdate = new Date();
+
+        var minutes = currentdate.getMinutes()+(delta % 60);
+        var hours = currentdate.getHours()+((delta-(delta % 60))/60);
+
+        if (minutes > 59) {
+            minutes = minutes - 60;
+            hours++;
         }
-        else {
-            $("#presence").css("minWidth", "0px");
-            $("#mainPresence").css("display", "");
-            $("#showHide").html("[ - ]");
-        }
+
+        var datetime = ('0'  + (currentdate.getMonth()+1)).slice(-2) + '/' +
+                       ('0'  + currentdate.getDate()).slice(-2) + '/' +
+                       currentdate.getFullYear() + ' ' +
+                       ('0'  + hours).slice(-2) + ':' +
+                       ('0'  + minutes).slice(-2);
+
+        $('#cheesto-date-pick').val(datetime);
     }
 };

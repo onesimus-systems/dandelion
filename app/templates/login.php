@@ -9,17 +9,29 @@
         <title>Dandelion Web Log - Login</title>
     </head>
     <body>
-        <div id="login">
-            <h1>Dandelion Web Log</h1>
-            <form id="login_form">
-                Username:<br><input type="text" value="" id="username" onKeyPress="check(event);" autocomplete="off"><br><br>
-                Password:<br><input type="password" value="" id="password" onKeyPress="check(event);"><br>
-                <br><label id="remember"><input type="checkbox" value="remember" id="rememberMe">Remember my username</label><br>
-                <div class="login_button_div">
-                    <button type="button" id="login_button" onClick="attemptLogin();">Login</button>
-                </div>
+        <div class="login-box">
+            <h1>Dandelion Login</h1>
+
+            <form>
+                <fieldset>
+                    <label for="username">Username:</label>
+                    <div class="textfield"><input type="text" id="username"></div>
+                </fieldset>
+
+                <fieldset>
+                    <label for="password">Password:</label>
+                    <div class="textfield"><input type="password" id="password"></div>
+                </fieldset>
+
+                <fieldset>
+                    <strong>Remember username:</strong> <input type="checkbox" id="remember-username">
+                </fieldset>
+
+                <fieldset>
+                    <button type="button" class="button" id="login-btn">Login</button>
+                </fieldset>
             </form>
         </div>
+        <?= $this->loadJS() // Special function defined in auth controller ?>
     </body>
-    <?= $this->loadJS() // Special function defined in auth controller ?>
 </html>

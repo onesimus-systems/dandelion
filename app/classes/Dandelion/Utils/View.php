@@ -12,17 +12,18 @@ class view
     {
         $scripts = func_get_args();
         $scriptList = '';
+        $config = Configuration::getConfig();
 
         foreach ($scripts as $file) {
             // Check for a keyworded include
-            $builtin = self::isVenderJS($file);
+            $builtin = self::isVenderJS($file, $config['hostname']);
             if ($builtin) {
                 $scriptList .= $builtin;
                 continue;
             }
 
             // Otherwise check for a custom file
-            $custom = self::isJSFile($file);
+            $custom = self::isJSFile($file, $config['hostname']);
             if ($custom) {
                 $scriptList .= $custom;
                 continue;
@@ -31,37 +32,38 @@ class view
         return $scriptList;
     }
 
-    private static function isVenderJS($name)
+    private static function isVenderJS($name, $hostname)
     {
         $include = '';
 
         switch (strtolower($name)) {
             case 'jquery':
-                $include .= '<script src="assets/js/vendor/jquery/js/jquery-2.1.1.min.js"></script>';
+                $include .= '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-2.1.3.min.js"></script>';
                 break;
             case 'jqueryui':
-                $include .= '<script src="assets/js/vendor/jquery/js/jquery-ui-1.10.4.min.js"></script>';
+                $include .= '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-ui-1.11.3.min.js"></script>';
                 break;
-            case 'tinymce':
-                $include .= '<script src="assets/js/vendor/tinymce/js/jquery.tinymce.min.js"></script>';
-                $include .= '<script src="assets/js/vendor/tinymce/js/tinymce.min.js"></script>';
+            case 'jhtmlarea':
+                $include .= '<script src="'.$hostname.'/assets/js/vendor/jhtmlarea/jHtmlArea-0.8.min.js"></script>';
                 break;
         }
         return $include;
     }
 
-    private static function isJSFile($name)
+    private static function isJSFile($name, $hostname)
     {
+        $paths = Application::getPaths();
+
         // Normalize name
         if (substr($name, -7) != '.min.js') {
             $name .= '.min.js';
         }
         $include = '';
 
-        if (is_file('build/js/'.$name)) {
-            $include .= '<script src="build/js/'.$name.'"></script>';
-        } elseif (is_file('assets/js/vendor/jquery/js/'.$name)) {
-            $include .= '<script src="assets/js/vendor/jquery/js/'.$name.'"></script>';
+        if (is_file($paths['public'] . '/build/js/'.$name)) {
+            $include .= '<script src="'.$hostname.'/build/js/'.$name.'"></script>';
+        } elseif (is_file($paths['public'] . '/assets/js/vendor/jquery/js/'.$name)) {
+            $include .= '<script src="'.$hostname.'/assets/js/vendor/jquery/js/'.$name.'"></script>';
         } else {
             $include .= "<!-- {$name} was not found. Error 404. -->";
         }
@@ -102,7 +104,7 @@ class view
             return '';
         }
 
-        $themeList .= '<select name="userTheme" id="userTheme">';
+        $themeList .= '<select id="theme">';
         if ($showDefaultOption) {
             $themeList .= '<option value="default">Default</option>';
         }
@@ -145,11 +147,12 @@ class view
         $theme = self::getTheme();
         $cssList = '';
         $paths = Application::getPaths();
+        $config = Configuration::getConfig();
 
-        $cssList .= self::findStyleSheet('normalize', $paths);
+        $cssList .= self::findStyleSheet('normalize', $paths, $config['hostname']);
         if (count($optionalSheets) == 0 || $optionalSheets[count($optionalSheets)-1] !== false) {
-            $cssList .= self::findStyleSheet('main', $paths);
-            $cssList .= self::findThemeStyleSheet('main', $paths, $theme);
+            $cssList .= self::findStyleSheet('main', $paths, $config['hostname']);
+            $cssList .= self::findThemeStyleSheet('main', $paths, $theme, $config['hostname']);
         }
 
         // Other stylesheets
@@ -160,32 +163,35 @@ class view
 
             // Special case for jQueryUI styles
             if ($normalized == 'jqueryui') {
-                $cssList .= '<link rel="stylesheet" type="text/css" href="assets/js/vendor/jquery/css/smoothness/jquery-ui-1.10.4.custom.min.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jquery/css/jquery-ui.min.css">';
+                continue;
+            } elseif ($normalized == 'jhtmlarea') {
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jhtmlarea/styles/jHtmlArea.css">';
                 continue;
             }
 
-            $cssList .= self::findStyleSheet($normalized, $paths);
-            $cssList .= self::findThemeStyleSheet($normalized, $paths, $theme);
+            $cssList .= self::findStyleSheet($normalized, $paths, $config['hostname']);
+            $cssList .= self::findThemeStyleSheet($normalized, $paths, $theme, $config['hostname']);
         }
 
         return $cssList;
     }
 
-    public static function findStyleSheet($name, $paths)
+    public static function findStyleSheet($name, $paths, $hostname)
     {
         if (is_file($paths['public'] . '/build/css/' . $name . '.min.css')) {
-            return '<link rel="stylesheet" type="text/css" href="build/css/' . $name . '.min.css">';
+            return '<link rel="stylesheet" type="text/css" href="' . $hostname . '/build/css/' . $name . '.min.css">';
         } elseif (is_file($paths['public'] . '/build/css/' . $name . '.css')) {
-            return '<link rel="stylesheet" type="text/css" href="build/css/' . $name . '.css">';
+            return '<link rel="stylesheet" type="text/css" href="' . $hostname . '/build/css/' . $name . '.css">';
         }
     }
 
-    public static function findThemeStyleSheet($name, $paths, $theme)
+    public static function findThemeStyleSheet($name, $paths, $theme, $hostname)
     {
         if (is_file($paths['themes'] . '/' . $theme . '/css/' . $name . '.min.css')) {
-            return '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/css/' . $name . '.min.css">';
+            return '<link rel="stylesheet" type="text/css" href="'.$hostname.'/' . THEME_DIR . '/' . $theme . '/css/' . $name . '.min.css">';
         } elseif (is_file($paths['themes'] . '/' . $theme . '/css/' . $name . '.css')) {
-            return '<link rel="stylesheet" type="text/css" href="' . THEME_DIR . '/' . $theme . '/css/' . $name . '.css">';
+            return '<link rel="stylesheet" type="text/css" href="'.$hostname.'/' . THEME_DIR . '/' . $theme . '/css/' . $name . '.css">';
         }
     }
 
@@ -216,7 +222,7 @@ class view
             return;
         }
 
-        $newPath = rtrim($config['hostname'], '/') . '/' . $allPages[$page];
+        $newPath = $config['hostname'] . '/' . $allPages[$page];
         header("Location: $newPath");
         return;
     }

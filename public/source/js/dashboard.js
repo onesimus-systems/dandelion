@@ -1,4 +1,8 @@
-/* global CategoryManage, $, document, window, setInterval, setTimeout, clearInterval, tinymce, alert */
+/**
+ * Scripts for Dashboard
+ */
+/* global document, window, searchFun, $, setInterval,
+    setTimeout, clearInterval, Categories, Cheesto */
 
 "use strict"; // jshint ignore:line
 
@@ -6,35 +10,29 @@ var search = false,
     refreshc;
 
 $(document).ready(function() {
-    var dateSearch = $('#datesearch');
-    dateSearch.datepicker();
-    dateSearch.change(function() {
-        $('#datesearch').datepicker('option', 'dateFormat', 'yy-mm-dd');
-        });
+    Refresh.init();
+    View.init();
+    Search.init();
+    Cheesto.dashboardInit();
 
-    searchFun.enableclear();
-    searchFun.focusOut();
+    $('#show-cheesto-button').click(function() {
+        Section.show(this, 'messages-panel');
+    });
+
+    $('#show-logs-button').click(function() {
+        Section.show(this, 'logs-panel');
+    });
 });
 
-$(document).on('focusin', function(e) {
-	if ($(e.target).closest('.mce-window').length) {
-		e.stopImmediatePropagation();
-	}
-});
-
-tinymce.init({
-    browser_spellcheck: true
-});
-
-var refreshFun =
+var Refresh =
 {
-    runFirst: function() {
-        refreshFun.refreshLog();
-        refreshFun.startrefresh();
+    init: function() {
+        Refresh.refreshLog();
+        Refresh.startrefresh();
     },
 
     startrefresh: function() {
-        refreshc = setInterval(function(){ refreshFun.refreshLog(); }, 60000);
+        refreshc = setInterval(function(){ Refresh.refreshLog(); }, 60000);
     },
 
     stoprefresh: function() {
@@ -43,69 +41,56 @@ var refreshFun =
 
     refreshLog: function(clearSearch) {
         if (clearSearch) {
-            searchFun.enableclear();
-            refreshFun.startrefresh();
+            search = false;
+            Refresh.startrefresh();
         }
 
         if (!search) {
-            $.get('api/i/logs/read', {}, null, 'json')
-                .done(function(json) {
-                    view.makeLogView(json.data);
-                })
-                .fail(function(response) {
-                    if (typeof response !== 'undefined' && response.readyState===4 && response.status===404)
-                    {
-                        $('#logs').html('An error has occured. Please try logging out and back in.');
-                    }
-                });
+            $.getJSON('api/i/logs/read', {}, function(json) {
+                View.makeLogView(json.data);
+            });
         }
     }
-}; // refreshFun
+}; // Refresh
 
-var view = {
-    makeLogView:function(data) {
-        var logView = $('#logs');
-        logView.empty();
-        logView.append(view.pageControls(data.metadata, 'top'));
-        logView.append(view.displayLogs(data));
-        logView.append(view.pageControls(data.metadata, 'bottom'));
+var Section =
+{
+    show: function(elem, panel) {
+        if (elem.innerHTML.match(/^Show\s/)) {
+            elem.innerHTML = elem.innerHTML.replace(/^Show\s/, 'Hide ');
+        } else {
+            elem.innerHTML = elem.innerHTML.replace(/^Hide\s/, 'Show ');
+        }
+
+        $('#'+panel).toggleClass('enabled');
+    }
+};
+
+var View =
+{
+    prevPage: -1,
+    nextPage: -1,
+    currentOffset: -1,
+
+    init: function() {
+        $('#prev-page-button').click(View.loadPrevPage);
+        $('#next-page-button').click(View.loadNextPage);
+        $('#create-log-button').click(AddEdit.showAddInputs);
+        $('#clear-search-button').click(function() {
+            $('#search-query').val('');
+            Refresh.refreshLog(true);
+        });
     },
 
-    pageControls: function(data, pos) {
-        var div = $('<div/>').attr('class', 'pagination');
-        var clickAction;
-
-        var html = '<form method="post">';
-        if (data.offset > 0) {
-            var prevPage = data.offset-data.limit;
-            if (search) {
-                clickAction = 'searchFun.searchlog('+ prevPage +');';
-            } else {
-                clickAction = 'view.pagentation('+ prevPage +');';
-            }
-            html += '<input type="button" value="Previous" onClick="'+ clickAction +'" class="flle">';
-        }
-
-        if (data.offset+data.limit < data.logSize && data.resultCount == data.limit) {
-            var nextPage = data.offset+data.limit;
-            if (search) {
-                clickAction = 'searchFun.searchlog('+ nextPage +');';
-            } else {
-                clickAction = 'view.pagentation('+ nextPage +');';
-            }
-            html += '<input type="button" value="Next" onClick="'+ clickAction +'" class="flri">';
-        }
-
-        if (search && pos == 'top') {
-            html += '<input type="button" value="Clear Search" onClick="refreshFun.refreshLog(true);" class="flri">';
-        }
-        html += '</form></div>';
-        div.append(html);
-        return div;
+    makeLogView: function(data) {
+        var logView = $('#log-list');
+        logView.replaceWith(View.displayLogs(data));
+        View.pageControls(data.metadata);
+        View.currentOffset = data.metadata.offset;
     },
 
     displayLogs: function(data) {
-        var div = $('<div/>').attr('id', 'logs_core');
+        var logs = '<div id="log-list">';
 
         for (var key in data) {
             if (!data.hasOwnProperty(key) || key == 'metadata')
@@ -119,108 +104,191 @@ var view = {
             }
 
             // Display each log entry
-            // jshint multistr:true
-            var html = '<form method="post">\
-                        <div class="logentry">\
-                        <h2>' + log.title + '</h2>\
-                        <p class="entry">' + log.entry + '</p>\
-                        <p class="entrymeta">Created by ' + creator + ' on ' + log.datec + ' @ ' + log.timec + ' ';
+            var html = '<div class="log-entry">'+
+                '<span class="log-title">'+ log.title +'</span>';
 
-            if (log.edited == "1") { html += '(Edited)'; }
+            if (log.canEdit) { html += '<button type="button" class="button edit-button" onClick="AddEdit.getEdit(' + log.logid + ');">Edit</button>'; }
 
-            html += '<br>Categorized as ' + log.cat + '<br><a href="#" onClick="searchFun.filter(\'' + log.cat + '\');">Learn more about this system...</a>';
+            html += '<p class="log-body">'+ log.entry +'</p><p class="log-metadata">'+
+                    '<span class="log-meta-author">Created by ' + creator + ' on ' + log.datec + ' @ ' + log.timec + ' ';
 
-            if (log.canEdit) { html += '<button type="button" onClick="editFun.grabedit(' + log.logid + ');" class="editButton">Edit</button>'; }
+            if (log.edited == "1") { html += '(Amended)'; }
 
-            html += '</p></div></form>';
+            html += '</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink(\'' + log.cat + '\');">'+ log.cat +'</a></span></p></div>';
 
-            div.append(html);
+            logs += html;
         }
-        return div;
+        logs += '</div>';
+        return logs;
+    },
+
+    pageControls: function(data) {
+        if (data.offset > 0) {
+            View.prevPage = data.offset-data.limit;
+        } else {
+            View.prevPage = -1;
+        }
+
+        if (data.offset+data.limit < data.logSize && data.resultCount == data.limit) {
+            View.nextPage = data.offset+data.limit;
+        } else {
+            View.nextPage = -1;
+        }
+
+        if (search) {
+            $('#clear-search-button').show();
+        } else {
+            $('#clear-search-button').hide();
+        }
+    },
+
+    loadPrevPage: function() {
+        if (View.prevPage >= 0) {
+            if (search) {
+                Search.searchLog(View.prevPage);
+            } else {
+                View.pagentation(View.prevPage);
+            }
+        }
+    },
+
+    loadNextPage: function() {
+        if (View.nextPage >= 0) {
+            if (search) {
+                Search.searchLog(View.nextPage);
+            } else {
+                View.pagentation(View.nextPage);
+            }
+        }
     },
 
     pagentation: function(pageOffset) {
-        $.get('api/i/logs/read', { offset: pageOffset }, null, 'json')
-            .done(function(html) {
-                view.makeLogView(html.data);
+        $.getJSON('api/i/logs/read', {offset: pageOffset}, function(json) {
+            View.makeLogView(json.data);
 
-                if (pageOffset <= 0) {
-                    refreshFun.refreshLog();
-                    refreshFun.startrefresh();
-                } else {
-                    refreshFun.stoprefresh();
-                }
-
-                if ($(window).width() > 600) {
-                     window.scrollTo(0,0);
-                } else {
-                     window.scrollTo(0,610);
-                }
-            })
-            .fail(function(jqXHR) {
-                if (typeof jqXHR !== 'undefined' && jqXHR.readyState===4 && jqXHR.status===404) {
-                    $('#logs').html('An error has occured. Please try logging out and back in.');
-                }
-            });
+            if (pageOffset <= 0) {
+                Refresh.refreshLog();
+                Refresh.startrefresh();
+            } else {
+                Refresh.stoprefresh();
+            }
+        });
     }
 }; // View
 
-var addFun =
+var Search =
 {
-    showaddinputs: function() {
-        var entryBox = $('textarea#logEntry');
-        $('#add_edit_form')[0].reset();
-        entryBox.html('');
-
-        $('#add_edit').dialog({
-			height: 575,
-			width: 800,
-			modal: true,
-			show: {
-				effect: 'fade',
-				duration: 500
-			},
-			hide: {
-				effect: 'fade',
-				duration: 500
-			},
-			buttons: {
-				'Add Log': function() {
-					addFun.sendLog(true);
-				},
-				Cancel: function() {
-					$(this).dialog('close');
-					CategoryManage.addEditLog = false;
-					CategoryManage.grabFirstLevel();
-				}
-			}
-        });
-
-        entryBox.tinymce({
-            browser_spellcheck: true,
-			forced_root_block: false,
-			resize: false,
-			menubar: 'edit format view insert tools',
-			toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor',
-			plugins: [
-				'autolink link lists hr anchor pagebreak',
-				'searchreplace wordcount code insertdatetime',
-				'template paste textcolor'
-				]
-        });
-
-        CategoryManage.addEditLog = true;
-        CategoryManage.grabFirstLevel();
+    init: function() {
+        $('#search-btn').click(Search.searchLog);
+        $('#search-query').on('keypress', Search.check);
     },
 
-    sendLog: function(isnew, id) {
+    // Checks if enter key was pressed, if so search
+    check: function(e) {
+        if (e.keyCode == 13) {
+            Search.searchLog();
+            e.preventDefault();
+        }
+    },
+
+    // Execute search from button or enter key
+    searchLog: function(offset) {
+        if (typeof offset !== 'number') { offset = 0; }
+        var query = $('#search-query').val();
+        Search.exec(query, offset);
+    },
+
+    // Execute category search from link
+    searchLogLink: function(query) {
+        query = 'category:"'+query+'"';
+        $('#search-query').val(query);
+        Search.exec(query, 0);
+    },
+
+    // Send search query to server
+    exec: function(query, offset) {
+        if (typeof query === 'undefined') { return false; }
+        if (typeof offset === 'undefined') { offset = 0; }
+
+        $.post('api/i/logs/search', {query: query, offset: offset}, function(json) {
+            search = true;
+            Refresh.stoprefresh();
+            View.makeLogView(json.data);
+        }, 'json');
+    }
+}; // Search
+
+var AddEdit =
+{
+    showDialog: function(title, okText, okCall) {
+        var dialogButtons = {};
+        dialogButtons[okText] = okCall;
+        dialogButtons.Cancel = function() { $(this).dialog('close'); };
+
+        $('#add-edit-form').dialog({
+            height: 450,
+            width: 800,
+            title: 'Edit Log',
+            modal: true,
+            open: function(evt, ui) {
+                $('#log-body').htmlarea({
+                    toolbar: [
+                        ["bold", "italic", "underline", "strikethrough", "|", "forecolor"],
+                        ["p", "h1", "h2", "h3", "h4", "h5", "h6"],
+                        ["link", "unlink", "|", "orderedList", "unorderedList", "|", "superscript", "subscript"]
+                    ],
+                    css: 'assets/js/vendor/jhtmlarea/styles/jHtmlArea.Editor.css'
+                });
+                $('#log-body').htmlarea('updateHtmlArea');
+            },
+            show: {
+                effect: 'fade',
+                duration: 500
+            },
+            hide: {
+                effect: 'fade',
+                duration: 500
+            },
+            buttons: dialogButtons
+        });
+    },
+
+    showEditInputs: function(logInfo) {
+        $('#log-title').val(logInfo.data.title);
+        $('#log-body').html(logInfo.data.entry);
+        $('#categories').text('Loading categories...');
+
+        Categories.renderCategoriesFromString(logInfo.data.cat, function(html) {
+            $('#categories').html(html);
+        });
+
+        AddEdit.showDialog('Edit Log', 'Save Edit', function() {
+            AddEdit.saveLog(false, logInfo.data.logid);
+        });
+    },
+
+    showAddInputs: function() {
+        $('#log-title').val('');
+        $('#log-body').html('');
+        $('#categories').html('');
+
+        Categories.grabFirstLevel('categories');
+
+        AddEdit.showDialog('Create Log', 'Save Log', function() {
+            AddEdit.saveLog(true);
+        });
+    },
+
+    getEdit: function(logid) {
+        $.post('api/i/logs/readone', {logid: logid}, AddEdit.showEditInputs, 'json');
+    },
+
+    saveLog: function(isnew, id) {
         var urlvars = {};
         var url = '';
-        var title = $('input#logTitle').val();
-        title = encodeURIComponent(title);
-        var entry = $('textarea#logEntry').val();
-        entry = encodeURIComponent(entry);
-        var cat = CategoryManage.getCatString();
+        var title = $('#log-title').val();
+        var entry = $('#log-body').val();
+        var cat = Categories.getCatString();
 
         if (isnew) {
             urlvars = { title: title, body: entry, cat: cat };
@@ -230,154 +298,16 @@ var addFun =
             url = 'api/i/logs/edit';
         }
 
-		if (title !== '' && entry !== '' && cat !== '' && cat !== false) {
-			$('#add_edit').dialog('close');
-			$('#messages').fadeOut();
-
-			$.post(url, urlvars, null, 'json')
-				.done(function(html) {
-					refreshFun.refreshLog();
-					CategoryManage.addEditLog = false;
-					CategoryManage.grabFirstLevel();
-					showDialog(html.data);
-				});
+        if (title !== '' && entry !== '' && cat !== '' && cat !== false) {
+            $.post(url, urlvars, function(json) {
+                    Refresh.refreshLog();
+                    $.alert(json.data, 'Create Log', function() {
+                        $('#add-edit-form').dialog('close');
+                    });
+                }, 'json');
         } else {
-			$('#messages').html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
-			CategoryManage.addEditLog = true;
-			CategoryManage.grabFirstLevel();
-			setTimeout(function() { $('#messages').fadeOut(); }, 10000);
+            $('#messages').html('<span class="bad">Log entries must have a title, category, and entry text.</span>').fadeIn();
+            setTimeout(function() { $('#messages').fadeOut(); }, 10000);
         }
     }
-}; //addFun
-
-var editFun =
-{
-    showeditinputs: function(log_info) {
-        var linfo = log_info.data;
-        var entryBox = $('textarea#logEntry');
-
-        $('input#logTitle').val(linfo.title);
-        entryBox.val(linfo.entry);
-        $('#catSpace').text('Loading categories...');
-
-        CategoryManage.renderCategoriesFromString(linfo.cat, function(html) {
-            CategoryManage.addEditLog = true;
-            $('#categorySelects').empty();
-            $('#catSpace').html(html);
-        });
-
-        $('#add_edit').dialog({
-			height: 575,
-			width: 800,
-			modal: true,
-			show: {
-				effect: 'fade',
-				duration: 500
-			},
-			hide: {
-				effect: 'fade',
-				duration: 500
-			},
-			buttons: {
-				'Save Edit': function() {
-                    addFun.sendLog(false, linfo.logid);
-				},
-				Cancel: function() {
-					$(this).dialog('close');
-                    CategoryManage.addEditLog = false;
-                    CategoryManage.grabFirstLevel();
-				}
-			}
-        });
-
-        entryBox.tinymce({
-            browser_spellcheck: true,
-			forced_root_block: false,
-			resize: false,
-			menubar: 'edit format view insert tools',
-			toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | forecolor',
-			plugins: [
-				'autolink link lists hr anchor pagebreak',
-				'searchreplace wordcount code insertdatetime',
-				'template paste textcolor'
-				]
-        });
-    },
-
-    /* This function is called when a user clicks edit
-     * It grabs the information about the log entry they
-     * want to edit then calls showeditinputs(); to display
-     * the fields.
-     */
-    grabedit: function(logid) {
-        $.post('api/i/logs/readone', { logid: logid }, null, 'json')
-            .done(editFun.showeditinputs);
-    }
-}; //editFun
-
-function showDialog(html) {
-    var dialog = $('#dialogBox');
-	dialog.html('<p>'+html+'</p>');
-	dialog.dialog({
-		modal: true,
-		width: 400,
-		show: {
-			effect: 'fade',
-			duration: 500
-		},
-		hide: {
-			effect: 'fade',
-			duration: 500
-		},
-		buttons: {
-			Ok: function() {
-				$(this).dialog('close');
-			}
-		}
-	});
-}
-
-var searchFun =
-{
-    // Checks if enter key was pressed, if so search
-    check: function(e) {
-        if (e.keyCode == 13) {
-            searchFun.searchlog();
-            e.preventDefault();
-        }
-    },
-
-    enableclear: function() {
-        search = false;
-        $('#searchquery').val('Search');
-        $('#searchquery').click(function() {
-            var search = $('#searchquery');
-            search.val('');
-            search.off('click');
-        });
-    },
-
-    focusOut: function() {
-        $('#searchquery').focusout(function () {
-            var search = $('#searchquery');
-            if (search.val() === '') {
-                searchFun.enableclear();
-            }
-        });
-    },
-
-    // Search for keyword or datestamp
-    searchlog: function(offset) {
-        if (typeof offset === 'undefined') {
-            offset = 0;
-        }
-        var query = $('input#searchquery').val();
-
-        $.post('api/i/logs/search', {query: query, offset: offset}, null, 'json')
-            .done(function(json) {
-                search = true;
-                refreshFun.stoprefresh();
-                view.makeLogView(json.data, true);
-            });
-    }
-};
+}; // AddEdit

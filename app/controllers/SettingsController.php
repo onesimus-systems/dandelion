@@ -8,13 +8,13 @@ use \Dandelion\Rights;
 use \Dandelion\Template;
 use \Dandelion\Utils\View;
 use \Dandelion\Utils\Repos;
+use \Dandelion\KeyManager;
 
 class SettingsController extends BaseController
 {
 	public function settings()
 	{
-        $rightsRepo = Repos::makeRepo($this->app->config['db']['type'], 'Rights');
-        $userRights = new Rights($_SESSION['userInfo']['userid'], $rightsRepo);
+        $this->loadRights();
 
         $template = new Template($this->app);
 
@@ -22,9 +22,15 @@ class SettingsController extends BaseController
             return View::getThemeList();
         });
 
+        $key = '';
+        if ($this->app->config['publicApiEnabled']) {
+            $keyManager = new KeyManager(Repos::makeRepo('KeyManager'));
+            $key = $keyManager->getKey($_SESSION['userInfo']['userid']);
+        }
+
         $template->addData([
             'publicApiEnabled' => $this->app->config['publicApiEnabled'],
-            'userRights' => $userRights
+            'apiKey' => $key
         ]);
 
         $template->render('settings', 'User Settings');

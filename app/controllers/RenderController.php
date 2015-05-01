@@ -24,7 +24,7 @@ class RenderController extends BaseController
         $urlParams = new UrlParameters();
 
         if ($urlParams->catstring) {
-            $catRepo = Repos::makeRepo($this->app->config['db']['type'], 'Categories');
+            $catRepo = Repos::makeRepo('Categories');
             $displayCats = new Categories($catRepo);
             echo $displayCats->renderFromString($urlParams->catstring);
         }
@@ -39,7 +39,7 @@ class RenderController extends BaseController
         $urlParams = new UrlParameters();
 
         $past = json_decode(stripslashes($urlParams->pastSelection));
-        $catRepo = $catRepo = Repos::makeRepo($this->app->config['db']['type'], 'Categories');
+        $catRepo = $catRepo = Repos::makeRepo('Categories');
         $displayCats = new Categories($catRepo);
         echo $displayCats->renderChildrenJson($past);
         return;

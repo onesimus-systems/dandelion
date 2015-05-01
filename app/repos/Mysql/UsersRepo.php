@@ -23,14 +23,14 @@ class UsersRepo extends BaseMySqlRepo implements Interfaces\UsersRepo
                             p.returntime AS p_returntime,
                         a.keystring AS a_keystring,
                             a.expires AS a_expires,
-                        r.permissions AS u_permissions')
+                        g.permissions AS u_permissions')
             ->from($this->prefix . 'users AS u
                     LEFT JOIN ' . $this->prefix . 'presence AS p
                         ON p.uid = u.userid
                     LEFT JOIN ' . $this->prefix . 'apikeys AS a
                         ON a.user = u.userid
-                    LEFT JOIN ' . $this->prefix . 'rights AS r
-                        ON r.role = u.role')
+                    LEFT JOIN ' . $this->prefix . 'groups AS g
+                        ON g.role = u.role')
             ->where('u.userid = :uid');
 
         return $this->database->getFirst(['uid' => $uid]);
@@ -126,9 +126,7 @@ class UsersRepo extends BaseMySqlRepo implements Interfaces\UsersRepo
                                 LEFT JOIN ' . $this->prefix . 'presence AS p
                                     ON p.uid = u.userid
                                 LEFT JOIN ' . $this->prefix . 'apikeys AS a
-                                    ON a.user = u.userid
-                                LEFT JOIN ' . $this->prefix . 'mail AS m
-                                    ON m.toUser = u.userid')
+                                    ON a.user = u.userid')
             ->where('u.userid = :uid');
 
         return $this->database->go(['uid' => $uid]);

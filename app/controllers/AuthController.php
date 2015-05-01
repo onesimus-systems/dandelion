@@ -23,7 +23,7 @@ class AuthController extends BaseController
     {
         parent::__construct($app);
 
-        $this->repo = Repos::makeRepo($this->app->config['db']['type'], 'Auth');
+        $this->repo = Repos::makeRepo('Auth');
 
         $this->up = new UrlParameters();
     }

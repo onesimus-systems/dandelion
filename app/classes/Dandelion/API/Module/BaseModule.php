@@ -38,10 +38,7 @@ abstract class BaseModule
 
     protected function makeRepo($module)
     {
-        // Database type
-        $dbtype = ucfirst($this->app->config['db']['type']);
-
-        $repo = Repos::makeRepo($dbtype, $module);
+        $repo = Repos::makeRepo($module);
         if ($repo) {
             return $repo;
         } else {

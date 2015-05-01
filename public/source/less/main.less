@@ -1,112 +1,64 @@
-/* Base theme for Dandelion Web Log
- *
- * @author Lee Keitel
- * @date Feb 2014
-**/
+/**
+ * Stysheet for header and footer and other common styles
+ */
 
 @import (reference) "_base";
 
+html {
+    height: 100%;
+}
+
 body {
-    margin: 0 auto;
-    text-align: center;
-    font-family: sans-serif;
-    font-size: 15px;
-    color: black;
-}
+    background-color: @body-bg-color;
+    min-width: 850px;
+    height: 100%;
 
-button, html input[type=button], input[type=reset], input[type=submit] {
-    cursor: default;
-}
-
-h1 {
-    margin-bottom: 0;
-    text-align: center;
-}
-
-h4 {
-    margin-top: .75em;
-    margin-bottom: .65em;
-    text-align: center;
-}
-
-a {
-    &:visited, &:hover, &:link, &:active {
-        color: blue;
-        text-decoration: none;
-    }
-}
-
-/** Navigation */
-nav {
-    a {
-        &:visited, &:link, &:active {
-            color: black;
-            text-decoration: none;
-            padding: 10px 20px;
-        }
-    }
-    margin: 20px 0;
     #dandelion-lib > .media-query(screen, small, {
-        a { display: block; }
+    	min-width: 0;
     });
 }
 
-/** Footer */
-footer {
-    font-size: .75em;
-    margin: 20px;
 
-    .aboutlink {
-        &:visited, &:hover, &:link, &:active {
-            color: black;
-            text-decoration: none;
-        }
+a {
+    text-decoration: none;
+    color: @dandelion-accent;
+
+    &:hover {
+        text-decoration: underline;
     }
 }
 
-/** Floats */
-.flri {
-    float: right;
-    margin-right: 15px;
+.main-content {
+    margin: 0 50px 10px;
+
+    #dandelion-lib > .media-query(screen, small, {
+        margin: 0 10px 10px;
+    });
 }
 
-.flle {
-    float: left;
-    margin-left: 15px;
+.button {
+	#dandelion-lib > .button();
+	#dandelion-lib > .button-hover();
+	font-size: initial;
 }
 
-/** Button styles */
-.dButton {
-    border: none;
-    padding: .25em .5em;
-    margin: .25em .15em;
-    font-size: 1em;
-    color: white;
+.disabled {
+	display: none;
 }
 
-.adminButton {
-    width: 15em;
+.enabled {
+	display: initial !important;
 }
 
-/** Dialog box styles */
-#dialogBox {
-    text-align: left;
+.hidden-dialog {
     display: none;
 }
 
-/** Error or other helpful message texts in dialog boxes */
-#messages {
-  margin-top: 25px;
-  display: none;
+.ui-tooltip {
+    white-space: pre-line;
 }
 
-/** Page Specific Styles */
+@import "header";
+@import "footer";
 
-/** Permissions management */
-#groups {
-    margin-bottom: 1em;
-}
-
-#categorySelects, #add_cat {
-    display: inline;
-}
+@import "javashop";

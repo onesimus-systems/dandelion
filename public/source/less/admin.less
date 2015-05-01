@@ -1,0 +1,83 @@
+/**
+ * Styles for administatration page
+ */
+
+@import (reference) "_base";
+
+section {
+    margin: 0 20px;
+
+    table {
+        border: none;
+        margin-top: 10px;
+
+        tr {
+            &:hover {
+                background-color: @dandelion-light-orange;
+            }
+        }
+
+        th, td {
+            padding: .5em;
+            cursor: default;
+        }
+
+        th {
+            text-align: left;
+            background-color: @dandelion-mid-grey;
+            color: white;
+        }
+
+        .highlighted {
+            background-color: @dandelion-light-orange;
+            color: black;
+        }
+
+        #dandelion-lib > .media-query(screen, small, {
+            .non-essential-info {
+                display: none;
+            }
+        });
+    }
+}
+
+.admin-div {
+
+}
+
+// These styles are for the user management modal
+.user-info, .user-actions {
+    float: left;
+}
+
+.user-actions {
+    margin-right: -20px;
+    margin-left: 20px;
+
+    button {
+        display: block;
+        width: 100%;
+    }
+}
+
+#categories {
+    margin-top: 10px;
+
+    select {
+        #dandelion-lib > .select();
+        background-color: lighten(@dandelion-mid-grey, 20%);
+        color: black;
+        margin-left: 5px;
+
+        #dandelion-lib > .media-query(screen, small, {
+            display: block;
+            margin-bottom: 10px;
+        });
+    }
+}
+
+#add-user-table {
+    td {
+        padding: 5px;
+    }
+}

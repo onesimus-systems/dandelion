@@ -1,0 +1,145 @@
+/* global document, $, setTimeout, location */
+
+"use strict"; // jshint ignore:line
+
+var UserManage =
+{
+    init: function() {
+        $('#delete-user-btn').click(UserManage.confirmDeleteUser);
+        $('#reset-pwd-btn').click(UserManage.showPasswordDialog);
+        $('#revoke-api-btn').click(UserManage.confirmRevokeKey);
+        $('#save-btn').click(UserManage.saveUser);
+        $('#user-status').change(UserManage.checkStatus);
+        $('#user-status-return').datetimepicker({
+            timeFormat: "HH:mm",
+            controlType: 'select',
+            stepMinute: 10,
+        });
+    },
+
+    confirmDeleteUser: function() {
+        $.confirmBox("Are you sure you want to delete this user?",
+            "Delete User",
+            UserManage.deleteUser
+        );
+    },
+
+    deleteUser: function() {
+        $.post('../../api/i/users/delete', {uid: $('#user-id').val()}, null, 'json')
+            .done(function(data) {
+                if (data.errorcode === 0) {
+                    $.alert('User deleted successfully', 'User Management', function() {
+                        location.assign('../../admin');
+                    });
+                } else {
+                    $.alert('Error deleting user', 'User Management');
+                }
+            });
+        return;
+    },
+
+    showPasswordDialog: function() {
+        $('#pwd-reset-dialog').dialog({
+            modal: true,
+            width: 400,
+            height: 200,
+            show: {
+                effect: "fade",
+                duration: 500
+            },
+            hide: {
+                effect: "fade",
+                duration: 250
+            },
+            buttons: [
+                {
+                    text: "Reset",
+                    click: function() {
+                        $(this).dialog('close');
+                        UserManage.resetPassword();
+                    }
+                },
+                {
+                    text: "Cancel",
+                    click: function() {
+                        $(this).dialog('close');
+                    }
+                }
+            ]
+        });
+    },
+
+    resetPassword: function() {
+        var pass1 = $('#pass1').val();
+        var pass2 = $('#pass2').val();
+        $("#pass1").val('');
+        $("#pass2").val('');
+
+        if (pass1 === pass2 && pass1 !== "") {
+            $.post('../../api/i/users/resetPassword', {pw: pass1, uid: $('#user-id').val()}, null, 'json')
+                .done(function(data) {
+                    $.alert(data.data, 'User Management');
+                });
+        } else {
+            $.alert('Passwords do not match or are empty', 'User Management');
+        }
+        return;
+    },
+
+    confirmRevokeKey: function() {
+        $.confirmBox("Are you sure you want to revoke the API key?",
+            "API Key Revoke",
+            UserManage.revokeKey
+        );
+    },
+
+    revokeKey: function() {
+        $.post('../../api/i/key/revoke', {uid: $('#user-id').val()}, null, 'json')
+            .done(function(data) {
+                if (data.errorcode === 0 && data.data.key === true) {
+                    $.alert('API key revoked', 'User Management');
+                } else {
+                    $.alert('Error revoking API key', 'User Management');
+                }
+            });
+        return;
+    },
+
+    saveUser: function() {
+        var userid = $('#user-id').val();
+        var fullname = $('#fullname').val();
+        var group = $('#user-group').val();
+        var status = $('#user-status').val();
+        var message = $('#user-status-message').val();
+        var returntime = $('#user-status-return').val();
+
+        $.post('../../api/i/users/edit', {uid: userid, fullname: fullname, role: group}, null, 'json')
+            .done(function(response) {
+                if (response.errorcode === 0) {
+                    $.post('../../api/i/cheesto/update', {uid: userid, message: message, status: status, returntime: returntime}, null, 'json')
+                        .done(function(response) {
+                            if (response.errorcode === 0) {
+                                $.flashMessage('User saved');
+                            } else {
+                                $.flashMessage('Error saving user');
+                            }
+                        });
+                } else {
+                    $.flashMessage('Error saving user');
+                }
+            });
+    },
+
+    checkStatus: function() {
+        var status = $('#user-status').val();
+
+        if (status == 'Available') {
+            $('#user-status-message').val('');
+            $('#user-status-return').val('00:00:00');
+        }
+    }
+};
+
+(function() {
+    UserManage.init();
+})();

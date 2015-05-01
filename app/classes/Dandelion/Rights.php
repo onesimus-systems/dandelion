@@ -24,23 +24,32 @@ class Rights
     /**
      * Check if user is authorized for requested action
      *
-     * @param string $permission - Permission to check
+     * @param string variable length - Permissions to check
      */
-    public function authorized($permissions)
+    public function authorized()
     {
+        if (!func_num_args()) {
+            return false;
+        }
+
+        $permissions = func_get_args();
+        if (is_array($permissions[0])) {
+            // For legacy support, the old function definition
+            // called for an array as the only parameter. This fixes
+            // the expected array to be the array provided
+            $permissions = $permissions[0];
+        }
+
         // The admin flag grants full rights
         if ($this->permissions['admin']) {
             return true;
         }
 
-        if (is_array($permissions)) {
-            foreach ($permissions as $permission) {
-                if ($this->permissions[strtolower($permission)]) {
-                    return true;
-                }
+        foreach ($permissions as $permission) {
+            if (isset($this->permissions[strtolower($permission)])
+                && $this->permissions[strtolower($permission)]) {
+                return true;
             }
-        } else {
-            return $this->permissions[strtolower($permissions)];
         }
 
         return false;

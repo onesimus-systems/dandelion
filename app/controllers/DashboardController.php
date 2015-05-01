@@ -12,19 +12,18 @@ class DashboardController extends BaseController
 {
 	public function dashboard()
 	{
-        $rightsRepo = Repos::makeRepo($this->app->config['db']['type'], 'Rights');
-        $userRights = new Rights($_SESSION['userInfo']['userid'], $rightsRepo);
+        $this->loadRights();
 
-        $showCheesto = ($this->app->config['cheestoEnabled'] && $userRights->authorized('viewcheesto'));
-        $showLog = $userRights->authorized('viewlog');
-        $showCreateButton = $userRights->authorized('createlog');
+        $showCheesto = $this->rights->authorized('viewcheesto');
+        $showLog = $this->rights->authorized('viewlog');
+        $showCreateButton = $this->rights->authorized('createlog');
 
         $template = new Template($this->app);
 
         $template->addData([
             'showCheesto' => $showCheesto,
             'showLog' => $showLog,
-            'createButton' => $showCreateButton ? '<button type="button" class="dButton cpButton" onClick="addFun.showaddinputs();">Add New Log</button>' : ''
+            'createButton' => $showCreateButton ? '<button type="button" class="button" id="create-log-button">Create New</button>' : ''
         ]);
 
         $template->render('dashboard');

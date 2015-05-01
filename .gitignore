@@ -7,6 +7,7 @@ backups/
 vendor/
 node_modules/
 .idea/
+.settings/
 public/build/
 public/assets/themes/Darkness/css
 public/assets/themes/Halloween/css

@@ -1,124 +1,226 @@
 /**
- * Styles for main dashboard page
+ * Dashboard styles
  */
 
 @import (reference) "_base";
 
-#dashboard {
-    margin: 0 auto;
-    text-align: center;
-    width: 60%;
-
-    #dandelion-lib > .media-query(screen, large, {
-    	width: 90%;
-    });
+.main-content {
+    margin: 0;
 
     #dandelion-lib > .media-query(screen, small, {
-    	width: initial;
+        margin-bottom: 20px;
+        height: initial;
     });
 
-	#add_edit {
-		margin-top: 1em;
-		display: none;
-	}
+    .section-title {
+        font-size: 1.5em;
+        width: 100%;
+        text-align: center;
+        background-color: @navbar-bg-color;
+        padding: 10px 0;
+        color: @navbar-text-color;
+        border: none;
 
-	#controlPanel {
-		.commonStyles() {
-			display: inline-block;
-			border: none;
-			height: 2em;
-			margin: 0;
-			padding: 0 .75em;
-			-moz-box-sizing: border-box;
-		    -webkit-box-sizing: border-box;
-		    box-sizing: border-box;
-		}
+        #dandelion-lib > .button-hover();
 
-		#searchquery {
-			.commonStyles;
-			color: gray;
-			width: 350px;
+        #dandelion-lib > .media-query(screen, small, {
+            display: block;
 
-			&:focus {
-			    outline: 1px solid #353535;
-			    -webkit-box-shadow: 0px 0px 4px 0px #353535;
-			    box-shadow: 0px 0px 10px 0px #353535;
-			    color: black;
-			}
+        });
+    }
 
-			#dandelion-lib > .media-query(screen, small, {
-		    	width: 200px;
-		    });
-		}
+    .messages-panel {
+        float: left;
+        width: 250px;
 
-		.cpButton {
-			.commonStyles;
-		}
+        #dandelion-lib > .media-query(screen, small, {
+            width: 100%;
+            display: none;
+            float: none;
+        });
 
-		.controlButtons {
-			#dandelion-lib > .media-query(screen, small, {
-				margin: 0 auto;
-				display: block;
-			});
-		}
-	}
+        .messages-common-styles() {
+            height: 50%;
+            margin-bottom: 20px;
+            overflow: auto;
 
-	.pageEntryButtons() {
-		border: none;
-		padding: 1em 2em;
-		margin: 0;
-		font-size: 1em;
-		color: white;
-	}
+            &-header {
+                padding-left: 10px;
+                margin: 10px 0;
 
-	.pagination {
-		.pageEntryButtons;
-		display: block;
-		overflow: hidden;
-		padding: 0;
-		height: 3em;
+                .messages-title {
+                    font-size: 1.5em;
+                    font-weight: bold;
+                }
+            }
 
-		input, .filler {
-			.pageEntryButtons;
-		}
-	}
+            &-content {
+                padding-left: 10px;
+                width: 90%;
+                overflow: auto;
 
-	.logentry {
-	  	margin: 5px;
-		border: 0 solid black;
-		text-align: left;
-		font-family: sans-serif;
+                table {
+                    width: 100%;
 
-		.editButton {
-			.pageEntryButtons;
-			padding: .5em 1.5em;
-			float: right;
+                    th, td {
+                        border: 1px solid black;
+                        word-wrap: break-word;
+                    }
 
-			#dandelion-lib > .media-query(screen, small, {
-		    	float: initial;
-		    	display: block;
-		    });
-		}
-	}
+                    td {
+                        padding: 5px;
 
-	.entry {
-		word-wrap: break-word;
-	}
+                        &.status-cell {
+                            color: @dandelion-dark-orange;
 
-	#logs_core {
-		padding: .5em 1.5em;
-		color: black;
-	}
+                            &:hover {
+                                cursor: pointer;
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-	#logs {
-		//min-width: 35em;
-		margin-top: 1em;
-		#dandelion-lib > .media-query(screen, large, {
-			margin-top: .5em;
-		});
-	}
+        #messages-cheesto {
+            .messages-common-styles();
+
+            #status-select {
+                #dandelion-lib > .select();
+                margin-top: 5px;
+            }
+        }
+    }
+
+    .logs-panel {
+        border-left: 2px solid @dandelion-dark-grey;
+        margin-left: 250px;
+
+        #dandelion-lib > .media-query(screen, small, {
+            //width: 100%;
+            display: none;
+            margin-left: 0;
+        });
+
+        .control-panel {
+            font-size: 0;
+            margin-bottom: 20px;
+
+            .search-console {
+                position: relative;
+
+                .commonStyles() {
+                    font-size: initial;
+                    border: none;
+                    height: 2em;
+                    margin: 0;
+                    padding: 0 .75em;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                }
+
+                .query-box {
+                    .commonStyles();
+                    color: gray;
+                    width: 100%;
+                    padding-right: 50px;
+
+                    &:focus {
+                        -webkit-box-shadow: 0px 0px 4px 0px #353535;
+                        box-shadow: 0px 0px 10px 0px #353535;
+                        color: black;
+                    }
+                }
+
+                .search-button {
+                    .commonStyles();
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+
+                    #dandelion-lib > .button();
+                    #dandelion-lib > .button-hover();
+                }
+            }
+
+            .top-controls {
+                background-color: @button-bg-color;
+
+                .button-right {
+                    float: right;
+                }
+
+                .button {
+                    padding: 10px 10px;
+                }
+            }
+        }
+
+        #log-list {
+            margin: 0 10px;
+            padding-bottom: 10px;
+
+            .log-entry {
+                margin: 20px 0 0 0;
+
+                button {
+                    margin-left: 10px;
+                }
+
+                .log-title {
+                    font-size: 1.5em;
+                    font-weight: 700;
+                }
+
+                .log-body {
+                    word-wrap: break-word;
+                }
+
+                .log-metadata {
+                    margin-bottom: 0;
+
+                    span {
+                        display: block;
+                    }
+
+                    .log-meta-author {
+
+                    }
+
+                    .log-meta-cat {
+
+                    }
+                }
+            }
+        }
+    }
 }
 
-.categories {
-  text-align: left;
+#cheesto-status-form {
+    fieldset {
+        border: none;
+
+        table {
+            margin-top: 10px;
+
+            td {
+                border: 1px solid black;
+                padding: 5px;
+
+                input {
+                    margin-left: 5px;
+                }
+            }
+        }
+
+        label {
+            display: block;
+        }
+
+        &.outer {
+            float: left;
+        }
+    }
 }

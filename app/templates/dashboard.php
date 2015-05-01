@@ -2,49 +2,103 @@
 /**
  * Dashboard page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard','cheesto','jqueryui']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'jhtmlarea', 'datetimepicker']]);
 ?>
-<!-- Begin Page Body -->
-<div id="dashboard">
-    <?php if ($showLog): ?>
-        <div id="controlPanel">
-            <form>
-                <input type="search" id="searchquery" onKeyPress="return searchFun.check(event);" autocomplete="off"><span class="controlButtons"><!--
-                --><input type="button" value="Search" class="dButton cpButton" onClick="searchFun.searchlog();"><!--
-                --><?= $createButton ?></span>
-            </form>
-        </div>
-    <?php endif; ?>
-
-    <?php if ($showCheesto): ?>
-        <div id="presence">
-            <h3><a href="#" onClick="presence.showHideP();"><span id="showHide">[ - ]</span></a> &#264;eesto: <a href="mail"><img id="mailicon" src="assets/images/nomail.png" width="32" height="16" alt="No Mail"></a></h3>
-
-        	<div id="mainPresence"></div>
-        </div>
-    <?php endif;
-
-    if ($showLog): ?>
-        <div id="add_edit" title="">
-            <form id="add_edit_form">
-                Title: <input type="text" id="logTitle" name="logTitle" value="" size="60"><br><br>
-                <textarea id="logEntry" name="logEntry" cols="80" rows="10"></textarea><br>
-                <div class="categories">
-                    Category: <span id="catSpace"></span>
-                </div>
-            </form>
-            <div id="messages"></div>
-        </div>
-        <div id="dialogBox"></div>
-
-        <div id="logs">Loading journal...</div>
-    <?php endif; ?>
+<div id="add-edit-form" class="hidden-dialog">
+    <form>
+        Title: <input type="text" id="log-title" value="" size="60"><br><br>
+        <textarea id="log-body" cols="80" rows="10"></textarea><br>
+        <div>Category: <span id="categories"></span></div>
+    </form>
+    <div id="messages"></div>
 </div>
 
-<?= $this->loadJS(['jquery','jqueryui','common','tinymce','cheesto','catManage','dashboard','mail']) ?>
-<script type="text/javascript">
-    refreshFun.runFirst();
-    presence.checkstat(0);
-    mail.areUnread();
-</script>
-<!-- End Page Body -->
+<div id="cheesto-status-form" class="hidden-dialog">
+    <form>
+        <fieldset class="outer">
+            Time Quick Set:
+            <table>
+                <tr>
+                    <td>10 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(10);"></td>
+                    <td>20 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(20);"></td>
+                </tr>
+                <tr>
+                    <td>30 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(30);"></td>
+                    <td>40 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(40);"></td>
+                </tr>
+                <tr>
+                    <td>50 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(50);"></td>
+                    <td>1 Hour<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(60);">
+                </tr>
+                <tr>
+                    <td>1 Hour 15 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(75);"></td>
+                    <td>1 Hour 30 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(90);"></td>
+                </tr>
+                <tr>
+                    <td>1 Hour 45 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(105);"></td>
+                    <td>2 Hours<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(120);"></td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <fieldset class="outer">
+            <fieldset>
+                <label for="cheesto-date-pick">Return Time:</label>
+                <input type="text" id="cheesto-date-pick" value="Today">
+            </fieldset>
+            <fieldset>
+                <label for="cheesto-message-text">Message:</label>
+                <textarea id="cheesto-message-text" cols="25" rows="10"></textarea>
+            </fieldset>
+        </fieldset>
+    </form>
+</div>
+
+<button type="button" class="section-title disabled" id="show-cheesto-button">Show Message Center</button>
+
+<section id="messages-panel" class="messages-panel">
+    <?php if ($showCheesto): ?>
+        <div id="messages-cheesto">
+            <div id="messages-cheesto-header">
+                <span class="messages-title">Ĉeesto</span>
+
+                <div class="messages-controls">
+                    <select id="status-select">
+                        <option value="-1">Set Status:</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="messages-cheesto-content">Loading...</div>
+        </div>
+    <?php endif; ?>
+</section>
+
+
+<button type="button" class="section-title disabled" id="show-logs-button">Show Logs</button>
+
+<section id="logs-panel" class="logs-panel">
+    <div class="control-panel">
+        <div class="search-console">
+            <input type="search" class="query-box" id="search-query" placeholder="Search" value="" autocomplete="off">
+            <button class="search-button" type="button" id="search-btn">Search</button>
+        </div>
+
+        <div class="top-controls">
+            <form>
+                <button type="button" class="button" id="prev-page-button">Prev</button>
+                <?= $createButton ?>
+                <button type="button" class="button button-right" id="next-page-button">Next</button>
+                <button type="button" class="button button-right" id="clear-search-button">Clear Search</button>
+            </form>
+        </div>
+    </div>
+
+    <?php if ($showLog): ?>
+
+
+        <div id="log-list">Loading logs...</div>
+    <?php endif; ?>
+</section>
+
+<?= $this->loadJS(['jquery', 'jqueryui', 'jhtmlarea', 'timepicker', 'common', 'categories', 'cheesto', 'dashboard']) ?>
