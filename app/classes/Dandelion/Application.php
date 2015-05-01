@@ -5,8 +5,8 @@
 namespace Dandelion;
 
 use \Dandelion\Utils\Updater;
+use \Dandelion\Storage\Loader;
 use \Dandelion\Utils\Configuration;
-use \Dandelion\Storage\MySqlDatabase;
 use \Dandelion\Session\SessionManager;
 
 /**
@@ -45,22 +45,30 @@ class Application
 
         // Load application configuration
         $this->config = Configuration::load($this->paths);
+        
+        // Prepare database connection
+        Loader::load($this->config['db'], $this->config['debugEnabled']);
 
-        $this->loadLegacyCode();
+        $this->setConstants();
 
         // Setup session manager
         SessionManager::register($this);
         SessionManager::startSession($this->config['phpSessionName']);
 
+        // Setup routes and filters
         include $this->paths['app'] . '/routes.php';
         include $this->paths['app'] . '/filters.php';
+        
+        // Get route for request
         list($class, $method, $params) = Routes::route();
 
+        // Check controller exists
         if (!$class || !class_exists($class)) {
             Logging::errorPage("Controller '{$class}' wasn't found.");
             return;
         }
 
+        // Check controller has method for request
         $controller = new $class($this);
         if (method_exists($controller, $method)) {
             call_user_func_array(array($controller, $method), $params);
@@ -70,12 +78,8 @@ class Application
         return;
     }
 
-    public function loadLegacyCode()
+    public function setConstants()
     {
-        // Give database class the info to connect
-        MySqlDatabase::getInstance($this->config['db'], true);
-
-        // Define constants
         define('DEBUG_ENABLED', $this->config['debugEnabled']);
         define('PUBLIC_DIR', $this->paths['public']);
         define('THEME_DIR', 'assets/themes');

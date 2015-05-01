@@ -4,7 +4,7 @@
  */
 namespace Dandelion\Repos\Mysql;
 
-use \Dandelion\Storage\MySqlDatabase;
+use \Dandelion\Storage\MysqlDatabase;
 
 abstract class BaseMySqlRepo
 {
@@ -12,7 +12,7 @@ abstract class BaseMySqlRepo
 
     public function __construct()
     {
-        $this->database = MySqlDatabase::getInstance();
+        $this->database = MysqlDatabase::getInstance();
         $this->prefix = $this->database->getTablePrefix();
     }
 }

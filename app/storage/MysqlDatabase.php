@@ -4,13 +4,10 @@
  */
 namespace Dandelion\Storage;
 
-use \Dandelion\Storage\Contracts\DatabaseConn;
-
-class MySqlDatabase implements DatabaseConn
+class MysqlDatabase implements Contracts\DatabaseConn
 {
     // Current database socket connection
     private $currentConn;
-
     private $debug;
 
     // Singleton instance of database object
@@ -99,7 +96,7 @@ class MySqlDatabase implements DatabaseConn
                 \PDO::ATTR_PERSISTENT => true
             ));
 
-            if (true) {
+            if ($this->debug) {
                 $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             }
 
@@ -107,7 +104,7 @@ class MySqlDatabase implements DatabaseConn
             $this->sqlStatement = $this->blankStatement;
             $this->initialized = true;
         } catch (\PDOException $e) {
-            if (true) {
+            if ($this->debug) {
                 echo 'ERROR: ' . $e->getMessage();
             } else {
                 echo 'Error 0x000185: Can\'t connect to database';
