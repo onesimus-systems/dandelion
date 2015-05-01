@@ -10,7 +10,6 @@ use \Dandelion\Utils\Configuration;
 class Routes
 {
     private static $routeList = [];
-
     private static $filters = [];
 
     /**
@@ -79,19 +78,19 @@ class Routes
     private static function register($method, $url, $options)
     {
         if (!is_array($options)) {
-            $options = array('use' => $options, 'filter' => '');
+            $options = ['use' => $options, 'filter' => ''];
         }
 
         $options['use'] = explode('@', $options['use']);
         $url = self::cleanUrl($url);
         $routeName = $url.'@'.$method;
-        self::$routeList[$routeName] = array(
+        self::$routeList[$routeName] = [
             'httpmethod' => $method,
             'class' => $options['use'][0],
             'method' => $options['use'][1],
             'pattern' => explode('/', $url),
             'filter' => $options['filter']
-        );
+        ];
         return;
     }
 
@@ -157,7 +156,7 @@ class Routes
             return false;
         }
 
-        return array($routeClass, $routeMethod, []);
+        return [$routeClass, $routeMethod, []];
     }
 
     /**
@@ -191,7 +190,7 @@ class Routes
             }
         }
 
-        if ($route === '') {
+        if (!$route) {
             return false;
         }
 
@@ -204,7 +203,7 @@ class Routes
         }
 
         $params = self::getVars($pattern, $url);
-        return array($routeClass, $routeMethod, $params);
+        return [$routeClass, $routeMethod, $params];
     }
 
     public static function filter($name, \Closure $callback)
@@ -249,7 +248,6 @@ class Routes
                 continue;
             }
 
-            $value = trim($value, '{}');
             array_push($vars, $url[$key]);
         }
         return $vars;
