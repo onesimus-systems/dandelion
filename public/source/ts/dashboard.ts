@@ -186,7 +186,110 @@ var View = {
 var Search = {
     init: function(): void {
         $('#search-btn').click(Search.searchLog);
+        $('#query-builder-btn').click(Search.showBuilder);
         $('#search-query').on('keypress', Search.check);
+        $('#qb-date1').change(function() {
+           if (!$('#qb-date2').val()) {
+               $('#qb-date2').val($('#qb-date1').val());
+           }
+        });
+    },
+    
+    showBuilder: function(): void {
+        $('#query-builder-form').dialog({
+            height: 380,
+            width: 540,
+            title: 'Search Query Builder',
+            modal: true,
+            open: function(evt, ui) {
+                $('#qb-date1').datepicker();
+                $('#qb-date2').datepicker();
+                Categories.grabFirstLevel('#categories2');
+            },
+            show: {
+                effect: 'fade',
+                duration: 500
+            },
+            hide: {
+                effect: 'fade',
+                duration: 500
+            },
+            buttons: {
+                'Search': function() {
+                    Search.buildQuery();
+                    $(this).dialog('close');
+                    Search.clearBuilderForm();
+                },
+                Cancel: function() {
+                    $(this).dialog('close');
+                    Search.clearBuilderForm();
+                }
+            }
+        });
+    },
+    
+    buildQuery: function(): void {
+        var title = $('#qb-title');
+        var titleNot = $('#qb-title-not');
+        var body = $('#qb-body');
+        var bodyNot = $('#qb-body-not');
+        var dateNot = $('#qb-date-not');
+        var date1 = $('#qb-date1');
+        var date2 = $('#qb-date2');
+        var cat = Categories.getCatString();
+        var catNot = $('#qb-cat-not');
+        var query = '';
+        
+        if (title.val()) {
+            if (titleNot.prop('checked')) {
+                query += ' title:"!'+title.val().replace('"', '\\"')+'"';  
+            } else {
+                query += ' title:"'+title.val().replace('"', '\\"')+'"';
+            }
+        }
+        
+        if (body.val()) {
+            if (bodyNot.prop('checked')) {
+                query += ' body:"!'+body.val().replace('"', '\\"')+'"';  
+            } else {
+                query += ' body:"'+body.val().replace('"', '\\"')+'"';
+            }
+        }
+        
+        if (date1.val()) {
+            var negate = '';
+            if (dateNot.prop('checked')) {
+                negate = '!';
+            }
+            if (date2.val() && date1.val() != date2.val()) {
+                query += ' date:"'+negate+date1.val()+' to '+date2.val()+'"';
+            } else {
+                query += ' date:"'+negate+date1.val()+'"';
+            }
+        }
+        
+        if (cat) {
+            if (catNot.prop('checked')) {
+                query += ' category:"!'+cat+'" ';
+            } else {
+                query += ' category:"'+cat+'" ';
+            }
+        }
+        
+        $('#search-query').val(query);
+        Search.exec(query, 0);
+    },
+    
+    clearBuilderForm: function(): void {
+        $('#qb-title').val('');
+        $('#qb-body').val('');
+        $('#qb-date1').val('');
+        $('#qb-date2').val('');
+        $('#qb-title-not').prop('checked', false);
+        $('#qb-body-not').prop('checked', false);
+        $('#qb-date-not').prop('checked', false);
+        $('#qb-cat-not').prop('checked', false);
+        $('#categories2').empty();
     },
 
     // Checks if enter key was pressed, if so search
@@ -206,13 +309,18 @@ var Search = {
 
     // Execute category search from link
     searchLogLink: function(query: string): void {
-        query = 'category:"'+query+'"';
-        $('#search-query').val(query);
+        query = ' category:"'+query+'"';
+        if (search) {
+            var queryBar = $('#search-query').val();
+            $('#search-query').val(queryBar+query);
+        } else {
+            $('#search-query').val(query);
+        }
         Search.exec(query, 0);
     },
 
     // Send search query to server
-    exec: function(query: string, offset: number): boolean {
+    exec: function(query: string, offset?: number): boolean {
         if (typeof query === 'undefined') { return false; }
         if (typeof offset === 'undefined') { offset = 0; }
 
@@ -265,14 +373,7 @@ var AddEdit = {
         $('#log-body').html(logInfo.data.entry);
         $('#categories').text('Loading categories...');
 
-        Categories.renderCategoriesFromString(logInfo.data.cat, function(html, json) {
-            if (!json.error) {
-                $('#categories').html(html);
-            } else {
-                html = "There was an error getting the category.<br>"+html;
-                $('#categories').html(html);
-            }
-        });
+        Categories.renderCategoriesFromString(logInfo.data.cat, '#categories');
 
         AddEdit.showDialog('Edit Log', 'Save Edit', function() {
             AddEdit.saveLog(false, logInfo.data.logid);
@@ -284,7 +385,7 @@ var AddEdit = {
         $('#log-body').html('');
         $('#categories').html('');
 
-        Categories.grabFirstLevel();
+        Categories.grabFirstLevel('#categories');
 
         AddEdit.showDialog('Create Log', 'Save Log', function() {
             AddEdit.saveLog(true);

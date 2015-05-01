@@ -6,6 +6,7 @@
 
 module Categories {
     var currentSelection: number[] = [];
+    var domid: string = '';
 
     export function grabNextLevel(pid: string): void {
         var pidSplit = pid.split(':');
@@ -22,23 +23,24 @@ module Categories {
 
         $.get('render/categoriesJson', {pastSelection: JSON.stringify(currentSelection)}, null, 'json')
             .done(function(json) {
-                $('#categories').empty();
-                $('#categories').html(renderSelectsFromJson(json));
+                $(domid).empty();
+                $(domid).html(renderSelectsFromJson(json));
             });
     }
 
-    export function grabFirstLevel(): void {
+    export function grabFirstLevel(elemid: string): void {
         // Reset current selection
         currentSelection = [];
+        domid = elemid;
         // Get root categories
         grabNextLevel('-1:0');
     }
     
-    export function selectOnChange(elem) {
+    export function selectOnChange(elem: any): void {
         Categories.grabNextLevel(elem.value);
     }
 
-    function renderSelectsFromJson(json): string {
+    function renderSelectsFromJson(json: any): string {
         currentSelection = json.currentList;
         var span = $('<span/>');
 
@@ -64,15 +66,22 @@ module Categories {
         return span.html();
     }
 
-    export function renderCategoriesFromString(str, callback) {
+    export function renderCategoriesFromString(str: string, elemid: string): void {
         $.get('render/editcat', {catstring: str}, null, 'json')
             .done(function(json) {
                 var rendered = renderSelectsFromJson(json);
-                callback(rendered, json);
+                domid = elemid;
+                
+                if (!json.error) {
+                    $(domid).html(rendered);
+                } else {
+                    rendered = "There was an error getting the category.<br><br>"+rendered;
+                    $(domid).html(rendered);
+                }
             });
     }
 
-    export function createNew() {
+    export function createNew(): void {
         var catString = getCatString()+': ';
         var message = 'Add new category<br><br>';
 
@@ -85,7 +94,7 @@ module Categories {
         $.dialogBox(dialog, addNew, null, {title: 'Create new category', buttonText1: 'Create', height: 200, width: 500});
     }
 
-    function addNew() {
+    function addNew(): void {
         var newCatDesc = $('#new_category').val();
         var parent = currentSelection[currentSelection.length-1];
         
@@ -100,7 +109,7 @@ module Categories {
         }
     }
 
-    export function editCat() {
+    export function editCat(): void {
         var cid = currentSelection[currentSelection.length-1];
         var lvl = currentSelection.length-2;
 
@@ -126,12 +135,10 @@ module Categories {
                 null,
                 {title: 'Edit category', buttonText1: 'Save', height: 200, width: 300}
             );
-
-            
         }
     }
 
-    export function deleteCat() {
+    export function deleteCat(): void {
         var myCatString = getCatString();
         var cid = currentSelection[currentSelection.length-1];
 
@@ -146,15 +153,15 @@ module Categories {
             });
     }
 
-    function getCatsAfterAction() {
+    function getCatsAfterAction(): void {
         if (currentSelection.length <= 2) {
-            grabFirstLevel();
+            grabFirstLevel(domid);
         } else {
             grabNextLevel((currentSelection.length-3)+':'+currentSelection[currentSelection.length-2]);
         }
     }
 
-    export function getCatString() {
+    export function getCatString(): string {
         var catString = '';
         /*
          * Note to future self: The jQuery statement below is messier than I would like. Here's the reason.

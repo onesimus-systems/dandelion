@@ -9,7 +9,7 @@ var Admin = {
         $('#add-user-btn').click(Admin.showAddUserDialog);
         $('#add-role-button').click(Admin.showAddGroupDialog);
     
-        Categories.grabFirstLevel();
+        Categories.grabFirstLevel('#categories');
         $('#add-category-button').click(Categories.createNew);
         $('#edit-category-button').click(Categories.editCat);
         $('#delete-category-button').click(Categories.deleteCat);
