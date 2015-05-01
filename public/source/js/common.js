@@ -14,8 +14,11 @@ $.extend({alert: function (message, title, callback) {
 }
 });
 
-$.extend({flashMessage: function (msg) {
-    var message = $('#message');
+$.extend({flashMessage: function (msg, domid) {
+    if (typeof domid === 'undefined') {
+        domid = '#message';
+    }
+    var message = $(domid);
     message.hide();
     message.text(msg);
     message.fadeIn();
@@ -32,7 +35,7 @@ $.extend({confirmBox: function (message, title, yescallback, nocallback) {
     }
 
     $("<div></div>").dialog({
-        buttons: { "Yes": function () { $(this).dialog("close"); yescallback(); $(this).remove(); },
+        buttons: { "Ok": function () { $(this).dialog("close"); yescallback(); $(this).remove(); },
             "Cancel": function() { $(this).dialog("close"); nocallback(); $(this).remove(); }
         },
         resizable: false,
