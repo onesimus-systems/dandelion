@@ -1,4 +1,6 @@
-/* global $, document, location, unescape */
+/// <reference path="../dts/jquery.d.ts" />
+/// <reference path="../dts/common.d.ts" />
+/* global $, document, location */
 
 "use strict"; // jshint ignore:line
 
@@ -18,19 +20,18 @@ $(document).ready(function() {
     $('#password').on('keypress', Login.check);
 });
 
-var Login =
-{
-    attemptLogin: function() {
-        var user = $('#username').val();
-        var pass = $('#password').val();
-        var remember = $('#remember-username').prop('checked');
+var Login = {
+    attemptLogin: function(): boolean {
+        var user: string = $('#username').val();
+        var pass: string = $('#password').val();
+        var remember: boolean = $('#remember-username').prop('checked');
 
-        if (user === '' || pass === '') {
+        if (!user || !pass) {
             return false;
         }
 
         $.post("login", { user: user, pass: pass, remember: remember }, null, 'json')
-            .done(function( response ) {
+            .done(function(response: any) {
                 if (response != '1' && response != '2') {
                     $.alert(response, 'Dandelion Login');
                     return;
@@ -44,15 +45,15 @@ var Login =
             });
     },
 
-    check: function(e) {
-        if (e.keyCode == 13) {
+    check: function(e: any): void {
+        if (e.keyCode === 13) {
             Login.attemptLogin();
         }
     },
 
-    getCookie: function(name) {
+    getCookie: function(name: string): string {
         var re = new RegExp(name + "=([^;]+)");
         var value = re.exec(document.cookie);
-        return (value !== null) ? unescape(value[1]) : null;
+        return (value !== null) ? decodeURI(value[1]) : null;
     }
 };

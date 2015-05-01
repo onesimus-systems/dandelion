@@ -10,7 +10,6 @@
     "gulp-changed": "~1.1.1",
     "gulp-minify-css": "~0.4.3",
     "gulp-rename": "~1.2.0",
-    "gulp-jshint": "~1.9.2",
-    "yargs": "~3.0.4"
+    "gulp-typescript": "~2.6.0"
   }
 }

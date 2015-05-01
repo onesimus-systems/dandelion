@@ -1,16 +1,23 @@
+/// <reference path="../dts/jquery.d.ts" />
+/// <reference path="../dts/jqueryui.d.ts" />
+/// <reference path="../dts/datetimepicker.d.ts" />
 /* global $, setTimeout */
 
 "use strict"; // jshint ignore:line
 
-var Cheesto =
-{
+interface cheestoReadResponse {
+    // 0 to many individual status arrays
+    statusOptions: string[];
+}
+
+var Cheesto = {
     firstgen: true,
 
-    dashboardInit: function() {
+    dashboardInit: function(): void {
         Cheesto.getStatuses();
     },
 
-    getStatuses: function () {
+    getStatuses: function(): void {
         $.getJSON("api/i/cheesto/read",
             function (data) {
                 if (data.errorcode == 5) {
@@ -25,7 +32,7 @@ var Cheesto =
             });
     },
 
-    generateView: function (dataObj) {
+    generateView: function(dataObj: cheestoReadResponse): void {
         Cheesto.generateTable(dataObj);
         if (Cheesto.firstgen) {
             Cheesto.makeStatusSelect(dataObj);
@@ -33,8 +40,7 @@ var Cheesto =
         return;
     },
 
-
-    makeStatusSelect: function (dataObj) {
+    makeStatusSelect: function(dataObj: cheestoReadResponse): void {
         var statusSelect = $('<select/>').attr('id', 'status-select');
         statusSelect.change(Cheesto.setStatus);
 
@@ -50,7 +56,7 @@ var Cheesto =
         return;
     },
 
-    generateTable: function (dataObj) {
+    generateTable: function(dataObj: cheestoReadResponse): void {
         var div = $('<div/>').attr('id', 'messages-cheesto-content');
         var table = $('<table/>');
         table.append('<thead><tr><td>Name</td><td>Status</td></tr></thead><tbody>');
@@ -83,10 +89,10 @@ var Cheesto =
         return;
     },
 
-    setStatus: function () {
-        var newStatus = $("#status-select").val();
+    setStatus: function(): void {
+        var newStatus: string = $("#status-select").val();
 
-        if (newStatus != 'Available') {
+        if (newStatus !== 'Available') {
             // Status requires a return time and optional message
             $('#cheesto-status-form').dialog({
                 height: 440,
@@ -124,7 +130,7 @@ var Cheesto =
         }
     },
 
-    processStatus: function(status) {
+    processStatus: function(status: string): void {
         var message = $('#cheesto-message-text');
         var returnTime = $('#cheesto-date-pick');
 
@@ -136,12 +142,12 @@ var Cheesto =
         returnTime.val('Today');
     },
 
-    sendNewStatus: function (stat, rt, message) {
+    sendNewStatus: function (stat: string, rt: string, message: string): void {
         $.post('api/i/cheesto/update', {status: stat, returntime: rt, message: message})
             .done(function() { Cheesto.getStatuses(); });
     },
 
-    setDateTime: function(delta) {
+    setDateTime: function(delta: number): void {
         var currentdate = new Date();
 
         var minutes = currentdate.getMinutes()+(delta % 60);
