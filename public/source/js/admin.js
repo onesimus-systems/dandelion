@@ -30,7 +30,7 @@ Admin.showAddUserDialog = function() {
             if (json.errorcode === 0) {
                 var rightsList = json.data;
 
-                var table = $('<table/>');
+                var table = $('<table/>').attr('id', 'add-user-table');
                 table.append('<tr><td>Username:</td><td><input type="text" id="add_user" autocomplete="off"></td></tr>');
                 table.append('<tr><td>Password:</td><td><input type="password" id="add_pass"></td></tr>');
                 table.append('<tr><td>Real Name:</td><td><input type="text" id="add_fullname" autocomplete="off"></td></tr>');
@@ -51,6 +51,7 @@ Admin.showAddUserDialog = function() {
                 roleCell.append(select);
                 roleRow.append(roleCell);
                 table.append(roleRow);
+                table = $('<form/>').append(table);
 
                 $.dialogBox(table, Admin.addUser, null, {title: 'Add new user', buttonText1: 'Add'});
             } else {
@@ -79,8 +80,13 @@ Admin.addUser = function() {
 Admin.showAddGroupDialog = function() {
     "use strict";
 
-    var dialog = 'Group Name: <input type="text" id="new_group_name">';
-    $.dialogBox(dialog, Admin.addGroup, null, {title: 'Create new group', buttonText1: 'Create'});
+    var dialog = 'Group Name:<br><br><input type="text" id="new_group_name">';
+    $.dialogBox(
+        dialog,
+        Admin.addGroup,
+        null,
+        {title: 'Create new group', buttonText1: 'Create', height: 200, width: 300}
+    );
 };
 
 Admin.addGroup = function() {
