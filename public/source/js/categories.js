@@ -73,37 +73,31 @@ var Categories =
     },
 
     createNew: function() {
-        var catString = Categories.getCatString();
-        var message = 'Add new category\n\n';
+        var catString = Categories.getCatString()+': ';
+        var message = 'Add new category<br><br>';
 
         if (Categories.currentSelection.length == 1) {
-            message = 'Create new root category:';
+            message = 'Create new root category:<br><br>';
             catString = '';
         }
-
-        while (true) {
-            var newCatDesc = window.prompt(message+catString);
-
-            if (newCatDesc === '') {
-                $.alert('Please enter a category description', 'Categories');
-            } else if (newCatDesc === null) {
-                return false;
-            } else {
-                Categories.addNew(encodeURIComponent(newCatDesc));
-                break;
-            }
-        }
+        
+        var dialog = message+catString+'<input type="text" id="new_category">';
+        $.dialogBox(dialog, Categories.addNew, null, {title: 'Create new category', buttonText1: 'Create', height: 200, width: 500});
     },
 
-    addNew: function(description) {
-        var newCatDesc = description;
+    addNew: function() {
+        var newCatDesc = $('#new_category').val();
         var parent = Categories.currentSelection[Categories.currentSelection.length-1];
-
-        $.post("api/i/categories/create", { pid: parent, description: newCatDesc }, null, 'json')
-            .done(function( json ) {
-                $.alert(json.data, 'Categories');
-                Categories.getCatsAfterAction();
-            });
+        
+        if (newCatDesc) {
+            $.post("api/i/categories/create", { pid: parent, description: newCatDesc }, null, 'json')
+                .done(function( json ) {
+                    $.alert(json.data, 'Categories');
+                    Categories.getCatsAfterAction();
+                });
+        } else {
+            $.alert('Please enter a category description.', 'Categories');
+        }
     },
 
     editCat: function() {
@@ -114,15 +108,26 @@ var Categories =
 
         if (typeof elt.val() !== 'undefined') {
             var editString = elt.text();
-            var editedCat = window.prompt("Edit Category Description:",editString);
+            
+            var dialog = 'Edit Category Description:<br><br><input type="text" id="edited_category" value="'+editString+'">';
+            $.dialogBox(dialog,
+                function() {
+                    var editedCat = $('#edited_category').val();
+                    if (editedCat) {
+                        $.post("api/i/categories/edit", { cid: cid, description: encodeURIComponent(editedCat) }, null, 'json')
+                            .done(function( json ) {
+                                $.alert(json.data, 'Categories');
+                                Categories.getCatsAfterAction();
+                            });
+                    } else {
+                        $.alert('Please enter a category description.', 'Categories');
+                    }
+                },
+                null,
+                {title: 'Edit category', buttonText1: 'Save', height: 200, width: 300}
+            );
 
-            if (editedCat !== null && editedCat !== '') {
-                $.post("api/i/categories/edit", { cid: cid, description: encodeURIComponent(editedCat) }, null, 'json')
-                    .done(function( json ) {
-                        $.alert(json.data, 'Categories');
-                        Categories.getCatsAfterAction();
-                    });
-            }
+            
         }
     },
 
@@ -130,14 +135,14 @@ var Categories =
         var myCatString = Categories.getCatString();
         var cid = Categories.currentSelection[Categories.currentSelection.length-1];
 
-        if (!window.confirm('Delete "'+ myCatString +'"?\n\nChildren categories will be reassigned one level up')) {
-            return false;
-        }
-
-        $.post("api/i/categories/delete", { cid: cid }, null ,'json')
-            .done(function( json ) {
-                $.alert(json.data, 'Categories');
-                Categories.getCatsAfterAction();
+        $.confirmBox('Delete "'+ myCatString +'"?\n\nChildren categories will be reassigned one level up',
+            'Delete Category',
+            function() {
+                $.post("api/i/categories/delete", { cid: cid }, null ,'json')
+                .done(function( json ) {
+                    $.alert(json.data, 'Categories');
+                    Categories.getCatsAfterAction();
+                });
             });
     },
 
