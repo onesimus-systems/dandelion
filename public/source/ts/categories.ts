@@ -1,52 +1,52 @@
+/// <reference path="../dts/jquery.d.ts" />
+/// <reference path="../dts/common.d.ts" />
 /* global $, window */
 
 "use strict"; // jshint ignore:line
 
-var Categories =
-{
-    currentSelection: [],
+module Categories {
+    var currentSelection: number[] = [];
 
-    grabNextLevel: function(pid) {
+    export function grabNextLevel(pid: string): void {
         var pidSplit = pid.split(':');
         var level = +pidSplit[0] + 1;
         var cid = +pidSplit[1];
 
-        if (Categories.currentSelection[level]) {
+        if (currentSelection[level]) {
             // This is to ensure that if a category is changed in the upper levels,
             // no residual children will remain
-            Categories.currentSelection.splice(level);
+            currentSelection.splice(level);
         }
 
-        Categories.currentSelection[level] = cid;
+        currentSelection[level] = cid;
 
-        $.get('render/categoriesJson', {pastSelection: JSON.stringify(Categories.currentSelection)}, null, 'json')
+        $.get('render/categoriesJson', {pastSelection: JSON.stringify(currentSelection)}, null, 'json')
             .done(function(json) {
                 $('#categories').empty();
-                $('#categories').html(Categories.renderSelectsFromJson(json));
+                $('#categories').html(renderSelectsFromJson(json));
             });
-    },
+    }
 
-    grabFirstLevel: function() {
+    export function grabFirstLevel(): void {
         // Reset current selection
-        Categories.currentSelection = [];
+        currentSelection = [];
         // Get root categories
-        Categories.grabNextLevel('-1:0');
-    },
+        grabNextLevel('-1:0');
+    }
+    
+    export function selectOnChange(elem) {
+        Categories.grabNextLevel(elem.value);
+    }
 
-    renderSelectsFromJson: function(json) {
-        Categories.currentSelection = json.currentList;
+    function renderSelectsFromJson(json): string {
+        currentSelection = json.currentList;
         var span = $('<span/>');
-
-        var onChangeFunc = function() {
-            Categories.grabNextLevel(this.value);
-        };
 
         for (var key in json.levels) {
             if (!json.levels.hasOwnProperty(key))
                 continue;
 
-            var select = $('<select/>').attr('id', 'level'+key);
-            select.change(onChangeFunc);
+            var select = $('<select onChange="Categories.selectOnChange(this);">').attr('id', 'level'+key);
             select.append('<option value="">Select:</option>');
 
             for (var category in json.levels[key]) {
@@ -61,48 +61,48 @@ var Categories =
             span.append(select);
         }
 
-        return span;
-    },
+        return span.html();
+    }
 
-    renderCategoriesFromString: function(str, callback) {
+    export function renderCategoriesFromString(str, callback) {
         $.get('render/editcat', {catstring: str}, null, 'json')
             .done(function(json) {
-                var rendered = Categories.renderSelectsFromJson(json);
-                callback(rendered);
+                var rendered = renderSelectsFromJson(json);
+                callback(rendered, json);
             });
-    },
+    }
 
-    createNew: function() {
-        var catString = Categories.getCatString()+': ';
+    export function createNew() {
+        var catString = getCatString()+': ';
         var message = 'Add new category<br><br>';
 
-        if (Categories.currentSelection.length == 1) {
+        if (currentSelection.length == 1) {
             message = 'Create new root category:<br><br>';
             catString = '';
         }
         
         var dialog = message+catString+'<input type="text" id="new_category">';
-        $.dialogBox(dialog, Categories.addNew, null, {title: 'Create new category', buttonText1: 'Create', height: 200, width: 500});
-    },
+        $.dialogBox(dialog, addNew, null, {title: 'Create new category', buttonText1: 'Create', height: 200, width: 500});
+    }
 
-    addNew: function() {
+    function addNew() {
         var newCatDesc = $('#new_category').val();
-        var parent = Categories.currentSelection[Categories.currentSelection.length-1];
+        var parent = currentSelection[currentSelection.length-1];
         
         if (newCatDesc) {
             $.post("api/i/categories/create", { pid: parent, description: newCatDesc }, null, 'json')
                 .done(function( json ) {
                     $.alert(json.data, 'Categories');
-                    Categories.getCatsAfterAction();
+                    getCatsAfterAction();
                 });
         } else {
             $.alert('Please enter a category description.', 'Categories');
         }
-    },
+    }
 
-    editCat: function() {
-        var cid = Categories.currentSelection[Categories.currentSelection.length-1];
-        var lvl = Categories.currentSelection.length-2;
+    export function editCat() {
+        var cid = currentSelection[currentSelection.length-1];
+        var lvl = currentSelection.length-2;
 
         var elt = $("#level"+lvl+" option:selected");
 
@@ -117,7 +117,7 @@ var Categories =
                         $.post("api/i/categories/edit", { cid: cid, description: encodeURIComponent(editedCat) }, null, 'json')
                             .done(function( json ) {
                                 $.alert(json.data, 'Categories');
-                                Categories.getCatsAfterAction();
+                                getCatsAfterAction();
                             });
                     } else {
                         $.alert('Please enter a category description.', 'Categories');
@@ -129,11 +129,11 @@ var Categories =
 
             
         }
-    },
+    }
 
-    deleteCat: function() {
-        var myCatString = Categories.getCatString();
-        var cid = Categories.currentSelection[Categories.currentSelection.length-1];
+    export function deleteCat() {
+        var myCatString = getCatString();
+        var cid = currentSelection[currentSelection.length-1];
 
         $.confirmBox('Delete "'+ myCatString +'"?\n\nChildren categories will be reassigned one level up',
             'Delete Category',
@@ -141,20 +141,20 @@ var Categories =
                 $.post("api/i/categories/delete", { cid: cid }, null ,'json')
                 .done(function( json ) {
                     $.alert(json.data, 'Categories');
-                    Categories.getCatsAfterAction();
+                    getCatsAfterAction();
                 });
             });
-    },
+    }
 
-    getCatsAfterAction: function() {
-        if (Categories.currentSelection.length <= 2) {
-            Categories.grabFirstLevel();
+    function getCatsAfterAction() {
+        if (currentSelection.length <= 2) {
+            grabFirstLevel();
         } else {
-            Categories.grabNextLevel((Categories.currentSelection.length-3)+':'+Categories.currentSelection[Categories.currentSelection.length-2]);
+            grabNextLevel((currentSelection.length-3)+':'+currentSelection[currentSelection.length-2]);
         }
-    },
+    }
 
-    getCatString: function() {
+    export function getCatString() {
         var catString = '';
         /*
          * Note to future self: The jQuery statement below is messier than I would like. Here's the reason.
@@ -169,9 +169,9 @@ var Categories =
          * the select elements. What's weirder, is according to the dev console, the option's selected attribute is
          * applied appropiatly, and yet jQuery doesn't see it. I don't know. The below statement works. So that's nice.
          */
-        for (var i=0; i<Categories.currentSelection.length; i++) {
+        for (var i=0; i<currentSelection.length; i++) {
             if ($("#level"+(i))) {
-                var optVal = i + ':' + Categories.currentSelection[i+1];
+                var optVal = i + ':' + currentSelection[i+1];
                 var elt = $('#level'+(i)+' option[value=\''+optVal+'\']:first');
                 catString += elt.text() + ':';
             }
@@ -182,5 +182,5 @@ var Categories =
         } else {
             return '';
         }
-    },
-};
+    }
+}

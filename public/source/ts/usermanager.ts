@@ -1,10 +1,13 @@
+/// <reference path="../dts/jquery.d.ts" />
+/// <reference path="../dts/jqueryui.d.ts" />
+/// <reference path="../dts/common.d.ts" />
+/// <reference path="../dts/datetimepicker.d.ts" />
 /* global document, $, setTimeout, location */
 
 "use strict"; // jshint ignore:line
 
-var UserManage =
-{
-    init: function() {
+var UserManage = {
+    init: function(): void {
         $('#delete-user-btn').click(UserManage.confirmDeleteUser);
         $('#reset-pwd-btn').click(UserManage.showPasswordDialog);
         $('#revoke-api-btn').click(UserManage.confirmRevokeKey);
@@ -17,14 +20,14 @@ var UserManage =
         });
     },
 
-    confirmDeleteUser: function() {
+    confirmDeleteUser: function(): void {
         $.confirmBox("Are you sure you want to delete this user?",
             "Delete User",
             UserManage.deleteUser
         );
     },
 
-    deleteUser: function() {
+    deleteUser: function(): void {
         $.post('../../api/i/users/delete', {uid: $('#user-id').val()}, null, 'json')
             .done(function(data) {
                 if (data.errorcode === 0) {
@@ -38,7 +41,7 @@ var UserManage =
         return;
     },
 
-    showPasswordDialog: function() {
+    showPasswordDialog: function(): void {
         $('#pwd-reset-dialog').dialog({
             modal: true,
             width: 400,
@@ -69,9 +72,9 @@ var UserManage =
         });
     },
 
-    resetPassword: function() {
-        var pass1 = $('#pass1').val();
-        var pass2 = $('#pass2').val();
+    resetPassword: function(): void {
+        var pass1: string = $('#pass1').val();
+        var pass2: string = $('#pass2').val();
         $("#pass1").val('');
         $("#pass2").val('');
 
@@ -86,14 +89,14 @@ var UserManage =
         return;
     },
 
-    confirmRevokeKey: function() {
+    confirmRevokeKey: function(): void {
         $.confirmBox("Are you sure you want to revoke the API key?",
             "API Key Revoke",
             UserManage.revokeKey
         );
     },
 
-    revokeKey: function() {
+    revokeKey: function(): void {
         $.post('../../api/i/key/revoke', {uid: $('#user-id').val()}, null, 'json')
             .done(function(data) {
                 if (data.errorcode === 0 && data.data.key === true) {
@@ -105,13 +108,13 @@ var UserManage =
         return;
     },
 
-    saveUser: function() {
-        var userid = $('#user-id').val();
-        var fullname = $('#fullname').val();
-        var group = $('#user-group').val();
-        var status = $('#user-status').val();
-        var message = $('#user-status-message').val();
-        var returntime = $('#user-status-return').val();
+    saveUser: function(): void {
+        var userid: string = $('#user-id').val();
+        var fullname: string = $('#fullname').val();
+        var group: string = $('#user-group').val();
+        var status: string = $('#user-status').val();
+        var message: string = $('#user-status-message').val();
+        var returntime: string = $('#user-status-return').val();
 
         $.post('../../api/i/users/edit', {uid: userid, fullname: fullname, role: group}, null, 'json')
             .done(function(response) {
@@ -130,10 +133,10 @@ var UserManage =
             });
     },
 
-    checkStatus: function() {
-        var status = $('#user-status').val();
+    checkStatus: function(): void {
+        var status: string = $('#user-status').val();
 
-        if (status == 'Available') {
+        if (status === 'Available') {
             $('#user-status-message').val('');
             $('#user-status-return').val('00:00:00');
         }

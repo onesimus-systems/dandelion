@@ -1,3 +1,5 @@
+/// <reference path="../dts/jquery.d.ts" />
+/// <reference path="../dts/jqueryui.d.ts" />
 //jQuery UI extention for an alert box
 // Code from: http://coding.abel.nu/2012/01/jquery-ui-replacement-for-alert/
 $.extend({alert: function (message, title, callback) {

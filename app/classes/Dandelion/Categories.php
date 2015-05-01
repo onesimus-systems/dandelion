@@ -71,9 +71,18 @@ class Categories
 
         for ($i = 0; $i < count($catstring); $i++) {
             $pid = $this->repo->getIdForCategoryWithParent($catstring[$i], $pid);
-            array_push($idArr, $pid);
+            if ($pid) {
+                array_push($idArr, $pid);
+            }
         }
-        return $this->renderChildrenJson($idArr);
+        
+        $mainJson = json_decode($this->renderChildrenJson($idArr), true);
+        if ((count($catstring) + 1) > count($idArr)) {
+            $mainJson['error'] = true;
+        } else {
+            $mainJson['error'] = false;
+        }
+        return json_encode($mainJson);
     }
 
     /**
