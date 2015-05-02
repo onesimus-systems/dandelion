@@ -51,7 +51,7 @@ return array(
     // Application tagline dispalyed below title
     'tagline' => 'Website Slogan',
     // Application default theme
-    'defaultTheme' => 'Halloween',
+    'defaultTheme' => 'modern',
     // If Cheesto status system is enabled
     'cheestoEnabled' => true,
     // If the public api is enabled

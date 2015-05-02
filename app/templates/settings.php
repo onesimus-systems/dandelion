@@ -2,7 +2,7 @@
 /**
  * User settings page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['user-settings', 'jqueryui']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui']]);
 ?>
 <!-- Begin Page Body -->
 <h1>User Settings</h1>
@@ -19,7 +19,17 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['user-settings', 'jqueryu
 
     <fieldset>
         <label for="theme">Theme:</label>
-        <?= $this->getThemeList() ?>
+        <select id="theme">
+        <?php
+        foreach ($themeInfo as $theme) {
+            if ($theme['selected']) {
+                echo '<option value="'.$theme['slug'].'" selected>'.$theme['name'].'</option>';
+            } else {
+                echo '<option value="'.$theme['slug'].'">'.$theme['name'].'</option>';
+            }
+        }
+        ?>
+        </select>
 
         <button type="button" id="save-theme-btn" class="button">Save</button>
     </fieldset>

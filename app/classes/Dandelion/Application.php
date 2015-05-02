@@ -45,7 +45,7 @@ class Application
 
         // Load application configuration
         $this->config = Configuration::load($this->paths);
-        
+
         // Prepare database connection
         Loader::load($this->config['db'], $this->config['debugEnabled']);
 
@@ -58,7 +58,7 @@ class Application
         // Setup routes and filters
         include $this->paths['app'] . '/routes.php';
         include $this->paths['app'] . '/filters.php';
-        
+
         // Get route for request
         list($class, $method, $params) = Routes::route();
 
@@ -82,8 +82,6 @@ class Application
     {
         define('DEBUG_ENABLED', $this->config['debugEnabled']);
         define('PUBLIC_DIR', $this->paths['public']);
-        define('THEME_DIR', 'assets/themes');
-        define('DEFAULT_THEME', $this->config['defaultTheme']);
         return;
     }
 

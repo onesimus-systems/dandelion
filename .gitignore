@@ -8,7 +8,7 @@ vendor/
 node_modules/
 .idea/
 .settings/
+.sublime-gulp.cache
 public/build/
-public/assets/themes/Darkness/css
-public/assets/themes/Halloween/css
-public/assets/themes/Sky/css
+public/assets/themes/modern/*.css
+public/assets/themes/modern/maps/

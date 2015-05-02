@@ -18,10 +18,6 @@ class SettingsController extends BaseController
 
         $template = new Template($this->app);
 
-        $template->registerFunction('getThemeList', function() {
-            return View::getThemeList();
-        });
-
         $key = '';
         if ($this->app->config['publicApiEnabled']) {
             $keyManager = new KeyManager(Repos::makeRepo('KeyManager'));
@@ -30,7 +26,8 @@ class SettingsController extends BaseController
 
         $template->addData([
             'publicApiEnabled' => $this->app->config['publicApiEnabled'],
-            'apiKey' => $key
+            'apiKey' => $key,
+            'themeInfo' => View::getThemeListArray()
         ]);
 
         $template->render('settings', 'User Settings');

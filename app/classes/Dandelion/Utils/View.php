@@ -8,6 +8,19 @@ use Dandelion\Application;
 
 class view
 {
+    private static $themeMetadataSchema = [
+        'slug' => '',
+        'name' => '',
+        'author' => '',
+        'email' => '',
+        'description' => '',
+        'version' => '',
+        'files' => [],
+        'extends' => ''
+    ];
+
+    private static $themeHttpDir = 'assets/themes';
+
     public static function loadJS()
     {
         $scripts = func_get_args();
@@ -73,62 +86,41 @@ class view
     /**
      * Determine the theme to use. Either a user assigned theme or the default.
      *
-     * @return string - Theme name
+     * @return string - Theme slug
      */
     public static function getTheme()
     {
+        $config = Configuration::getConfig();
+        $paths = Application::getPaths();
+
         // Check if a theme is given from the user settings session variable
-        $theme = !empty($_SESSION['userInfo']['theme']) ? $_SESSION['userInfo']['theme'] : DEFAULT_THEME;
+        $theme = $_SESSION['userInfo']['theme'] ? $_SESSION['userInfo']['theme'] : $config['defaultTheme'];
         // Next see if that theme is available
-        $theme = is_dir(PUBLIC_DIR.'/'.THEME_DIR.'/'.$theme) ? $theme : DEFAULT_THEME;
+        $theme = is_file($paths['public'].'/assets/themes/'.$theme.'/metadata.json') ? $theme : $config['defaultTheme'];
         return $theme;
-    }
-
-    /**
-     * Generate a list of available themes with the current used theme selected
-     *
-     * @param string $theme - Default null - Name of theme to have preselected
-     * @return string - Generated HTML
-     */
-    public static function getThemeList($theme = null, $showDefaultOption = true)
-    {
-        /*
-         * The call can pass the theme currently used,
-         * if one isn't passed, assume the current user's theme
-         */
-        $currentTheme = ($theme===null) ? self::getTheme() : $theme;
-        $currentTheme = ($theme==='') ? DEFAULT_THEME : $currentTheme;
-        $themeList = '';
-
-        if (!$handle = opendir(PUBLIC_DIR.'/'.THEME_DIR)) {
-            return '';
-        }
-
-        $themeList .= '<select id="theme">';
-        if ($showDefaultOption) {
-            $themeList .= '<option value="default">Default</option>';
-        }
-        while (false !== ($themeName = readdir($handle))) {
-            if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
-                $selected = ($themeName == $currentTheme) ? 'selected' : '';
-
-                $themeList .= "<option value=\"{$themeName}\" {$selected}>{$themeName}</option>";
-            }
-        }
-        $themeList .= '</select>';
-
-        return $themeList;
     }
 
     public static function getThemeListArray()
     {
+        $paths = Application::getPaths();
         $themeList = [];
-        if (!$handle = opendir(PUBLIC_DIR.'/'.THEME_DIR)) {
-            return '';
+        $themeDir = $paths['public'].'/'.self::$themeHttpDir;
+        $currentTheme = self::getTheme();
+
+        if (!$handle = opendir($themeDir)) {
+            return [];
         }
+
         while (false !== ($themeName = readdir($handle))) {
-            if ($themeName != '.' && $themeName != '..' && is_dir(THEME_DIR.'/'.$themeName)) {
-                array_push($themeList, $themeName);
+            $themeFiles = $themeDir.'/'.$themeName;
+            if ($themeName != '.' && $themeName != '..' && is_dir($themeFiles)) {
+                if (!is_file($themeFiles.'/metadata.json')) {
+                    continue;
+                }
+
+                $metadata = self::loadThemeMetadata($themeDir, $themeName);
+                $metadata['selected'] = ($metadata['slug'] === $currentTheme);
+                array_push($themeList, $metadata);
             }
         }
         return $themeList;
@@ -144,55 +136,82 @@ class view
     public static function loadCssSheets()
     {
         $optionalSheets = func_get_args();
-        $theme = self::getTheme();
+        $themes = [self::getTheme()];
+        $baseTheme = $themes[0];
         $cssList = '';
         $paths = Application::getPaths();
         $config = Configuration::getConfig();
+        $themeDir = $paths['public'].'/'.self::$themeHttpDir;
 
-        $cssList .= self::findStyleSheet('normalize', $paths, $config['hostname']);
+        // Determine if the main stylesheet should be loaded
         if (count($optionalSheets) == 0 || $optionalSheets[count($optionalSheets)-1] !== false) {
-            $cssList .= self::findStyleSheet('main', $paths, $config['hostname']);
-            $cssList .= self::findThemeStyleSheet('main', $paths, $theme, $config['hostname']);
+            array_unshift($optionalSheets, 'main');
+        }
+        // Unshift normalize last so it's loaded first
+        array_unshift($optionalSheets, 'normalize');
+
+        // Load metadata for base theme
+        $metadataJson = self::loadThemeMetadata($themeDir, $baseTheme);
+
+        // Check if the base theme extends another theme
+        if ($metadataJson['extends']) {
+            array_unshift($themes, $metadataJson['extends']);
         }
 
-        // Other stylesheets
-        foreach ($optionalSheets as $sheet) {
-            $normalized = strtolower($sheet);
-            $normalized = str_replace('.min.css', '', $normalized);
-            $normalized = str_replace('.css', '', $normalized);
+        $addedSpecial = []; // Used to prevent double loading of special stylesheets
+        foreach ($themes as $theme) {
+            foreach ($optionalSheets as $sheet) {
+                if (!$sheet) { // Possiblity one of the elements may be a bool false
+                    continue;
+                }
 
-            // Special case for jQueryUI styles
-            if ($normalized == 'jqueryui') {
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jquery/css/jquery-ui.min.css">';
-                continue;
-            } elseif ($normalized == 'jhtmlarea') {
-                $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jhtmlarea/styles/jHtmlArea.css">';
-                continue;
+                if ($theme == $baseTheme) {
+                    // Use previously parsed JSON for base theme
+                    $metaJson = $metadataJson;
+                } else {
+                    // Load metadata for extended theme
+                    $metaJson = self::loadThemeMetadata($themeDir, $theme);
+                }
+
+                // Remove css, min.css extensions
+                $normalized = strtolower($sheet);
+                $normalized = str_replace('.min.css', '', $normalized);
+                $normalized = str_replace('.css', '', $normalized);
+
+                // Special case for jQueryUI and jHtmlArea styles
+                if ($normalized == 'jqueryui' && !in_array('jqueryui', $addedSpecial)) {
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jquery/css/jquery-ui.min.css">';
+                    array_push($addedSpecial, 'jqueryui');
+                    continue;
+                } elseif ($normalized == 'jhtmlarea' && !in_array('jhtmlarea', $addedSpecial)) {
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jhtmlarea/styles/jHtmlArea.css">';
+                    array_push($addedSpecial, 'jhtmlarea');
+                    continue;
+                }
+
+                // If the theme contains a map to a file for this style, use it
+                if (array_key_exists($normalized, $metaJson['files'])) {
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/' . self::$themeHttpDir . '/' . $theme . '/' . $metaJson['files'][$normalized] . '">';
+                } else {
+                    // Otherwise search
+                    if (is_file($themeDir . '/' . $theme . '/' . $normalized . '.min.css')) {
+                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.min.css">';
+                    } elseif (is_file($themeDir . '/' . $theme . '/' . $normalized . '.css')) {
+                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.css">';
+                    }
+                }
             }
-
-            $cssList .= self::findStyleSheet($normalized, $paths, $config['hostname']);
-            $cssList .= self::findThemeStyleSheet($normalized, $paths, $theme, $config['hostname']);
         }
 
         return $cssList;
     }
 
-    public static function findStyleSheet($name, $paths, $hostname)
+    private static function loadThemeMetadata($themeDir, $theme)
     {
-        if (is_file($paths['public'] . '/build/css/' . $name . '.min.css')) {
-            return '<link rel="stylesheet" type="text/css" href="' . $hostname . '/build/css/' . $name . '.min.css">';
-        } elseif (is_file($paths['public'] . '/build/css/' . $name . '.css')) {
-            return '<link rel="stylesheet" type="text/css" href="' . $hostname . '/build/css/' . $name . '.css">';
-        }
-    }
-
-    public static function findThemeStyleSheet($name, $paths, $theme, $hostname)
-    {
-        if (is_file($paths['themes'] . '/' . $theme . '/css/' . $name . '.min.css')) {
-            return '<link rel="stylesheet" type="text/css" href="'.$hostname.'/' . THEME_DIR . '/' . $theme . '/css/' . $name . '.min.css">';
-        } elseif (is_file($paths['themes'] . '/' . $theme . '/css/' . $name . '.css')) {
-            return '<link rel="stylesheet" type="text/css" href="'.$hostname.'/' . THEME_DIR . '/' . $theme . '/css/' . $name . '.css">';
-        }
+        $metadataJson = file_get_contents($themeDir.'/'.$theme.'/metadata.json');
+        $metadataJson = json_decode($metadataJson, true);
+        $metadataJson = array_merge(self::$themeMetadataSchema, $metadataJson);
+        return $metadataJson;
     }
 
     public static function redirect($page)
