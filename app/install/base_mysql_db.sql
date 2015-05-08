@@ -96,10 +96,10 @@ INSERT INTO `dan_presence` (`id`, `uid`, `realname`, `status`, `message`, `retur
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_rights`
+-- Table structure for table `dan_groups`
 --
 
-CREATE TABLE IF NOT EXISTS `dan_rights` (
+CREATE TABLE IF NOT EXISTS `dan_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role` varchar(255) NOT NULL,
   `permissions` text NOT NULL,
@@ -108,10 +108,10 @@ CREATE TABLE IF NOT EXISTS `dan_rights` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `dan_rights`
+-- Dumping data for table `dan_groups`
 --
 
-INSERT INTO `dan_rights` (`id`, `role`, `permissions`) VALUES
+INSERT INTO `dan_groups` (`id`, `role`, `permissions`) VALUES
   (1, 'user', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:6:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:0;s:7:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:8:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
   (2, 'admin', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:6:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:7:"createuser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:8:"creategroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
   (3, 'guest', 'a:15:{s:9:"createlog";b:0;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:6:"createcat";b:0;s:7:"editcat";b:0;s:9:"deletecat";b:0;s:7:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:8:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:0;s:5:"admin";b:0;}');
