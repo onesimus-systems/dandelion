@@ -35,8 +35,10 @@ return array(
     // Application configuration
     // FQDN/IP for the application
     'hostname' => 'http://localhost',
+    // Prefix for cookies managed by Dandelion
+    'cookiePrefix' => 'dan_',
     // Name of PHP session for Dandelion, make unique for each instance of Dandelion
-    'phpSessionName' => 'dan_session_1',
+    'phpSessionName' => 'session_1',
     // Garbage collection lottery, the odds that a GC run will happen on a session close
     // Default is 2 out of 100.
     'gcLottery' => [2, 100],

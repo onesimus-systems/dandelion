@@ -53,7 +53,7 @@ class Application
 
         // Setup session manager
         SessionManager::register($this);
-        SessionManager::startSession($this->config['phpSessionName']);
+        SessionManager::startSession($this->config['cookiePrefix'].$this->config['phpSessionName']);
 
         // Setup routes and filters
         include $this->paths['app'] . '/routes.php';
