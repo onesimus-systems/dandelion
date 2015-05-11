@@ -6,7 +6,7 @@ namespace Dandelion\Utils;
 
 use Dandelion\Application;
 
-class view
+class View
 {
     private static $themeMetadataSchema = [
         'slug' => '',
@@ -93,13 +93,52 @@ class view
         $config = Configuration::getConfig();
         $paths = Application::getPaths();
 
-        // Check if a theme is given from the user settings session variable
-        $theme = $_SESSION['userInfo']['theme'] ? $_SESSION['userInfo']['theme'] : $config['defaultTheme'];
-        // Next see if that theme is available
-        $theme = is_file($paths['public'].'/assets/themes/'.$theme.'/metadata.json') ? $theme : $config['defaultTheme'];
-        return $theme;
+        if (isset($_COOKIE[$config['cookiePrefix'].'usertheme'])) {
+            if (self::isTheme($paths['public'], $_COOKIE[$config['cookiePrefix'].'usertheme'])) {
+                return $_COOKIE[$config['cookiePrefix'].'usertheme'];
+            }
+        } elseif (isset($_SESSION['userInfo']['theme'])) {
+            if (self::isTheme($paths['public'], $_SESSION['userInfo']['theme'])) {
+                self::setThemeCookie($_SESSION['userInfo']['theme']);
+                return $_SESSION['userInfo']['theme'];
+            }
+        }
+
+        return $config['defaultTheme'];
     }
 
+    /**
+     * Eligibility of a theme is determined by the existance of a metadata.json file
+     *
+     * @param $path string - Path to the public folder
+     * @param $slug string - Theme slug to check
+     *
+     * @return boolean
+     */
+    private static function isTheme($path, $slug)
+    {
+        return is_file($path.'/assets/themes/'.$slug.'/metadata.json');
+    }
+
+    /**
+     * Utility function to set the browser cookie for a theme
+     *
+     * @param $theme string - The theme slug to set
+     *
+     * @return void
+     */
+    public static function setThemeCookie($theme)
+    {
+        $config = Configuration::getConfig();
+        setcookie($config['cookiePrefix'].'usertheme', $theme, time() + 60 * 60 * 24 * 30, '/');
+        return;
+    }
+
+    /**
+     * Generates and returns an array of valid theme metadata
+     *
+     * @return array
+     */
     public static function getThemeListArray()
     {
         $paths = Application::getPaths();
@@ -114,13 +153,15 @@ class view
         while (false !== ($themeName = readdir($handle))) {
             $themeFiles = $themeDir.'/'.$themeName;
             if ($themeName != '.' && $themeName != '..' && is_dir($themeFiles)) {
-                if (!is_file($themeFiles.'/metadata.json')) {
+                if (!self::isTheme($paths['public'], $themeName)) {
                     continue;
                 }
 
                 $metadata = self::loadThemeMetadata($themeDir, $themeName);
-                $metadata['selected'] = ($metadata['slug'] === $currentTheme);
-                array_push($themeList, $metadata);
+                if ($metadata['slug']) {
+                    $metadata['selected'] = ($metadata['slug'] === $currentTheme);
+                    array_push($themeList, $metadata);
+                }
             }
         }
         return $themeList;
@@ -136,7 +177,7 @@ class view
     public static function loadCssSheets()
     {
         $optionalSheets = func_get_args();
-        $themes = [self::getTheme()];
+        $themes = [self::getTheme()]; // Array in case the theme extends another theme
         $baseTheme = $themes[0];
         $cssList = '';
         $paths = Application::getPaths();
@@ -206,6 +247,14 @@ class view
         return $cssList;
     }
 
+    /**
+     * Opens and parses the metadata file for a theme
+     *
+     * @param $themeDir string - Public theme directory
+     * @param $theme string - Theme slug to process
+     *
+     * @return array - Theme metadata formatted as $themeMetadataSchema
+     */
     private static function loadThemeMetadata($themeDir, $theme)
     {
         $metadataJson = file_get_contents($themeDir.'/'.$theme.'/metadata.json');
@@ -214,6 +263,13 @@ class view
         return $metadataJson;
     }
 
+    /**
+     * Issues a browser redirect to a specific page
+     *
+     * @param $page - Page slug to redirect
+     *
+     * @return void
+     */
     public static function redirect($page)
     {
         $config = Configuration::getConfig();

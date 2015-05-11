@@ -4,7 +4,8 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Repos\Interfaces\UserSettingsRepo;
+use Dandelion\Utils;
+use Dandelion\Repos\Interfaces\UserSettingsRepo;
 
 class UserSettings
 {
@@ -36,7 +37,11 @@ class UserSettings
         $user = $user ?: $_SESSION['userInfo']['userid'];
 
         if ($this->repo->saveUserTheme($user, $theme)) {
+            $config = Utils\Configuration::getConfig();
+
             $_SESSION['userInfo']['theme'] = $theme;
+            Utils\View::setThemeCookie($theme);
+
             return 'Theme saved successfully';
         } else {
             return 'An error occured saving your settings';
