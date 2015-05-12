@@ -5,10 +5,12 @@
 "use strict"; // jshint ignore:line
 
 $(document).ready(function(){
-    $('#save-per-page-btn').click(Settings.savePerPage);
-    $('#save-theme-btn').click(Settings.saveTheme);
+    if (page !== 'initialReset') {
+        $('#save-per-page-btn').click(Settings.savePerPage);
+        $('#save-theme-btn').click(Settings.saveTheme);
+        $('#generate-apikey-btn').click(Settings.generateKey);
+    }
     $('#reset-password-btn').click(Settings.resetPassword);
-    $('#generate-apikey-btn').click(Settings.generateKey);
 });
 
 var Settings = {
@@ -27,7 +29,11 @@ var Settings = {
         if (pw1 === pw2 && pw1 !== '') {
             $.post('api/i/users/resetPassword', {'pw': pw1}, null, 'json')
                 .done(function(msg) {
-                    $.alert(msg.data, 'Password Reset');
+                    $.alert(msg.data, 'Password Reset', function() {
+                        if (page === 'initialReset') {
+                            location.assign('dashboard');
+                        }
+                    });
                 });
         } else {
             $.alert('Passwords do not match or are empty', 'Password Reset');
