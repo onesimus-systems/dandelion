@@ -8,6 +8,7 @@ use Dandelion\Application;
 
 class View
 {
+    // Schema for a theme metadata file
     private static $themeMetadataSchema = [
         'slug' => '',
         'name' => '',
@@ -19,7 +20,11 @@ class View
         'extends' => ''
     ];
 
+    // Subdirectory path to themes as seen from the browser
     private static $themeHttpDir = 'assets/themes';
+
+    // The limit of how long a theme extend chain can be
+    private static $extendsLimit = 5;
 
     public static function loadJS()
     {
@@ -94,30 +99,30 @@ class View
         $paths = Application::getPaths();
 
         if (isset($_COOKIE[$config['cookiePrefix'].'usertheme'])) {
-            if (self::isTheme($paths['public'], $_COOKIE[$config['cookiePrefix'].'usertheme'])) {
+            if (self::isTheme($_COOKIE[$config['cookiePrefix'].'usertheme'])) {
                 return $_COOKIE[$config['cookiePrefix'].'usertheme'];
             }
         } elseif (isset($_SESSION['userInfo']['theme'])) {
-            if (self::isTheme($paths['public'], $_SESSION['userInfo']['theme'])) {
+            if (self::isTheme($_SESSION['userInfo']['theme'])) {
                 self::setThemeCookie($_SESSION['userInfo']['theme']);
                 return $_SESSION['userInfo']['theme'];
             }
         }
 
-        return $config['defaultTheme'];
+        return $config['defaultTheme']; // Returns early if possible
     }
 
     /**
      * Eligibility of a theme is determined by the existance of a metadata.json file
      *
-     * @param $path string - Path to the public folder
      * @param $slug string - Theme slug to check
      *
      * @return boolean
      */
-    private static function isTheme($path, $slug)
+    private static function isTheme($slug)
     {
-        return is_file($path.'/assets/themes/'.$slug.'/metadata.json');
+        $paths = Application::getPaths();
+        return is_file($paths['public'].'/assets/themes/'.$slug.'/metadata.json');
     }
 
     /**
@@ -153,11 +158,11 @@ class View
         while (false !== ($themeName = readdir($handle))) {
             $themeFiles = $themeDir.'/'.$themeName;
             if ($themeName != '.' && $themeName != '..' && is_dir($themeFiles)) {
-                if (!self::isTheme($paths['public'], $themeName)) {
+                if (!self::isTheme($themeName)) {
                     continue;
                 }
 
-                $metadata = self::loadThemeMetadata($themeDir, $themeName);
+                $metadata = self::loadThemeMetadata($themeName);
                 if ($metadata['slug']) {
                     $metadata['selected'] = ($metadata['slug'] === $currentTheme);
                     array_push($themeList, $metadata);
@@ -177,8 +182,7 @@ class View
     public static function loadCssSheets()
     {
         $optionalSheets = func_get_args();
-        $themes = [self::getTheme()]; // Array in case the theme extends another theme
-        $baseTheme = $themes[0];
+        $baseTheme = self::getTheme();
         $cssList = '';
         $paths = Application::getPaths();
         $config = Configuration::getConfig();
@@ -191,28 +195,16 @@ class View
         // Unshift normalize last so it's loaded first
         array_unshift($optionalSheets, 'normalize');
 
-        // Load metadata for base theme
-        $metadataJson = self::loadThemeMetadata($themeDir, $baseTheme);
-
-        // Check if the base theme extends another theme
-        if ($metadataJson['extends']) {
-            array_unshift($themes, $metadataJson['extends']);
-        }
+        // Load theme extend chain
+        $themes = self::getExtendChain(self::loadThemeMetadata($baseTheme));
 
         $addedSpecial = []; // Used to prevent double loading of special stylesheets
-        foreach ($themes as $theme) {
+        foreach ($themes as $metaJson) {
             foreach ($optionalSheets as $sheet) {
                 if (!$sheet) { // Possiblity one of the elements may be a bool false
                     continue;
                 }
-
-                if ($theme == $baseTheme) {
-                    // Use previously parsed JSON for base theme
-                    $metaJson = $metadataJson;
-                } else {
-                    // Load metadata for extended theme
-                    $metaJson = self::loadThemeMetadata($themeDir, $theme);
-                }
+                $theme = $metaJson['slug'];
 
                 // Remove css, min.css extensions
                 $normalized = strtolower($sheet);
@@ -248,6 +240,35 @@ class View
     }
 
     /**
+     * Compile the chain of extended themes from the base theme
+     *
+     * @param $baseMeta array - Metadata for the base theme
+     *
+     * @return array - List of theme metadata in the order they should be loaded.
+     */
+    private static function getExtendChain($baseMeta)
+    {
+        $chain = [$baseMeta];
+        $themes = [$baseMeta['slug']]; // Track loops in the extend chain
+
+        for ($i = 0; $i < self::$extendsLimit; $i++) {
+            if (!$chain[0]['extends']) {
+                // The last theme in the chain doesn't extend anything
+                break;
+            }
+
+            // Make sure the theme isn't already in the chain and is a theme
+            if (!in_array($chain[0]['extends'], $themes) && self::isTheme($chain[0]['extends'])) {
+                array_unshift($chain, self::loadThemeMetadata($chain[0]['extends']));
+            } else {
+                break;
+            }
+        }
+
+        return $chain;
+    }
+
+    /**
      * Opens and parses the metadata file for a theme
      *
      * @param $themeDir string - Public theme directory
@@ -255,8 +276,10 @@ class View
      *
      * @return array - Theme metadata formatted as $themeMetadataSchema
      */
-    private static function loadThemeMetadata($themeDir, $theme)
+    private static function loadThemeMetadata($theme)
     {
+        $paths = Application::getPaths();
+        $themeDir = $paths['public'].'/'.self::$themeHttpDir;
         $metadataJson = file_get_contents($themeDir.'/'.$theme.'/metadata.json');
         $metadataJson = json_decode($metadataJson, true);
         $metadataJson = array_merge(self::$themeMetadataSchema, $metadataJson);
@@ -280,15 +303,10 @@ class View
             'dashboard' => '',
             'userSettings' => 'settings',
             'adminSettings' => 'admin',
-            'tutorial' => 'tutorial',
             'logout' => 'logout',
             'login' => 'login',
             'about' => 'about',
-            'adminCategories' => 'categories',
-            'adminGroups' => 'editgroups',
-            'adminUsers' => 'editusers',
             'installer' => 'install/index.php',
-            'mailbox' => 'mail',
             'resetPassword' => 'reset'
         );
 
