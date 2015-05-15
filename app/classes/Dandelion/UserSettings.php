@@ -32,13 +32,11 @@ class UserSettings
         }
     }
 
-    public function saveTheme($theme = 'default', $user = null)
+    public function saveTheme($theme = '', $user = null)
     {
         $user = $user ?: $_SESSION['userInfo']['id'];
 
         if ($this->repo->saveUserTheme($user, $theme)) {
-            $config = Utils\Configuration::getConfig();
-
             $_SESSION['userInfo']['theme'] = $theme;
             Utils\View::setThemeCookie($theme);
 
