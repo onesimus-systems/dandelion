@@ -1,6 +1,8 @@
 {
-	"slug": "modern",
-	"name": "Dandelion Modern",
-	"author": "Lee Keitel",
-	"version": "0.1.0"
+    "slug": "modern",
+    "name": "Dandelion Modern",
+    "author": "Lee Keitel",
+    "email": "keitellf@gmail.com",
+    "description": "The polished look of awesomeness.",
+    "version": "0.1.0"
 }

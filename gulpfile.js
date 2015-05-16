@@ -12,14 +12,16 @@ var srcPaths = {
       'public/source/dts/*.ts'
     ],
     themes: {
-      modern: 'public/assets/themes/modern/less/*.less'
+      modern: 'public/assets/themes/modern/less/*.less',
+      legacy: 'public/assets/themes/legacy/less/*.less'
     }
 };
 
 var destPaths = {
     scripts: 'public/build/js',
     themes: {
-      modern: 'public/assets/themes/modern'
+      modern: 'public/assets/themes/modern',
+      legacy: 'public/assets/themes/legacy'
     }
 };
 
@@ -58,7 +60,8 @@ gulp.task('themes', function() {
 
 gulp.task('watch', function() {
     gulp.watch(srcPaths.typescript, ['typescript']);
-    gulp.watch(srcPaths.typescript, ['typescript']);
+    gulp.watch(srcPaths.themes.modern, ['themes']);
+    gulp.watch(srcPaths.themes.legacy, ['themes']);
 });
 
 gulp.task('default', ['typescript', 'themes']);

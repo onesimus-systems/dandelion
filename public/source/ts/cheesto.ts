@@ -59,7 +59,7 @@ var Cheesto = {
     generateTable: function(dataObj: cheestoReadResponse): void {
         var div = $('<div/>').attr('id', 'messages-cheesto-content');
         var table = $('<table/>');
-        table.append('<thead><tr><td>Name</td><td>Status</td></tr></thead><tbody>');
+        table.append('<thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>');
 
         for (var key in dataObj) {
             if (dataObj.hasOwnProperty(key)) {
