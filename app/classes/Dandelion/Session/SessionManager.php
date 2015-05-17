@@ -58,9 +58,7 @@ class SessionManager implements \SessionHandlerInterface
     public function open($savePath, $sessionName)
     {
         $this->sessionName = $sessionName;
-
-        $dbtype = ucfirst($this->app->config['db']['type']);
-        $repo = "\\Dandelion\\Repos\\{$dbtype}\\SessionRepo";
+        $repo = "\\Dandelion\\Repos\\SessionRepo";
         $this->repo = new $repo();
         return true;
     }
@@ -82,28 +80,29 @@ class SessionManager implements \SessionHandlerInterface
     {
         $r = $this->repo->read($id);
 
-        if (count($r) == 1) {
-            $data = $r[0]["data"];
-            return $data;
-        } else {
+        if (is_null($r)) {
             return '';
+        } else {
+            return $r;
         }
     }
 
     public function write($id, $data)
     {
-        return $this->repo->write($id, $data);
+        $this->repo->write($id, $data);
+        return;
     }
 
     public function destroy($id)
     {
         $this->repo->destroy($id);
         $_SESSION = array();
-        return true;
+        return;
     }
 
     public function gc($maxlifetime)
     {
-        return $this->repo->gc($maxlifetime);
+        $this->repo->gc($maxlifetime);
+        return;
     }
 }

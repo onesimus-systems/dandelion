@@ -48,7 +48,7 @@ class ApiController extends BaseController
      */
     public function internalApiCall($module, $method)
     {
-        $returnObj = $this->processRequest($_SESSION['userInfo']['userid'], true, $module, $method);
+        $returnObj = $this->processRequest($_SESSION['userInfo']['id'], true, $module, $method);
         echo $returnObj;
         return;
     }
@@ -75,13 +75,12 @@ class ApiController extends BaseController
                 define('USER_ID', $key);
             }
 
-            $rightsRepo = Repos::makeRepo('Rights');
+            $rightsRepo = Repos::makeRepo('Groups');
             $userRights = new Rights(USER_ID, $rightsRepo);
         } else {
             $userRights = null;
         }
 
-        $DatabaseConn = MySqlDatabase::getInstance();
         $urlParams = new UrlParameters();
 
         // Shortened alias for keymanager

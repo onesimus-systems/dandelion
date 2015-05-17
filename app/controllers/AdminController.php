@@ -6,7 +6,8 @@ namespace Dandelion\Controllers;
 
 use \Dandelion\Users;
 use \Dandelion\Template;
-use \Dandelion\Permissions;
+use \Dandelion\Cheesto;
+use \Dandelion\Groups;
 use \Dandelion\Utils\Repos;
 use \Dandelion\Utils\View;
 
@@ -24,12 +25,12 @@ class AdminController extends BaseController
         }
 
         if ($this->rights->authorized('creategroup', 'editgroup', 'deletegroup')) {
-            $permObj = new Permissions(Repos::makeRepo('Rights'));
+            $permObj = new Groups(Repos::makeRepo('Groups'));
             $grouplist = $permObj->getGroupList();
 
             foreach ($grouplist as $key => $group) {
                 $grouplist[$key]['users'] = [];
-                $usersInGroup = $permObj->usersInGroup($group['role']);
+                $usersInGroup = $permObj->usersInGroup($group['id']);
                 foreach ($usersInGroup as $value) {
                     array_push($grouplist[$key]['users'], $value['username']);
                 }
@@ -59,12 +60,14 @@ class AdminController extends BaseController
             View::redirect('dashboard');
         }
 
-        $user = new Users(Repos::makeRepo('Users'), $uid, true);
-        $groups = new Permissions(Repos::makeRepo('Rights'));
+        $user = new Users(Repos::makeRepo('Users'));
+        $groups = new Groups(Repos::makeRepo('Groups'));
+        $cheesto = new Cheesto(Repos::makeRepo('Cheesto'));
 
         $template = new Template($this->app);
         $template->addData([
-            'user' => $user,
+            'user' => $user->getUser($uid),
+            'cheesto' => $cheesto->getUserStatus($uid),
             'grouplist' => $groups->getGroupList(),
             'statuslist' => $this->app->config['cheesto']['statusOptions']
         ]);
@@ -72,9 +75,9 @@ class AdminController extends BaseController
         $template->render('admin::edituser', 'User Management');
     }
 
-    public function editGroup($gname = null)
+    public function editGroup($gid = null)
     {
-        if (!$gname) {
+        if (!$gid) {
             View::redirect('adminSettings');
         }
 
@@ -84,13 +87,13 @@ class AdminController extends BaseController
             View::redirect('dashboard');
         }
 
-        $permObj = new Permissions(Repos::makeRepo('Rights'));
+        $permObj = new Groups(Repos::makeRepo('Groups'));
 
         $template = new Template($this->app);
-        $group = $permObj->getGroupList($gname);
+        $group = $permObj->getGroupList($gid);
         $template->addData([
             'group' => $group,
-            'usersInGroup' => $permObj->usersInGroup($group['role'])
+            'usersInGroup' => $permObj->usersInGroup($group['id'])
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
         $template->render('admin::editgroup', 'Group Management');

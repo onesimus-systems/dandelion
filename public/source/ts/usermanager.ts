@@ -99,7 +99,7 @@ var UserManage = {
     revokeKey: function(): void {
         $.post('../../api/i/key/revoke', {uid: $('#user-id').val()}, null, 'json')
             .done(function(data) {
-                if (data.errorcode === 0 && data.data.key === true) {
+                if (data.errorcode === 0) {
                     $.alert('API key revoked', 'User Management');
                 } else {
                     $.alert('Error revoking API key', 'User Management');

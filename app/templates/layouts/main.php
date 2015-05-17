@@ -36,7 +36,7 @@
                 <span class="dash">License: <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">GPLv3</a></span>
                 <span class="dash">Version: <?= $this->e($appVersion) ?></span>
                 <span class="dash"><a href="<?= $this->e($hostname) ?>/about">About</a></span>
-                <span><a href="<?= $this->e($hostname) ?>/help">Help</a></span>
+                <span><a href="http://onesimussystems.com/dandelion" target="_blank">Help</a></span>
             </span>
         </footer>
     </body>

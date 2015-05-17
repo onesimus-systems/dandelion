@@ -36,9 +36,9 @@ class Categories
             $alphaList = array();
             // Find children
             foreach ($cats as $isChild) {
-                if($isChild['pid'] == $cid) {
+                if($isChild['parent'] == $cid) {
                     $child = array(
-                        'cid' =>  $isChild['cid'],
+                        'id' =>  $isChild['id'],
                         'description' => $isChild['description']
                     );
                     array_push($alphaList, $child);
@@ -50,10 +50,10 @@ class Categories
 
             // Add children to array for the level
             foreach ($alphaList as $children) {
-                $selected = (isset($cids[$i+1]) && ($children['cid'] == $cids[$i+1])) ? true : false;
+                $selected = (isset($cids[$i+1]) && ($children['id'] == $cids[$i+1])) ? true : false;
 
                 $response['levels'][$i][] = [
-                    'id' => $children['cid'],
+                    'id' => $children['id'],
                     'desc' => $children['description'],
                     'selected' => $selected
                 ];
@@ -75,7 +75,7 @@ class Categories
                 array_push($idArr, $pid);
             }
         }
-        
+
         $mainJson = json_decode($this->renderChildrenJson($idArr), true);
         if ((count($catstring) + 1) > count($idArr)) {
             $mainJson['error'] = true;
@@ -128,9 +128,9 @@ class Categories
         $deleted = $this->repo->deleteCategory($cid);
 
         // Reassign children
-        $reassigned = $this->repo->adoptChildren($newParent, $cid);
+        $this->repo->adoptChildren($newParent, $cid);
 
-        if ($deleted && $reassigned) {
+        if ($deleted) {
             return 'Category deleted successfully';
         } else {
             return 'An error occured deleting a category';

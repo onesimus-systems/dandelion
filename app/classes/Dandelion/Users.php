@@ -18,9 +18,9 @@ class Users
         $this->repo = $repo;
 
         if ($uid >= 0) {
-            $this->userInfo['userid'] = $uid;
+            $this->userInfo['id'] = $uid;
         } else {
-            $this->userInfo['userid'] = null;
+            $this->userInfo['id'] = null;
         }
 
         if ($load === true && $uid >= 0) {
@@ -33,55 +33,33 @@ class Users
 
     public function loadUser()
     {
-        $allUserInfo = $this->repo->getFullUser($this->userInfo['userid']);
-
-        foreach ($allUserInfo as $key => $value) {
-            $infoType = substr($key, 0, 2);
-            $key = substr_replace($key, '', 0, 2);
-
-            switch ($infoType) {
-                case 'u_':
-                    if ($key == 'permissions') {
-                        $value = (array) unserialize($value);
-                    }
-                    $this->userInfo[$key] = $value;
-                    break;
-                case 'p_':
-                    $this->userCheesto[$key] = $value;
-                    break;
-                case 'a_':
-                    $this->userApi[$key] = $value;
-                    break;
-            }
-        }
-
+        $this->userInfo = $this->getUser($this->userInfo['id']);
         return true;
     }
 
     public function saveUser()
     {
-        if (!$this->userInfo['realname']
-            || !$this->userInfo['role']
-            || (!$this->userInfo['firsttime'] && $this->userInfo['firsttime'] != 0)
-            || !$this->userInfo['userid']
+        if (!$this->userInfo['fullname']
+            || !$this->userInfo['group_id']
+            || (!$this->userInfo['initial_login'] && $this->userInfo['initial_login'] != 0)
+            || !$this->userInfo['id']
         ) {
             return 'Something is empty';
         }
 
-        $this->userInfo['role'] = strtolower($this->userInfo['role']);
         // Update main user row
         $userSaved = $this->repo->saveUser(
-            $this->userInfo['userid'],
-            $this->userInfo['realname'],
-            $this->userInfo['role'],
+            $this->userInfo['id'],
+            $this->userInfo['fullname'],
+            $this->userInfo['group_id'],
             $this->userInfo['theme'],
-            $this->userInfo['firsttime']
+            $this->userInfo['initial_login']
         );
 
         // Update Cheesto information
         $userCheestoSaved = $this->repo->saveUserCheesto(
-            $this->userInfo['realname'],
-            $this->userInfo['userid']
+            $this->userInfo['id'],
+            $this->userInfo['fullname']
         );
 
         if ($userSaved && $userCheestoSaved) {
@@ -91,30 +69,27 @@ class Users
         }
     }
 
-    public function createUser($username, $password, $realname, $role, $cheesto = true)
+    public function createUser($username, $password, $fullname, $gid, $cheesto = true)
     {
         $date = new \DateTime();
 
         // Error checking
-        if (!$username || !$password || !$realname || !$role) {
+        if (!$username || !$password || !$fullname || !$gid) {
             return 'Something is empty';
         }
         if ($this->isUser($username)) {
             return 'Username already in use';
         }
 
-        $role = strtolower($role);
         $password = password_hash($password, PASSWORD_BCRYPT);
 
         // Create row in users table
-        $userCreated = $this->repo->createUser($username, $password, $realname, $role, $date->format('Y-m-d'));
+        $userCreated = $this->repo->createUser($username, $password, $fullname, $gid, $date->format('Y-m-d'));
 
         $userCheestoCreated = true;
         if ($cheesto) {
-            $lastID = $this->repo->lastCreatedUserId();
-
             // Create row in presence table
-            $userCheestoCreated = $this->repo->createUserCheesto($lastID, $realname, $date->format('Y-m-d H:i:s'));
+            $userCheestoCreated = $this->repo->createUserCheesto($userCreated, $fullname, $date->format('Y-m-d H:i:s'));
         }
 
         if ($userCreated && $userCheestoCreated) {
@@ -131,7 +106,7 @@ class Users
 
     public function resetPassword($pass = '')
     {
-        $uid = $this->userInfo['userid'];
+        $uid = $this->userInfo['id'];
 
         if (!$uid || !$pass) {
             return 'Something is empty';
@@ -149,16 +124,16 @@ class Users
     public function deleteUser($uid, Permissions $permissions)
     {
         if (!$uid) {
-            if ($this->userInfo['userid']) {
-                $uid = $this->userInfo['userid'];
+            if ($this->userInfo['id']) {
+                $uid = $this->userInfo['id'];
             } else {
                 return 'No user id provided';
             }
         }
 
         $delete = false;
-        $userRole = $this->repo->getUserRole($uid);
-        $isAdmin = (array) $permissions->loadRights($userRole);
+        $userGroup = $this->repo->getUserRole($uid);
+        $isAdmin = $permissions->loadRights($userGroup);
 
         if (!$isAdmin['admin']) {
             // If the account being deleted isn't an admin, then there's nothing to worry about
@@ -169,7 +144,7 @@ class Users
             $otherUsers = $this->repo->getUserRole($uid, true);
 
             foreach ($otherUsers as $areTheyAdmin) {
-                $isAdmin = (array) $permissions->loadRights($areTheyAdmin['role']);
+                $isAdmin = $permissions->loadRights($areTheyAdmin['id']);
 
                 if ($isAdmin['admin']) {
                     // If one is found, stop for loop and allow the delete
@@ -179,8 +154,10 @@ class Users
             }
         }
 
+        // TODO: Create exception class for errors in classes
         if ($delete) {
-            if ($this->repo->deleteUser($uid)) {
+            $success = $this->repo->deleteUser($uid);
+            if ($success) {
                 return 'User deleted successfully';
             } else {
                 return 'Error deleting user';

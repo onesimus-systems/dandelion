@@ -42,7 +42,7 @@ class KeyManagerAPI extends BaseModule
         $userid = USER_ID;
 
         // Check permissions
-        if (isset($this->up->uid)) {
+        if ($this->up->uid) {
             if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
                 $userid = $this->up->uid;
             } else {

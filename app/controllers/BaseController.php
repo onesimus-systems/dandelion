@@ -21,7 +21,7 @@ class BaseController
 
     protected function loadRights()
     {
-        $rightsRepo = Repos::makeRepo('Rights');
-        $this->rights = new Rights($_SESSION['userInfo']['userid'], $rightsRepo);
+        $rightsRepo = Repos::makeRepo('Groups');
+        $this->rights = new Rights($_SESSION['userInfo']['id'], $rightsRepo);
     }
 }

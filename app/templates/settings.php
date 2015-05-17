@@ -12,7 +12,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui
 <form>
     <fieldset>
         <label for="page-limit">Logs shown per page:</label>
-        <div class="textfield"><input type="text" id="page-limit" size="5" maxlength="3" value="<?= $_SESSION['userInfo']['showlimit'] ?>"></div>
+        <div class="textfield"><input type="text" id="page-limit" size="5" maxlength="3" value="<?= $_SESSION['userInfo']['logs_per_page'] ?>"></div>
 
         <button type="button" id="save-per-page-btn" class="button">Save</button>
     </fieldset>

@@ -4,7 +4,7 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Repos\Interfaces\RightsRepo;
+use \Dandelion\Repos\Interfaces\GroupsRepo;
 
 class Rights
 {
@@ -15,7 +15,7 @@ class Rights
      *
      * @param int $userid - ID of user
      */
-    public function __construct($userid, RightsRepo $repo)
+    public function __construct($userid, GroupsRepo $repo)
     {
         $this->userid = $userid;
         $this->permissions = (array)unserialize($repo->getRightsForUser($userid));
@@ -33,12 +33,6 @@ class Rights
         }
 
         $permissions = func_get_args();
-        if (is_array($permissions[0])) {
-            // For legacy support, the old function definition
-            // called for an array as the only parameter. This fixes
-            // the expected array to be the array provided
-            $permissions = $permissions[0];
-        }
 
         // The admin flag grants full rights
         if ($this->permissions['admin']) {

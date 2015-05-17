@@ -4,9 +4,9 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Repos\Interfaces\RightsRepo;
+use \Dandelion\Repos\Interfaces\GroupsRepo;
 
-class Permissions
+class Groups
 {
     private $defaultPermissions = [
         'createlog' => false,
@@ -54,7 +54,7 @@ class Permissions
         'admin' => 'Is Full Admin'
     ];
 
-    public function __construct(RightsRepo $repo)
+    public function __construct(GroupsRepo $repo)
     {
         $this->repo = $repo;
         return;
@@ -126,9 +126,9 @@ class Permissions
      * @param string $userrole - Name of permisions group
      * @return array - Permissions
      */
-    public function loadRights($role)
+    public function loadRights($gid)
     {
-       return unserialize($this->repo->loadRights($role));
+       return (array) unserialize($this->repo->loadRights($gid));
     }
 
     /**
@@ -139,29 +139,11 @@ class Permissions
      */
     public function usersExistInGroup($group)
     {
-        if (is_numeric($group)) {
-            // Get name of group to search users table
-            $groupName = $this->getGroupList($group)['role'];
-        } else {
-            $groupName = $group;
-        }
-
-        if ($this->repo->userCountInGroup($groupName) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->repo->userCountInGroup($group);
     }
 
     public function usersInGroup($group)
     {
-        if (is_numeric($group)) {
-            // Get name of group to search users table
-            $groupName = $this->getGroupList($group)['role'];
-        } else {
-            $groupName = $group;
-        }
-
-        return $this->repo->usersInGroup($groupName);
+        return $this->repo->usersInGroup($group);
     }
 }

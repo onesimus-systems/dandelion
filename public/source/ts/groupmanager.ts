@@ -8,18 +8,18 @@ var GroupManage = {
         $('#save-btn').click(GroupManage.save);
         $('#delete-btn').click(GroupManage.confirmDeleteGroup);
     },
-    
+
     save: function(): void {
         "use strict";
         var permissions = {};
         $('form input[type="checkbox"]').each(function() {
             permissions[$(this).val()] = $(this).prop('checked');
         });
-    
+
         var permissionsStr: string = JSON.stringify(permissions);
         var gid: string = $('#groupid').val();
-    
-        $.post('../../api/i/rights/edit', {groupid: gid, rights: permissionsStr}, null, 'json')
+
+        $.post('../../api/i/groups/edit', {groupid: gid, rights: permissionsStr}, null, 'json')
             .done(function(response) {
                 if (response.errorcode === 0) {
                     $.flashMessage('Group saved');
@@ -28,7 +28,7 @@ var GroupManage = {
                 }
             });
     },
-    
+
     confirmDeleteGroup: function(): void {
         "use strict";
         $.confirmBox("Are you sure you want to delete this group?",
@@ -36,19 +36,19 @@ var GroupManage = {
             GroupManage.deleteGroup
         );
     },
-    
+
     deleteGroup: function(): void {
         "use strict";
         var gid: string = $('#groupid').val();
-    
-        $.post('../../api/i/rights/delete', {groupid: gid}, null, 'json')
+
+        $.post('../../api/i/groups/delete', {groupid: gid}, null, 'json')
             .done(function(data) {
                 if (data.errorcode === 0) {
                     $.alert('Group deleted successfully', 'Group Management', function() {
                         location.assign('../../admin');
                     });
                 } else {
-                    $.alert('Error deleting group', 'Group Management');
+                    $.alert('Error deleting group: '+data.status, 'Group Management');
                 }
             });
         return;

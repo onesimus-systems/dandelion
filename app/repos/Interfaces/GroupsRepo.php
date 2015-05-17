@@ -4,7 +4,7 @@
  */
 namespace Dandelion\Repos\Interfaces;
 
-interface RightsRepo
+interface GroupsRepo
 {
     public function getGroupById($gid);
     public function getGroupByName($gname);

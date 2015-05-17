@@ -34,7 +34,9 @@ class KeyManager
         }
 
         // Insert new key
-        if ($this->repo->saveKeyForUser($uid, $newKey)) {
+        $success = $this->repo->saveKeyForUser($uid, $newKey);
+
+        if ($success) {
             return $newKey;
         } else {
             return 'Error generating key.';

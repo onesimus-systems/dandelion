@@ -4,17 +4,17 @@
  */
 namespace Dandelion\API\Module;
 
-use \Dandelion\Permissions;
+use \Dandelion\Groups;
 use \Dandelion\Controllers\ApiController;
 
-class RightsAPI extends BaseModule
+class GroupsAPI extends BaseModule
 {
     /**
      * Gets the list of rights groups
      */
     public function getList()
     {
-        $permissions = new Permissions($this->repo);
+        $permissions = new Groups($this->repo);
         return $permissions->getGroupList();
     }
 
@@ -23,7 +23,7 @@ class RightsAPI extends BaseModule
      */
     public function getGroup()
     {
-        $permissions = new Permissions($this->repo);
+        $permissions = new Groups($this->repo);
         $gid = $this->up->groupid;
         return $permissions->getGroupList($gid);
     }
@@ -34,17 +34,17 @@ class RightsAPI extends BaseModule
     public function edit()
     {
         if (!$this->ur->authorized('editgroup')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'groups'));
         }
 
-        $permissions = new Permissions($this->repo);
+        $permissions = new Groups($this->repo);
         $gid = $this->up->groupid;
         $rights = json_decode($this->up->rights, true);
 
         if ($permissions->editGroup($gid, $rights)) {
             return 'User group saved';
         } else {
-            exit(ApiController::makeDAPI(5, 'Error saving user group', 'rights'));
+            exit(ApiController::makeDAPI(5, 'Error saving user group', 'groups'));
         }
     }
 
@@ -54,10 +54,10 @@ class RightsAPI extends BaseModule
     public function create()
     {
         if (!$this->ur->authorized('creategroup')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'groups'));
         }
 
-        $permissions = new Permissions($this->repo);
+        $permissions = new Groups($this->repo);
         $name = $this->up->name;
         $rights = $this->up->get('rights', []);
 
@@ -68,7 +68,7 @@ class RightsAPI extends BaseModule
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return 'User group created successfully';
         } else {
-            exit(ApiController::makeDAPI(5, 'Error creating user group', 'rights'));
+            exit(ApiController::makeDAPI(5, 'Error creating user group', 'groups'));
         }
     }
 
@@ -78,15 +78,15 @@ class RightsAPI extends BaseModule
     public function delete()
     {
         if (!$this->ur->authorized('deletegroup')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'rights'));
+            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'groups'));
         }
 
-        $permissions = new Permissions($this->repo);
+        $permissions = new Groups($this->repo);
         $gid = $this->up->groupid;
         $users = $permissions->usersExistInGroup($gid);
 
         if ($users) {
-            return 'This group is assigned to users.<br>Can not delete this group.';
+            exit(ApiController::makeDAPI(5, 'This group is assigned to users. Can not delete this group.', 'groups'));
         } else {
             $permissions->deleteGroup($gid);
             return 'Group deleted successfully.';

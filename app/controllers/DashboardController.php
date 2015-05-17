@@ -4,9 +4,7 @@
  */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Rights;
 use \Dandelion\Template;
-use \Dandelion\Utils\Repos;
 
 class DashboardController extends BaseController
 {

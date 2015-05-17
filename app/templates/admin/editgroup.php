@@ -5,7 +5,7 @@
 $this->layout('layouts::main', ['requiredCssFiles' => ['editgroup','jqueryui']]);
 ?>
 
-<h1>Manage Group - <?= $this->e($group['role']) ?></h1>
+<h1>Manage Group - <?= $this->e($group['name']) ?></h1>
 
 <form>
 
@@ -44,8 +44,12 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['editgroup','jqueryui']])
     <h3>Users in this group:</h3>
     <ul>
         <?php
-        foreach ($usersInGroup as $user) {
-            echo "<li>{$user['realname']} - {$user['username']}</li>";
+        if (!count($usersInGroup)) {
+            echo '<li>No users in this group</li>';
+        } else {
+            foreach ($usersInGroup as $user) {
+                echo "<li>{$user['fullname']} - {$user['username']}</li>";
+            }
         }
         ?>
     </ul>

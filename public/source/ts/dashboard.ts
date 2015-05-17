@@ -11,7 +11,7 @@
 
 var search = false,
     refreshc: number;
-    
+
 interface apiResponse {
     data: any;
     errorcode: number;
@@ -105,7 +105,7 @@ var View = {
 
             var log = data[key];
 
-            var creator = log.realname;
+            var creator = log.fullname;
             if (creator === '') {
                 creator = 'Unknown User';
             }
@@ -114,14 +114,14 @@ var View = {
             var html = '<div class="log-entry">'+
                 '<span class="log-title">'+ log.title +'</span>';
 
-            if (log.canEdit) { html += '<button type="button" class="button edit-button" onClick="AddEdit.getEdit(' + log.logid + ');">Edit</button>'; }
+            if (log.canEdit) { html += '<button type="button" class="button edit-button" onClick="AddEdit.getEdit(' + log.id + ');">Edit</button>'; }
 
-            html += '<p class="log-body">'+ log.entry +'</p><p class="log-metadata">'+
-                    '<span class="log-meta-author">Created by ' + creator + ' on ' + log.datec + ' @ ' + log.timec + ' ';
+            html += '<p class="log-body">'+ log.body +'</p><p class="log-metadata">'+
+                    '<span class="log-meta-author">Created by ' + creator + ' on ' + log.date_created + ' @ ' + log.time_created + ' ';
 
-            if (log.edited == "1") { html += '(Amended)'; }
+            if (log.is_edited == "1") { html += '(Amended)'; }
 
-            html += '</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink(\'' + log.cat + '\');">'+ log.cat +'</a></span></p></div>';
+            html += '</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink(\'' + log.category + '\');">'+ log.category +'</a></span></p></div>';
 
             logs += html;
         }
@@ -194,7 +194,7 @@ var Search = {
            }
         });
     },
-    
+
     showBuilder: function(): void {
         $('#query-builder-form').dialog({
             height: 380,
@@ -227,7 +227,7 @@ var Search = {
             }
         });
     },
-    
+
     buildQuery: function(): void {
         var title = $('#qb-title');
         var titleNot = $('#qb-title-not');
@@ -239,23 +239,23 @@ var Search = {
         var cat = Categories.getCatString();
         var catNot = $('#qb-cat-not');
         var query = '';
-        
+
         if (title.val()) {
             if (titleNot.prop('checked')) {
-                query += ' title:"!'+title.val().replace('"', '\\"')+'"';  
+                query += ' title:"!'+title.val().replace('"', '\\"')+'"';
             } else {
                 query += ' title:"'+title.val().replace('"', '\\"')+'"';
             }
         }
-        
+
         if (body.val()) {
             if (bodyNot.prop('checked')) {
-                query += ' body:"!'+body.val().replace('"', '\\"')+'"';  
+                query += ' body:"!'+body.val().replace('"', '\\"')+'"';
             } else {
                 query += ' body:"'+body.val().replace('"', '\\"')+'"';
             }
         }
-        
+
         if (date1.val()) {
             var negate = '';
             if (dateNot.prop('checked')) {
@@ -267,7 +267,7 @@ var Search = {
                 query += ' date:"'+negate+date1.val()+'"';
             }
         }
-        
+
         if (cat) {
             if (catNot.prop('checked')) {
                 query += ' category:"!'+cat+'" ';
@@ -275,11 +275,11 @@ var Search = {
                 query += ' category:"'+cat+'" ';
             }
         }
-        
+
         $('#search-query').val(query);
         Search.exec(query, 0);
     },
-    
+
     clearBuilderForm: function(): void {
         $('#qb-title').val('');
         $('#qb-body').val('');
@@ -370,13 +370,13 @@ var AddEdit = {
 
     showEditInputs: function(logInfo: apiResponse): void {
         $('#log-title').val(logInfo.data.title);
-        $('#log-body').html(logInfo.data.entry);
+        $('#log-body').html(logInfo.data.body);
         $('#categories').text('Loading categories...');
 
-        Categories.renderCategoriesFromString(logInfo.data.cat, '#categories');
+        Categories.renderCategoriesFromString(logInfo.data.category, '#categories');
 
         AddEdit.showDialog('Edit Log', 'Save Edit', function() {
-            AddEdit.saveLog(false, logInfo.data.logid);
+            AddEdit.saveLog(false, logInfo.data.id);
         });
     },
 

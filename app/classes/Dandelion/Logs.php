@@ -40,11 +40,7 @@ class Logs
         $getLogs = $this->repo->getLogList($offset, $limit);
 
         foreach ($getLogs as $key => $value) {
-            if ($this->ur->isAdmin() || $value['usercreated'] == $this->ur->userid) {
-                $getLogs[$key]['canEdit'] = true;
-            } else {
-                $getLogs[$key]['canEdit'] = false;
-            }
+            $getLogs[$key]['canEdit'] = ($this->ur->isAdmin() || $value['user_id'] == $this->ur->userid);
         }
         return $getLogs;
     }

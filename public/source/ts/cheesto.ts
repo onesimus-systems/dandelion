@@ -66,7 +66,7 @@ var Cheesto = {
                 if (key !== "statusOptions") {
                     var user = dataObj[key];
 
-                    var html = '<tr><td>' + user.realname + '</td>'+
+                    var html = '<tr><td>' + user.fullname + '</td>'+
                         '<td class="status-cell" title="Message: ' + user.message + '\nReturn: ' + user.returntime + '">'+
                         user.status + '</td></tr>';
 

@@ -4,7 +4,6 @@
  */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Rights;
 use \Dandelion\Template;
 use \Dandelion\Utils\View;
 use \Dandelion\Utils\Repos;
@@ -21,7 +20,7 @@ class SettingsController extends BaseController
         $key = '';
         if ($this->app->config['publicApiEnabled']) {
             $keyManager = new KeyManager(Repos::makeRepo('KeyManager'));
-            $key = $keyManager->getKey($_SESSION['userInfo']['userid']);
+            $key = $keyManager->getKey($_SESSION['userInfo']['id']);
         }
 
         $template->addData([

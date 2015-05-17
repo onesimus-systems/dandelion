@@ -4,9 +4,9 @@
  */
 namespace Dandelion\API\Module;
 
-use Dandelion\Permissions;
-use \Dandelion\Users;
-use \Dandelion\Controllers\ApiController;
+use Dandelion\Groups;
+use Dandelion\Users;
+use Dandelion\Controllers\ApiController;
 
 class UsersAPI extends BaseModule
 {
@@ -18,7 +18,7 @@ class UsersAPI extends BaseModule
         $userid = USER_ID;
 
         // Check permissions
-        if (isset($this->up->uid)) {
+        if ($this->up->uid) {
             if ($this->up->uid == USER_ID || $this->ur->authorized('edituser')) {
                 $userid = $this->up->uid;
             } else {
@@ -48,12 +48,12 @@ class UsersAPI extends BaseModule
 
         $username = $this->up->username;
         $password = $this->up->password;
-        $realname = $this->up->fullname;
-        $role = $this->up->role;
+        $fullname = $this->up->fullname;
+        $role = $this->up->group;
         $cheesto = $this->up->get('cheesto', true);
 
         $user = new Users($this->repo);
-        return $user->createUser($username, $password, $realname, $role, $cheesto);
+        return $user->createUser($username, $password, $fullname, $role, $cheesto);
     }
 
     /**
@@ -71,9 +71,9 @@ class UsersAPI extends BaseModule
         }
 
         $user = new Users($this->repo, $uid, true);
-        $user->userInfo['realname'] = $this->up->get('fullname', $user->userInfo['realname']);
-        $user->userInfo['role'] = $this->up->get('role', $user->userInfo['role']);
-        $user->userInfo['firsttime'] = $this->up->get('prompt', $user->userInfo['firsttime']);
+        $user->userInfo['fullname'] = $this->up->get('fullname', $user->userInfo['fullname']);
+        $user->userInfo['group_id'] = $this->up->get('role', $user->userInfo['group_id']);
+        $user->userInfo['initial_login'] = $this->up->get('prompt', $user->userInfo['initial_login']);
         $user->userInfo['theme'] = $this->up->get('theme', $user->userInfo['theme']);
         return $user->saveUser();
     }
@@ -95,7 +95,7 @@ class UsersAPI extends BaseModule
         }
 
         $user = new Users($this->repo);
-        $permissions = new Permissions($this->makeRepo('Rights'));
+        $permissions = new Groups($this->makeRepo('Groups'));
         return $user->deleteUser($userid, $permissions);
     }
 

@@ -5,7 +5,7 @@
 "use strict"; // jshint ignore:line
 
 $(document).ready(function(){
-    if (page !== 'initialReset') {
+    if (typeof page === 'undefined' || page !== 'initialReset') {
         $('#save-per-page-btn').click(Settings.savePerPage);
         $('#save-theme-btn').click(Settings.saveTheme);
         $('#generate-apikey-btn').click(Settings.generateKey);

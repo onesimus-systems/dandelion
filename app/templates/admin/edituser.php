@@ -5,7 +5,7 @@
 $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','datetimepicker']]);
 ?>
 
-<h1>Manage User - <?= $this->e($user->userInfo['realname']) ?></h1>
+<h1>Manage User - <?= $this->e($user['fullname']) ?></h1>
 
 <form>
 <div id="pwd-reset-dialog" title="Reset Password">
@@ -25,15 +25,15 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
 
 <section id="general-info">
     <h2>General Information</h2>
-    <input type="hidden" id="user-id" value="<?= $this->e($user->userInfo['userid']) ?>">
+    <input type="hidden" id="user-id" value="<?= $this->e($user['id']) ?>">
     <table>
         <tr>
             <td class="field-name">Username:</td>
-            <td><?= $this->e($user->userInfo['username']) ?></td>
+            <td><?= $this->e($user['username']) ?></td>
         </tr>
         <tr>
             <td class="field-name">Full Name:</td>
-            <td><input type="text" id="fullname" value="<?= $this->e($user->userInfo['realname']) ?>"></td>
+            <td><input type="text" id="fullname" value="<?= $this->e($user['fullname']) ?>"></td>
         </tr>
         <tr>
             <td class="field-name">Group:</td>
@@ -41,10 +41,10 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
                 <select id="user-group">
                 <?php
                     foreach ($grouplist as $group) {
-                        if ($user->userInfo['role'] == $group['role']) {
-                            echo '<option value="'.$group['role'].'" selected>'.ucfirst($group['role']).'</option>';
+                        if ($user['group_id'] == $group['id']) {
+                            echo '<option value="'.$group['id'].'" selected>'.ucfirst($group['name']).'</option>';
                         } else {
-                            echo '<option value="'.$group['role'].'">'.ucfirst($group['role']).'</option>';
+                            echo '<option value="'.$group['id'].'">'.ucfirst($group['name']).'</option>';
                         }
                     }
                 ?>
@@ -53,7 +53,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
         </tr>
         <tr>
             <td class="field-name">Date Created:</td>
-            <td><?= $this->e($user->userInfo['datecreated']) ?></td>
+            <td><?= $this->e($user['created']) ?></td>
         </tr>
     </table>
 </section>
@@ -67,7 +67,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
                 <select id="user-status">
                 <?php
                     foreach ($statuslist as $status) {
-                        if ($user->userCheesto['status'] == $status) {
+                        if ($cheesto['status'] == $status) {
                             echo '<option value="'.$status.'" selected>'.ucfirst($status).'</option>';
                         } else {
                             echo '<option value="'.$status.'">'.ucfirst($status).'</option>';
@@ -80,12 +80,12 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
         <tr>
             <td class="field-name">Message:</td>
             <td>
-                <textarea id="user-status-message"><?= $this->e($user->userCheesto['message']) ?></textarea>
+                <textarea id="user-status-message"><?= $this->e($cheesto['message']) ?></textarea>
             </td>
         </tr>
         <tr>
             <td class="field-name">Return Time:</td>
-            <td><input type="text" id="user-status-return" value="<?= $this->e($user->userCheesto['returntime']) ?>"></td>
+            <td><input type="text" id="user-status-return" value="<?= $this->e($cheesto['returntime']) ?>"></td>
         </tr>
     </table>
 </section>

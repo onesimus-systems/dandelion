@@ -22,7 +22,7 @@ class UserSettings
           $limit = 500;
         }
 
-        $user = $user ?: $_SESSION['userInfo']['userid'];
+        $user = $user ?: $_SESSION['userInfo']['id'];
 
         if ($this->repo->saveLogViewLimit($user, $limit)) {
             $_SESSION['userInfo']['showlimit'] = $limit;
@@ -34,7 +34,7 @@ class UserSettings
 
     public function saveTheme($theme = 'default', $user = null)
     {
-        $user = $user ?: $_SESSION['userInfo']['userid'];
+        $user = $user ?: $_SESSION['userInfo']['id'];
 
         if ($this->repo->saveUserTheme($user, $theme)) {
             $config = Utils\Configuration::getConfig();

@@ -4,6 +4,7 @@
  */
 namespace Dandelion;
 
+use \SC\SC;
 use \Dandelion\Utils\Updater;
 use \Dandelion\Storage\Loader;
 use \Dandelion\Utils\Configuration;
@@ -47,7 +48,7 @@ class Application
         $this->config = Configuration::load($this->paths);
 
         // Prepare database connection
-        Loader::load($this->config['db'], $this->config['debugEnabled']);
+        $this->loadDatabase($this->config['db']);
 
         $this->setConstants();
 
@@ -83,6 +84,20 @@ class Application
         define('DEBUG_ENABLED', $this->config['debugEnabled']);
         define('PUBLIC_DIR', $this->paths['public']);
         return;
+    }
+
+    private function loadDatabase($dbConfig)
+    {
+        $loaded = SC::connect(
+            $dbConfig['type'],
+            $dbConfig['hostname'],
+            $dbConfig['dbname'],
+            $dbConfig['username'],
+            $dbConfig['password']);
+
+        if (!$loaded) {
+            throw new Exception("Error Connecting to Database", 1);
+        }
     }
 
     public function bindInstallPaths(array $paths)

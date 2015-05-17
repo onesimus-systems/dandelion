@@ -114,7 +114,7 @@ class LogsAPI extends BaseModule
     private function offsetLimitCommon()
     {
         $userLimit = new UserSettings($this->makeRepo('UserSettings'));
-        $limit = $userLimit->getSetting('showlimit', USER_ID);
+        $limit = $userLimit->getSetting('logs_per_page', USER_ID);
         $limit = (int) $this->up->get('limit', $limit);
         $offset = (int) $this->up->get('offset', 0);
         $offset = $offset < 0 ? 0 : $offset;

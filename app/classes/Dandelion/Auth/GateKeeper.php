@@ -43,7 +43,7 @@ class GateKeeper
             setcookie('dan_username', $_SESSION['userInfo']['username'], time() + 60 * 60 * 24 * 30, '/');
         }
 
-        switch ($userInfo['firsttime']) {
+        switch ($userInfo['initial_login']) {
             case 1:
                 return '2';
                 break;

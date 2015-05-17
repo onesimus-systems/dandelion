@@ -7,7 +7,7 @@ namespace Dandelion;
 class UrlParameters
 {
     // List of URL parameters
-    private $values = [];
+    public $values = [];
 
     /**
      * Create object using $type of url arguments
