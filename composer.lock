@@ -64,12 +64,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/seed-catalog.git",
-                "reference": "c2342292b67a97f2ddd5d3a760ec135970626c31"
+                "reference": "aaa0571744d955684e51b20a151d3994b2c8b22f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/seed-catalog/zipball/c2342292b67a97f2ddd5d3a760ec135970626c31",
-                "reference": "c2342292b67a97f2ddd5d3a760ec135970626c31",
+                "url": "https://api.github.com/repos/onesimus-systems/seed-catalog/zipball/aaa0571744d955684e51b20a151d3994b2c8b22f",
+                "reference": "aaa0571744d955684e51b20a151d3994b2c8b22f",
                 "shasum": ""
             },
             "require-dev": {
@@ -104,7 +104,7 @@
                 "orm",
                 "pdo"
             ],
-            "time": "2015-05-18 15:55:02"
+            "time": "2015-05-19 00:49:00"
         }
     ],
     "packages-dev": [],

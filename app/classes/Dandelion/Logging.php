@@ -28,7 +28,7 @@ class Logging
         error_reporting(E_ALL);
         ini_set('log_errors', true);
 
-        if (true) {
+        if (self::$app->config['debugEnabled']) {
             ini_set('display_errors', true);
             ini_set('display_startup_errors', true);
         } else {
@@ -143,6 +143,7 @@ class Logging
     {
         $debug = $debug ?: 'Debug Message: An error has occured. But I don\'t know what.';
         $message = $message ?: 'An internal server error has occured.';
+        self::logToFile($debug, "error");
 
         $errorPage = new Template(self::$app);
         if (self::$app->config['debugEnabled']) {

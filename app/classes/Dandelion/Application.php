@@ -5,6 +5,7 @@
 namespace Dandelion;
 
 use \SC\SC;
+use \Exception;
 use \Dandelion\Utils\Updater;
 use \Dandelion\Storage\Loader;
 use \Dandelion\Utils\Configuration;
@@ -29,7 +30,7 @@ class Application
     {
         // Check for and apply updates
         //Updater::checkForUpdate();
-        if (is_null($instance)) {
+        if (is_null(self::$instance)) {
             self::$instance = $this;
         }
     }
@@ -41,40 +42,40 @@ class Application
      */
     public function run()
     {
+        // Load application configuration
+        $this->config = Configuration::load($this->paths);
+        $this->setConstants();
+
         // Register logging system
         Logging::register($this, $this->paths['app'].'/logs');
 
-        // Load application configuration
-        $this->config = Configuration::load($this->paths);
+        try {
+            // Setup session manager
+            SessionManager::register($this);
+            SessionManager::startSession($this->config['cookiePrefix'].$this->config['phpSessionName']);
 
-        // Prepare database connection
-        $this->loadDatabase($this->config['db']);
+            // Setup routes and filters
+            include $this->paths['app'] . '/routes.php';
+            include $this->paths['app'] . '/filters.php';
 
-        $this->setConstants();
+            // Get route for request
+            list($class, $method, $params) = Routes::route();
 
-        // Setup session manager
-        SessionManager::register($this);
-        SessionManager::startSession($this->config['cookiePrefix'].$this->config['phpSessionName']);
+            // Check controller exists
+            if (!$class || !class_exists($class)) {
+                Logging::errorPage("Controller '{$class}' wasn't found.");
+                return;
+            }
 
-        // Setup routes and filters
-        include $this->paths['app'] . '/routes.php';
-        include $this->paths['app'] . '/filters.php';
-
-        // Get route for request
-        list($class, $method, $params) = Routes::route();
-
-        // Check controller exists
-        if (!$class || !class_exists($class)) {
-            Logging::errorPage("Controller '{$class}' wasn't found.");
-            return;
-        }
-
-        // Check controller has method for request
-        $controller = new $class($this);
-        if (method_exists($controller, $method)) {
-            call_user_func_array(array($controller, $method), $params);
-        } else {
-            Logging::errorPage("Method '{$method}' wasn't found in Class '{$class}'.");
+            // Check controller has method for request
+            $controller = new $class($this);
+            if (method_exists($controller, $method)) {
+                call_user_func_array(array($controller, $method), $params);
+            } else {
+                Logging::errorPage("Method '{$method}' wasn't found in Class '{$class}'.");
+            }
+        } catch(Exception $e) {
+            Logging::errorPage("An exception was thrown: ".$e->getMessage());
         }
         return;
     }
@@ -84,20 +85,6 @@ class Application
         define('DEBUG_ENABLED', $this->config['debugEnabled']);
         define('PUBLIC_DIR', $this->paths['public']);
         return;
-    }
-
-    private function loadDatabase($dbConfig)
-    {
-        $loaded = SC::connect(
-            $dbConfig['type'],
-            $dbConfig['hostname'],
-            $dbConfig['dbname'],
-            $dbConfig['username'],
-            $dbConfig['password']);
-
-        if (!$loaded) {
-            throw new Exception("Error Connecting to Database", 1);
-        }
     }
 
     public function bindInstallPaths(array $paths)
