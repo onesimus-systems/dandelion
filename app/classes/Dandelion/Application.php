@@ -75,7 +75,7 @@ class Application
                 Logging::errorPage("Method '{$method}' wasn't found in Class '{$class}'.");
             }
         } catch(Exception $e) {
-            Logging::errorPage("An exception was thrown: ".$e->getMessage());
+            Logging::errorPage($e);
         }
         return;
     }

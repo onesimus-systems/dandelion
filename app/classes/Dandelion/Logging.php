@@ -12,6 +12,22 @@ class Logging
     private static $path;
     private static $app;
 
+    private static $errorNames = [
+        E_ERROR              => 'Error',
+        E_WARNING            => 'Warning',
+        E_PARSE              => 'Parsing Error',
+        E_NOTICE             => 'Notice',
+        E_CORE_ERROR         => 'Core Error',
+        E_CORE_WARNING       => 'Core Warning',
+        E_COMPILE_ERROR      => 'Compile Error',
+        E_COMPILE_WARNING    => 'Compile Warning',
+        E_USER_ERROR         => 'User Error',
+        E_USER_WARNING       => 'User Warning',
+        E_USER_NOTICE        => 'User Notice',
+        E_STRICT             => 'Runtime Notice',
+        E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
+    ];
+
     private function __construct() {}
     private function __clone() {}
     private function __wakeup() {}
@@ -27,14 +43,8 @@ class Logging
         register_shutdown_function('\Dandelion\Logging::shutdownHandler');
         error_reporting(E_ALL);
         ini_set('log_errors', true);
-
-        if (self::$app->config['debugEnabled']) {
-            ini_set('display_errors', true);
-            ini_set('display_startup_errors', true);
-        } else {
-            ini_set('display_errors', false);
-            ini_set('display_startup_errors', false);
-        }
+        ini_set('display_errors', self::$app->config['debugEnabled']);
+        ini_set('display_startup_errors', self::$app->config['debugEnabled']);
     }
 
     /**
@@ -42,23 +52,7 @@ class Logging
      */
     public static function errorHandler($error_level, $error_message, $error_file, $error_line, $error_context)
     {
-        $errortype = array(
-                E_ERROR              => 'Error',
-                E_WARNING            => 'Warning',
-                E_PARSE              => 'Parsing Error',
-                E_NOTICE             => 'Notice',
-                E_CORE_ERROR         => 'Core Error',
-                E_CORE_WARNING       => 'Core Warning',
-                E_COMPILE_ERROR      => 'Compile Error',
-                E_COMPILE_WARNING    => 'Compile Warning',
-                E_USER_ERROR         => 'User Error',
-                E_USER_WARNING       => 'User Warning',
-                E_USER_NOTICE        => 'User Notice',
-                E_STRICT             => 'Runtime Notice',
-                E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
-        );
-
-        $error = date("Y-m-d H:i:s") . ' | ' . $errortype[$error_level] . ' | Message: ' . $error_message . ' | File: ' . $error_file . ' | Ln: ' . $error_line;
+        $error = date("Y-m-d H:i:s") . ' | ' . self::$errorNames[$error_level] . ' | Message: ' . $error_message . ' | File: ' . $error_file . ' | Ln: ' . $error_line;
         switch ($error_level) {
             case E_ERROR:
                 // no break
@@ -128,6 +122,17 @@ class Logging
     }
 
     /**
+     *  Gracefully handle (un)caught exceptions
+     */
+    public static function exceptionHandler($exception)
+    {
+        session_write_close();
+        $error = date("Y-m-d H:i:s") . " | Exception | Message: " . $exception->getMessage() . " | File: " . $exception->getFile() . " | Ln: " . $exception->getLine() . " | ST: " . $exception->getTraceAsString();
+        self::logToFile($error, "exception");
+        exit(1);
+    }
+
+    /**
      *  Log all errors to file with the file name of their error level
      */
     private static function logToFile($error, $errlvl)
@@ -141,16 +146,22 @@ class Logging
 
     public static function errorPage($debug = '', $message = '')
     {
-        $debug = $debug ?: 'Debug Message: An error has occured. But I don\'t know what.';
-        $message = $message ?: 'An internal server error has occured.';
-        self::logToFile($debug, "error");
+        header("HTTP/1.1 500 Internal Server Error");
 
         $errorPage = new Template(self::$app);
         if (self::$app->config['debugEnabled']) {
+            $debug = (string) $debug ?: 'Debug Message: An error has occured. But I don\'t know what.';
             $errorPage->addData(['message' => $debug]);
         } else {
+            $message = $message ?: 'An internal server error has occured.';
             $errorPage->addData(['message' => $message]);
         }
         $errorPage->render('error');
+
+        if ($debug instanceof \Exception) {
+            self::exceptionHandler($debug);
+        } else {
+            self::logToFile($debug, "error");
+        }
     }
 }

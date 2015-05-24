@@ -2,7 +2,7 @@
 /**
  * Dandelion generic error page
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
+$this->layout('layouts::main', ['requiredCssFiles' => []]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
