@@ -1,0 +1,48 @@
+/**
+ * Library mixins
+ *
+ * Theme: Dandelion Legacy
+ */
+@body-bg-color: #6e6e6e;
+
+@main-content: #f3843e;
+@main-text: black;
+
+@button-text-color: white;
+@button-bg-color: #393939;
+@button-hover-text-color: black;
+@button-hover-bg-color: #ff9900;
+
+#dandelion-lib {
+    @screen-large-size: 960px;
+    @screen-small-size: 500px;
+
+    .media-query(@device; @size; @rules) {
+        @type: "@{device}-@{size}-size";
+        @media @device and (max-width: @@type) { @rules(); }
+    }
+
+    .button() {
+        color: @button-text-color;
+        background-color: @button-bg-color;
+        padding: 5px 10px;
+        border: 0;
+    }
+
+    .button-hover() {
+        &:hover {
+            background-color: @button-hover-bg-color;
+            color: @button-hover-text-color;
+            box-shadow: none;
+        }
+    }
+
+    .select() {
+        border: none;
+        padding: 0 .5em;
+        font-size: 1em;
+        height: 1.5em;
+        background-color: @button-bg-color;
+        color: @button-text-color;
+    }
+}

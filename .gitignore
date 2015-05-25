@@ -10,5 +10,5 @@ node_modules/
 .settings/
 .sublime-gulp.cache
 public/build/
-public/assets/themes/modern/*.css
-public/assets/themes/modern/maps/
+public/assets/themes/*/*.css
+public/assets/themes/*/maps/

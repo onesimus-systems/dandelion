@@ -1,0 +1,51 @@
+/**
+ * Global stylesheet
+ *
+ * Theme: Dandelion Legacy
+ */
+@import (reference) "_base";
+
+body {
+    background-color: @body-bg-color;
+    min-width: 850px;
+    height: 100%;
+    text-align: center;
+    width: 85%;
+    margin: 0 auto;
+    font-family: arial;
+}
+
+
+a {
+    text-decoration: none;
+    color: black;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.button {
+    #dandelion-lib > .button();
+    #dandelion-lib > .button-hover();
+    font-size: initial;
+}
+
+.disabled {
+    display: none;
+}
+
+.enabled {
+    display: initial !important;
+}
+
+.hidden-dialog {
+    display: none;
+}
+
+.ui-tooltip {
+    white-space: pre-line;
+}
+
+@import "header";
+@import "footer";
