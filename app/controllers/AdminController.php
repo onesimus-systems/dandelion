@@ -27,12 +27,14 @@ class AdminController extends BaseController
         if ($this->rights->authorized('creategroup', 'editgroup', 'deletegroup')) {
             $permObj = new Groups(Repos::makeRepo('Groups'));
             $grouplist = $permObj->getGroupList();
+            $grouplist2 = [];
 
-            foreach ($grouplist as $key => $group) {
-                $grouplist[$key]['users'] = [];
+            foreach ($grouplist as $group) {
+                $grouplist2[$group['id']] = ['name' => $group['name'], 'users' => []];
                 $usersInGroup = $permObj->usersInGroup($group['id']);
+
                 foreach ($usersInGroup as $value) {
-                    array_push($grouplist[$key]['users'], $value['username']);
+                    array_push($grouplist2[$group['id']]['users'], $value['username']);
                 }
             }
         }
@@ -41,7 +43,7 @@ class AdminController extends BaseController
         $template->addData([
             'userRights' => $this->rights,
             'userlist' => $userlist,
-            'grouplist' => $grouplist,
+            'grouplist' => $grouplist2,
             'catList' => $this->rights->authorized('createcat', 'editcat', 'deletecat')
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');

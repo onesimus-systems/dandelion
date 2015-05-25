@@ -30,7 +30,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['admin','jqueryui']]);
                 echo '<tr onClick="Admin.editUser('.$user['id'].')">';
                 echo '<td>'.$user['fullname'].'</td>';
                 echo '<td>'.$user['username'].'</td>';
-                echo '<td>'.$user['group_id'].'</td>';
+                echo '<td>'.$grouplist[$user['group_id']]['name'].'</td>';
                 echo '<td class="non-essential-info">'.$user['created'].'</td>';
                 echo '</tr>';
             } ?>
@@ -54,8 +54,8 @@ if ($grouplist):
             </tr>
 
             <?php
-            foreach ($grouplist as $group) {
-                echo '<tr onClick="Admin.editGroup(\''.$group['id'].'\')">';
+            foreach ($grouplist as $id => $group) {
+                echo '<tr onClick="Admin.editGroup(\''.$id.'\')">';
                 echo '<td>'.$group['name'].'</td>';
                 echo '<td>'.implode(', ', $group['users']).'</td>';
                 echo '</tr>';
