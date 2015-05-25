@@ -26,10 +26,9 @@ class UserSettings
 
         if ($this->repo->saveLogViewLimit($user, $limit)) {
             $_SESSION['userInfo']['showlimit'] = $limit;
-            return 'Show limit changed successfully';
-        } else {
-            return 'An error occured saving your settings';
+            return true;
         }
+        return false;
     }
 
     public function saveTheme($theme = '', $user = null)
@@ -39,11 +38,9 @@ class UserSettings
         if ($this->repo->saveUserTheme($user, $theme)) {
             $_SESSION['userInfo']['theme'] = $theme;
             Utils\View::setThemeCookie($theme);
-
-            return 'Theme saved successfully';
-        } else {
-            return 'An error occured saving your settings';
+            return true;
         }
+        return false;
     }
 
     public function getSetting($setting, $id)

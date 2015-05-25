@@ -5,7 +5,9 @@
 namespace Dandelion\API\Module;
 
 use \Dandelion\Cheesto;
+use \Dandelion\Exception\ApiException;
 use \Dandelion\Controllers\ApiController;
+use \Dandelion\Exception\ApiPermissionException;
 
 class CheestoAPI extends BaseModule
 {
@@ -17,10 +19,10 @@ class CheestoAPI extends BaseModule
     public function read()
     {
         if (!$this->app->config['cheestoEnabled']) {
-            exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
+            throw new ApiException('Cheesto has been disabled', 5);
         }
         if (!$this->ur->authorized('viewcheesto')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+            throw new ApiPermissionException();
         }
 
         $cheesto = new Cheesto($this->repo);
@@ -38,7 +40,7 @@ class CheestoAPI extends BaseModule
     public function statusTexts()
     {
         if (!$this->app->config['cheestoEnabled']) {
-            exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
+            throw new ApiException('Cheesto has been disabled', 5);
         }
         $cheesto = new Cheesto($this->repo);
         return $cheesto->getStatusText();
@@ -52,10 +54,10 @@ class CheestoAPI extends BaseModule
     public function update()
     {
         if (!$this->app->config['cheestoEnabled']) {
-            exit(ApiController::makeDAPI(5, 'Cheesto has been disabled.', 'cheesto'));
+            throw new ApiException('Cheesto has been disabled', 5);
         }
         if (!$this->ur->authorized('updatecheesto')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+            throw new ApiPermissionException();
         }
 
         $cheesto = new Cheesto($this->repo);
@@ -68,10 +70,14 @@ class CheestoAPI extends BaseModule
             if ($this->up->uid == USER_ID || $this->ur->authorized('edituser')) {
                 $userid = $this->up->uid;
             } else {
-                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'cheesto'));
+                throw new ApiPermissionException();
             }
         }
 
-        return $cheesto->updateStatus($message, $status, $returntime, $userid);
+        if ($cheesto->updateStatus($message, $status, $returntime, $userid)) {
+            return 'Status updated successfully';
+        } else {
+            throw new ApiException('Error updating status', 5);
+        }
     }
 }

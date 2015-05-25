@@ -99,17 +99,13 @@ class Categories
      * @param int $parent Parent ID (0 if root)
      * @param string $description Name of category
      *
-     * @return string - Status message
+     * @return bool - success
      */
     public function addCategory($parent, $description)
     {
         $description = str_replace(':', '_', $description);
 
-        if ($this->repo->addCategory($description, $parent)) {
-            return 'Category added successfully';
-        } else {
-            return 'Error adding category';
-        }
+        return $this->repo->addCategory($description, $parent);
     }
 
     /**
@@ -117,7 +113,7 @@ class Categories
      *
      * @param int $cid ID of category to be deleted
      *
-     * @return string - Status message
+     * @return bool - success
      */
     public function delCategory($cid)
     {
@@ -130,11 +126,7 @@ class Categories
         // Reassign children
         $this->repo->adoptChildren($newParent, $cid);
 
-        if ($deleted) {
-            return 'Category deleted successfully';
-        } else {
-            return 'An error occured deleting a category';
-        }
+        return $deleted
     }
 
     /**
@@ -143,16 +135,12 @@ class Categories
      * @param int $cid ID of category to update
      * @param string $desc Name of category
      *
-     * @return string - Status message
+     * @return bool - success
      */
     public function editCategory($cid, $desc)
     {
         $desc = str_replace(':', '_', $desc);
 
-        if ($this->repo->updateCategory($desc, $cid)) {
-            return 'Category updated successfully';
-        } else {
-            return 'Error saving category';
-        }
+        return $this->repo->updateCategory($desc, $cid);
     }
 }

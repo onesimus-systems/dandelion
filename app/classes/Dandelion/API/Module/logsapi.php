@@ -7,7 +7,9 @@ namespace Dandelion\API\Module;
 use \Dandelion\Logs;
 use \Dandelion\LogSearch;
 use \Dandelion\UserSettings;
+use \Dandelion\Exception\ApiException;
 use \Dandelion\Controllers\ApiController;
+use \Dandelion\Exception\ApiPermissionException;
 
 class LogsAPI extends BaseModule
 {
@@ -19,7 +21,7 @@ class LogsAPI extends BaseModule
     public function read()
     {
         if (!$this->ur->authorized('viewlog')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            throw new ApiPermissionException();
         }
 
         $metadata = $this->offsetLimitCommon();
@@ -37,7 +39,7 @@ class LogsAPI extends BaseModule
     public function readOne()
     {
         if (!$this->ur->authorized('viewlog')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            throw new ApiPermissionException();
         }
 
         $logs = new Logs($this->repo);
@@ -50,7 +52,7 @@ class LogsAPI extends BaseModule
     public function create()
     {
         if (!$this->ur->authorized('createlog')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            throw new ApiPermissionException();
         }
 
         $title = $this->up->title;
@@ -58,7 +60,12 @@ class LogsAPI extends BaseModule
         $cat = rtrim($this->up->cat, ':');
 
         $logs = new Logs($this->repo);
-        return $logs->addLog($title, $body, $cat, USER_ID);
+
+        if ($logs->addLog($title, $body, $cat, USER_ID)) {
+            return 'Log created successfully';
+        } else {
+            throw new ApiException('Error creating log', 5);
+        }
     }
 
     /**
@@ -72,7 +79,7 @@ class LogsAPI extends BaseModule
             $log = json_decode($this->readOne(), true);
 
             if (!$this->ur->authorized('editlog') || $log['usercreated'] != USER_ID) {
-                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+                throw new ApiPermissionException();
             }
         }
 
@@ -81,7 +88,12 @@ class LogsAPI extends BaseModule
         $cat = rtrim($this->up->cat, ':');
 
         $logs = new Logs($this->repo);
-        return $logs->editLog($lid, $title, $body, $cat);
+
+        if ($logs->editLog($lid, $title, $body, $cat)) {
+            return "'{$title}' edited successfully";
+        } else {
+            throw new ApiException("Error saving log", 5);
+        }
     }
 
     /**
@@ -91,7 +103,7 @@ class LogsAPI extends BaseModule
     public function search()
     {
         if (!$this->ur->authorized('viewlog')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'logs'));
+            throw new ApiPermissionException();
         }
 
         $query = $this->up->query;

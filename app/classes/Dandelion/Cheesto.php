@@ -45,10 +45,6 @@ class Cheesto
         $date = new \DateTime();
         $date = $date->format('Y-m-d H:i:s');
 
-        if ($this->repo->updateStatus($uid, $status, $message, $return, $date)) {
-            return 'User status updated';
-        } else {
-            return 'Error updating user status';
-        }
+        return $this->repo->updateStatus($uid, $status, $message, $return, $date);
     }
 }

@@ -5,7 +5,9 @@
 namespace Dandelion\API\Module;
 
 use \Dandelion\Groups;
+use \Dandelion\Exception\ApiException;
 use \Dandelion\Controllers\ApiController;
+use \Dandelion\Exception\ApiPermissionException;
 
 class GroupsAPI extends BaseModule
 {
@@ -34,7 +36,7 @@ class GroupsAPI extends BaseModule
     public function edit()
     {
         if (!$this->ur->authorized('editgroup')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'groups'));
+            throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
@@ -44,7 +46,7 @@ class GroupsAPI extends BaseModule
         if ($permissions->editGroup($gid, $rights)) {
             return 'User group saved';
         } else {
-            exit(ApiController::makeDAPI(5, 'Error saving user group', 'groups'));
+            throw new ApiException('Error saving user group', 5);
         }
     }
 
@@ -54,7 +56,7 @@ class GroupsAPI extends BaseModule
     public function create()
     {
         if (!$this->ur->authorized('creategroup')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'groups'));
+            throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
@@ -68,7 +70,7 @@ class GroupsAPI extends BaseModule
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return 'User group created successfully';
         } else {
-            exit(ApiController::makeDAPI(5, 'Error creating user group', 'groups'));
+            throw new ApiException('Error creating user group', 5);
         }
     }
 
@@ -78,7 +80,7 @@ class GroupsAPI extends BaseModule
     public function delete()
     {
         if (!$this->ur->authorized('deletegroup')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'groups'));
+            throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
@@ -86,7 +88,7 @@ class GroupsAPI extends BaseModule
         $users = $permissions->usersExistInGroup($gid);
 
         if ($users) {
-            exit(ApiController::makeDAPI(5, 'This group is assigned to users. Can not delete this group.', 'groups'));
+            throw new ApiException('This group is assigned to users. Cannot delete group.', 5);
         } else {
             $permissions->deleteGroup($gid);
             return 'Group deleted successfully.';

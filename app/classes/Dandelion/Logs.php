@@ -58,18 +58,14 @@ class Logs
     public function addLog($title, $body, $cat, $uid)
     {
         if (!$title || !$body || !$cat || strtolower($cat) == 'select') {
-            return 'Log entries require a title, category, and body.';
+            return false;
         }
 
         $datetime = getdate();
         $date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
         $time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
 
-        if ($this->repo->addLog($uid, $title, $body, $cat, $date, $time)) {
-            return 'Log entry created successfully.';
-        } else {
-            return 'An error occured saving the log entry.';
-        }
+        return $this->repo->addLog($uid, $title, $body, $cat, $date, $time);
     }
 
     /**
@@ -82,13 +78,9 @@ class Logs
     public function editLog($lid, $title, $body, $cat)
     {
         if (empty($body) || empty($title) || empty($lid) || empty($cat)) {
-            return 'Log entries require a title, category, and body.';
+            return false;
         }
 
-        if ($this->repo->updateLog($lid, $title, $body, $cat)) {
-            return "\"{$title}\" edited successfully.";
-        } else {
-            return 'There was an error saving the log.';
-        }
+        return $this->repo->updateLog($lid, $title, $body, $cat);
     }
 }

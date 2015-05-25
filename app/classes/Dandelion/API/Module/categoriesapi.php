@@ -5,7 +5,9 @@
 namespace Dandelion\API\Module;
 
 use \Dandelion\Categories;
+use \Dandelion\Exception\ApiException;
 use \Dandelion\Controllers\ApiController;
+use \Dandelion\Exception\ApiPermissionException;
 
 class CategoriesAPI extends BaseModule
 {
@@ -17,13 +19,18 @@ class CategoriesAPI extends BaseModule
     public function create()
     {
         if (!$this->ur->authorized('createcat')) {
-            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to create a category.', 'categories'));
+            throw new ApiPermissionException();
         }
 
         $parent = $this->up->pid;
         $desc = $this->up->description;
         $createCat = new Categories($this->repo);
-        return $createCat->addCategory($parent, $desc);
+
+        if ($createCat->addCategory($parent, $desc)) {
+            return 'Category created successfully';
+        } else {
+            throw new ApiException('Error creating category', 5);
+        }
     }
 
     /**
@@ -34,13 +41,18 @@ class CategoriesAPI extends BaseModule
     public function edit()
     {
         if (!$this->ur->authorized('editcat')) {
-            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to edit a category.', 'categories'));
+            throw new ApiPermissionException();
         }
 
         $cid = $this->up->cid;
         $desc = $this->up->description;
         $editCat = new Categories($this->repo);
-        return $editCat->editCategory($cid, $desc);
+
+        if ($editCat->editCategory($cid, $desc)) {
+            return 'Category edited successfully';
+        } else {
+            throw new ApiException('Error editing category', 5);
+        }
     }
 
     /**
@@ -51,12 +63,17 @@ class CategoriesAPI extends BaseModule
     public function delete()
     {
         if (!$this->ur->authorized('deletecat')) {
-            exit(ApiController::makeDAPI(4, 'Your account doesn\'t have permissions to delete a category.', 'categories'));
+            throw new ApiPermissionException();
         }
 
         $cat = $this->up->cid;
         $deleteCat = new Categories($this->repo);
-        return $deleteCat->delCategory($cat);
+
+        if ($deleteCat->delCategory($cat)) {
+            return 'Category deleted successfully';
+        } else {
+            throw new ApiException('Error deleting category', 5);
+        }
     }
 
     /**

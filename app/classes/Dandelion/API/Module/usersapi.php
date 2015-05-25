@@ -4,9 +4,11 @@
  */
 namespace Dandelion\API\Module;
 
-use Dandelion\Groups;
 use Dandelion\Users;
+use Dandelion\Groups;
+use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
+use Dandelion\Exception\ApiPermissionException;
 
 class UsersAPI extends BaseModule
 {
@@ -22,14 +24,14 @@ class UsersAPI extends BaseModule
             if ($this->up->uid == USER_ID || $this->ur->authorized('edituser')) {
                 $userid = $this->up->uid;
             } else {
-                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+                throw new ApiPermissionException();
             }
         }
 
         // Validate password
         $newPass = $this->up->pw;
         if (!$newPass) {
-            exit(ApiController::makeDAPI(5, 'New password is invalid', 'users'));
+            throw new ApiException('New password is invalid', 5);
         }
 
         // Do action
@@ -43,7 +45,7 @@ class UsersAPI extends BaseModule
     public function create()
     {
         if (!$this->ur->authorized('createuser')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            throw new ApiPermissionException();
         }
 
         $username = $this->up->username;
@@ -53,7 +55,12 @@ class UsersAPI extends BaseModule
         $cheesto = $this->up->get('cheesto', true);
 
         $user = new Users($this->repo);
-        return $user->createUser($username, $password, $fullname, $role, $cheesto);
+
+        if ($user->createUser($username, $password, $fullname, $role, $cheesto)) {
+            return 'User created successfully';
+        } else {
+            throw new ApiException('Error creating user', 5);
+        }
     }
 
     /**
@@ -62,12 +69,12 @@ class UsersAPI extends BaseModule
     public function edit()
     {
         if (!$this->ur->authorized('edituser')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            throw new ApiPermissionException();
         }
 
         $uid = $this->up->uid;
         if (!$uid) {
-            exit(ApiController::makeDAPI(5, 'No user id given.', 'users'));
+            throw new ApiException('No user id given', 5);
         }
 
         $user = new Users($this->repo, $uid, true);
@@ -75,7 +82,12 @@ class UsersAPI extends BaseModule
         $user->userInfo['group_id'] = $this->up->get('role', $user->userInfo['group_id']);
         $user->userInfo['initial_login'] = $this->up->get('prompt', $user->userInfo['initial_login']);
         $user->userInfo['theme'] = $this->up->get('theme', $user->userInfo['theme']);
-        return $user->saveUser();
+
+        if ($user->saveUser()) {
+            return 'User saved successfully';
+        } else {
+            throw new ApiException('Error saving user', 5);
+        }
     }
 
     /**
@@ -84,19 +96,24 @@ class UsersAPI extends BaseModule
     public function delete()
     {
         if (USER_ID == $this->up->uid) {
-            exit(ApiController::makeDAPI(5, 'You can\'t delete yourself.', 'users'));
+            throw new ApiException('Can\'t delete yourself', 5);
         }
 
         // Check permissions
         if ($this->ur->authorized('deleteuser')) {
             $userid = $this->up->uid;
         } else {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            throw new ApiPermissionException();
         }
 
         $user = new Users($this->repo);
         $permissions = new Groups($this->makeRepo('Groups'));
-        return $user->deleteUser($userid, $permissions);
+
+        if ($user->deleteUser($userid, $permissions)) {
+            return 'User deleted successfully';
+        } else {
+            throw new ApiException('Error deleting user', 5);
+        }
     }
 
     /**
@@ -106,7 +123,7 @@ class UsersAPI extends BaseModule
     {
         // Check permissions
         if (!$this->ur->authorized('edituser')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            throw new ApiPermissionException();
         }
         $list = new Users($this->repo);
         return $list->getUserList();
@@ -119,12 +136,12 @@ class UsersAPI extends BaseModule
     {
         // Check permissions
         if (!$this->ur->authorized('edituser')) {
-            exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'users'));
+            throw new ApiPermissionException();
         }
 
         $uid = $this->up->uid;
         if (!$uid) {
-            exit(ApiController::makeDAPI(5, 'No user id given.', 'users'));
+            throw new ApiException('No user id given', 5);
         }
 
         $user = new Users($this->repo);

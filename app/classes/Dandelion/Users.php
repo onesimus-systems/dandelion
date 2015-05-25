@@ -44,7 +44,7 @@ class Users
             || (!$this->userInfo['initial_login'] && $this->userInfo['initial_login'] != 0)
             || !$this->userInfo['id']
         ) {
-            return 'Something is empty';
+            return false;
         }
 
         // Update main user row
@@ -62,11 +62,7 @@ class Users
             $this->userInfo['fullname']
         );
 
-        if ($userSaved && $userCheestoSaved) {
-            return 'User saved successfully';
-        } else {
-            return 'There was an error saving user';
-        }
+        return ($userSaved && $userCheestoSaved);
     }
 
     public function createUser($username, $password, $fullname, $gid, $cheesto = true)
@@ -92,11 +88,7 @@ class Users
             $userCheestoCreated = $this->repo->createUserCheesto($userCreated, $fullname, $date->format('Y-m-d H:i:s'));
         }
 
-        if ($userCreated && $userCheestoCreated) {
-            return 'User created successfully';
-        } else {
-            return 'Error saving user';
-        }
+        return ($userCreated && $userCheestoCreated);
     }
 
     private function isUser($username)
@@ -156,12 +148,7 @@ class Users
 
         // TODO: Create exception class for errors in classes
         if ($delete) {
-            $success = $this->repo->deleteUser($uid);
-            if ($success) {
-                return 'User deleted successfully';
-            } else {
-                return 'Error deleting user';
-            }
+            return $this->repo->deleteUser($uid);
         } else {
             return 'At least one admin account must be left to delete another admin account';
         }

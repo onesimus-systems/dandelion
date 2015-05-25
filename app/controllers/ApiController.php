@@ -9,7 +9,7 @@ use \Dandelion\Utils\Repos;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\API\Module\BaseModule;
-use \Dandelion\Storage\MySqlDatabase;
+use \Dandelion\Exception\ApiException;
 
 class ApiController extends BaseController
 {
@@ -21,19 +21,32 @@ class ApiController extends BaseController
     }
 
     /**
+     * Route destination for bad api calls
+     *
+     * @return null
+     */
+    public function badApiCall()
+    {
+        echo self::makeDAPI(5, 'Bad API call', 'api');
+        return;
+    }
+
+    /**
      * Process api call
      *
      * @param $module string - Name of api module to create
      * @param $method string - Method to call on module
      *
-     * @return Nothing
+     * @return null
      */
-    public function apiCall($module, $method = '')
+    public function apiCall($module, $method)
     {
         if ($this->app->config['publicApiEnabled']) {
             $urlParams = new UrlParameters();
             $apikey = $urlParams->get('apikey');
             echo $this->processRequest($apikey, false, $module, $method);
+        } else {
+            echo self::makeDAPI(2, 'Public API disabled', 'api');
         }
         return;
     }
@@ -44,12 +57,11 @@ class ApiController extends BaseController
      * @param $module string - Name of api module to create
      * @param $method string - Method to call on module
      *
-     * @return Nothing
+     * @return null
      */
     public function internalApiCall($module, $method)
     {
-        $returnObj = $this->processRequest($_SESSION['userInfo']['id'], true, $module, $method);
-        echo $returnObj;
+        echo $this->processRequest($_SESSION['userInfo']['id'], true, $module, $method);
         return;
     }
 
@@ -61,48 +73,51 @@ class ApiController extends BaseController
      * @param string $subsystem - Module being called
      * @param string $request - Method being called
      *
-     * @return DAPI object
+     * @return string json
      */
     private function processRequest($key, $localCall, $module, $request)
     {
-        /*
-         * Declare request source as the api Default value is empty in bootstrap.php
-         */
-        if ($module != 'auth') {
-            if (!$localCall) {
-                define('USER_ID', $this->verifyKey($key));
-            } else {
+        try {
+            /*
+             * Declare request source as the api Default value is empty in bootstrap.php
+             */
+            if ($localCall) {
                 define('USER_ID', $key);
+            } else {
+                define('USER_ID', $this->verifyKey($key));
             }
 
-            $rightsRepo = Repos::makeRepo('Groups');
-            $userRights = new Rights(USER_ID, $rightsRepo);
-        } else {
-            $userRights = null;
+            $userRights = new Rights(USER_ID, Repos::makeRepo('Groups'));
+            $urlParams = new UrlParameters();
+
+            // Shortened alias for keymanager
+            if ($module === 'key') {
+                $module = 'keymanager';
+            }
+
+            // Call the requested function (as defined by the last part of the URL)
+            $className = '\Dandelion\API\Module\\' . $module . 'API';
+            if (!class_exists($className)) {
+                throw new ApiException('Module not found', 6);
+            }
+            $ApiModule = new $className($this->app, $userRights, $urlParams);
+
+            if ($ApiModule instanceof BaseModule && method_exists($ApiModule, $request)) {
+                try {
+                    $data = $ApiModule->$request();
+                } catch (ApiException $e) {
+                    $e->setModule($module);
+                    throw $e;
+                }
+            } else {
+                throw new ApiException('Bad API call', 5);
+            }
+
+            // Return DAPI object
+            return self::makeDAPI(0, 'Completed', $module, $data);
+        } catch (ApiException $e) {
+            return self::makeDAPI($e->getCode(), $e->getMessage(), $e->getModule(), '');
         }
-
-        $urlParams = new UrlParameters();
-
-        // Shortened alias for keymanager
-        if ($module === 'key') {
-            $module = 'keymanager';
-        }
-
-        // Call the requested function (as defined by the last part of the URL)
-        $className = '\Dandelion\API\Module\\' . $module . 'API';
-        if (!class_exists($className)) {
-            return self::makeDAPI(6, 'Module not found', 'API', '');
-        }
-        $ApiModule = new $className($this->app, $userRights, $urlParams);
-
-        if ($ApiModule instanceof BaseModule && method_exists($ApiModule, $request)) {
-            $data = $ApiModule->$request();
-        } else {
-            return self::makeDAPI(5, 'Bad API call', 'API', '');
-        }
-
-        // Return DAPI object
-        return self::makeDAPI(0, 'Completed', $module, $data);
     }
 
     /**
@@ -110,31 +125,21 @@ class ApiController extends BaseController
      *
      * @param string $key - API key to verify
      *
-     * @return bool true on success, DAPI object on failure
+     * @return bool
      */
     private function verifyKey($key)
     {
-        if (empty($key)) {
-            // If $key is empty or the key isn't in the DB, exit with a DAPI object
-            exit(self::makeDAPI(1, 'API key is not valid', 'api'));
+        if (!$key) {
+            throw new ApiException('API key is not valid', 1);
         }
 
-        $conn = MySqlDatabase::getInstance();
+        $repo = Repos::makeRepo('Api');
+        $keyValid = $repo->getKey($key);
 
-        // Search for key with case sensitive collation
-        $conn->select()
-             ->from($this->app->config['db']['tablePrefix'].'apikeys')
-             ->where('keystring = :key');
-        $params = array (
-            "key" => $key
-        );
-
-        $keyValid = $conn->get($params);
-
-        if (!empty($keyValid[0])) {
-            return $keyValid[0]['user'];
+        if ($keyValid) {
+            return $keyValid['user_id'];
         } else {
-            exit(self::makeDAPI(1, 'API key is not valid', 'api'));
+            throw new ApiException('API key is not valid', 1);
         }
         return;
     }
@@ -147,7 +152,7 @@ class ApiController extends BaseController
      * @param string $module - API where DAPI was created
      * @param array $data - Data returned from API
      *
-     * @return JSON DAPI object
+     * @return string json
      */
     public static function makeDAPI($ecode, $status, $module, $data = '')
     {
@@ -157,13 +162,13 @@ class ApiController extends BaseController
          * errorcode - Integer code corresponding to some error
          * status - String message of error or feedback
          * module - String name of the API module that was called
-         * data - Array/String of data returned by API module
+         * data - Data returned by API module
          *
          * Error Code Meanings:
          *
          * 0 - Successful API call
          * 1 - Invalid API key
-         * 2 - Reserved for future use
+         * 2 - Public API disabled
          * 3 - Action requires active login
          * 4 - Insufficient permissions
          * 5 - General error
@@ -173,7 +178,7 @@ class ApiController extends BaseController
             'errorcode' => $ecode,
             'status' => $status,
             'module' => $module,
-            'data' => $data
+            'data' => $data ?: $status
         );
         return json_encode($response);
     }

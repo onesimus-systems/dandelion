@@ -8,6 +8,7 @@ use \Dandelion\Rights;
 use \Dandelion\Application;
 use \Dandelion\UrlParameters;
 use \Dandelion\Utils\Repos;
+use \Dandelion\Exception\ApiException;
 use \Dandelion\Controllers\ApiController;
 
 abstract class BaseModule
@@ -42,7 +43,7 @@ abstract class BaseModule
         if ($repo) {
             return $repo;
         } else {
-            exit(ApiController::makeDAPI(6, 'Error initializing API request', 'api'));
+            throw new ApiException('Error initializing API request', 6);
         }
     }
 }

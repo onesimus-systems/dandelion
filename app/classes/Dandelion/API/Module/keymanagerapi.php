@@ -6,6 +6,7 @@ namespace Dandelion\API\Module;
 
 use \Dandelion\KeyManager;
 use \Dandelion\Controllers\ApiController;
+use \Dandelion\Exception\ApiPermissionException;
 
 class KeyManagerAPI extends BaseModule
 {
@@ -46,7 +47,7 @@ class KeyManagerAPI extends BaseModule
             if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
                 $userid = $this->up->uid;
             } else {
-                exit(ApiController::makeDAPI(4, 'This account doesn\'t have the proper permissions.', 'keymanager'));
+                throw new ApiPermissionException();
             }
         }
 
@@ -65,7 +66,7 @@ class KeyManagerAPI extends BaseModule
     }
 
     /**
-     *
+     * Test an API key for validity
      */
     public function test() {
         // By time the request reaches here, the key has been verified

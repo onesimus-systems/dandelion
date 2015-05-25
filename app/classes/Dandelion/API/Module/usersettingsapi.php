@@ -6,19 +6,30 @@ namespace Dandelion\API\Module;
 
 use \Dandelion\UserSettings;
 use \Dandelion\Utils\View;
+use \Dandelion\Exception\ApiException;
 
 class UserSettingsAPI extends BaseModule
 {
     public function saveLogLimit()
     {
         $settings = new UserSettings($this->repo);
-        return $settings->saveLogLimit((int) $this->up->limit, USER_ID);
+
+        if ($settings->saveLogLimit((int) $this->up->limit, USER_ID)) {
+            return 'Setting saved';
+        } else {
+            throw new ApiException('Error saving setting', 5);
+        }
     }
 
     public function saveTheme()
     {
         $settings = new UserSettings($this->repo);
-        return $settings->saveTheme($this->up->theme, USER_ID);
+
+        if ($settings->saveTheme($this->up->theme, USER_ID)) {
+            return 'Setting saved';
+        } else {
+            throw new ApiException('Error saving setting', 5);
+        }
     }
 
     public function getThemeList()
