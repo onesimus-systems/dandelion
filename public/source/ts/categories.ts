@@ -35,7 +35,7 @@ module Categories {
         // Get root categories
         grabNextLevel('-1:0');
     }
-    
+
     export function selectOnChange(elem: any): void {
         Categories.grabNextLevel(elem.value);
     }
@@ -71,7 +71,7 @@ module Categories {
             .done(function(json) {
                 var rendered = renderSelectsFromJson(json);
                 domid = elemid;
-                
+
                 if (!json.error) {
                     $(domid).html(rendered);
                 } else {
@@ -89,7 +89,7 @@ module Categories {
             message = 'Create new root category:<br><br>';
             catString = '';
         }
-        
+
         var dialog = message+catString+'<input type="text" id="new_category">';
         $.dialogBox(dialog, addNew, null, {title: 'Create new category', buttonText1: 'Create', height: 200, width: 500});
     }
@@ -97,7 +97,7 @@ module Categories {
     function addNew(): void {
         var newCatDesc = $('#new_category').val();
         var parent = currentSelection[currentSelection.length-1];
-        
+
         if (newCatDesc) {
             $.post("api/i/categories/create", { pid: parent, description: newCatDesc }, null, 'json')
                 .done(function( json ) {
@@ -117,7 +117,7 @@ module Categories {
 
         if (typeof elt.val() !== 'undefined') {
             var editString = elt.text();
-            
+
             var dialog = 'Edit Category Description:<br><br><input type="text" id="edited_category" value="'+editString+'">';
             $.dialogBox(dialog,
                 function() {
@@ -142,15 +142,17 @@ module Categories {
         var myCatString = getCatString();
         var cid = currentSelection[currentSelection.length-1];
 
-        $.confirmBox('Delete "'+ myCatString +'"?\n\nChildren categories will be reassigned one level up',
-            'Delete Category',
-            function() {
-                $.post("api/i/categories/delete", { cid: cid }, null ,'json')
-                .done(function( json ) {
-                    $.alert(json.data, 'Categories');
-                    getCatsAfterAction();
+        if (myCatString !== '') {
+            $.confirmBox('Delete "'+ myCatString +'"?\n\nChildren categories will be reassigned one level up',
+                'Delete Category',
+                function() {
+                    $.post("api/i/categories/delete", { cid: cid }, null ,'json')
+                    .done(function( json ) {
+                        $.alert(json.data, 'Categories');
+                        getCatsAfterAction();
+                    });
                 });
-            });
+        }
     }
 
     function getCatsAfterAction(): void {
