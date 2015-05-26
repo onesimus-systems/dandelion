@@ -62,7 +62,7 @@ class Users
             $this->userInfo['fullname']
         );
 
-        return ($userSaved && $userCheestoSaved);
+        return (is_numeric($userSaved) && is_numeric($userCheestoSaved));
     }
 
     public function createUser($username, $password, $fullname, $gid, $cheesto = true)
@@ -88,7 +88,7 @@ class Users
             $userCheestoCreated = $this->repo->createUserCheesto($userCreated, $fullname, $date->format('Y-m-d H:i:s'));
         }
 
-        return ($userCreated && $userCheestoCreated);
+        return (is_numeric($userCreated) && is_numeric($userCheestoCreated));
     }
 
     private function isUser($username)
@@ -106,6 +106,7 @@ class Users
 
         $pass = password_hash($pass, PASSWORD_BCRYPT);
 
+        // Should return 1 row
         if ($this->repo->resetPassword($uid, $pass)) {
             return 'Password changed successfully';
         } else {
@@ -146,8 +147,8 @@ class Users
             }
         }
 
-        // TODO: Create exception class for errors in classes
         if ($delete) {
+            // Should return 1 row
             return $this->repo->deleteUser($uid);
         } else {
             return 'At least one admin account must be left to delete another admin account';

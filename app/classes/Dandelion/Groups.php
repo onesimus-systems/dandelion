@@ -117,7 +117,7 @@ class Groups
     {
         $rights = array_merge($this->defaultPermissions, $rights);
         $rights = serialize($rights);
-        return $this->repo->editGroup($gid, $rights);
+        return is_numeric($this->repo->editGroup($gid, $rights));
     }
 
     /**

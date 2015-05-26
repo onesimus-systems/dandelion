@@ -141,6 +141,6 @@ class Categories
     {
         $desc = str_replace(':', '_', $desc);
 
-        return $this->repo->updateCategory($desc, $cid);
+        return is_numeric($this->repo->updateCategory($desc, $cid));
     }
 }
