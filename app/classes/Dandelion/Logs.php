@@ -81,6 +81,6 @@ class Logs
             return false;
         }
 
-        return $this->repo->updateLog($lid, $title, $body, $cat);
+        return is_numeric($this->repo->updateLog($lid, $title, $body, $cat));
     }
 }

@@ -382,8 +382,8 @@ var AddEdit = {
 
     showAddInputs: function(): void {
         $('#log-title').val('');
-        $('#log-body').html('');
-        $('#categories').html('');
+        $('#log-body').val('');
+        $('#categories').empty();
 
         Categories.grabFirstLevel('#categories');
 
