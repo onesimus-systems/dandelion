@@ -44,6 +44,10 @@ class Application
     {
         // Load application configuration
         $this->config = Configuration::load($this->paths);
+        if (!$this->config) {
+            echo 'Please run the <a href="install.php">Installer</a>';
+            exit();
+        }
         $this->setConstants();
 
         // Register logging system

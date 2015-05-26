@@ -126,7 +126,7 @@ class Categories
         // Reassign children
         $this->repo->adoptChildren($newParent, $cid);
 
-        return $deleted
+        return $deleted;
     }
 
     /**

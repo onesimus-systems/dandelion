@@ -31,14 +31,15 @@ $config = [
     ],
 
     'hostname' => $_POST['hostname'] ? rtrim($_POST['hostname'], '/') : 'http://localhost',
-    'phpSessionName' => 'dan_session_1',
+    'cookiePrefix' => $_POST['cookie_prefix'] ?: 'dan_',
+    'phpSessionName' => 'session_1',
     'gcLottery' => [2, 100],
     'sessionTimeout' => 360,
     'debugEnabled' => false,
     'installed' => true,
     'appTitle' => $_POST['apptitle'] ?: 'Dandelion Web Log',
     'tagline' => $_POST['tagline'] ?: '',
-    'defaultTheme' => 'Halloween',
+    'defaultTheme' => 'modern',
     'cheestoEnabled' => true,
     'publicApiEnabled' => false
 ];
@@ -67,10 +68,8 @@ try {
 
     $sql = file_get_contents(__DIR__."/base_{$config['db']['type']}_db.sql");
 
-    if ($config['db']['tablePrefix'] != 'dan_') {
-        // Replace the default dan_ prefix with the user defined prefix
-        $sql = str_replace('dan_', $config['db']['tablePrefix'], $sql);
-    }
+    // Replace the prefix placeholder with the user defined prefix
+    $sql = str_replace('{{prefix}}', $config['db']['tablePrefix'], $sql);
 
     $exec = $conn->prepare($sql);
     $success = $exec->execute();

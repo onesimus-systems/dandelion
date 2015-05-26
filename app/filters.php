@@ -12,5 +12,6 @@ Routes::filter('auth', function() {
 		return true;
 	} else {
 		View::redirect('login');
+        exit();
 	}
 });

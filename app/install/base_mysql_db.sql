@@ -22,7 +22,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `dan_apikey`
 --
 
-CREATE TABLE IF NOT EXISTS `dan_apikey` (
+CREATE TABLE IF NOT EXISTS `{{prefix}}apikey` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `keystring` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `dan_apikey` (
 -- Table structure for table `dan_category`
 --
 
-CREATE TABLE IF NOT EXISTS `dan_category` (
+CREATE TABLE IF NOT EXISTS `{{prefix}}category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` tinytext NOT NULL,
   `parent` int(11) NOT NULL,
@@ -58,7 +58,7 @@ INSERT INTO `dan_category` (`id`, `description`, `parent`) VALUES
 -- Table structure for table `dan_cheesto`
 --
 
-CREATE TABLE IF NOT EXISTS `dan_cheesto` (
+CREATE TABLE IF NOT EXISTS `{{prefix}}cheesto` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `fullname` text NOT NULL,
@@ -83,7 +83,7 @@ INSERT INTO `dan_cheesto` (`id`, `user_id`, `fullname`, `status`, `message`, `re
 -- Table structure for table `dan_group`
 --
 
-CREATE TABLE IF NOT EXISTS `dan_group` (
+CREATE TABLE IF NOT EXISTS `{{prefix}}group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` tinytext NOT NULL,
   `permissions` text NOT NULL,
@@ -105,7 +105,7 @@ INSERT INTO `dan_group` (`id`, `name`, `permissions`) VALUES
 -- Table structure for table `dan_log`
 --
 
-CREATE TABLE IF NOT EXISTS `dan_log` (
+CREATE TABLE IF NOT EXISTS `{{prefix}}log` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `date_created` date NOT NULL,
   `time_created` time NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `dan_log` (
 -- Table structure for table `dan_session`
 --
 
-CREATE TABLE IF NOT EXISTS `dan_session` (
+CREATE TABLE IF NOT EXISTS `{{prefix}}session` (
   `id` char(32) NOT NULL,
   `data` mediumtext,
   `last_accessed` int(11) NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `dan_session` (
 -- Table structure for table `dan_user`
 --
 
-CREATE TABLE IF NOT EXISTS `dan_user` (
+CREATE TABLE IF NOT EXISTS `{{prefix}}user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` tinytext NOT NULL,
   `password` tinytext NOT NULL,
