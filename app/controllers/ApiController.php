@@ -117,6 +117,9 @@ class ApiController extends BaseController
             return self::makeDAPI(0, 'Completed', $module, $data);
         } catch (ApiException $e) {
             return self::makeDAPI($e->getCode(), $e->getMessage(), $e->getModule(), '');
+        } catch (\Exception $e) {
+            header("HTTP/1.1 500 Internal Server Error");
+            return self::makeDAPI(6, 'Oops, something happened', 'api');
         }
     }
 

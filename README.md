@@ -42,8 +42,8 @@ Installing Dandelion is an easy and simple task. Just follow these steps and you
     and change the password when prompted.
 9. Congratulations! You've now installed Dandelion. Go and make your first log.
 
-Sample Auto Install Commands (Ubuntu, Nginx)
---------------------------------------------
+Sample Install From Build Commands
+----------------------------------
 
 ```bash
 $ mkdir -p /var/www
