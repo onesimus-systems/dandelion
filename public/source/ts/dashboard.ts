@@ -342,8 +342,8 @@ var AddEdit = {
 
         $('#add-edit-form').dialog({
             height: 450,
-            width: 800,
-            title: 'Edit Log',
+            width: 610,
+            title: title,
             modal: true,
             open: function(evt, ui) {
                 $('#log-body').htmlarea({
@@ -370,7 +370,7 @@ var AddEdit = {
 
     showEditInputs: function(logInfo: apiResponse): void {
         $('#log-title').val(logInfo.data.title);
-        $('#log-body').html(logInfo.data.body);
+        $('#log-body').val(logInfo.data.body);
         $('#categories').text('Loading categories...');
 
         Categories.renderCategoriesFromString(logInfo.data.category, '#categories');
