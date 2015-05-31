@@ -7,7 +7,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
 <div id="add-edit-form" class="hidden-dialog">
     <form>
         Title: <input type="text" id="log-title" value="" size="60"><br><br>
-        <textarea id="log-body" cols="80" rows="10"></textarea><br>
+        <textarea id="log-body" rows="10"></textarea><br>
         <div>Category: <span id="categories"></span></div>
     </form>
     <div id="messages"></div>
@@ -20,13 +20,13 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
             Not: <input type="checkbox" id="qb-title-not">
             <input type="text" id="qb-title" value="" size="40">
         </fieldset>
-        
+
         <fieldset>
             <label for="qb-body">Body:</label>
             Not: <input type="checkbox" id="qb-body-not">
             <input type="text" id="qb-body" value="" size="40">
         </fieldset>
-        
+
         <fieldset>
             <label for="qb-date1">Date:</label>
             Not: <input type="checkbox" id="qb-date-not">

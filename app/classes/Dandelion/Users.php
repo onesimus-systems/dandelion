@@ -107,11 +107,7 @@ class Users
         $pass = password_hash($pass, PASSWORD_BCRYPT);
 
         // Should return 1 row
-        if ($this->repo->resetPassword($uid, $pass)) {
-            return 'Password changed successfully';
-        } else {
-            return 'Error changing password';
-        }
+        return $this->repo->resetPassword($uid, $pass);
     }
 
     public function deleteUser($uid, Permissions $permissions)

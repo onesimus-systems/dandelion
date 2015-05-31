@@ -24,7 +24,7 @@ class KeyManagerAPI extends BaseModule
             $user = USER_ID;
         }
         $key = new KeyManager($this->repo);
-        return self::encodeKey($key->getKey($user, $force));
+        return $key->getKey($user, $force);
     }
 
     /**
@@ -52,17 +52,12 @@ class KeyManagerAPI extends BaseModule
         }
 
         $key = new KeyManager($this->repo);
-        return self::encodeKey($key->revoke($userid));
-    }
 
-    /**
-     *  Put key into JSON encoded array with 'key' as the name
-     *
-     *  @param string $key - API Key (or error message)
-     */
-    private function encodeKey($key)
-    {
-        return ['key' => $key];
+        if (is_numeric($key->revoke($userid))) {
+            return 'Key revoked successfully';
+        } else {
+            throw new ApiException('Error revoking key', 5);
+        }
     }
 
     /**
@@ -70,6 +65,6 @@ class KeyManagerAPI extends BaseModule
      */
     public function test() {
         // By time the request reaches here, the key has been verified
-        return 'Key is good';
+        return true;
     }
 }

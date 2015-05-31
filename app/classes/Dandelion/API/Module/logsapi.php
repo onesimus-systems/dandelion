@@ -24,26 +24,19 @@ class LogsAPI extends BaseModule
             throw new ApiPermissionException();
         }
 
-        $metadata = $this->offsetLimitCommon();
-
+        $return = [];
         $logs = new Logs($this->repo, $this->ur);
-        $return = $logs->getLogList($metadata['limit'], $metadata['offset']);
-        $metadata['resultCount'] = count($return);
-        $return['metadata'] = $metadata;
-        return $return;
-    }
 
-    /**
-     *  Get data for a single log
-     */
-    public function readOne()
-    {
-        if (!$this->ur->authorized('viewlog')) {
-            throw new ApiPermissionException();
+        if ($this->up->logid) {
+            $return = $logs->getLogInfo($this->up->logid);
+        } else {
+            $metadata = $this->offsetLimitCommon();
+            $return = $logs->getLogList($metadata['limit'], $metadata['offset']);
+            $metadata['resultCount'] = count($return);
+            $return['metadata'] = $metadata;
         }
 
-        $logs = new Logs($this->repo);
-        return $logs->getLogInfo($this->up->logid);
+        return $return;
     }
 
     /**

@@ -36,7 +36,12 @@ class UsersAPI extends BaseModule
 
         // Do action
         $user = new Users($this->repo, $userid);
-        return $user->resetPassword($newPass);
+
+        if ($user->resetPassword($newPass)) {
+            return 'Password changed successfully';
+        } else {
+            throw new ApiException('Error changing password', 5);
+        }
     }
 
     /**
@@ -119,7 +124,7 @@ class UsersAPI extends BaseModule
     /**
      * Get list of user accounts
      */
-    public function getUsersList()
+    public function getUsers()
     {
         // Check permissions
         if (!$this->ur->authorized('edituser')) {
@@ -132,7 +137,7 @@ class UsersAPI extends BaseModule
     /**
      * Get information for a single user
      */
-    public function getUserInfo()
+    public function getUser()
     {
         // Check permissions
         if (!$this->ur->authorized('edituser')) {

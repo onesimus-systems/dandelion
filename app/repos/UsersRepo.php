@@ -73,17 +73,20 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
     // TODO: Add a disabled field so a user's info isn't really deleted
     public function deleteUser($uid)
     {
+        // May return 0 or 1 row affected
         $this->database
             ->find($this->prefix.'cheesto')
             ->whereEqual('user_id', $uid)
             ->delete();
 
+        // May return 0 or 1 row affected
         $this->database
             ->find($this->prefix.'apikey')
             ->whereEqual('user_id', $uid)
             ->delete();
 
-        $this->database->deleteItem($this->table, $uid);
+        // Should return 1 row affected
+        return $this->database->deleteItem($this->table, $uid);
     }
 
     public function getUserRole($uid, $invert = false)
@@ -99,10 +102,16 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
 
     public function getUsers($uid = null)
     {
+        $fields = 'id, fullname, username, group_id, created, initial_login, theme';
         if ($uid) {
-            return $this->database->readItem($this->table, $uid);
+            return $this->database
+                    ->find($this->table)
+                    ->whereEqual('id', $uid)
+                    ->read($fields);
         } else {
-            return $this->database->find($this->table)->read();
+            return $this->database
+                    ->find($this->table)
+                    ->read($fields);
         }
     }
 }

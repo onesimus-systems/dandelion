@@ -11,7 +11,7 @@ class View
     // Schema for a theme metadata file
     private static $themeMetadataSchema = [
         'slug' => '',
-        'name' => '',
+        'name' => 'Unnamed',
         'author' => '',
         'email' => '',
         'description' => '',
@@ -220,6 +220,10 @@ class View
                     $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jhtmlarea/styles/jHtmlArea.css">';
                     array_push($addedSpecial, 'jhtmlarea');
                     continue;
+                } elseif ($normalized == 'datetimepicker' && !in_array('datetimepicker', $addedSpecial)) {
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jquery/css/datetimepicker.min.css">';
+                    array_push($addedSpecial, 'jhtmlarea');
+                    continue;
                 }
 
                 // If the theme contains a map to a file for this style, use it
@@ -283,6 +287,7 @@ class View
         $metadataJson = file_get_contents($themeDir.'/'.$theme.'/metadata.json');
         $metadataJson = json_decode($metadataJson, true);
         $metadataJson = array_merge(self::$themeMetadataSchema, $metadataJson);
+        $metadataJson['slug'] = $metadataJson['slug'] ?: $theme;
         return $metadataJson;
     }
 

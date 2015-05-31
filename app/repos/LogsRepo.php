@@ -78,7 +78,13 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
 
     public function getLogInfo($lid)
     {
-        return $this->database->readItem($this->table, $lid);
+        $log = $this->database
+            ->find($this->table)
+            ->belongsTo($this->prefix.'user', 'user_id')
+            ->whereEqual($this->table.'.id', $lid)
+            ->read($this->table.'.*, '.$this->prefix.'user.fullname');
+
+        return $log;
     }
 
     public function getLogList($offset, $limit)

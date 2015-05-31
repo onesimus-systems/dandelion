@@ -369,11 +369,11 @@ var AddEdit = {
     },
 
     showEditInputs: function(logInfo: apiResponse): void {
-        $('#log-title').val(logInfo.data.title);
-        $('#log-body').val(logInfo.data.body);
+        $('#log-title').val(logInfo.data[0].title);
+        $('#log-body').val(logInfo.data[0].body);
         $('#categories').text('Loading categories...');
 
-        Categories.renderCategoriesFromString(logInfo.data.category, '#categories');
+        Categories.renderCategoriesFromString(logInfo.data[0].category, '#categories');
 
         AddEdit.showDialog('Edit Log', 'Save Edit', function() {
             AddEdit.saveLog(false, logInfo.data.id);
@@ -393,7 +393,7 @@ var AddEdit = {
     },
 
     getEdit: function(logid): void {
-        $.post('api/i/logs/readone', {logid: logid}, AddEdit.showEditInputs, 'json');
+        $.post('api/i/logs/read', {logid: logid}, AddEdit.showEditInputs, 'json');
     },
 
     saveLog: function(isnew: boolean, id?: number): void {

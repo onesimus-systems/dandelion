@@ -68,7 +68,7 @@ class AdminController extends BaseController
 
         $template = new Template($this->app);
         $template->addData([
-            'user' => $user->getUser($uid),
+            'user' => $user->getUser($uid)[0],
             'cheesto' => $cheesto->getUserStatus($uid),
             'grouplist' => $groups->getGroupList(),
             'statuslist' => $this->app->config['cheesto']['statusOptions']

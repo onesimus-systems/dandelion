@@ -150,7 +150,7 @@ v6.0.0
 - New look
     * Dandelion has been updated with a fresh, new look. But don't worry, if you don't like the new look, just switch to the Legacy theme.
 - The category of a log can be edited
-- Completed and clearned public API
+- Completed and cleaned public API
     * All tasks can now be done through the API.
     * [Documentation](http://onesimussystems.com/dandelion/api)
 - Major source rewrite
