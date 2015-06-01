@@ -20,7 +20,7 @@ var Cheesto = {
     getStatuses: function(): void {
         $.getJSON("api/i/cheesto/read",
             function (data) {
-                if (data.errorcode == 5) {
+                if (data.errorcode !== 0) {
                     return;
                 }
 
