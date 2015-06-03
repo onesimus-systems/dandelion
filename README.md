@@ -100,7 +100,7 @@ Install From Source - Completely Manually
 Sometimes we just want to do things ourselves. And that's fine! Here's the verbose way of installing Dandelion without using our install page.
 
 1. Grab a copy of Dandelion off GitHub. Either via a source download from the web UI or from the git command.
-2. Import the file ```base_mysql_db.sql``` located under the app/install directory into a database table. Dandelion currently only supports MySQL/MariaDB. Supporting other databases is in the works.
+2. Import the file ```mysql_schema.sql``` located under the app/install directory into a database table. Dandelion currently only supports MySQL/MariaDB. Supporting other databases is in the works.
 3. Copy ```config.sample.php``` under app/config to ```config.php``` under the same folder. Use your favorite text editor (ie. Vim) and edit the configuration to fit your environment. The comments in the file explain what each setting is.
 4. Run ```composer install --no-dev``` from the root Dandelion directory. If you don't have Composer installed please see the [Getting Started](https://getcomposer.org/doc/00-intro.md) guide.
 5. Run ```npm install && ./node_modules/.bin/gulp```. This will compile the javascript and stylesheets.
@@ -126,7 +126,7 @@ $ cd dandelion
 $ mysql -u [username] -p
 mysql> CREATE DATABASE [some name];
 mysql> exit;
-$ mysql -u [username] -p [some name] < app/install/base_mysql_db.sql
+$ mysql -u [username] -p [some name] < app/install/mysql_schema.sql
 $ cp app/config/config.sample.php app/config/config.php
 $ vim app/config/config.php
 $ composer install --no-dev
