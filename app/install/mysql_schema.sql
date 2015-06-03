@@ -22,7 +22,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `dan_apikey`
 --
 
-CREATE TABLE IF NOT EXISTS `{{prefix}}apikey` (
+CREATE TABLE IF NOT EXISTS `dan_apikey` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `keystring` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}apikey` (
 -- Table structure for table `dan_category`
 --
 
-CREATE TABLE IF NOT EXISTS `{{prefix}}category` (
+CREATE TABLE IF NOT EXISTS `dan_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `description` tinytext NOT NULL,
   `parent` int(11) NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}category` (
 -- Dumping data for table `dan_category`
 --
 
-INSERT INTO `{{prefix}}category` (`id`, `description`, `parent`) VALUES
+INSERT INTO `dan_category` (`id`, `description`, `parent`) VALUES
 (1, 'Logs', 0);
 
 -- --------------------------------------------------------
@@ -58,7 +58,7 @@ INSERT INTO `{{prefix}}category` (`id`, `description`, `parent`) VALUES
 -- Table structure for table `dan_cheesto`
 --
 
-CREATE TABLE IF NOT EXISTS `{{prefix}}cheesto` (
+CREATE TABLE IF NOT EXISTS `dan_cheesto` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `fullname` text NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}cheesto` (
 -- Dumping data for table `dan_cheesto`
 --
 
-INSERT INTO `{{prefix}}cheesto` (`id`, `user_id`, `fullname`, `status`, `message`, `returntime`, `modified`, `disabled`) VALUES
+INSERT INTO `dan_cheesto` (`id`, `user_id`, `fullname`, `status`, `message`, `returntime`, `modified`, `disabled`) VALUES
 (1, 1, 'Administrator', 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);
 
 -- --------------------------------------------------------
@@ -83,7 +83,7 @@ INSERT INTO `{{prefix}}cheesto` (`id`, `user_id`, `fullname`, `status`, `message
 -- Table structure for table `dan_group`
 --
 
-CREATE TABLE IF NOT EXISTS `{{prefix}}group` (
+CREATE TABLE IF NOT EXISTS `dan_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` tinytext NOT NULL,
   `permissions` text NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}group` (
 -- Dumping data for table `dan_group`
 --
 
-INSERT INTO `{{prefix}}group` (`id`, `name`, `permissions`) VALUES
+INSERT INTO `dan_group` (`id`, `name`, `permissions`) VALUES
 (1, 'user', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
 (2, 'admin', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:11:"creategroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
 (3, 'guest', 'a:15:{s:9:"createlog";b:0;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:9:"createcat";b:0;s:7:"editcat";b:0;s:9:"deletecat";b:0;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:0;s:5:"admin";b:0;}');
@@ -105,7 +105,7 @@ INSERT INTO `{{prefix}}group` (`id`, `name`, `permissions`) VALUES
 -- Table structure for table `dan_log`
 --
 
-CREATE TABLE IF NOT EXISTS `{{prefix}}log` (
+CREATE TABLE IF NOT EXISTS `dan_log` (
   `id` int(20) NOT NULL AUTO_INCREMENT,
   `date_created` date NOT NULL,
   `time_created` time NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}log` (
 -- Table structure for table `dan_session`
 --
 
-CREATE TABLE IF NOT EXISTS `{{prefix}}session` (
+CREATE TABLE IF NOT EXISTS `dan_session` (
   `id` char(32) NOT NULL,
   `data` mediumtext,
   `last_accessed` int(11) NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}session` (
 -- Table structure for table `dan_user`
 --
 
-CREATE TABLE IF NOT EXISTS `{{prefix}}user` (
+CREATE TABLE IF NOT EXISTS `dan_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` tinytext NOT NULL,
   `password` tinytext NOT NULL,
@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}user` (
 -- Dumping data for table `dan_user`
 --
 
-INSERT INTO `{{prefix}}user` (`id`, `username`, `password`, `fullname`, `group_id`, `created`, `initial_login`, `logs_per_page`, `theme`, `disabled`) VALUES
+INSERT INTO `dan_user` (`id`, `username`, `password`, `fullname`, `group_id`, `created`, `initial_login`, `logs_per_page`, `theme`, `disabled`) VALUES
 (1, 'admin', '$2y$10$zibMP6jZw5PRMGHGdo/JzeXkb3re0WEIulmkgRe4PC76GwT4M8G5u', 'Administrator', 2, '2015-01-01', 1, 25, '', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
