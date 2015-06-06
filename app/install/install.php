@@ -58,6 +58,11 @@ try {
             }
             break;
 
+        case 'sqlite':
+            $config['db']['hostname'] = $configDir.'/dandelion.sqlite';
+            $db_connect = "sqlite:{$config['db']['hostname']}";
+            break;
+
         default:
             throw new Exception('No database driver loaded.');
             break;
@@ -71,8 +76,22 @@ try {
     // Replace the prefix placeholder with the user defined prefix
     $sql = str_replace('{{prefix}}', $config['db']['tablePrefix'], $sql);
 
-    $exec = $conn->prepare($sql);
-    $success = $exec->execute();
+    if ($config['db']['type'] === 'sqlite') {
+        // SQLite doesn't like multiple statements in a single query
+        // so the file is separated by double semicolons for each
+        // statement in order to separate them and run them individually.
+        // MySQL doesn't have an issue with this.
+        $queries = explode(';;', $sql);
+
+        foreach ($queries as $query) {
+            $query = trim($query);
+            if ($query) {
+                $success = $conn->query($query);
+            }
+        }
+    } else { // MySQL
+        $success = $conn->query($sql);
+    }
 
     if (!$success) {
         throw new Exception('Problem installing initial data into database.');

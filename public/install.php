@@ -51,7 +51,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <table>
                 <tr>
                     <td class="labels">*Database Type:</td>
-                    <td class="field"><select name="db_type" onChange="showHide(this.value);"><option value="mysql">MySQL</option><!-- <option value="sqlite">SQLite</option>--></select></td>
+                    <td class="field">
+                        <select name="db_type" onChange="showHide(this.value);">
+                            <option value="mysql">MySQL</option>
+                            <option value="sqlite">SQLite</option>
+                        </select>
+                    </td>
                 </tr>
             </table>
             <table id="mysql_only" style="display:inline;">

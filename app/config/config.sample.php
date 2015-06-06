@@ -2,11 +2,12 @@
 return array(
     // Database Configuration
     'db' => array(
-        // Database type: mysql
+        // Database type: mysql, sqlite
         'type' => '',
         // Database name of mysql
         'dbname' => '',
         // Database hostname/IP for mysql
+        // Database filename for sqlite
         'hostname' => '',
         // User for mysql
         'username' => '',

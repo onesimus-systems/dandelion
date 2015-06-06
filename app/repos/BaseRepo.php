@@ -16,8 +16,13 @@ abstract class BaseRepo
     {
         if (is_null(self::$dbconnection)) {
             // Create new database connection object and cache
+            $pdoParams = [];
             self::$dbconnection = new SC();
             $dbConfig = Configuration::getConfig()['db'];
+
+            if ($dbConfig['type'] !== 'sqlite') {
+                $pdoParams = [\PDO::ATTR_PERSISTENT => true];
+            }
 
             // Connect to database
             self::$dbconnection->connect(
@@ -26,10 +31,10 @@ abstract class BaseRepo
                 $dbConfig['dbname'],
                 $dbConfig['username'],
                 $dbConfig['password'],
-                [\PDO::ATTR_PERSISTENT => true]);
+                $pdoParams);
 
             // Check for proper connection
-            if (!self::$dbconnection) {
+            if (!self::$dbconnection->pdo()) {
                 throw new \Exception("Error Connecting to Database", 1);
             }
         }

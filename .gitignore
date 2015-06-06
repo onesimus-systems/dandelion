@@ -12,3 +12,4 @@ node_modules/
 public/build/
 public/assets/themes/*/*.css
 public/assets/themes/*/maps/
+*.sqlite
