@@ -1,7 +1,13 @@
 <?php
 /**
- * Actual install script, again we assume absolutely nothing
- */
+  * Dandelion - Web based log journal
+  *
+  * @author Lee Keitel  <keitellf@gmail.com>
+  * @copyright 2015 Lee Keitel, Onesimus Systems
+  *
+  * @license GNU GPL version 3
+  */
+namespace Dandelion;
 
 $configDir = __DIR__.'/../config';
 
@@ -81,7 +87,9 @@ try {
     $conn = null;
 
     // Save as new configuration file
-    file_put_contents($configDir.'/config.php', '<?php return ' . var_export($config, true) . ';');
+    $configFile = '// This file was generated on '.date(DATE_RFC2822)."\n";
+    $configFile .= '<?php return '.var_export($config, true).';';
+    file_put_contents($configDir.'/config.php', $configFile);
 
     // Change config directory to user:readonly for security
     chmod($configDir.'/config.php', 0400);

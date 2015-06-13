@@ -1,19 +1,15 @@
 <?php
 /**
- * This file is a global file which is included on every page.
- * This script is used to define any global aspects of Dandelion
- * and include other needed PHP scripts.
- *
- * @author Lee Keitel
- *         @date March 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- *
- */
+  * Dandelion - Web based log journal
+  *
+  * @author Lee Keitel  <keitellf@gmail.com>
+  * @copyright 2015 Lee Keitel, Onesimus Systems
+  *
+  * @license GNU GPL version 3
+  */
 namespace Dandelion;
 
 use \Dandelion\Application;
-use \Dandelion\Storage\MySqlDatabase;
 
 $paths = require __DIR__.'/paths.php';
 
