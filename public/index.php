@@ -1,12 +1,12 @@
 <?php
 /**
-  * Dandelion Logbook - Keeping track of events so you remember what you did last week.
+  * Dandelion - Web based log journal
   *
   * @author Lee Keitel  <keitellf@gmail.com>
-  * @package Dandelion
+  * @copyright 2015 Lee Keitel, Onesimus Systems
   *
-  * @license GNU GPL v3 (see full license in root/LICENSE.md)
-***/
+  * @license GNU GPL version 3
+  */
 namespace Dandelion;
 
 use \Dandelion\Application;

@@ -1,16 +1,15 @@
 <?php
 /**
- * Class autoloader for Dandelion
- *
- * @author Lee Keitel
- *         @date May, 2014
- *
- * @license GNU GPL v3 (see full license in root/LICENSE.md)
- *
- */
+  * Dandelion - Web based log journal
+  *
+  * @author Lee Keitel  <keitellf@gmail.com>
+  * @copyright 2015 Lee Keitel, Onesimus Systems
+  *
+  * @license GNU GPL version 3
+  */
 namespace Dandelion;
 
-function dandy_autoload($className)
+function dandelionAutoloader($className)
 {
     $classInfo = explode('\\', $className);
     $className = array_pop($classInfo);
@@ -19,11 +18,11 @@ function dandy_autoload($className)
 
     // Load API modules
     $className = strtolower($className);
-    if (file_exists($rootDir."/classes/{$namespace}/{$className}.php")) {
-        require ($rootDir."/classes/{$namespace}/{$className}.php");
+    if (file_exists($rootDir."/{$namespace}/{$className}.php")) {
+        require ($rootDir."/{$namespace}/{$className}.php");
     } else {
         trigger_error("Class '{$namespace}/{$className}' was not able to load.", E_USER_ERROR);
     }
 }
 
-spl_autoload_register('Dandelion\dandy_autoload');
+spl_autoload_register('Dandelion\dandelionAutoloader');

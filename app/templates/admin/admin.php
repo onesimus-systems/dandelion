@@ -1,7 +1,12 @@
 <?php
 /**
- * Administration dashboard
- */
+  * Dandelion - Web based log journal
+  *
+  * @author Lee Keitel  <keitellf@gmail.com>
+  * @copyright 2015 Lee Keitel, Onesimus Systems
+  *
+  * @license GNU GPL version 3
+  */
 // Stays false unless an admin section is shown
 $content = false;
 $this->layout('layouts::main', ['requiredCssFiles' => ['admin','jqueryui']]);

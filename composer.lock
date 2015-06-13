@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fd3a21e39eea7174b658cbdccd184bb9",
+    "hash": "07cab1c9a907d0067f79ab6f5c241179",
     "packages": [
         {
             "name": "league/plates",
@@ -64,12 +64,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/seed-catalog.git",
-                "reference": "aaa0571744d955684e51b20a151d3994b2c8b22f"
+                "reference": "616bff8c049c96d3e091fc20bf4c3113bec11db2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/seed-catalog/zipball/aaa0571744d955684e51b20a151d3994b2c8b22f",
-                "reference": "aaa0571744d955684e51b20a151d3994b2c8b22f",
+                "url": "https://api.github.com/repos/onesimus-systems/seed-catalog/zipball/616bff8c049c96d3e091fc20bf4c3113bec11db2",
+                "reference": "616bff8c049c96d3e091fc20bf4c3113bec11db2",
                 "shasum": ""
             },
             "require-dev": {
@@ -104,7 +104,7 @@
                 "orm",
                 "pdo"
             ],
-            "time": "2015-05-19 00:49:00"
+            "time": "2015-06-06 23:06:46"
         }
     ],
     "packages-dev": [],
