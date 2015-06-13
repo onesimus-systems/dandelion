@@ -16,8 +16,8 @@ use \Dandelion\KeyManager;
 
 class SettingsController extends BaseController
 {
-	public function settings()
-	{
+    public function settings()
+    {
         $this->loadRights();
 
         $template = new Template($this->app);
@@ -35,5 +35,5 @@ class SettingsController extends BaseController
         ]);
 
         $template->render('settings', 'User Settings');
-	}
+    }
 }

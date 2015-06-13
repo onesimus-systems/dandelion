@@ -11,12 +11,13 @@ namespace Dandelion;
 
 use \Dandelion\Utils\View;
 use \Dandelion\Auth\GateKeeper;
+use \Onesimus\Router\Router;
 
-Routes::filter('auth', function() {
-	if (GateKeeper::authenticated()) {
-		return true;
-	} else {
-		View::redirect('login');
+Router::filter('auth', function() {
+    if (GateKeeper::authenticated()) {
+        return true;
+    } else {
+        View::redirect('login');
         exit();
-	}
+    }
 });

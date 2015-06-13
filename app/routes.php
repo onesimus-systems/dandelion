@@ -9,39 +9,34 @@
   */
 namespace Dandelion;
 
+use \Onesimus\Router\Router;
+
 // Available routes without prior authentication
-Routes::group(['rprefix' => '\Dandelion\Controllers\\'], [
+Router::group(['rprefix' => '\Dandelion\Controllers\\'], [
 	['get', '/login', 'AuthController@loginPage'],
 	['post', '/login', 'AuthController@login'],
 	['get', '/logout', 'AuthController@logout'],
 
-	['any', '/api/{module}/{method}', 'ApiController@apiCall'],
-	['any', '/api/{module}', 'ApiController@badApiCall'],
-	['any', '/api', 'ApiController@badApiCall']
+	['any', '/api/{?module}/{?method}', 'ApiController@apiCall']
 ]);
 
 // Authentication required for these routes
-Routes::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'auth'], [
+Router::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'auth'], [
+    ['get', '/{page}', 'PageController@render'],
 	['get', '/', 'DashboardController@dashboard'],
 	['get', '/dashboard', 'DashboardController@dashboard'],
-	['get', '/{page}', 'PageController@render'],
 	['get', '/settings', 'SettingsController@settings'],
+    ['any', '/render/{item}', 'RenderController@render'],
 
-	['any', '/api/i/{module}/{method}', 'ApiController@internalApiCall'],
-	['any', '/api/i/{module}', 'ApiController@badApiCall'],
-	['any', '/api/i', 'ApiController@badApiCall'],
-
-	['any', '/render/{item}', 'RenderController@render']
+	['any', '/api/i/{?module}/{?method}', 'ApiController@internalApiCall']
 ]);
 
 // Group for Administration pages, requires authentication
-Routes::group([
+Router::group([
 	'prefix' => '/admin', // All admin pages begin with /admin/{something}
 	'rprefix' => '\Dandelion\Controllers\AdminController',
 	'filter' => 'auth'], [
 	['get', '', '@admin'],
-	['get', '/edituser/{uid}', '@editUser'],
-	['get', '/edituser', '@editUser'],
-	['get', '/editgroup/{gid}', '@editGroup'],
-	['get', '/editgroup', '@editGroup']
+	['get', '/edituser/{?uid}', '@editUser'],
+	['get', '/editgroup/{?gid}', '@editGroup']
 ]);

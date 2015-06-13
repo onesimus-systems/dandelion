@@ -26,17 +26,6 @@ class ApiController extends BaseController
     }
 
     /**
-     * Route destination for bad api calls
-     *
-     * @return null
-     */
-    public function badApiCall()
-    {
-        echo self::makeDAPI(5, 'Bad API call', 'api');
-        return;
-    }
-
-    /**
      * Process api call
      *
      * @param $module string - Name of api module to create
@@ -46,6 +35,11 @@ class ApiController extends BaseController
      */
     public function apiCall($module, $method)
     {
+        if (!$module || !$method) {
+            echo self::makeDAPI(5, 'Bad API call', 'api');
+            return;
+        }
+
         if ($this->app->config['publicApiEnabled']) {
             $urlParams = new UrlParameters();
             $apikey = $urlParams->get('apikey');
@@ -66,6 +60,11 @@ class ApiController extends BaseController
      */
     public function internalApiCall($module, $method)
     {
+        if (!$module || !$method) {
+            echo self::makeDAPI(5, 'Bad API call', 'api');
+            return;
+        }
+
         echo $this->processRequest($_SESSION['userInfo']['id'], true, $module, $method);
         return;
     }

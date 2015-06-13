@@ -15,14 +15,14 @@ use \Dandelion\Utils\Repos;
 
 class BaseController
 {
-	// Instance of running application
-	protected $app;
+    // Instance of running application
+    protected $app;
     protected $rights;
 
-	public function __construct(Application $app)
-	{
-		$this->app = $app;
-	}
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
     protected function loadRights()
     {

@@ -15,6 +15,8 @@ use \Dandelion\Utils\Updater;
 use \Dandelion\Storage\Loader;
 use \Dandelion\Utils\Configuration;
 use \Dandelion\Session\SessionManager;
+use \Onesimus\Router\Router;
+use \Onesimus\Router\Http\Request;
 
 /**
  * DandelionApplication represents an instance of Dandelion.
@@ -67,22 +69,10 @@ class Application
             include $this->paths['app'] . '/routes.php';
             include $this->paths['app'] . '/filters.php';
 
-            // Get route for request
-            list($class, $method, $params) = Routes::route();
-
-            // Check controller exists
-            if (!$class || !class_exists($class)) {
-                Logging::errorPage("Controller '{$class}' wasn't found.");
-                return;
-            }
-
-            // Check controller has method for request
-            $controller = new $class($this);
-            if (method_exists($controller, $method)) {
-                call_user_func_array(array($controller, $method), $params);
-            } else {
-                Logging::errorPage("Method '{$method}' wasn't found in Class '{$class}'.");
-            }
+            $request = Request::getRequest();
+            $request->set('SERVER_NAME', $this->config['hostname']);
+            $route = Router::route($request);
+            $route->dispatch($this);
         } catch(Exception $e) {
             Logging::errorPage($e);
         }

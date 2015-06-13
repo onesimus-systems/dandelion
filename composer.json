@@ -1,7 +1,8 @@
 {
     "require": {
         "league/plates": "3.*",
-        "onesimus-systems/seed-catalog": "dev-master"
+        "onesimus-systems/seed-catalog": "dev-master",
+        "onesimus-systems/osrouter": "dev-master"
     },
 
     "autoload": {
