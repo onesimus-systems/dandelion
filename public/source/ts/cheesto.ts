@@ -28,6 +28,7 @@ var Cheesto = {
 
                 if (Cheesto.firstgen) {
                     setTimeout(Cheesto.getStatuses, 30000);
+                    Cheesto.firstgen = false;
                 }
             });
     },
@@ -52,7 +53,6 @@ var Cheesto = {
         }
 
         $('#status-select').replaceWith(statusSelect);
-        Cheesto.firstgen = false;
         return;
     },
 
