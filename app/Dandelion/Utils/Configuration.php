@@ -18,14 +18,14 @@ class Configuration
     private function __clone() {}
     private function __wakeup() {}
 
-    public static function load($paths)
+    public static function load($configPath)
     {
-        if (!file_exists($paths['app'] . '/config/config.php')) {
+        if (!file_exists($configPath)) {
             return false;
         }
 
         if (!self::$loaded) {
-            self::$config = include $paths['app'] . '/config/config.php';
+            self::$config = include $configPath;
             self::$config['hostname'] = rtrim(self::$config['hostname'], '/');
             self::$loaded = true;
         }
@@ -35,7 +35,7 @@ class Configuration
     public static function getConfig()
     {
         if (!self::$loaded) {
-            return null;
+            return [];
         }
         return self::$config;
     }

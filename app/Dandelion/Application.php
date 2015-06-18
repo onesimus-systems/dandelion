@@ -11,12 +11,17 @@ namespace Dandelion;
 
 use \SC\SC;
 use \Exception;
+
 use \Dandelion\Utils\Updater;
 use \Dandelion\Storage\Loader;
 use \Dandelion\Utils\Configuration;
 use \Dandelion\Session\SessionManager;
+
 use \Onesimus\Router\Router;
 use \Onesimus\Router\Http\Request;
+
+use \Onesimus\Logger\Logger;
+use \Onesimus\Logger\Adaptors\FileAdaptor;
 
 /**
  * DandelionApplication represents an instance of Dandelion.
@@ -27,6 +32,7 @@ class Application
 
     public $paths = [];
     public $config;
+    public $logger;
 
     private static $instance;
 
@@ -50,15 +56,15 @@ class Application
     public function run()
     {
         // Load application configuration
-        $this->config = Configuration::load($this->paths);
-        if (!$this->config) {
+        if (!$this->config = Configuration::load($this->paths['app'] . '/config/config.php')) {
             echo 'Please run the <a href="install.php">Installer</a>';
             exit();
         }
         $this->setConstants();
 
         // Register logging system
-        Logging::register($this, $this->paths['app'].'/logs');
+        //Logging::register($this, $this->paths['app'].'/logs');
+        $this->setupLogging();
 
         try {
             // Setup session manager
@@ -74,21 +80,49 @@ class Application
             $route = Router::route($request);
             $route->dispatch($this);
         } catch(Exception $e) {
+            $this->logger->error($e->getMessage());
             Logging::errorPage($e);
         }
         return;
     }
 
-    public function setConstants()
+    protected function setConstants()
     {
         define('DEBUG_ENABLED', $this->config['debugEnabled']);
         define('PUBLIC_DIR', $this->paths['public']);
         return;
     }
 
-    public function bindInstallPaths(array $paths)
+    protected function setupLogging()
     {
-        $this->paths = array_merge($this->paths, $paths);
+        error_reporting(E_ALL);
+        ini_set('log_errors', true);
+        ini_set('display_errors', $this->config['debugEnabled']);
+        ini_set('display_startup_errors', $this->config['debugEnabled']);
+
+        $fileAdaptor = new FileAdaptor($this->paths['logs'].'/logs.log');
+        $fileAdaptor->fileLogLevels('emergency', $this->paths['logs'].'/emergency.log');
+        $fileAdaptor->fileLogLevels('alert', $this->paths['logs'].'/alert.log');
+        $fileAdaptor->fileLogLevels('critical', $this->paths['logs'].'/critical.log');
+        $fileAdaptor->fileLogLevels('error', $this->paths['logs'].'/error.log');
+        $fileAdaptor->fileLogLevels('warning', $this->paths['logs'].'/warning.log');
+        $fileAdaptor->fileLogLevels('notice', $this->paths['logs'].'/notice.log');
+        $fileAdaptor->fileLogLevels('info', $this->paths['logs'].'/info.log');
+        $fileAdaptor->fileLogLevels('debug', $this->paths['logs'].'/debug.log');
+
+        $this->logger = new Logger($fileAdaptor);
+        $this->logger->registerErrorHandler();
+        $this->logger->registerShutdownHandler();
+        $this->logger->registerExceptionHandler();
+    }
+
+    public function bindInstallPaths(array $paths, $reset = false)
+    {
+        if ($reset) {
+            $this->paths = $paths;
+        } else {
+            $this->paths = array_merge($this->paths, $paths);
+        }
         return;
     }
 
