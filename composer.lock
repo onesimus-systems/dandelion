@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9cfec9c5b213aeaeed34257ee5172789",
+    "hash": "ef9b1bf177d64d1a16f5e50d99ef7aab",
     "packages": [
         {
             "name": "league/plates",
@@ -60,16 +60,16 @@
         },
         {
             "name": "onesimus-systems/osrouter",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/osrouter.git",
-                "reference": "416246e495c1379eb0b38cd1f12620e40b22323d"
+                "reference": "2fb2572f7cf7e4891a37080d0695ff5d7fbbb0ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/416246e495c1379eb0b38cd1f12620e40b22323d",
-                "reference": "416246e495c1379eb0b38cd1f12620e40b22323d",
+                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/2fb2572f7cf7e4891a37080d0695ff5d7fbbb0ea",
+                "reference": "2fb2572f7cf7e4891a37080d0695ff5d7fbbb0ea",
                 "shasum": ""
             },
             "require-dev": {
@@ -93,20 +93,25 @@
                     "role": "Developer"
                 }
             ],
-            "time": "2015-06-14 03:33:32"
+            "description": "A simple, easy to use router for PHP web applications",
+            "keywords": [
+                "http",
+                "router"
+            ],
+            "time": "2015-06-18 16:17:25"
         },
         {
             "name": "onesimus-systems/seed-catalog",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/seed-catalog.git",
-                "reference": "616bff8c049c96d3e091fc20bf4c3113bec11db2"
+                "reference": "e46497d4ac2c0b61b7b402cb6db086fb6e6cd5c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/seed-catalog/zipball/616bff8c049c96d3e091fc20bf4c3113bec11db2",
-                "reference": "616bff8c049c96d3e091fc20bf4c3113bec11db2",
+                "url": "https://api.github.com/repos/onesimus-systems/seed-catalog/zipball/e46497d4ac2c0b61b7b402cb6db086fb6e6cd5c4",
+                "reference": "e46497d4ac2c0b61b7b402cb6db086fb6e6cd5c4",
                 "shasum": ""
             },
             "require-dev": {
@@ -141,7 +146,7 @@
                 "orm",
                 "pdo"
             ],
-            "time": "2015-06-06 23:06:46"
+            "time": "2015-06-18 15:58:07"
         }
     ],
     "packages-dev": [
@@ -553,16 +558,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.7.3",
+            "version": "4.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "41fea1e84ed84d373f5ac099a1276c4358c90708"
+                "reference": "e5f851f324f7add846316f39e668e9deac97a103"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/41fea1e84ed84d373f5ac099a1276c4358c90708",
-                "reference": "41fea1e84ed84d373f5ac099a1276c4358c90708",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e5f851f324f7add846316f39e668e9deac97a103",
+                "reference": "e5f851f324f7add846316f39e668e9deac97a103",
                 "shasum": ""
             },
             "require": {
@@ -576,7 +581,7 @@
                 "phpunit/php-code-coverage": "~2.1",
                 "phpunit/php-file-iterator": "~1.4",
                 "phpunit/php-text-template": "~1.2",
-                "phpunit/php-timer": "~1.0",
+                "phpunit/php-timer": ">=1.0.6",
                 "phpunit/phpunit-mock-objects": "~2.3",
                 "sebastian/comparator": "~1.1",
                 "sebastian/diff": "~1.2",
@@ -621,7 +626,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-11 16:20:25"
+            "time": "2015-06-18 13:33:26"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1101,10 +1106,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "onesimus-systems/seed-catalog": 20,
-        "onesimus-systems/osrouter": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
