@@ -1,16 +1,17 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
 use \Dandelion\Logging;
 use \Dandelion\Application;
+
 use \League\Plates\Engine;
 
 class Template
@@ -49,7 +50,8 @@ class Template
         try {
             echo $this->template->render($page);
         } catch (\Exception $e) {
-            Logging::errorPage($e, '404: Page not found. Please check your address.');
+            $this->app->logger->info("404 Page not found: Template '{temp}' missing", ['temp' => $page]);
+            echo $this->template->render('404notfound');
         }
         return;
     }

@@ -60,16 +60,16 @@
         },
         {
             "name": "onesimus-systems/oslogger",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/oslogger.git",
-                "reference": "351743684c4fd3e349e2881962a8e8a9d0a9ad7e"
+                "reference": "f0b9606dc01d9ade4a9029216f00b2fe8069581c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/oslogger/zipball/351743684c4fd3e349e2881962a8e8a9d0a9ad7e",
-                "reference": "351743684c4fd3e349e2881962a8e8a9d0a9ad7e",
+                "url": "https://api.github.com/repos/onesimus-systems/oslogger/zipball/f0b9606dc01d9ade4a9029216f00b2fe8069581c",
+                "reference": "f0b9606dc01d9ade4a9029216f00b2fe8069581c",
                 "shasum": ""
             },
             "require": {
@@ -103,20 +103,20 @@
                 "logging",
                 "logs"
             ],
-            "time": "2015-06-18 17:59:16"
+            "time": "2015-06-18 18:34:38"
         },
         {
             "name": "onesimus-systems/osrouter",
-            "version": "1.0.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/osrouter.git",
-                "reference": "2fb2572f7cf7e4891a37080d0695ff5d7fbbb0ea"
+                "reference": "a9e3a07afca5c28b96645eb93810da33cade5989"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/2fb2572f7cf7e4891a37080d0695ff5d7fbbb0ea",
-                "reference": "2fb2572f7cf7e4891a37080d0695ff5d7fbbb0ea",
+                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/a9e3a07afca5c28b96645eb93810da33cade5989",
+                "reference": "a9e3a07afca5c28b96645eb93810da33cade5989",
                 "shasum": ""
             },
             "require-dev": {
@@ -145,7 +145,7 @@
                 "http",
                 "router"
             ],
-            "time": "2015-06-18 16:17:25"
+            "time": "2015-06-19 00:42:05"
         },
         {
             "name": "onesimus-systems/seed-catalog",

@@ -33,7 +33,7 @@ var Login = {
         $.post("login", { user: user, pass: pass, remember: remember }, null, 'json')
             .done(function(response: any) {
                 if (response != '1' && response != '2') {
-                    $.alert(response, 'Dandelion Login');
+                    $.alert('Login failed, please check your username and password', 'Dandelion Login');
                     return;
                 }
 

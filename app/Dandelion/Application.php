@@ -63,7 +63,6 @@ class Application
         $this->setConstants();
 
         // Register logging system
-        //Logging::register($this, $this->paths['app'].'/logs');
         $this->setupLogging();
 
         try {
@@ -77,11 +76,13 @@ class Application
 
             $request = Request::getRequest();
             $request->set('SERVER_NAME', $this->config['hostname']);
+
             $route = Router::route($request);
             $route->dispatch($this);
         } catch(Exception $e) {
             $this->logger->error($e->getMessage());
-            Logging::errorPage($e);
+            $errorPage = new Controllers\PageController($this);
+            $errorPage->renderErrorPage();
         }
         return;
     }
@@ -95,22 +96,32 @@ class Application
 
     protected function setupLogging()
     {
+        // Set PHP logging/error values
         error_reporting(E_ALL);
         ini_set('log_errors', true);
         ini_set('display_errors', $this->config['debugEnabled']);
         ini_set('display_startup_errors', $this->config['debugEnabled']);
 
+        // Create a file adaptor for logs
         $fileAdaptor = new FileAdaptor($this->paths['logs'].'/logs.log');
-        $fileAdaptor->fileLogLevels('emergency', $this->paths['logs'].'/emergency.log');
-        $fileAdaptor->fileLogLevels('alert', $this->paths['logs'].'/alert.log');
-        $fileAdaptor->fileLogLevels('critical', $this->paths['logs'].'/critical.log');
-        $fileAdaptor->fileLogLevels('error', $this->paths['logs'].'/error.log');
-        $fileAdaptor->fileLogLevels('warning', $this->paths['logs'].'/warning.log');
-        $fileAdaptor->fileLogLevels('notice', $this->paths['logs'].'/notice.log');
-        $fileAdaptor->fileLogLevels('info', $this->paths['logs'].'/info.log');
-        $fileAdaptor->fileLogLevels('debug', $this->paths['logs'].'/debug.log');
 
+        if ($this->config['debugEnabled']) {
+            // Only in development do we want the logs separated, otherwise
+            // they can stay together
+            $fileAdaptor->fileLogLevels('emergency', $this->paths['logs'].'/emergency.log');
+            $fileAdaptor->fileLogLevels('alert', $this->paths['logs'].'/alert.log');
+            $fileAdaptor->fileLogLevels('critical', $this->paths['logs'].'/critical.log');
+            $fileAdaptor->fileLogLevels('error', $this->paths['logs'].'/error.log');
+            $fileAdaptor->fileLogLevels('warning', $this->paths['logs'].'/warning.log');
+            $fileAdaptor->fileLogLevels('notice', $this->paths['logs'].'/notice.log');
+            $fileAdaptor->fileLogLevels('info', $this->paths['logs'].'/info.log');
+            $fileAdaptor->fileLogLevels('debug', $this->paths['logs'].'/debug.log');
+        }
+
+        // Create a logger
         $this->logger = new Logger($fileAdaptor);
+
+        // Register last ditch error functions
         $this->logger->registerErrorHandler();
         $this->logger->registerShutdownHandler();
         $this->logger->registerExceptionHandler();

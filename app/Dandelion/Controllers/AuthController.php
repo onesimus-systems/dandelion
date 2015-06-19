@@ -61,10 +61,10 @@ class AuthController extends BaseController
 
         $tryAuth = $auth->login($this->up->user, $this->up->pass, $rem);
         if (!$tryAuth) {
-            View::redirect('login');
-        } else {
-            echo json_encode($tryAuth);
+            $this->app->logger->info("Failed login attempt by user '{user}'", ['user' => $this->up->user]);
         }
+
+        echo json_encode($tryAuth);
         return;
     }
 

@@ -40,3 +40,5 @@ Router::group([
 	['get', '/edituser/{?uid}', '@editUser'],
 	['get', '/editgroup/{?gid}', '@editGroup']
 ]);
+
+Router::register404Route('\Dandelion\Controllers\NotFoundController@render');

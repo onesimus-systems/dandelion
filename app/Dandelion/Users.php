@@ -30,10 +30,7 @@ class Users
 
         if ($load === true && $uid >= 0) {
             $this->loadUser();
-        } elseif ($load === true && $uid < 0) {
-            trigger_error('To load a user you must provide a user ID.');
         }
-        return true;
     }
 
     public function loadUser()
