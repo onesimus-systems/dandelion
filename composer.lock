@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e3818d1f3195f0270bae63dd8fd752ef",
+    "hash": "5875761110f608d7675025603f842244",
     "packages": [
         {
             "name": "league/plates",
@@ -60,16 +60,16 @@
         },
         {
             "name": "onesimus-systems/oslogger",
-            "version": "1.0.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/oslogger.git",
-                "reference": "f0b9606dc01d9ade4a9029216f00b2fe8069581c"
+                "reference": "0b523469f9d0467c470a296a6be9e7ae13e9b477"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/oslogger/zipball/f0b9606dc01d9ade4a9029216f00b2fe8069581c",
-                "reference": "f0b9606dc01d9ade4a9029216f00b2fe8069581c",
+                "url": "https://api.github.com/repos/onesimus-systems/oslogger/zipball/0b523469f9d0467c470a296a6be9e7ae13e9b477",
+                "reference": "0b523469f9d0467c470a296a6be9e7ae13e9b477",
                 "shasum": ""
             },
             "require": {
@@ -103,7 +103,7 @@
                 "logging",
                 "logs"
             ],
-            "time": "2015-06-18 18:34:38"
+            "time": "2015-06-19 19:05:40"
         },
         {
             "name": "onesimus-systems/osrouter",
@@ -400,16 +400,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.1.5",
+            "version": "2.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "be2286cb8c7e1773eded49d9719219e6f74f9e3e"
+                "reference": "631e365cf26bb2c078683e8d9bcf8bc631ac4d44"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/be2286cb8c7e1773eded49d9719219e6f74f9e3e",
-                "reference": "be2286cb8c7e1773eded49d9719219e6f74f9e3e",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/631e365cf26bb2c078683e8d9bcf8bc631ac4d44",
+                "reference": "631e365cf26bb2c078683e8d9bcf8bc631ac4d44",
                 "shasum": ""
             },
             "require": {
@@ -458,7 +458,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-06-09 13:05:42"
+            "time": "2015-06-19 07:11:55"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -594,16 +594,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.4.2",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "db63be1159c81df649cd0260e30249a586d4129e"
+                "reference": "7a9b0969488c3c54fd62b4d504b3ec758fd005d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/db63be1159c81df649cd0260e30249a586d4129e",
-                "reference": "db63be1159c81df649cd0260e30249a586d4129e",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/7a9b0969488c3c54fd62b4d504b3ec758fd005d9",
+                "reference": "7a9b0969488c3c54fd62b4d504b3ec758fd005d9",
                 "shasum": ""
             },
             "require": {
@@ -639,7 +639,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2015-06-12 07:34:24"
+            "time": "2015-06-19 03:43:16"
         },
         {
             "name": "phpunit/phpunit",

@@ -36,6 +36,10 @@ class ApiController extends BaseController
     public function apiCall($module, $method)
     {
         if (!$module || !$method) {
+            $this->app->logger->notice(
+                'Bad API call for Module: \'{mod}\' and Method: \'{met}\'',
+                ['mod' => $module, 'met' => $method]
+            );
             echo self::makeDAPI(5, 'Bad API call', 'api');
             return;
         }
@@ -61,6 +65,10 @@ class ApiController extends BaseController
     public function internalApiCall($module, $method)
     {
         if (!$module || !$method) {
+            $this->app->logger->notice(
+                'Bad API call for Module: \'{mod}\' and Method: \'{met}\'',
+                ['mod' => $module, 'met' => $method]
+            );
             echo self::makeDAPI(5, 'Bad API call', 'api');
             return;
         }
@@ -120,9 +128,17 @@ class ApiController extends BaseController
             // Return DAPI object
             return self::makeDAPI(0, 'Completed', $module, $data);
         } catch (ApiException $e) {
+            if ($e->getCode() !== 1) { // Don't log invalid key exceptions
+                $this->app->logger->error(
+                    "{mess} :: Module: '{mod}'",
+                    ['mess' => $e->getMessage(), 'mod' => $e->getModule()]
+                );
+            }
+
             return self::makeDAPI($e->getCode(), $e->getMessage(), $e->getModule(), '');
         } catch (\Exception $e) {
             header("HTTP/1.1 500 Internal Server Error");
+            $this->app->logger->error($e->getMessage());
             return self::makeDAPI(6, 'Oops, something happened', 'api');
         }
     }

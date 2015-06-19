@@ -21,6 +21,7 @@ use \Onesimus\Router\Router;
 use \Onesimus\Router\Http\Request;
 
 use \Onesimus\Logger\Logger;
+use \Onesimus\Logger\ErrorHandler;
 use \Onesimus\Logger\Adaptors\FileAdaptor;
 
 /**
@@ -33,6 +34,7 @@ class Application
     public $paths = [];
     public $config;
     public $logger;
+    private $errorHandler;
 
     private static $instance;
 
@@ -106,25 +108,21 @@ class Application
         $fileAdaptor = new FileAdaptor($this->paths['logs'].'/logs.log');
 
         if ($this->config['debugEnabled']) {
-            // Only in development do we want the logs separated, otherwise
-            // they can stay together
-            $fileAdaptor->fileLogLevels('emergency', $this->paths['logs'].'/emergency.log');
-            $fileAdaptor->fileLogLevels('alert', $this->paths['logs'].'/alert.log');
-            $fileAdaptor->fileLogLevels('critical', $this->paths['logs'].'/critical.log');
-            $fileAdaptor->fileLogLevels('error', $this->paths['logs'].'/error.log');
-            $fileAdaptor->fileLogLevels('warning', $this->paths['logs'].'/warning.log');
-            $fileAdaptor->fileLogLevels('notice', $this->paths['logs'].'/notice.log');
-            $fileAdaptor->fileLogLevels('info', $this->paths['logs'].'/info.log');
-            $fileAdaptor->fileLogLevels('debug', $this->paths['logs'].'/debug.log');
+            // Separate logs for development
+            $fileAdaptor->separateLogFiles();
+        } else {
+            // Set minimum log level for non-debug
+            $fileAdaptor->setLevel('warning');
         }
 
         // Create a logger
         $this->logger = new Logger($fileAdaptor);
 
         // Register last ditch error functions
-        $this->logger->registerErrorHandler();
-        $this->logger->registerShutdownHandler();
-        $this->logger->registerExceptionHandler();
+        $this->errorHandler = new ErrorHandler($this->logger);
+        $this->errorHandler->registerErrorHandler();
+        $this->errorHandler->registerShutdownHandler();
+        $this->errorHandler->registerExceptionHandler();
     }
 
     public function bindInstallPaths(array $paths, $reset = false)
