@@ -25,6 +25,6 @@ if (version_compare(PHP_VERSION, '5.5.0', '<')) {
 
 $app = new Application();
 
-$app->bindInstallPaths($paths);
+$app->bindInstallPaths($paths, true);
 
 return $app;

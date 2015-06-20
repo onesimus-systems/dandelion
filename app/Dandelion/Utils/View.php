@@ -321,7 +321,7 @@ class View
         );
 
         if (!array_key_exists($page, $allPages)) {
-            trigger_error($page . ' is not an available redirect page.');
+            trigger_error($page . ' is not an available redirect page.', E_USER_ERROR);
             return;
         }
 

@@ -1,12 +1,12 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Auth;
 
 use \Dandelion\Repos\Interfaces\AuthRepo;
@@ -30,8 +30,7 @@ class GateKeeper
         $userInfo = $this->isUser($user, $pass);
 
         if (!$userInfo) {
-            trigger_error('Failed login attempt for ' . $user . ' at ' . date("Y-m-d H:i:s"), E_USER_WARNING);
-            return 'Incorrect username or password';
+            return false;
         }
 
         if (ini_get("session.use_cookies")) {
