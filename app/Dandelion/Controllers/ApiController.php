@@ -114,7 +114,7 @@ class ApiController extends BaseController
             }
             $ApiModule = new $className($this->app, $userRights, $urlParams);
 
-            if ($ApiModule instanceof BaseModule && method_exists($ApiModule, $request)) {
+            if (method_exists($ApiModule, $request)) {
                 try {
                     $data = $ApiModule->$request();
                 } catch (ApiException $e) {

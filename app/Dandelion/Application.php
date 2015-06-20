@@ -23,6 +23,7 @@ use \Onesimus\Router\Http\Request;
 use \Onesimus\Logger\Logger;
 use \Onesimus\Logger\ErrorHandler;
 use \Onesimus\Logger\Adaptors\FileAdaptor;
+use \Onesimus\Logger\Adaptors\ChromeLoggerAdaptor;
 
 /**
  * DandelionApplication represents an instance of Dandelion.
@@ -34,6 +35,7 @@ class Application
     public $paths = [];
     public $config;
     public $logger;
+    public $debugLogger;
     private $errorHandler;
 
     private static $instance;
@@ -62,7 +64,6 @@ class Application
             echo 'Please run the <a href="install.php">Installer</a>';
             exit();
         }
-        $this->setConstants();
 
         // Register logging system
         $this->setupLogging();
@@ -83,16 +84,11 @@ class Application
             $route->dispatch($this);
         } catch(Exception $e) {
             $this->logger->error($e->getMessage());
+            $this->debugLogger->error($e);
+
             $errorPage = new Controllers\PageController($this);
             $errorPage->renderErrorPage();
         }
-        return;
-    }
-
-    protected function setConstants()
-    {
-        define('DEBUG_ENABLED', $this->config['debugEnabled']);
-        define('PUBLIC_DIR', $this->paths['public']);
         return;
     }
 
@@ -106,17 +102,21 @@ class Application
 
         // Create a file adaptor for logs
         $fileAdaptor = new FileAdaptor($this->paths['logs'].'/logs.log');
+        $this->logger = new Logger($fileAdaptor, 'mainlogger');
+
+        // Create debug logger with null adaptor
+        $this->debugLogger = new Logger();
 
         if ($this->config['debugEnabled']) {
-            // Separate logs for development
-            $fileAdaptor->separateLogFiles();
+            $fileAdaptor->separateLogFiles('.log');
+            // Remove Null adaptor
+            $this->debugLogger->removeAdaptor(0);
+            // Add ChromeLogger to debug logger
+            $this->debugLogger->addAdaptor(new ChromeLoggerAdaptor());
         } else {
             // Set minimum log level for non-debug
             $fileAdaptor->setLevel('warning');
         }
-
-        // Create a logger
-        $this->logger = new Logger($fileAdaptor);
 
         // Register last ditch error functions
         $this->errorHandler = new ErrorHandler($this->logger);
