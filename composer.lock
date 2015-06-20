@@ -60,16 +60,16 @@
         },
         {
             "name": "onesimus-systems/oslogger",
-            "version": "2.0.0",
+            "version": "2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/oslogger.git",
-                "reference": "0b523469f9d0467c470a296a6be9e7ae13e9b477"
+                "reference": "8abdd4d704595ee63f9d025fc3f1976d63a5a6ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/oslogger/zipball/0b523469f9d0467c470a296a6be9e7ae13e9b477",
-                "reference": "0b523469f9d0467c470a296a6be9e7ae13e9b477",
+                "url": "https://api.github.com/repos/onesimus-systems/oslogger/zipball/8abdd4d704595ee63f9d025fc3f1976d63a5a6ae",
+                "reference": "8abdd4d704595ee63f9d025fc3f1976d63a5a6ae",
                 "shasum": ""
             },
             "require": {
@@ -103,7 +103,7 @@
                 "logging",
                 "logs"
             ],
-            "time": "2015-06-19 19:05:40"
+            "time": "2015-06-20 23:10:08"
         },
         {
             "name": "onesimus-systems/osrouter",
