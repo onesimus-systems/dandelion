@@ -9,10 +9,10 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Logging;
-use \Dandelion\Application;
+use Dandelion\Logging;
+use Dandelion\Application;
 
-use \League\Plates\Engine;
+use League\Plates\Engine;
 
 class Template
 {
@@ -35,7 +35,7 @@ class Template
         });
     }
 
-    public function render($page, $title = '')
+    public function render($page, $title = '', $echo = true)
     {
         $title = $title ?: ucfirst($page);
 
@@ -48,12 +48,16 @@ class Template
         ]);
 
         try {
-            echo $this->template->render($page);
+            $templateStr = $this->template->render($page);
+            if ($echo) {
+                echo $templateStr;
+            } else {
+                return $templateStr;
+            }
         } catch (\Exception $e) {
             $this->app->logger->info("404 Page not found: Template '{temp}' missing", ['temp' => $page]);
-            echo $this->template->render('404notfound');
+            return $this->render('404notfound', 'Page Not Found', $echo);
         }
-        return;
     }
 
     public function registerFunction($name, \Closure $closure)

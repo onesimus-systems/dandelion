@@ -1,11 +1,19 @@
 /// <reference path="../dts/jquery.d.ts" />
 /// <reference path="../dts/common.d.ts" />
-/* global $, document*/
+/* global $, document, page */
 
 "use strict"; // jshint ignore:line
 
 $(document).ready(function(){
-    if (typeof page === 'undefined' || page !== 'initialReset') {
+    if (typeof page === 'undefined') {
+        page = '';
+    }
+
+    if (page === 'initialReset') {
+        $('#new-password-1').on('keypress', Settings.check);
+        $('#new-password-2').on('keypress', Settings.check);
+        $('#new-password-1').focus();
+    } else {
         $('#save-per-page-btn').click(Settings.savePerPage);
         $('#save-theme-btn').click(Settings.saveTheme);
         $('#generate-apikey-btn').click(Settings.generateKey);
@@ -31,12 +39,14 @@ var Settings = {
                 .done(function(msg) {
                     $.alert(msg.data, 'Password Reset', function() {
                         if (page === 'initialReset') {
-                            location.assign('dashboard');
+                            location.assign('.');
                         }
                     });
                 });
         } else {
-            $.alert('Passwords do not match or are empty', 'Password Reset');
+            $.alert('Passwords do not match or are empty', 'Password Reset', function() {
+                $('#new-password-1').focus();
+            });
         }
     },
 
@@ -54,5 +64,11 @@ var Settings = {
             .done(function(msg) {
                 $.alert(msg.data, 'Settings', function() { document.location.reload(true); });
             });
-    }
+    },
+
+    check: function(e: any): void {
+        if (e.keyCode === 13) {
+            Settings.resetPassword();
+        }
+    },
 };

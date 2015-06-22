@@ -1,15 +1,15 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
-use \Dandelion\Repos\Interfaces\LogsRepo;
+use Dandelion\Repos\Interfaces\LogsRepo;
 
 class LogSearch
 {
@@ -44,16 +44,15 @@ class LogSearch
         if (!$matches) {
             // Simple generic message saying no results were found
             $notFound = [[
-                'canEdit' => false,
-                'cat' => 'Not Found',
-                'datec' => date('Y-m-d'),
-                'edited' => 0,
-                'entry' => 'Your search for `'.htmlentities($query).'` returned 0 results. Please check your query syntax and try again.',
-                'logid' => -1,
-                'realname' => 'Search',
-                'timec' => date('H:i:s'),
+                'category' => 'Not Found',
+                'date_created' => date('Y-m-d'),
+                'is_edited' => 0,
+                'body' => 'Your search for <b>'.htmlentities(trim($query)).'</b> returned 0 results. Please check your query syntax and try again.',
+                'id' => -1,
+                'fullname' => 'Search',
+                'time_created' => date('H:i:s'),
                 'title' => 'No Results',
-                'usercreated' => '-1'
+                'user_id' => '-1'
             ]];
             return $notFound;
         } else {
@@ -90,12 +89,12 @@ class LogSearch
             $matchedText = $match['querytext'];
 
             // If a method is available for further processing, call it
-            if (method_exists($this, $field.'Process')) {
-                $methodName = $field.'Process';
+            $methodName = $field.'Process';
+            if (method_exists($this, $methodName)) {
                 list($field, $matchedText) = $this->$methodName($field, $matchedText);
             }
 
-            if (!is_array($matchedText)) {
+            if (!is_array($matchedText['text'])) {
                 // Replace all instances of \\ with \\\\ in order to survive stripslashes()
                 if (strpos($matchedText['text'], '\\\\') !== false) {
                     $matchedText['text'] = str_replace('\\\\', '\\\\\\\\', $matchedText['text']);

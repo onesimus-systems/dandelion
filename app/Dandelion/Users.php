@@ -1,18 +1,20 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
-use \Dandelion\Repos\Interfaces\UsersRepo;
+use Dandelion\Repos\Interfaces\UsersRepo;
 
 class Users
 {
+    protected $repo;
+
     // User data
     public $userInfo = array();
     public $userCheesto = array();
@@ -79,7 +81,7 @@ class Users
             return 'Username already in use';
         }
 
-        $password = password_hash($password, PASSWORD_BCRYPT);
+        $password = $this->doHash($password);
 
         // Create row in users table
         $userCreated = $this->repo->createUser($username, $password, $fullname, $gid, $date->format('Y-m-d'));
@@ -106,7 +108,7 @@ class Users
             return 'Something is empty';
         }
 
-        $pass = password_hash($pass, PASSWORD_BCRYPT);
+        $pass = $this->doHash($pass);
 
         // Should return 1 row
         return $this->repo->resetPassword($uid, $pass);
@@ -160,6 +162,11 @@ class Users
 
     public function getUser($uid)
     {
-        return $this->repo->getUsers($uid);
+        return $this->repo->getUsers($uid)[0];
+    }
+
+    protected function doHash($s)
+    {
+        return password_hash($s, PASSWORD_BCRYPT);
     }
 }

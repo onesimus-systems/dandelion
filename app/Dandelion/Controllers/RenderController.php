@@ -1,17 +1,17 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Categories;
-use \Dandelion\UrlParameters;
-use \Dandelion\Utils\Repos;
+use Dandelion\Categories;
+use Dandelion\UrlParameters;
+use Dandelion\Utils\Repos;
 
 class RenderController extends BaseController
 {
@@ -22,7 +22,7 @@ class RenderController extends BaseController
     }
 
     /**
-     * Returns JSON with list of categories at each level
+     * Returns JSON with list of categories from a category string
      */
     public function editcat()
     {

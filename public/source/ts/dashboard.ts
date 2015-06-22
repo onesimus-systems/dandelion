@@ -36,8 +36,10 @@ $(document).ready(function() {
 
 var Refresh = {
     init: function(): void {
-        Refresh.refreshLog();
-        Refresh.startrefresh();
+        if ($('#log-list').length) {
+            Refresh.refreshLog();
+            Refresh.startrefresh();
+        }
     },
 
     startrefresh: function(): void {
@@ -132,14 +134,18 @@ var View = {
     pageControls: function(data: any): void {
         if (data.offset > 0) {
             View.prevPage = data.offset-data.limit;
+            $('#prev-page-button').show();
         } else {
             View.prevPage = -1;
+            $('#prev-page-button').hide();
         }
 
         if (data.offset+data.limit < data.logSize && data.resultCount == data.limit) {
             View.nextPage = data.offset+data.limit;
+            $('#next-page-button').show();
         } else {
             View.nextPage = -1;
+            $('#next-page-button').hide();
         }
 
         if (search) {
@@ -295,8 +301,8 @@ var Search = {
     // Checks if enter key was pressed, if so search
     check: function(e: any): void {
         if (e.keyCode == 13) {
-            Search.searchLog();
             e.preventDefault();
+            Search.searchLog();
         }
     },
 
@@ -376,7 +382,7 @@ var AddEdit = {
         Categories.renderCategoriesFromString(logInfo.data[0].category, '#categories');
 
         AddEdit.showDialog('Edit Log', 'Save Edit', function() {
-            AddEdit.saveLog(false, logInfo.data.id);
+            AddEdit.saveLog(false, logInfo.data[0].id);
         });
     },
 

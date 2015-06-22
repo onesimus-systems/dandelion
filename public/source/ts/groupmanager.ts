@@ -21,7 +21,7 @@ var GroupManage = {
 
         $.post('../../api/i/groups/edit', {groupid: gid, rights: permissionsStr}, null, 'json')
             .done(function(response) {
-                if (response.errorcode === 0) {
+                if ($.apiSuccess(response)) {
                     $.flashMessage('Group saved');
                 } else {
                     $.flashMessage('Error saving group');
@@ -43,7 +43,7 @@ var GroupManage = {
 
         $.post('../../api/i/groups/delete', {groupid: gid}, null, 'json')
             .done(function(data) {
-                if (data.errorcode === 0) {
+                if ($.apiSuccess(data)) {
                     $.alert('Group deleted successfully', 'Group Management', function() {
                         location.assign('../../admin');
                     });

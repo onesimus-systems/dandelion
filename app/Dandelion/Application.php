@@ -1,29 +1,29 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
-use \SC\SC;
-use \Exception;
+use SC\SC;
+use Exception;
 
-use \Dandelion\Utils\Updater;
-use \Dandelion\Storage\Loader;
-use \Dandelion\Utils\Configuration;
-use \Dandelion\Session\SessionManager;
+use Dandelion\Utils\Updater;
+use Dandelion\Storage\Loader;
+use Dandelion\Utils\Configuration;
+use Dandelion\Session\SessionManager;
 
-use \Onesimus\Router\Router;
-use \Onesimus\Router\Http\Request;
+use Onesimus\Router\Router;
+use Onesimus\Router\Http\Request;
 
-use \Onesimus\Logger\Logger;
-use \Onesimus\Logger\ErrorHandler;
-use \Onesimus\Logger\Adaptors\FileAdaptor;
-use \Onesimus\Logger\Adaptors\ChromeLoggerAdaptor;
+use Onesimus\Logger\Logger;
+use Onesimus\Logger\ErrorHandler;
+use Onesimus\Logger\Adaptors\FileAdaptor;
+use Onesimus\Logger\Adaptors\ChromeLoggerAdaptor;
 
 /**
  * DandelionApplication represents an instance of Dandelion.
@@ -52,6 +52,11 @@ class Application
         }
     }
 
+    public static function getInstance()
+    {
+        return self::$instance;
+    }
+
     /**
      * Main function of this class and single entrypoint into application.
      * Run takes the parsed URL and routes it to the appropiate place be it
@@ -77,8 +82,11 @@ class Application
             include $this->paths['app'] . '/routes.php';
             include $this->paths['app'] . '/filters.php';
 
+            $this->debugLogger->debug($_SERVER);
             $request = Request::getRequest();
             $request->set('SERVER_NAME', $this->config['hostname']);
+            $this->debugLogger->debug($request->get('SERVER_NAME'));
+            $this->debugLogger->debug($request->get('FULL_URI'));
 
             $route = Router::route($request);
             $route->dispatch($this);

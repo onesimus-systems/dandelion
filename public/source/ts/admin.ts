@@ -28,7 +28,7 @@ var Admin = {
 
         $.get('api/i/groups/getlist', {}, null, 'json')
             .done(function(json) {
-                if (json.errorcode === 0) {
+                if ($.apiSuccess(json)) {
                     var rightsList = json.data;
 
                     var table = $('<table/>').attr('id', 'add-user-table');

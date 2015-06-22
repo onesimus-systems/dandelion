@@ -1,12 +1,12 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 $this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui']]);
 ?>
 <!-- Begin Page Body -->
@@ -17,7 +17,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui
 <form>
     <fieldset>
         <label for="page-limit">Logs shown per page:</label>
-        <div class="textfield"><input type="text" id="page-limit" size="5" maxlength="3" value="<?= $_SESSION['userInfo']['logs_per_page'] ?>"></div>
+        <div class="textfield"><input type="text" id="page-limit" size="5" maxlength="3" value="<?= $this->e($logsPerPage) ?>"></div>
 
         <button type="button" id="save-per-page-btn" class="button">Save</button>
     </fieldset>

@@ -30,7 +30,7 @@ var UserManage = {
     deleteUser: function(): void {
         $.post('../../api/i/users/delete', {uid: $('#user-id').val()}, null, 'json')
             .done(function(data) {
-                if (data.errorcode === 0) {
+                if ($.apiSuccess(data)) {
                     $.alert('User deleted successfully', 'User Management', function() {
                         location.assign('../../admin');
                     });
@@ -99,7 +99,7 @@ var UserManage = {
     revokeKey: function(): void {
         $.post('../../api/i/key/revoke', {uid: $('#user-id').val()}, null, 'json')
             .done(function(data) {
-                if (data.errorcode === 0) {
+                if ($.apiSuccess(data)) {
                     $.alert('API key revoked', 'User Management');
                 } else {
                     $.alert('Error revoking API key', 'User Management');
@@ -118,10 +118,10 @@ var UserManage = {
 
         $.post('../../api/i/users/edit', {uid: userid, fullname: fullname, role: group}, null, 'json')
             .done(function(response) {
-                if (response.errorcode === 0) {
+                if ($.apiSuccess(response)) {
                     $.post('../../api/i/cheesto/update', {uid: userid, message: message, status: status, returntime: returntime}, null, 'json')
                         .done(function(response) {
-                            if (response.errorcode === 0) {
+                            if ($.apiSuccess(response)) {
                                 $.flashMessage('User saved');
                             } else {
                                 $.flashMessage('Error saving user');

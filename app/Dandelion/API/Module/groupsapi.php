@@ -1,18 +1,18 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\API\Module;
 
-use \Dandelion\Groups;
-use \Dandelion\Exception\ApiException;
-use \Dandelion\Controllers\ApiController;
-use \Dandelion\Exception\ApiPermissionException;
+use Dandelion\Groups;
+use Dandelion\Exception\ApiException;
+use Dandelion\Controllers\ApiController;
+use Dandelion\Exception\ApiPermissionException;
 
 class GroupsAPI extends BaseModule
 {

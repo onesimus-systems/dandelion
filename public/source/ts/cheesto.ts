@@ -14,20 +14,22 @@ var Cheesto = {
     firstgen: true,
 
     dashboardInit: function(): void {
-        Cheesto.getStatuses();
+        if ($('#messages-cheesto').length) {
+            Cheesto.getStatuses();
+        }
     },
 
     getStatuses: function(): void {
         $.getJSON("api/i/cheesto/read",
             function (data) {
-                if (data.errorcode !== 0) {
+                if (!$.apiSuccess(data)) {
                     return;
                 }
 
                 Cheesto.generateView(data.data);
+                setTimeout(Cheesto.getStatuses, 30000);
 
                 if (Cheesto.firstgen) {
-                    setTimeout(Cheesto.getStatuses, 30000);
                     Cheesto.firstgen = false;
                 }
             });

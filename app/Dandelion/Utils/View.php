@@ -1,12 +1,12 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Utils;
 
 use Dandelion\Application;
@@ -61,13 +61,13 @@ class View
 
         switch (strtolower($name)) {
             case 'jquery':
-                $include .= '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-2.1.3.min.js"></script>';
+                $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-2.1.3.min.js"></script>';
                 break;
             case 'jqueryui':
-                $include .= '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-ui-1.11.3.min.js"></script>';
+                $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-ui-1.11.3.min.js"></script>';
                 break;
             case 'jhtmlarea':
-                $include .= '<script src="'.$hostname.'/assets/js/vendor/jhtmlarea/jHtmlArea-0.8.min.js"></script>';
+                $include = '<script src="'.$hostname.'/assets/js/vendor/jhtmlarea/jHtmlArea-0.8.min.js"></script>';
                 break;
         }
         return $include;
@@ -84,11 +84,9 @@ class View
         $include = '';
 
         if (is_file($paths['public'] . '/build/js/'.$name)) {
-            $include .= '<script src="'.$hostname.'/build/js/'.$name.'"></script>';
+            $include = '<script src="'.$hostname.'/build/js/'.$name.'"></script>';
         } elseif (is_file($paths['public'] . '/assets/js/vendor/jquery/js/'.$name)) {
-            $include .= '<script src="'.$hostname.'/assets/js/vendor/jquery/js/'.$name.'"></script>';
-        } else {
-            $include .= "<!-- {$name} was not found. Error 404. -->";
+            $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/'.$name.'"></script>';
         }
         return $include;
     }
@@ -114,7 +112,7 @@ class View
             }
         }
 
-        return $config['defaultTheme']; // Returns early if possible
+        return $config['defaultTheme']; // Returns earlier if possible
     }
 
     /**

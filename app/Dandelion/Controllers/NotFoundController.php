@@ -9,7 +9,7 @@
  */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Template;
+use Dandelion\Template;
 
 class NotFoundController extends BaseController
 {

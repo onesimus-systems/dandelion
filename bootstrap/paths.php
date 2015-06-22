@@ -16,7 +16,7 @@ return array(
     'app' => __DIR__.'/../app',
 
     /**
-    *  Application Path - The path to the application core files
+    *  Log file path - Where logs are saved
     */
 
     'logs' => __DIR__.'/../app/logs',

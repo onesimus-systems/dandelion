@@ -72,7 +72,7 @@ module Categories {
                 var rendered = renderSelectsFromJson(json);
                 domid = elemid;
 
-                if (!json.error) {
+                if ($.apiSuccess(json)) {
                     $(domid).html(rendered);
                 } else {
                     rendered = "There was an error getting the category.<br><br>"+rendered;
@@ -99,8 +99,8 @@ module Categories {
         var parent = currentSelection[currentSelection.length-1];
 
         if (newCatDesc) {
-            $.post("api/i/categories/create", { pid: parent, description: newCatDesc }, null, 'json')
-                .done(function( json ) {
+            $.post("api/i/categories/create", {pid: parent, description: newCatDesc}, null, 'json')
+                .done(function(json) {
                     $.alert(json.data, 'Categories');
                     getCatsAfterAction();
                 });
@@ -123,8 +123,8 @@ module Categories {
                 function() {
                     var editedCat = $('#edited_category').val();
                     if (editedCat) {
-                        $.post("api/i/categories/edit", { cid: cid, description: encodeURIComponent(editedCat) }, null, 'json')
-                            .done(function( json ) {
+                        $.post("api/i/categories/edit", {cid: cid, description: encodeURIComponent(editedCat)}, null, 'json')
+                            .done(function(json) {
                                 $.alert(json.data, 'Categories');
                                 getCatsAfterAction();
                             });
@@ -146,8 +146,8 @@ module Categories {
             $.confirmBox('Delete "'+ myCatString +'"?\n\nChildren categories will be reassigned one level up',
                 'Delete Category',
                 function() {
-                    $.post("api/i/categories/delete", { cid: cid }, null ,'json')
-                    .done(function( json ) {
+                    $.post("api/i/categories/delete", {cid: cid}, null ,'json')
+                    .done(function(json) {
                         $.alert(json.data, 'Categories');
                         getCatsAfterAction();
                     });

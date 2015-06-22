@@ -40,9 +40,9 @@ return array(
     'cookiePrefix' => 'dan_',
     // Name of PHP session for Dandelion, make unique for each instance of Dandelion
     'phpSessionName' => 'session_1',
-    // Garbage collection lottery, the odds that a GC run will happen on a session close
-    // Default is 2 out of 100.
-    'gcLottery' => [2, 100],
+    // Garbage collection lottery, the odds that a GC run will happen on a session open
+    // Default is 1 out of 100.
+    'gcLottery' => [1, 100],
     // Session timeout in minutes. Default is 6 hours
     'sessionTimeout' => 360,
     // Debug mode => set to false in prod

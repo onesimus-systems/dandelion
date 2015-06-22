@@ -1,12 +1,12 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 ?>
 <!-- Begin Page Body -->
@@ -24,7 +24,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 
     <h3>Creator:</h3>
     <p>
-    	Lee Keitel, Onesimus Computer Systems &lt;keitellf@gmail.com&gt;
+    	Lee Keitel, Onesimus Systems &lt;keitellf@gmail.com&gt;
     </p>
 
     <h3>Source:</h3>
@@ -35,18 +35,18 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 	<h3>Copyright:</h3>
     <p class="noindent">
     	Dandelion - Web-based entry log journal.<br>
-		Copyright &copy; 2014  Lee Keitel, Onesimus Computer Systems<br><br>
+		Copyright &copy; 2015  Lee Keitel, Onesimus Systems<br><br>
 
 		This program is free software: you can redistribute it and/or modify
-		it under the terms of the GNU General Public License as published by
-		the Free Software Foundation, either version 3 of the License.<br><br>
+		it under the terms of the GNU General Public License version 3 as published by
+		the Free Software Foundation.<br><br>
 
 		This program is distributed in the hope that it will be useful,
 		but WITHOUT ANY WARRANTY; without even the implied warranty of
 		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 		GNU General Public License for more details.<br><br>
 
-		A copy of the license is available in LICENSE.md).
+		A copy of the license is available in LICENSE.md.
 		You can also read the license online at <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_BLANK">https://www.gnu.org/licenses/gpl-3.0.html</a>.
     </p>
 </div>

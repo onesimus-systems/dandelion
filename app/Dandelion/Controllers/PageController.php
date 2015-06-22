@@ -9,20 +9,15 @@
  */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Template;
-use \Dandelion\Exception\Template404Exception;
+use Dandelion\Template;
+use Dandelion\Exception\Template404Exception;
 
 class PageController extends BaseController
 {
     public function render($page)
     {
         $template = new Template($this->app);
-
-        try {
-            $template->render($page);
-        } catch (Template404Exception $e) {
-            $template->render('404notfound');
-        }
+        $template->render($page);
     }
 
     public function renderErrorPage($message = '')
@@ -30,7 +25,7 @@ class PageController extends BaseController
         header("HTTP/1.1 500 Internal Server Error");
 
         if (!$message) {
-            $message = 'But don\'t worry, it has been logged and the repair monkies are going to work.';
+            $message = "But don't worry, it has been logged and the repair monkies are going to work.";
         }
 
         $errorPage = new Template($this->app);

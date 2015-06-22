@@ -1,20 +1,22 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Users;
-use \Dandelion\Template;
-use \Dandelion\Cheesto;
-use \Dandelion\Groups;
-use \Dandelion\Utils\Repos;
-use \Dandelion\Utils\View;
+use Dandelion\Users;
+use Dandelion\Template;
+use Dandelion\Cheesto;
+use Dandelion\Groups;
+use Dandelion\Utils\Repos;
+use Dandelion\Utils\View;
+
+use Dandelion\Factory\UserFactory;
 
 class AdminController extends BaseController
 {
@@ -73,7 +75,7 @@ class AdminController extends BaseController
 
         $template = new Template($this->app);
         $template->addData([
-            'user' => $user->getUser($uid)[0],
+            'user' => $user->getUser($uid),
             'cheesto' => $cheesto->getUserStatus($uid),
             'grouplist' => $groups->getGroupList(),
             'statuslist' => $this->app->config['cheesto']['statusOptions']
