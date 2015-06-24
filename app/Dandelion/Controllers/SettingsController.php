@@ -35,6 +35,6 @@ class SettingsController extends BaseController
             'logsPerPage' => $_SESSION['userInfo']['logs_per_page']
         ]);
 
-        $template->render('settings', 'User Settings');
+        $this->setResponse($template->render('settings', 'User Settings'));
     }
 }

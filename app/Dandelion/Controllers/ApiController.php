@@ -21,8 +21,10 @@ class ApiController extends BaseController
     public function __construct(Application $app)
     {
         parent::__construct($app);
-        header('Content-Type: application/json');
-        header('Access-Control-Allow-Origin: *');
+        $app->response->headers->replace([
+            ['Content-Type', 'application/json'],
+            ['Access-Control-Allow-Origin', '*']
+        ]);
     }
 
     /**
@@ -219,6 +221,6 @@ class ApiController extends BaseController
      */
     protected function sendResponse($body)
     {
-        echo $body;
+        $this->setResponse($body);
     }
 }

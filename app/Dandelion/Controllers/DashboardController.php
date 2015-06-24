@@ -29,6 +29,6 @@ class DashboardController extends BaseController
             'createButton' => $showCreateButton ? '<button type="button" class="button" id="create-log-button">Create New</button>' : ''
         ]);
 
-        $template->render('dashboard');
+        $this->setResponse($template->render('dashboard', 'Dashboard'));
 	}
 }

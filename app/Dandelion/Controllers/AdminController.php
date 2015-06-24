@@ -54,7 +54,7 @@ class AdminController extends BaseController
             'catList' => $this->rights->authorized('createcat', 'editcat', 'deletecat')
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
-        $template->render('admin::admin', 'Administration');
+        $this->setResponse($template->render('admin::admin', 'Administration'));
 	}
 
     public function editUser($uid = null)
@@ -81,7 +81,7 @@ class AdminController extends BaseController
             'statuslist' => $this->app->config['cheesto']['statusOptions']
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
-        $template->render('admin::edituser', 'User Management');
+        $this->setResponse($template->render('admin::edituser', 'User Management'));
     }
 
     public function editGroup($gid = null)
@@ -105,6 +105,6 @@ class AdminController extends BaseController
             'usersInGroup' => $permObj->usersInGroup($group['id'])
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
-        $template->render('admin::editgroup', 'Group Management');
+        $this->setResponse($template->render('admin::editgroup', 'Group Management'));
     }
 }

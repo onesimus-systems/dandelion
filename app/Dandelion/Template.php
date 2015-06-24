@@ -35,7 +35,7 @@ class Template
         });
     }
 
-    public function render($page, $title = '', $echo = true)
+    public function render($page, $title = '')
     {
         $title = $title ?: ucfirst($page);
 
@@ -49,14 +49,11 @@ class Template
 
         try {
             $templateStr = $this->template->render($page);
-            if ($echo) {
-                echo $templateStr;
-            } else {
-                return $templateStr;
-            }
+            return $templateStr;
         } catch (\Exception $e) {
+            $this->app->response->setStatus(404);
             $this->app->logger->info("404 Page not found: Template '{temp}' missing", ['temp' => $page]);
-            return $this->render('404notfound', 'Page Not Found', $echo);
+            return $this->render('404notfound', 'Page Not Found');
         }
     }
 

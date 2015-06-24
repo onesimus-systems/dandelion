@@ -29,4 +29,9 @@ class BaseController
         $rightsRepo = Repos::makeRepo('Groups');
         $this->rights = new Rights($_SESSION['userInfo']['id'], $rightsRepo);
     }
+
+    protected function setResponse($body)
+    {
+        $this->app->response->setBody($body);
+    }
 }

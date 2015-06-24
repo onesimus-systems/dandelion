@@ -10,6 +10,7 @@
 namespace Dandelion\Utils;
 
 use Dandelion\Application;
+use Dandelion\Exception\ShutdownException;
 
 class View
 {
@@ -304,6 +305,7 @@ class View
     public static function redirect($page)
     {
         $config = Configuration::getConfig();
+        $app = Application::getInstance();
         $allPages = array(
             'home' => '',
             'homepage' => '',
@@ -324,7 +326,8 @@ class View
         }
 
         $newPath = $config['hostname'] . '/' . $allPages[$page];
-        header("Location: $newPath");
+        $app->response->redirect($newPath);
+        throw new ShutdownException();
         return;
     }
 }

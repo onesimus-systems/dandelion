@@ -28,7 +28,7 @@
 
             <nav>
                 <ul>
-                    <li><a href="<?= $this->e($hostname) ?>">Dashboard</a></li>
+                    <li><a href="<?= $this->e($hostname) ?>/">Dashboard</a></li>
                     <li><a href="<?= $this->e($hostname) ?>/settings">Settings</a></li>
                     <li><a href="<?= $this->e($hostname) ?>/admin">Administration</a></li>
                     <li><a href="<?= $this->e($hostname) ?>/logout">Logout</a></li>

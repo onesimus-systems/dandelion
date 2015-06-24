@@ -16,9 +16,12 @@ use Dandelion\Utils\Updater;
 use Dandelion\Storage\Loader;
 use Dandelion\Utils\Configuration;
 use Dandelion\Session\SessionManager;
+use Dandelion\Exception\AbortException;
+use Dandelion\Exception\ShutdownException;
 
 use Onesimus\Router\Router;
 use Onesimus\Router\Http\Request;
+use Onesimus\Router\Http\Response;
 
 use Onesimus\Logger\Logger;
 use Onesimus\Logger\ErrorHandler;
@@ -34,9 +37,14 @@ class Application
 
     public $paths = [];
     public $config;
+
     public $logger;
     public $debugLogger;
+
     private $errorHandler;
+
+    public $request;
+    public $response;
 
     private static $instance;
 
@@ -50,6 +58,9 @@ class Application
         if (is_null(self::$instance)) {
             self::$instance = $this;
         }
+
+        $this->request = Request::getRequest();
+        $this->response = new Response();
     }
 
     public static function getInstance()
@@ -82,21 +93,26 @@ class Application
             include $this->paths['app'] . '/routes.php';
             include $this->paths['app'] . '/filters.php';
 
-            $this->debugLogger->debug($_SERVER);
-            $request = Request::getRequest();
-            $request->set('SERVER_NAME', $this->config['hostname']);
-            $this->debugLogger->debug($request->get('SERVER_NAME'));
-            $this->debugLogger->debug($request->get('FULL_URI'));
+            // The router uses this to determine the route
+            // It's not always necassaily the right full URI
+            $this->request->set('SERVER_NAME', $this->config['hostname']);
 
-            $route = Router::route($request);
+            $route = Router::route($this->request);
             $route->dispatch($this);
-        } catch(Exception $e) {
+        } catch (ShutdownException $e) {
+            // Just catch to continue output to client
+        } catch (AbortException $e) {
+            // Just die
+            return;
+        } catch (Exception $e) {
             $this->logger->error($e->getMessage());
             $this->debugLogger->error($e);
 
             $errorPage = new Controllers\PageController($this);
             $errorPage->renderErrorPage();
         }
+
+        $this->sendToClient();
         return;
     }
 
@@ -146,5 +162,18 @@ class Application
     public static function getPaths()
     {
         return self::$instance->paths;
+    }
+
+    protected function sendToClient()
+    {
+        list($httpStatus, $httpHeaders, $httpBody) = $this->response->finalize();
+
+        http_response_code($httpStatus);
+
+        foreach ($httpHeaders as $header => $value) {
+            header("{$header}: {$value}");
+        }
+
+        echo $httpBody;
     }
 }

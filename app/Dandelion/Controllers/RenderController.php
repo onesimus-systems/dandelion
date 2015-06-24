@@ -18,7 +18,7 @@ class RenderController extends BaseController
 
     public function render($item)
     {
-        echo $this->$item();
+        $this->$item();
     }
 
     /**
@@ -31,7 +31,7 @@ class RenderController extends BaseController
         if ($urlParams->catstring) {
             $catRepo = Repos::makeRepo('Categories');
             $displayCats = new Categories($catRepo);
-            echo $displayCats->renderFromString($urlParams->catstring);
+            $this->setResponse($displayCats->renderFromString($urlParams->catstring));
         }
         return;
     }
@@ -46,7 +46,7 @@ class RenderController extends BaseController
         $past = json_decode(stripslashes($urlParams->pastSelection));
         $catRepo = $catRepo = Repos::makeRepo('Categories');
         $displayCats = new Categories($catRepo);
-        echo $displayCats->renderChildrenJson($past);
+        $this->setResponse($displayCats->renderChildrenJson($past));
         return;
     }
 }

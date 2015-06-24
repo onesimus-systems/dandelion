@@ -48,7 +48,7 @@ class AuthController extends BaseController
             return View::loadJS('jquery','jqueryui','common','login');
         });
 
-        echo $templates->render('login');
+        $this->setResponse($templates->render('login'));
     }
 
     public function login()
@@ -64,7 +64,7 @@ class AuthController extends BaseController
             $this->app->logger->info("Failed login attempt by user '{user}'", ['user' => $this->up->user]);
         }
 
-        echo json_encode($tryAuth);
+        $this->setResponse(json_encode($tryAuth));
         return;
     }
 
@@ -78,6 +78,7 @@ class AuthController extends BaseController
                     $params["secure"], $params["httponly"]
             );
         }
+        session_unset();
         session_destroy();
 
         View::redirect('login');

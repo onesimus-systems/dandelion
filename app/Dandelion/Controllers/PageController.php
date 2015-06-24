@@ -17,12 +17,12 @@ class PageController extends BaseController
     public function render($page)
     {
         $template = new Template($this->app);
-        $template->render($page);
+        $this->setResponse($template->render($page));
     }
 
     public function renderErrorPage($message = '')
     {
-        header("HTTP/1.1 500 Internal Server Error");
+        $this->app->response->setStatus(500);
 
         if (!$message) {
             $message = "But don't worry, it has been logged and the repair monkies are going to work.";
@@ -30,6 +30,6 @@ class PageController extends BaseController
 
         $errorPage = new Template($this->app);
         $errorPage->addData(['message' => $message]);
-        $errorPage->render('error');
+        $this->setResponse($errorPage->render('error', 'An error has occured'));
     }
 }
