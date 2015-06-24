@@ -107,16 +107,16 @@
         },
         {
             "name": "onesimus-systems/osrouter",
-            "version": "1.0.4",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/osrouter.git",
-                "reference": "4136a60aa6e62d5f63252f5da633f498c3669300"
+                "reference": "77dd3e70235aed4bafdfd0d6e630a575e0448281"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/4136a60aa6e62d5f63252f5da633f498c3669300",
-                "reference": "4136a60aa6e62d5f63252f5da633f498c3669300",
+                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/77dd3e70235aed4bafdfd0d6e630a575e0448281",
+                "reference": "77dd3e70235aed4bafdfd0d6e630a575e0448281",
                 "shasum": ""
             },
             "require-dev": {
@@ -145,7 +145,7 @@
                 "http",
                 "router"
             ],
-            "time": "2015-06-22 01:41:30"
+            "time": "2015-06-24 16:12:53"
         },
         {
             "name": "onesimus-systems/seed-catalog",
