@@ -149,16 +149,16 @@
         },
         {
             "name": "onesimus-systems/seed-catalog",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/seed-catalog.git",
-                "reference": "e46497d4ac2c0b61b7b402cb6db086fb6e6cd5c4"
+                "reference": "bea3dcb7720691f57fc96d49c08831a1ea0c9983"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/seed-catalog/zipball/e46497d4ac2c0b61b7b402cb6db086fb6e6cd5c4",
-                "reference": "e46497d4ac2c0b61b7b402cb6db086fb6e6cd5c4",
+                "url": "https://api.github.com/repos/onesimus-systems/seed-catalog/zipball/bea3dcb7720691f57fc96d49c08831a1ea0c9983",
+                "reference": "bea3dcb7720691f57fc96d49c08831a1ea0c9983",
                 "shasum": ""
             },
             "require-dev": {
@@ -193,7 +193,7 @@
                 "orm",
                 "pdo"
             ],
-            "time": "2015-06-18 15:58:07"
+            "time": "2015-06-25 19:07:58"
         },
         {
             "name": "psr/log",
