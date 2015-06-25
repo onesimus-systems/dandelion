@@ -177,6 +177,12 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
                     $params []= $struct['text'];
                     break;
             }
+
+            if ($command === 'log') {
+                // The log command has two placeholders in its
+                // where clause. The rest only have one.
+                $params []= "%{$struct['text']}%";
+            }
         }
 
         $whereClause = trim($whereClause, '& ');

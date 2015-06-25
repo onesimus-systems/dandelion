@@ -68,6 +68,7 @@ class LogSearch
     private function parseSearchQuery($query)
     {
         $parsedQuery = [];
+        $attemptedField = false; // Tracks if the query contains a valid field
         $fields = ['title', 'body', 'log', 'category', 'date', 'author'];
 
         $normalizedQuery = ' '.trim($query);
@@ -79,13 +80,18 @@ class LogSearch
                 continue;
             }
 
+            $attemptedField = true;
+
             // This regex will capture a piece of text that contains characters matching:
             // [Not a \ or "] OR [\\] OR [\"] OR [\!]
             // So basically, any letter that's not a backslash or double quote, double
             // backslashes (for an escaped backslash) or a backslash double quote
             // (for an escaped double quote) or escaped ! to use at beginning of query
             $regex = "/\\s{$field}:\"(?P<querytext>(?:[^\\\\\"]|\\\\\\\\|\\\\\"|\\\\!)*?)\"/";
-            preg_match($regex, $normalizedQuery, $match);
+            if (!preg_match($regex, $normalizedQuery, $match)) {
+                continue;
+            }
+
             $matchedText = $match['querytext'];
 
             // If a method is available for further processing, call it
@@ -105,11 +111,14 @@ class LogSearch
             $parsedQuery[$field] = $matchedText;
         }
 
-        if (!$parsedQuery) {
-            // If parsing failed for all fields, assume it's a general search
+        if (!$parsedQuery && !$attemptedField) {
+            // If parsing failed for all fields, and the query didn't
+            // contain a valid field syntax, assume it's a general search
             // and recursivly run with the field 'log'
-            $query = ($query[0] != '"') ? '"'.$query.'"' : $query;
-            return $this->parseSearchQuery('log:'.$query);
+            $query = 'log:"'.$query.'"';
+            return $this->parseSearchQuery($query);
+        } elseif (!$parsedQuery && $attemptedField) {
+            return [];
         } else {
             return $parsedQuery;
         }
