@@ -14,7 +14,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 	<h2>About</h2>
 
 	<p class="noindent">
-		Version: <?= $this->e($appVersion) ?>
+		<strong>Version</strong>: <?= $this->e($appVersion) ?> "<?= $this->e($appVersionName) ?>"
 	</p>
 
     <h3>What is Dandelion:</h3>

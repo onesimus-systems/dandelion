@@ -43,6 +43,7 @@ class Template
             'appTitle' => $this->app->config['appTitle'],
             'tagline' => $this->app->config['tagline'],
             'appVersion' => Application::VERSION,
+            'appVersionName' => Application::VER_NAME,
             'pageTitle' => $title,
             'hostname' => $this->app->config['hostname']
         ]);
