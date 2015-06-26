@@ -317,7 +317,8 @@ class View
             'login' => 'login',
             'about' => 'about',
             'installer' => 'install/index.php',
-            'resetPassword' => 'reset'
+            'resetPassword' => 'reset',
+            'update' => 'update'
         );
 
         if (!array_key_exists($page, $allPages)) {

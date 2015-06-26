@@ -16,6 +16,7 @@ Router::group(['rprefix' => '\Dandelion\Controllers\\'], [
 	['get', '/login', 'AuthController@loginPage'],
 	['post', '/login', 'AuthController@login'],
 	['get', '/logout', 'AuthController@logout'],
+	['get', '/update', 'UpdateController@update'],
 
 	['any', '/api/{?module}/{?method}', 'ApiController@apiCall']
 ]);
