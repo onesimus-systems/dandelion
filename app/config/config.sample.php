@@ -58,5 +58,7 @@ return array(
     // If Cheesto status system is enabled
     'cheestoEnabled' => true,
     // If the public api is enabled
-    'publicApiEnabled' => false
+    'publicApiEnabled' => false,
+    // Have Dandelion check online for a new version
+    'checkForUpdates' => true
 );

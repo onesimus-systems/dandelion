@@ -13,6 +13,7 @@ use Dandelion\Users;
 use Dandelion\Template;
 use Dandelion\Cheesto;
 use Dandelion\Groups;
+use Dandelion\Application;
 use Dandelion\Utils\Repos;
 use Dandelion\Utils\View;
 
@@ -20,11 +21,12 @@ use Dandelion\Factory\UserFactory;
 
 class AdminController extends BaseController
 {
-	public function admin()
-	{
+    public function admin()
+    {
         $this->loadRights();
         $userlist = [];
         $grouplist = [];
+        $updateArray = [];
 
         if ($this->rights->authorized('edituser', 'deleteuser')) {
             $userObj = new Users(Repos::makeRepo('Users'));
@@ -46,16 +48,29 @@ class AdminController extends BaseController
             }
         }
 
+        if ($this->app->config['checkForUpdates']) {
+            //$latest = file('http://onesimussystems.com/dandelion/versioncheck', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+            $latest = file('http://localhost:4000/dandelion/versioncheck', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+            $latest = json_decode($latest[0], true);
+            if (version_compare($latest['version'], Application::VERSION, '>')) {
+                $updateArray['current'] = Application::VERSION;
+                $updateArray['latest'] = $latest['version'];
+                $updateArray['url'] = $latest['url'];
+            }
+        }
+
         $template = new Template($this->app);
         $template->addData([
             'userRights' => $this->rights,
             'userlist' => $userlist,
             'grouplist' => $grouplist2,
-            'catList' => $this->rights->authorized('createcat', 'editcat', 'deletecat')
+            'catList' => $this->rights->authorized('createcat', 'editcat', 'deletecat'),
+            'showUpdateSection' => $this->app->config['checkForUpdates'],
+            'updates' => $updateArray
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
         $this->setResponse($template->render('admin::admin', 'Administration'));
-	}
+    }
 
     public function editUser($uid = null)
     {

@@ -7,15 +7,12 @@
  *
  * @license GNU GPL version 3
  */
-// Stays false unless an admin section is shown
-$content = false;
 $this->layout('layouts::main', ['requiredCssFiles' => ['admin','jqueryui']]);
 ?>
 
 <h1>Administration</h1>
 
-<?php if ($userlist):
-	$content = true; ?>
+<?php if ($userlist): ?>
 <section id="users-mgt">
     <h2>User Management</h2>
 
@@ -44,8 +41,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['admin','jqueryui']]);
 </section>
 <?php endif;
 
-if ($grouplist):
-	$content = true; ?>
+if ($grouplist): ?>
 <section id="group-mgt">
     <h2>Group Management</h2>
 
@@ -70,8 +66,7 @@ if ($grouplist):
 </section>
 <?php endif;
 
-if ($catList):
-	$content = true; ?>
+if ($catList): ?>
 <section id="category-mgt">
     <h2>Category Management</h2>
 
@@ -85,9 +80,19 @@ if ($catList):
 </section>
 <?php endif;
 
-if (!$content) {
-	echo 'Your account doesn\'t have rights to administrative controls.';
-}
+if ($showUpdateSection): ?>
+<section id="version-update">
+	<h2>Updates</h2>
+	<?php if (!$updates): ?>
+		No updates currently available
+	<?php else: ?>
+		<strong>An update is available!</strong><br><br>
+		<strong>Installed Version</strong>: <?= $this->e($updates['current']) ?><br><br>
+		<strong>Latest Version</strong>: <?= $this->e($updates['latest']) ?><br><br>
+		<a href="<?= $this->e($updates['url']) ?>">Download Update</a>
+	<?php endif; ?>
+</section>
+<?php endif;
 
 echo $this->loadJS(['jquery', 'jqueryui', 'common', 'categories', 'admin']);
 ?>
