@@ -14,3 +14,4 @@ public/assets/themes/*/*.css
 public/assets/themes/*/maps/
 *.sqlite
 update.lock
+tsconfig.json

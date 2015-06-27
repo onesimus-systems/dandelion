@@ -9,7 +9,10 @@ interface dialogBoxOptions {
 }
 
 interface apiResponse {
+    data: any;
     errorcode: number;
+    module: string;
+    status: string;
 }
 
 interface JQueryStatic {

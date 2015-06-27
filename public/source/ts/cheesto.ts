@@ -14,7 +14,7 @@ var Cheesto = {
     firstgen: true,
 
     dashboardInit: function(): void {
-        if ($('#messages-cheesto').length) {
+        if ($("#messages-cheesto").length) {
             Cheesto.getStatuses();
         }
     },
@@ -44,47 +44,46 @@ var Cheesto = {
     },
 
     makeStatusSelect: function(dataObj: cheestoReadResponse): void {
-        var statusSelect = $('<select/>').attr('id', 'status-select');
+        var statusSelect = $("<select/>").attr("id", "status-select");
         statusSelect.change(Cheesto.setStatus);
 
-        statusSelect.append('<option value="-1">Set Status:</option>');
+        statusSelect.append(`<option value="-1">Set Status:</option>`);
 
         for (var key2 in dataObj.statusOptions) {
-            var html = '<option value="' + dataObj.statusOptions[key2] + '">' + dataObj.statusOptions[key2] + '</option>';
+            var html = `<option value="${dataObj.statusOptions[key2]}">${dataObj.statusOptions[key2]}</option>`;
             statusSelect.append(html);
         }
 
-        $('#status-select').replaceWith(statusSelect);
+        $("#status-select").replaceWith(statusSelect);
         return;
     },
 
     generateTable: function(dataObj: cheestoReadResponse): void {
-        var div = $('<div/>').attr('id', 'messages-cheesto-content');
-        var table = $('<table/>');
-        table.append('<thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>');
+        var div = $("<div/>").attr("id", "messages-cheesto-content");
+        var table = $("<table/>");
+        table.append(`<thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>`);
 
         for (var key in dataObj) {
             if (dataObj.hasOwnProperty(key)) {
                 if (key !== "statusOptions") {
                     var user = dataObj[key];
 
-                    var html = '<tr><td>' + user.fullname + '</td>'+
-                        '<td class="status-cell" title="Message: ' + user.message + '\nReturn: ' + user.returntime + '">'+
-                        user.status + '</td></tr>';
+                    var html = `<tr><td>${user.fullname}</td><td class="status-cell" title="Message: ${user.message}\n
+                        Return: ${user.returntime}">${user.status}</td></tr>`;
 
                     table.append(html);
                 }
             }
         }
 
-        table.append('</tbody>');
+        table.append("</tbody>");
         div.append(table);
-        $('#messages-cheesto-content').replaceWith(div);
+        $("#messages-cheesto-content").replaceWith(div);
 
-        $('td.status-cell').tooltip({
+        $("td.status-cell").tooltip({
             track: true,
             show: {
-                effect: 'fade',
+                effect: "fade",
                 delay: 50
             }
         });
@@ -94,58 +93,58 @@ var Cheesto = {
     setStatus: function(): void {
         var newStatus: string = $("#status-select").val();
 
-        if (newStatus !== 'Available') {
+        if (newStatus !== "Available") {
             // Status requires a return time and optional message
-            $('#cheesto-status-form').dialog({
+            $("#cheesto-status-form").dialog({
                 height: 440,
                 width: 640,
-                title: 'Ĉeesto Status',
+                title: "Ĉeesto Status",
                 modal: true,
                 open: function(evt, ui) {
-                    $('#cheesto-date-pick').datetimepicker({
+                    $("#cheesto-date-pick").datetimepicker({
                         timeFormat: "HH:mm",
-                        controlType: 'select',
+                        controlType: "select",
                         stepMinute: 10,
                     });
                 },
                 show: {
-                    effect: 'fade',
+                    effect: "fade",
                     duration: 500
                 },
                 hide: {
-                    effect: 'fade',
+                    effect: "fade",
                     duration: 500
                 },
                 buttons: {
-                    'Save': function() {
+                    "Save": function() {
                         Cheesto.processStatus(newStatus);
                     },
                     Cancel: function() {
-                        $(this).dialog('close');
+                        $(this).dialog("close");
                         $("#status-select").prop("selectedIndex", 0);
                     }
                 }
             });
         } else {
             // Status is Available
-            Cheesto.sendNewStatus(newStatus, '00:00:00', '');
+            Cheesto.sendNewStatus(newStatus, "00:00:00", "");
         }
     },
 
     processStatus: function(status: string): void {
-        var message = $('#cheesto-message-text');
-        var returnTime = $('#cheesto-date-pick');
+        var message = $("#cheesto-message-text");
+        var returnTime = $("#cheesto-date-pick");
 
         Cheesto.sendNewStatus(status, returnTime.val(), message.val());
-        $('#cheesto-status-form').dialog('close');
+        $("#cheesto-status-form").dialog("close");
 
         $("#status-select").prop("selectedIndex", 0);
-        message.val('');
-        returnTime.val('Today');
+        message.val("");
+        returnTime.val("Today");
     },
 
     sendNewStatus: function (stat: string, rt: string, message: string): void {
-        $.post('api/i/cheesto/update', {status: stat, returntime: rt, message: message})
+        $.post("api/i/cheesto/update", {status: stat, returntime: rt, message: message})
             .done(function() { Cheesto.getStatuses(); });
     },
 
@@ -160,12 +159,8 @@ var Cheesto = {
             hours++;
         }
 
-        var datetime = ('0'  + (currentdate.getMonth()+1)).slice(-2) + '/' +
-                       ('0'  + currentdate.getDate()).slice(-2) + '/' +
-                       currentdate.getFullYear() + ' ' +
-                       ('0'  + hours).slice(-2) + ':' +
-                       ('0'  + minutes).slice(-2);
+        var datetime = `${(`0${(currentdate.getMonth()+1)}`).slice(-2)}/${(`0${currentdate.getDate()}`).slice(-2)}/${currentdate.getFullYear()} ${(`0${hours}`).slice(-2)}:${(`0${minutes}`).slice(-2)}`;
 
-        $('#cheesto-date-pick').val(datetime);
+        $("#cheesto-date-pick").val(datetime);
     }
 };

@@ -4,8 +4,8 @@
 // Code from: http://coding.abel.nu/2012/01/jquery-ui-replacement-for-alert/
 $.extend({
     alert: function(message, title, callback) {
-        if (typeof callback === 'undefined') {
-            callback = function() { };
+        if (typeof callback === "undefined") {
+            callback = function() { return; };
         }
         $("<div></div>").dialog({
             buttons: { "Ok": function() { $(this).dialog("close"); } },
@@ -28,8 +28,8 @@ $.extend({
 
 $.extend({
     flashMessage: function(msg, domid) {
-        if (typeof domid === 'undefined') {
-            domid = '#message';
+        if (typeof domid === "undefined") {
+            domid = "#message";
         }
         var message = $(domid);
         message.hide();
@@ -41,11 +41,11 @@ $.extend({
 
 $.extend({
     confirmBox: function(message, title, yescallback, nocallback) {
-        if (typeof yescallback === 'undefined') {
-            yescallback = function() { };
+        if (typeof yescallback === "undefined") {
+            yescallback = function() { return; };
         }
-        if (typeof nocallback === 'undefined') {
-            nocallback = function() { };
+        if (typeof nocallback === "undefined") {
+            nocallback = function() { return; };
         }
 
         $("<div></div>").dialog({
@@ -63,29 +63,29 @@ $.extend({
 $.extend({
     dialogBox: function(html, yescallback, nocallback, customize) {
         // Check customization settings
-        if (typeof customize == 'undefined') {
+        if (typeof customize == "undefined") {
             customize = {};
         }
-        if (typeof customize.height == 'undefined') {
+        if (typeof customize.height == "undefined") {
             customize.height = 300;
         }
-        if (typeof customize.width == 'undefined') {
+        if (typeof customize.width == "undefined") {
             customize.width = 450;
         }
-        if (typeof customize.title == 'undefined') {
-            customize.title = '';
+        if (typeof customize.title == "undefined") {
+            customize.title = "";
         }
-        if (typeof customize.buttonText1 == 'undefined') {
-            customize.buttonText1 = 'Okay';
+        if (typeof customize.buttonText1 == "undefined") {
+            customize.buttonText1 = "Okay";
         }
-        if (typeof customize.buttonText2 == 'undefined') {
-            customize.buttonText2 = 'Cancel';
+        if (typeof customize.buttonText2 == "undefined") {
+            customize.buttonText2 = "Cancel";
         }
-        if (typeof yescallback === 'undefined' || yescallback === null) {
-            yescallback = function() { };
+        if (typeof yescallback === "undefined" || yescallback === null) {
+            yescallback = function() { return; };
         }
-        if (typeof nocallback === 'undefined' || nocallback === null) {
-            nocallback = function() { };
+        if (typeof nocallback === "undefined" || nocallback === null) {
+            nocallback = function() { return; };
         }
 
         // Build dialog buttons
@@ -104,7 +104,7 @@ $.extend({
         };
 
         // Build and show dialog
-        var dialogBox = $('<div/>');
+        var dialogBox = $("<div/>");
         dialogBox.append(html);
         dialogBox.dialog({
             height: customize.height,

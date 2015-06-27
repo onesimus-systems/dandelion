@@ -4,43 +4,45 @@
 
 "use strict"; // jshint ignore:line
 
+var Login;
+
 $(document).ready(function() {
-    var username = Login.getCookie('dan_username');
+    var username = Login.getCookie("dan_username");
 
     if (username !== null) {
-        $('#remember-username').prop('checked', true);
-        $('#username').val(username);
-        $('#password').focus();
+        $("#remember-username").prop("checked", true);
+        $("#username").val(username);
+        $("#password").focus();
     } else {
-        $('#username').focus();
+        $("#username").focus();
     }
 
-    $('#login-btn').click(Login.attemptLogin);
-    $('#username').on('keypress', Login.check);
-    $('#password').on('keypress', Login.check);
+    $("#login-btn").click(Login.attemptLogin);
+    $("#username").on("keypress", Login.check);
+    $("#password").on("keypress", Login.check);
 });
 
-var Login = {
+Login = {
     attemptLogin: function(): boolean {
-        var user: string = $('#username').val();
-        var pass: string = $('#password').val();
-        var remember: boolean = $('#remember-username').prop('checked');
+        var user: string = $("#username").val();
+        var pass: string = $("#password").val();
+        var remember: boolean = $("#remember-username").prop("checked");
 
         if (!user || !pass) {
             return false;
         }
 
-        $.post("login", { user: user, pass: pass, remember: remember }, null, 'json')
+        $.post("login", { user: user, pass: pass, remember: remember }, null, "json")
             .done(function(response: any) {
-                if (response != '1' && response != '2') {
-                    $.alert('Login failed, please check your username and password', 'Dandelion Login');
+                if (response != "1" && response != "2") {
+                    $.alert("Login failed, please check your username and password", "Dandelion Login");
                     return;
                 }
 
-                if (response == '2') {
-                    location.assign('reset');
-                } else if (response == '1') {
-                    location.assign('.');
+                if (response == "2") {
+                    location.assign("reset");
+                } else if (response == "1") {
+                    location.assign(".");
                 }
             });
     },

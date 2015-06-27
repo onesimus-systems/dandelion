@@ -4,65 +4,68 @@
 
 "use strict"; // jshint ignore:line
 
+declare var page: string;
+var Settings;
+
 $(document).ready(function(){
-    if (typeof page === 'undefined') {
-        page = '';
+    if (typeof page === "undefined") {
+        page = "";
     }
 
-    if (page === 'initialReset') {
-        $('#new-password-1').on('keypress', Settings.check);
-        $('#new-password-2').on('keypress', Settings.check);
-        $('#new-password-1').focus();
+    if (page === "initialReset") {
+        $("#new-password-1").on("keypress", Settings.check);
+        $("#new-password-2").on("keypress", Settings.check);
+        $("#new-password-1").focus();
     } else {
-        $('#save-per-page-btn').click(Settings.savePerPage);
-        $('#save-theme-btn').click(Settings.saveTheme);
-        $('#generate-apikey-btn').click(Settings.generateKey);
+        $("#save-per-page-btn").click(Settings.savePerPage);
+        $("#save-theme-btn").click(Settings.saveTheme);
+        $("#generate-apikey-btn").click(Settings.generateKey);
     }
-    $('#reset-password-btn').click(Settings.resetPassword);
+    $("#reset-password-btn").click(Settings.resetPassword);
 });
 
-var Settings = {
+Settings = {
     generateKey: function(): void {
-        $.getJSON('api/i/key/generate', function(data) {
-                $('#apikey').html('<strong>Key:</strong> '+data.data.key);
+        $.getJSON("api/i/key/generate", function(data) {
+                $("#apikey").html(`<strong>Key:</strong> ${data.data.key}`);
         });
     },
 
     resetPassword: function(): void {
-        var pw1: string = $('#new-password-1').val();
-        var pw2: string = $('#new-password-2').val();
-        $('#new-password-1').val('');
-        $('#new-password-2').val('');
+        var pw1: string = $("#new-password-1").val();
+        var pw2: string = $("#new-password-2").val();
+        $("#new-password-1").val("");
+        $("#new-password-2").val("");
 
-        if (pw1 === pw2 && pw1 !== '') {
-            $.post('api/i/users/resetPassword', {'pw': pw1}, null, 'json')
+        if (pw1 === pw2 && pw1 !== "") {
+            $.post("api/i/users/resetPassword", {"pw": pw1}, null, "json")
                 .done(function(msg) {
-                    $.alert(msg.data, 'Password Reset', function() {
-                        if (page === 'initialReset') {
-                            location.assign('.');
+                    $.alert(msg.data, "Password Reset", function() {
+                        if (page === "initialReset") {
+                            location.assign(".");
                         }
                     });
                 });
         } else {
-            $.alert('Passwords do not match or are empty', 'Password Reset', function() {
-                $('#new-password-1').focus();
+            $.alert("Passwords do not match or are empty", "Password Reset", function() {
+                $("#new-password-1").focus();
             });
         }
     },
 
     savePerPage: function(): void {
-        var limit: string = $('#page-limit').val();
-        $.post('api/i/usersettings/saveLogLimit', {'limit': limit}, null, 'json')
+        var limit: string = $("#page-limit").val();
+        $.post("api/i/usersettings/saveLogLimit", {"limit": limit}, null, "json")
             .done(function(msg) {
-                $.alert(msg.data, 'Settings');
+                $.alert(msg.data, "Settings");
             });
     },
 
     saveTheme: function(): void {
-        var theme: string = $('#theme').val();
-        $.post('api/i/usersettings/saveTheme', {'theme': theme}, null, 'json')
+        var theme: string = $("#theme").val();
+        $.post("api/i/usersettings/saveTheme", {"theme": theme}, null, "json")
             .done(function(msg) {
-                $.alert(msg.data, 'Settings', function() { document.location.reload(true); });
+                $.alert(msg.data, "Settings", function() { document.location.reload(true); });
             });
     },
 
