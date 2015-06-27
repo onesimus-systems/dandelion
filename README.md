@@ -55,36 +55,6 @@ v6.0.0
 - New theme management system
     * Themes are handled a bit more elegantly and the structure has been simplified. Making creating themes much easier.
 
-v5.0.2
-
-- Bug fix: No spellcheck in TinyMCE editor
-
-v5.0.1
-
-- Bug fix: User's name not showing on filtered logs
-
-v5.0.0
-
-- Rights management
-- Internal email system
-- Better look and feel when adding/editing logs
-- Migration to jQuery
-- Cheesto status is set without extra button click
-- Internal and Public API (the public API is disabled by default)
-    * Can be disabled/enabled at will
-    * Per user API keys
-    * Available APIs:
-        - Read/Update Cheesto Status
-        - Read log entries
-        - Key management
-        - Test API key
-    * Full documentation coming soon
-- Code refactoring
-    * Consolidation of methods
-    * Working on consistant formatting
-    * Namespacing
-    * Modularization
-
 [Full Release Notes](http://onesimussystems.com/dandelion/release-notes)
 
 Contributing
