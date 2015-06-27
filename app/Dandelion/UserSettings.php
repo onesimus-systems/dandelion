@@ -21,15 +21,13 @@ class UserSettings
         $this->repo = $repo;
     }
 
-    public function saveLogLimit($limit = 25, $user = null)
+    public function saveLogLimit($limit = 25, $user)
     {
         if ($limit < 5) {
           $limit = 5;
         } elseif ($limit > 500) {
           $limit = 500;
         }
-
-        $user = $user ?: $_SESSION['userInfo']['id'];
 
         if ($this->repo->saveLogViewLimit($user, $limit)) {
             $_SESSION['userInfo']['logs_per_page'] = $limit;
@@ -38,10 +36,8 @@ class UserSettings
         return false;
     }
 
-    public function saveTheme($theme = '', $user = null)
+    public function saveTheme($theme = '', $user)
     {
-        $user = $user ?: $_SESSION['userInfo']['id'];
-
         if ($this->repo->saveUserTheme($user, $theme)) {
             $_SESSION['userInfo']['theme'] = $theme;
             Utils\View::setThemeCookie($theme);

@@ -51,11 +51,13 @@ class Categories
             }
 
             // Sort children alphabetically
-            usort($alphaList, "self::cmp");
+            usort($alphaList, function($a, $b) {
+                return strcasecmp(mb_strtolower($a['description']), mb_strtolower($b['description']));
+            });
 
             // Add children to array for the level
             foreach ($alphaList as $children) {
-                $selected = (isset($cids[$i+1]) && ($children['id'] == $cids[$i+1])) ? true : false;
+                $selected = (isset($cids[$i+1]) && ($children['id'] == $cids[$i+1]));
 
                 $response['levels'][$i][] = [
                     'id' => $children['id'],
@@ -88,14 +90,6 @@ class Categories
             $mainJson['errorcode'] = 0;
         }
         return json_encode($mainJson);
-    }
-
-    /**
-     * Used with usort() to alphabetize the category lists
-     */
-    private function cmp($a, $b)
-    {
-        return strcasecmp(mb_strtolower($a['description']), mb_strtolower($b['description']));
     }
 
     /**
@@ -147,6 +141,13 @@ class Categories
         return is_numeric($this->repo->updateCategory($desc, $cid));
     }
 
+    /**
+     * Normalize category descriptions
+     *
+     * @param string $desc description to normalize
+     *
+     * @return string
+     */
     private function normalizeCategoryDesc($desc)
     {
         // Colons are used to separate categories, so remove them

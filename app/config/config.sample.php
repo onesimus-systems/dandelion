@@ -51,11 +51,11 @@ return array(
     'installed' => false,
     // Application title displayed at top of pages
     'appTitle' => 'Dandelion Web Log',
-    // Application tagline dispalyed below title
+    // Application tagline displayed below title
     'tagline' => 'Website Slogan',
     // Application default theme
     'defaultTheme' => 'modern',
-    // If Cheesto status system is enabled
+    // Cheesto status system is enabled
     'cheestoEnabled' => true,
     // If the public api is enabled
     'publicApiEnabled' => false,

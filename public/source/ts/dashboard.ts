@@ -57,7 +57,12 @@ Refresh = {
 
         if (!search) {
             $.getJSON("api/i/logs/read", {}, function(json: apiResponse) {
-                View.makeLogView(json.data);
+                if ($.apiSuccess(json)) {
+                    View.makeLogView(json.data);
+                } else {
+                    $("#log-list").html(`<h3>An error has occured. Please check your Dandelion instance.</h3>`);
+                    Refresh.stoprefresh();
+                }
             });
         }
     }
@@ -246,17 +251,17 @@ Search = {
 
         if (title.val()) {
             if (titleNot.prop("checked")) {
-                query += ` title:"!${title.val().replace(`"`, `\\"`)}"`;
+                query += ` title:"!${title.val().replace(`"`, "\\\"")}"`;
             } else {
-                query += ` title:"${title.val().replace(`"`, `\\"`)}"`;
+                query += ` title:"${title.val().replace(`"`, "\\\"")}"`;
             }
         }
 
         if (body.val()) {
             if (bodyNot.prop("checked")) {
-                query += ` body:"!${body.val().replace(`"`, `\\"`)}"`;
+                query += ` body:"!${body.val().replace(`"`, "\\\"")}"`;
             } else {
-                query += ` body:"${body.val().replace(`"`, `\\"`)}"`;
+                query += ` body:"${body.val().replace(`"`, "\\\"")}"`;
             }
         }
 

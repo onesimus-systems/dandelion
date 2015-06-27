@@ -47,7 +47,8 @@ $config = [
     'tagline' => $_POST['tagline'] ?: '',
     'defaultTheme' => 'modern',
     'cheestoEnabled' => true,
-    'publicApiEnabled' => false
+    'publicApiEnabled' => false,
+    'checkForUpdates' => true
 ];
 
 try {

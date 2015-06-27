@@ -9,8 +9,6 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Application;
-
 /**
  * Register Composer's autoloader
  */

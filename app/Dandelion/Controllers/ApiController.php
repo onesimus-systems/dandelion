@@ -121,7 +121,7 @@ class ApiController extends BaseController
             }
             $ApiModule = new $className($this->app, $userRights, $urlParams);
 
-            if (method_exists($ApiModule, $request)) {
+            if (is_callable([$ApiModule, $request])) {
                 try {
                     $data = $ApiModule->$request();
                 } catch (ApiException $e) {
@@ -132,7 +132,6 @@ class ApiController extends BaseController
                 throw new ApiException('Bad API call', 5);
             }
 
-            // Return DAPI object
             return $this->formatResponse(0, 'Completed', $module, $data);
         } catch (ApiException $e) {
             if ($e->getCode() !== 1) { // Don't log invalid key exceptions

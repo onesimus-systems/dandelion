@@ -64,8 +64,11 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui
         <span id="apikey"><strong>Key:</strong> <?= $this->e($apiKey) ?></span>
         <button type="button" id="generate-apikey-btn" class="button">Regenerate Key</button>
     </form>
-<?php
-endif;
+<?php endif; ?>
 
-echo $this->loadJS(['jquery', 'jqueryui', 'common', 'settings']); ?>
+<script type="text/javascript">
+    var page = 'userSettings';
+</script>
+
+<?= $this->loadJS(['jquery', 'jqueryui', 'common', 'settings']); ?>
 <!-- End Page Body -->

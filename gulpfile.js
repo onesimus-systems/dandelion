@@ -27,7 +27,12 @@ var destPaths = {
 
 var tsProject = ts.createProject({
     declarationFiles: true,
-    noExternalResolve: true
+    noExternalResolve: true,
+    target: "es5",
+    module: "commonjs",
+    declaration: false,
+    noImplicitAny: false,
+    removeComments: true
 });
 
 function minifyLess(src, dest) {
@@ -55,7 +60,7 @@ gulp.task('typescript', function() {
 gulp.task('themes', function() {
     for (var theme in srcPaths.themes) {
       minifyLess(srcPaths.themes[theme], destPaths.themes[theme]);
-    };
+    }
 });
 
 gulp.task('watch', function() {

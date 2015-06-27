@@ -53,9 +53,6 @@ class Application
     /** @var Application Instance */
     private static $instance;
 
-    /**
-     *
-     */
     public function __construct()
     {
         if (is_null(self::$instance)) {

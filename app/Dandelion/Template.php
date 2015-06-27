@@ -11,6 +11,7 @@ namespace Dandelion;
 
 use Dandelion\Logging;
 use Dandelion\Application;
+use Dandelion\Exception\AbortException;
 
 use League\Plates\Engine;
 
@@ -54,6 +55,13 @@ class Template
         } catch (\Exception $e) {
             $this->app->response->setStatus(404);
             $this->app->logger->info("404 Page not found: Template '{temp}' missing", ['temp' => $page]);
+
+            if ($page === '404notfound') {
+                // Protect against loops, just in case the template disappears
+                $this->app->logger->error('404 loop detected, aborting.');
+                throw new AbortException();
+            }
+
             return $this->render('404notfound', 'Page Not Found');
         }
     }

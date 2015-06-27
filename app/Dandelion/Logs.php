@@ -79,7 +79,7 @@ class Logs
      */
     public function editLog($lid, $title, $body, $cat)
     {
-        if (empty($body) || empty($title) || empty($lid) || empty($cat)) {
+        if (!$body || !$title || !$lid || !$cat) {
             return false;
         }
 

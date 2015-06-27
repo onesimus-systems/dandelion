@@ -114,7 +114,7 @@ class LogSearch
         if (!$parsedQuery && !$attemptedField) {
             // If parsing failed for all fields, and the query didn't
             // contain a valid field syntax, assume it's a general search
-            // and recursivly run with the field 'log'
+            // and recursively run with the field 'log'
             $query = 'log:"'.$query.'"';
             return $this->parseSearchQuery($query);
         } elseif (!$parsedQuery && $attemptedField) {
@@ -148,7 +148,7 @@ class LogSearch
     {
         $negate = false;
         if ($data[0] == '!') {
-            $data = ltrim($data, '!');
+            $data = mb_substr($data, 1);
             $negate = true;
         }
         return [$field, ['text' => $data, 'negate' => $negate]];
