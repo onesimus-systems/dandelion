@@ -1,46 +1,17 @@
-#################
-## Custom
-#################
-
 private/
 database/
 config.php
 docs/
 logs/
-koala-config*
 backups/
 vendor/
-*.lock
 node_modules/
-app/
-
-#################
-## Eclipse
-#################
-
-*.pydevproject
-.project
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
-.classpath
-.settings/
-.loadpath
 .idea/
-
-# External tool builders
-.externalToolBuilders/
-
-# Locally stored "Eclipse launch configurations"
-*.launch
-
-# CDT-specific
-.cproject
-
-# PDT-specific
-.buildpath
+.settings/
+.sublime-gulp.cache
+public/build/
+public/assets/themes/*/*.css
+public/assets/themes/*/maps/
+*.sqlite
+update.lock
+tsconfig.json

@@ -1,0 +1,257 @@
+/**
+ * Dashboard styles
+ */
+
+@import (reference) "_base";
+
+.main-content {
+    margin: 0;
+
+    #dandelion-lib > .media-query(screen, small, {
+        margin-bottom: 20px;
+        height: initial;
+    });
+
+    .section-title {
+        font-size: 1.5em;
+        width: 100%;
+        text-align: center;
+        background-color: @navbar-bg-color;
+        padding: 10px 0;
+        color: @navbar-text-color;
+        border: none;
+
+        #dandelion-lib > .button-hover();
+
+        #dandelion-lib > .media-query(screen, small, {
+            display: block;
+
+        });
+    }
+
+    .messages-panel {
+        float: left;
+        width: 250px;
+
+        #dandelion-lib > .media-query(screen, small, {
+            width: 100%;
+            display: none;
+            float: none;
+        });
+
+        .messages-common-styles() {
+            height: 50%;
+            margin-bottom: 20px;
+            overflow: auto;
+
+            &-header {
+                padding-left: 10px;
+                margin: 10px 0;
+
+                .messages-title {
+                    font-size: 1.5em;
+                    font-weight: bold;
+                }
+            }
+
+            &-content {
+                padding-left: 10px;
+                width: 90%;
+                overflow: auto;
+
+                table {
+                    width: 100%;
+
+                    th, td {
+                        border: 1px solid black;
+                        word-wrap: break-word;
+                    }
+
+                    td {
+                        padding: 5px;
+
+                        &.status-cell {
+                            color: @dandelion-dark-orange;
+
+                            &:hover {
+                                cursor: pointer;
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        #messages-cheesto {
+            .messages-common-styles();
+
+            #status-select {
+                #dandelion-lib > .select();
+                margin-top: 5px;
+            }
+        }
+    }
+
+    .logs-panel {
+        border-left: 2px solid @dandelion-dark-grey;
+        margin-left: 250px;
+
+        #dandelion-lib > .media-query(screen, small, {
+            //width: 100%;
+            display: none;
+            margin-left: 0;
+        });
+
+        .control-panel {
+            font-size: 0;
+            margin-bottom: 20px;
+
+            .search-console {
+                overflow: auto;
+                display: table;
+
+                .commonStyles() {
+                    font-size: initial;
+                    border: none;
+                    height: 2em;
+                    margin: 0;
+                    padding: 0 .75em;
+                    -moz-box-sizing: border-box;
+                    -webkit-box-sizing: border-box;
+                    box-sizing: border-box;
+                }
+
+                .query-box {
+                    display: table-cell;
+                    width: 100%;
+                    input {
+                        .commonStyles();
+                        color: gray;
+                        width: 100%;
+                        padding-right: 50px;
+                        width: 100%;
+
+                        &:focus {
+                            -webkit-box-shadow: 0px 0px 4px 0px #353535;
+                            box-shadow: 0px 0px 10px 0px #353535;
+                            color: black;
+                        }
+                    }
+                }
+
+                .search-buttons {
+                    display: table-cell;
+
+                    button {
+                        display: inline-block;
+                        .commonStyles();
+
+                        #dandelion-lib > .button();
+                        #dandelion-lib > .button-hover();
+                    }
+                }
+            }
+
+            .top-controls {
+                background-color: @button-bg-color;
+
+                .button-right {
+                    float: right;
+                }
+
+                .button {
+                    padding: 10px 10px;
+                }
+
+                #prev-page-button {
+                    display: none;
+                }
+            }
+        }
+
+        #log-list {
+            margin: 0 10px;
+            padding-bottom: 10px;
+
+            .log-entry {
+                margin: 20px 0 0 0;
+
+                button {
+                    margin-left: 10px;
+                }
+
+                .log-title {
+                    font-size: 1.5em;
+                    font-weight: 700;
+                }
+
+                .log-body {
+                    word-wrap: break-word;
+                }
+
+                .log-metadata {
+                    margin-bottom: 0;
+
+                    span {
+                        display: block;
+                    }
+
+                    .log-meta-author {
+
+                    }
+
+                    .log-meta-cat {
+
+                    }
+                }
+            }
+        }
+    }
+}
+
+#cheesto-status-form {
+    fieldset {
+        border: none;
+
+        table {
+            margin-top: 10px;
+
+            td {
+                border: 1px solid black;
+                padding: 5px;
+
+                input {
+                    margin-left: 5px;
+                }
+            }
+        }
+
+        label {
+            display: block;
+        }
+
+        &.outer {
+            float: left;
+        }
+    }
+}
+
+#query-builder-form {
+    fieldset {
+        border: none;
+
+        label {
+            font-weight: bold;
+            display: block;
+        }
+
+        input {
+            margin: 0 5px;
+        }
+    }
+}
+
+#log-body {
+    width: 580px;
+}

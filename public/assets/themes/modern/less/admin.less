@@ -1,0 +1,59 @@
+/**
+ * Styles for administatration page
+ */
+
+@import (reference) "_base";
+
+section {
+    margin: 0 20px;
+
+    table {
+        border: none;
+        margin-top: 10px;
+
+        tr {
+            &:hover {
+                background-color: @dandelion-light-orange;
+            }
+        }
+
+        th, td {
+            padding: .5em;
+            cursor: default;
+        }
+
+        th {
+            text-align: left;
+            background-color: @dandelion-mid-grey;
+            color: white;
+        }
+
+        #dandelion-lib > .media-query(screen, small, {
+            .non-essential-info {
+                display: none;
+            }
+        });
+    }
+}
+
+#categories {
+    margin-top: 10px;
+
+    select {
+        #dandelion-lib > .select();
+        background-color: lighten(@dandelion-mid-grey, 20%);
+        color: black;
+        margin-left: 5px;
+
+        #dandelion-lib > .media-query(screen, small, {
+            display: block;
+            margin-bottom: 10px;
+        });
+    }
+}
+
+#add-user-table {
+    td {
+        padding: 5px;
+    }
+}
