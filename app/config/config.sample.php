@@ -40,9 +40,9 @@ return array(
     'cookiePrefix' => 'dan_',
     // Name of PHP session for Dandelion, make unique for each instance of Dandelion
     'phpSessionName' => 'session_1',
-    // Garbage collection lottery, the odds that a GC run will happen on a session close
-    // Default is 2 out of 100.
-    'gcLottery' => [2, 100],
+    // Garbage collection lottery, the odds that a GC run will happen on a session open
+    // Default is 1 out of 100.
+    'gcLottery' => [1, 100],
     // Session timeout in minutes. Default is 6 hours
     'sessionTimeout' => 360,
     // Debug mode => set to false in prod
@@ -51,12 +51,14 @@ return array(
     'installed' => false,
     // Application title displayed at top of pages
     'appTitle' => 'Dandelion Web Log',
-    // Application tagline dispalyed below title
+    // Application tagline displayed below title
     'tagline' => 'Website Slogan',
     // Application default theme
     'defaultTheme' => 'modern',
-    // If Cheesto status system is enabled
+    // Cheesto status system is enabled
     'cheestoEnabled' => true,
     // If the public api is enabled
-    'publicApiEnabled' => false
+    'publicApiEnabled' => false,
+    // Have Dandelion check online for a new version
+    'checkForUpdates' => true
 );

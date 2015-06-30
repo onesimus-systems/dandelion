@@ -12,7 +12,7 @@ namespace Dandelion\Utils;
 class Configuration
 {
     private static $loaded = false;
-    private static $config;
+    private static $config = [];
 
     private function __construct() {}
     private function __clone() {}
@@ -34,9 +34,6 @@ class Configuration
 
     public static function getConfig()
     {
-        if (!self::$loaded) {
-            return [];
-        }
         return self::$config;
     }
 }

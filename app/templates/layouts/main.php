@@ -1,12 +1,12 @@
 <!--
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 -->
 <!DOCTYPE html>
 <html>
@@ -28,7 +28,7 @@
 
             <nav>
                 <ul>
-                    <li><a href="<?= $this->e($hostname) ?>">Dashboard</a></li>
+                    <li><a href="<?= $this->e($hostname) ?>/">Dashboard</a></li>
                     <li><a href="<?= $this->e($hostname) ?>/settings">Settings</a></li>
                     <li><a href="<?= $this->e($hostname) ?>/admin">Administration</a></li>
                     <li><a href="<?= $this->e($hostname) ?>/logout">Logout</a></li>

@@ -1,15 +1,15 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Repos;
 
-use \Dandelion\Repos\Interfaces;
+use Dandelion\Repos\Interfaces;
 
 class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
 {
@@ -23,7 +23,8 @@ class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
 
     public function getGroupById($gid)
     {
-        return $this->database->readItem($this->table, $gid);
+        return $this->database
+            ->readItem($this->table, $gid);
     }
 
     public function getGroupByName($gname)
@@ -36,12 +37,14 @@ class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
 
     public function getGroupList()
     {
-        return $this->database->find($this->table)->read('id, name');
+        return $this->database
+            ->find($this->table)->read('id, name');
     }
 
     public function createGroup($name, $rights)
     {
-        return $this->database->createItem($this->table, ['name' => $name, 'permissions' => $rights]);
+        return $this->database
+            ->createItem($this->table, ['name' => $name, 'permissions' => $rights]);
     }
 
     /**
@@ -52,7 +55,8 @@ class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
      */
     public function deleteGroup($gid)
     {
-        return $this->database->deleteItem($this->table, $gid);
+        return $this->database
+            ->deleteItem($this->table, $gid);
     }
 
     /**
@@ -64,7 +68,8 @@ class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
      */
     public function editGroup($gid, $rights)
     {
-        return $this->database->updateItem($this->table, $gid, ['permissions' => $rights]);
+        return $this->database
+            ->updateItem($this->table, $gid, ['permissions' => $rights]);
     }
 
     /**
@@ -75,7 +80,10 @@ class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
      */
     public function loadRights($gid)
     {
-        $record = $this->database->find($this->table)->whereEqual('id', $gid)->readField('permissions');
+        $record = $this->database
+            ->find($this->table)
+            ->whereEqual('id', $gid)
+            ->readField('permissions');
         return $record;
     }
 

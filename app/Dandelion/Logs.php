@@ -1,15 +1,15 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
-use \Dandelion\Repos\Interfaces\LogsRepo;
+use Dandelion\Repos\Interfaces\LogsRepo;
 
 class Logs
 {
@@ -27,10 +27,8 @@ class Logs
      *
      * @return array with log data
      */
-    public function getLogInfo($logid)
+    public function getLogInfo($logid = '')
     {
-        $logid = isset($logid) ? $logid : '';
-
         return $this->repo->getLogInfo($logid);
     }
 
@@ -66,9 +64,8 @@ class Logs
             return false;
         }
 
-        $datetime = getdate();
-        $date = $datetime['year'] . '-' . $datetime['mon'] . '-' . $datetime['mday'];
-        $time = $datetime['hours'] . ':' . $datetime['minutes'] . ':' . $datetime['seconds'];
+        $date = date('Y-m-d');
+        $time = date('H:i:s');
 
         return $this->repo->addLog($uid, $title, $body, $cat, $date, $time);
     }
@@ -82,7 +79,7 @@ class Logs
      */
     public function editLog($lid, $title, $body, $cat)
     {
-        if (empty($body) || empty($title) || empty($lid) || empty($cat)) {
+        if (!$body || !$title || !$lid || !$cat) {
             return false;
         }
 

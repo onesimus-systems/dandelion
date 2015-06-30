@@ -1,12 +1,12 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
 $configDir = __DIR__.'/../config';
@@ -47,7 +47,8 @@ $config = [
     'tagline' => $_POST['tagline'] ?: '',
     'defaultTheme' => 'modern',
     'cheestoEnabled' => true,
-    'publicApiEnabled' => false
+    'publicApiEnabled' => false,
+    'checkForUpdates' => true
 ];
 
 try {

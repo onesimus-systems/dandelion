@@ -1,15 +1,15 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Repos;
 
-use \Dandelion\Repos\Interfaces;
+use Dandelion\Repos\Interfaces;
 
 class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
 {
@@ -72,7 +72,8 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
 
     public function resetPassword($uid, $pass)
     {
-        return $this->database->updateItem($this->table, $uid, ['password' => $pass, 'initial_login' => 0]);
+        return $this->database
+            ->updateItem($this->table, $uid, ['password' => $pass, 'initial_login' => 0]);
     }
 
     // TODO: Add a disabled field so a user's info isn't really deleted

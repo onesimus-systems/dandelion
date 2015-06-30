@@ -9,10 +9,7 @@
  */
 namespace Dandelion\Exception;
 
-class ApiPermissionException extends ApiException
+class AbortException extends \Exception
 {
-    public function __construct()
-    {
-        parent::__construct('Your account doesn\'t have the proper permissions', 4);
-    }
+
 }

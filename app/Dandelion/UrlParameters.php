@@ -1,35 +1,35 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
 class UrlParameters
 {
     // List of URL parameters
-    public $values = [];
+    private $values = [];
 
     /**
      * Create object using $type of url arguments
      *
-     * @param $type string - Type of URL parameters to store: get, post, request (default)
+     * @param $type string - Type of URL parameters to store: get, post, both (default, empty)
      */
-    public function __construct($type = 'request')
+    public function __construct($type = '')
     {
         switch($type) {
-            case 'request':
-                $this->values = $_REQUEST;
-                break;
             case 'post':
                 $this->values = $_POST;
                 break;
             case 'get':
                 $this->values = $_GET;
+                break;
+            default:
+                $this->values = array_merge($_POST, $_GET);
                 break;
         }
     }

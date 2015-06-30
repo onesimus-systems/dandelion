@@ -9,7 +9,7 @@
  */
 namespace Dandelion\Auth;
 
-use \Dandelion\Repos\Interfaces\AuthRepo;
+use Dandelion\Repos\Interfaces\AuthRepo;
 
 class GateKeeper
 {
@@ -41,20 +41,14 @@ class GateKeeper
         // Set primary session data
         $_SESSION['loggedin'] = true;
         $_SESSION['userInfo'] = $userInfo;
+        unset($_SESSION['userInfo']['password']);
 
         if ($remember) {
             // Set remember me cookie
             setcookie('dan_username', $_SESSION['userInfo']['username'], time() + 60 * 60 * 24 * 30, '/');
         }
 
-        switch ($userInfo['initial_login']) {
-            case 1:
-                return '2';
-                break;
-            default:
-                return '1';
-                break;
-        }
+        return $userInfo['initial_login']+1;
     }
 
     /**
@@ -70,8 +64,10 @@ class GateKeeper
     {
         $user = $this->repo->isUser($user);
 
-        if (!empty($user['password']) && password_verify($pass, $user['password'])) { // Check if password is correct
-            return $user;
+        if ($user) {
+            if ($user['password'] && password_verify($pass, $user['password'])) { // Check if password is correct
+                return $user;
+            }
         }
 
         return false;

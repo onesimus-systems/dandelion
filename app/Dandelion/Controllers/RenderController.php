@@ -1,28 +1,28 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Categories;
-use \Dandelion\UrlParameters;
-use \Dandelion\Utils\Repos;
+use Dandelion\Categories;
+use Dandelion\UrlParameters;
+use Dandelion\Utils\Repos;
 
 class RenderController extends BaseController
 {
 
     public function render($item)
     {
-        echo $this->$item();
+        $this->$item();
     }
 
     /**
-     * Returns JSON with list of categories at each level
+     * Returns JSON with list of categories from a category string
      */
     public function editcat()
     {
@@ -31,7 +31,7 @@ class RenderController extends BaseController
         if ($urlParams->catstring) {
             $catRepo = Repos::makeRepo('Categories');
             $displayCats = new Categories($catRepo);
-            echo $displayCats->renderFromString($urlParams->catstring);
+            $this->setResponse($displayCats->renderFromString($urlParams->catstring));
         }
         return;
     }
@@ -46,7 +46,7 @@ class RenderController extends BaseController
         $past = json_decode(stripslashes($urlParams->pastSelection));
         $catRepo = $catRepo = Repos::makeRepo('Categories');
         $displayCats = new Categories($catRepo);
-        echo $displayCats->renderChildrenJson($past);
+        $this->setResponse($displayCats->renderChildrenJson($past));
         return;
     }
 }

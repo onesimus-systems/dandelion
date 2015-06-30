@@ -9,10 +9,11 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Logging;
-use \Dandelion\Application;
+use Dandelion\Logging;
+use Dandelion\Application;
+use Dandelion\Exception\AbortException;
 
-use \League\Plates\Engine;
+use League\Plates\Engine;
 
 class Template
 {
@@ -43,17 +44,26 @@ class Template
             'appTitle' => $this->app->config['appTitle'],
             'tagline' => $this->app->config['tagline'],
             'appVersion' => Application::VERSION,
+            'appVersionName' => Application::VER_NAME,
             'pageTitle' => $title,
             'hostname' => $this->app->config['hostname']
         ]);
 
         try {
-            echo $this->template->render($page);
+            $templateStr = $this->template->render($page);
+            return $templateStr;
         } catch (\Exception $e) {
+            $this->app->response->setStatus(404);
             $this->app->logger->info("404 Page not found: Template '{temp}' missing", ['temp' => $page]);
-            echo $this->template->render('404notfound');
+
+            if ($page === '404notfound') {
+                // Protect against loops, just in case the template disappears
+                $this->app->logger->error('404 loop detected, aborting.');
+                throw new AbortException();
+            }
+
+            return $this->render('404notfound', 'Page Not Found');
         }
-        return;
     }
 
     public function registerFunction($name, \Closure $closure)

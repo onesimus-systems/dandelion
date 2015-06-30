@@ -9,10 +9,7 @@
  */
 namespace Dandelion\Exception;
 
-class Template404Exception extends \Exception
+class ShutdownException extends \Exception
 {
-    public function __construct($template)
-    {
-        parent::__construct('Template '.$template.' not found', 404);
-    }
+
 }

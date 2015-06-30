@@ -1,38 +1,63 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Utils;
+
+use Dandelion\Application;
 
 class Updater
 {
-    public static function checkForUpdate() {
-        $updateLockFile = ROOT . '/update.lock';
-        if (!file_exists($updateLockFile)) {
-            return 'This instance of Dandelion isn\'t configured for automatic updates.';
+    /**
+     * Filename of lock file
+     * @var string
+     */
+    private static $lockFile;
+
+    /**
+     * Called to initiate an update sequence. Redirects to update page if needed
+     *
+     * @param  Application $app
+     * @return bool
+     */
+    public static function checkForUpdates(Application $app)
+    {
+        self::$lockFile = $app->paths['app'].'/update.lock';
+
+        if (!file_exists(self::$lockFile)) {
+            file_put_contents(self::$lockFile, Application::VERSION.PHP_EOL.Application::VER_NAME);
+            return true;
         }
 
-        $oldVersion = file_get_contents($updateLockFile);
-        if ($oldVersion == D_VERSION) {
-            return 'This instance of Dandelion is already up to date.';
+        if (self::needsUpdated()) {
+            $app->logger->info('Redirecting to update controller');
+            View::redirect('update');
         }
+        return true;
+    }
 
-        // Show message about updates
+    /**
+     * Determine if the current installation needs to be updated
+     *
+     * @return bool
+     */
+    public static function needsUpdated()
+    {
+        $lockVersionFile = file(self::$lockFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $versionNum = $lockVersionFile[0];
+        $versionName = $lockVersionFile[1];
 
-        // Run update sequence for each version from $oldVersion to D_VERSION
-
-        // if (update sequence returns true) {
-            file_put_contents($updateLockFile, D_VERSION);
-            // Show message about successful updates
-            exit(0);
-        // } else {
-        //  reportError();
-        // }
-        return;
+        if (version_compare($versionNum, Application::VERSION, '=')) {
+            return false;
+        } elseif (version_compare($versionNum, Application::VERSION, '>')) {
+            throw new \Exception('Version mismatch. Lock file is higher than application');
+        } else {
+            return true;
+        }
     }
 }

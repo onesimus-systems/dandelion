@@ -1,12 +1,12 @@
 <!--
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 -->
 <!DOCTYPE html>
 <html>
@@ -15,7 +15,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="x-ua-compatible" content="IE=9">
         <link rel="icon" type="image/ico" href="assets/favicon.ico">
-        <?= $this->getCssSheets() // Special function defined in auth controller ?>
+        <?= $this->getCssSheets() // Special definition defined in auth controller ?>
         <title>Dandelion Web Log - Login</title>
     </head>
     <body>
@@ -42,6 +42,6 @@
                 </fieldset>
             </form>
         </div>
-        <?= $this->loadJS() // Special function defined in auth controller ?>
+        <?= $this->loadJS() // Special definition defined in auth controller ?>
     </body>
 </html>

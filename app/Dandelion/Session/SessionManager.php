@@ -1,12 +1,12 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Session;
 
 use Dandelion\Application;
@@ -44,7 +44,7 @@ class SessionManager implements \SessionHandlerInterface
             return;
         }
 
-        self::$instance->timeout = $app->config['sessionTimeout'] * 60; // 6 hours
+        self::$instance->timeout = $app->config['sessionTimeout'] * 60;
         self::$instance->app = $app;
         self::$instance->gcLotto = $app->config['gcLottery'];
 
@@ -56,7 +56,7 @@ class SessionManager implements \SessionHandlerInterface
     {
         session_name($name);
         session_start();
-        self::$session = $_SESSION;
+        self::$session = &$_SESSION;
         return;
     }
 
@@ -65,18 +65,18 @@ class SessionManager implements \SessionHandlerInterface
         $this->sessionName = $sessionName;
         $repo = "\\Dandelion\\Repos\\SessionRepo";
         $this->repo = new $repo();
+
+        // Garbage collection
+        $odds = $this->gcLotto[0];
+        $max = $this->gcLotto[1];
+        if (mt_rand(0, $max - 1) < $odds) {
+            $this->gc($this->timeout);
+        }
         return true;
     }
 
     public function close()
     {
-        $odds = $this->gcLotto[0];
-        $max = $this->gcLotto[1];
-
-        if (mt_rand(0, $max - 1) < $odds) {
-            $this->gc($this->timeout);
-        }
-
         unset($this->repo);
         return true;
     }
@@ -101,13 +101,13 @@ class SessionManager implements \SessionHandlerInterface
     public function destroy($id)
     {
         $this->repo->destroy($id);
-        $_SESSION = array();
+        $_SESSION = [];
         return;
     }
 
     public function gc($maxlifetime)
     {
-        $this->repo->gc($maxlifetime);
-        return;
+        $this->app->logger->info('Executing session garbage collection...');
+        return (bool) $this->repo->gc($maxlifetime);
     }
 }

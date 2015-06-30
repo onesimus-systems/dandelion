@@ -1,20 +1,20 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\API\Module;
 
-use \Dandelion\Logs;
-use \Dandelion\LogSearch;
-use \Dandelion\UserSettings;
-use \Dandelion\Exception\ApiException;
-use \Dandelion\Controllers\ApiController;
-use \Dandelion\Exception\ApiPermissionException;
+use Dandelion\Logs;
+use Dandelion\LogSearch;
+use Dandelion\UserSettings;
+use Dandelion\Exception\ApiException;
+use Dandelion\Controllers\ApiController;
+use Dandelion\Exception\ApiPermissionException;
 
 class LogsAPI extends BaseModule
 {
@@ -74,9 +74,9 @@ class LogsAPI extends BaseModule
         $lid = $this->up->logid;
 
         if (!$this->ur->isAdmin()) {
-            $log = json_decode($this->readOne(), true);
+            $log = $this->read()[0];
 
-            if (!$this->ur->authorized('editlog') || $log['usercreated'] != USER_ID) {
+            if (!$this->ur->authorized('editlog') || $log['user_id'] != USER_ID) {
                 throw new ApiPermissionException();
             }
         }
@@ -109,6 +109,8 @@ class LogsAPI extends BaseModule
         $metadata = $this->offsetLimitCommon();
 
         $logs = new LogSearch($this->repo);
+        // It would appear the +1 extra log, and the -1 count would cancel out...
+        // Well, they don't. So don't touch them
         $return = $logs->search($query, $metadata['limit']+1, $metadata['offset']);
         $metadata['resultCount'] = count($return)-1;
         unset($return[$metadata['limit']]);

@@ -5,26 +5,26 @@
 var GroupManage = {
     init: function(): void {
         "use strict";
-        $('#save-btn').click(GroupManage.save);
-        $('#delete-btn').click(GroupManage.confirmDeleteGroup);
+        $("#save-btn").click(GroupManage.save);
+        $("#delete-btn").click(GroupManage.confirmDeleteGroup);
     },
 
     save: function(): void {
         "use strict";
         var permissions = {};
-        $('form input[type="checkbox"]').each(function() {
-            permissions[$(this).val()] = $(this).prop('checked');
+        $(`form input[type="checkbox"]`).each(function() {
+            permissions[$(this).val()] = $(this).prop("checked");
         });
 
         var permissionsStr: string = JSON.stringify(permissions);
-        var gid: string = $('#groupid').val();
+        var gid: string = $("#groupid").val();
 
-        $.post('../../api/i/groups/edit', {groupid: gid, rights: permissionsStr}, null, 'json')
+        $.post("../../api/i/groups/edit", {groupid: gid, rights: permissionsStr}, null, "json")
             .done(function(response) {
-                if (response.errorcode === 0) {
-                    $.flashMessage('Group saved');
+                if ($.apiSuccess(response)) {
+                    $.flashMessage("Group saved");
                 } else {
-                    $.flashMessage('Error saving group');
+                    $.flashMessage("Error saving group");
                 }
             });
     },
@@ -39,16 +39,16 @@ var GroupManage = {
 
     deleteGroup: function(): void {
         "use strict";
-        var gid: string = $('#groupid').val();
+        var gid: string = $("#groupid").val();
 
-        $.post('../../api/i/groups/delete', {groupid: gid}, null, 'json')
+        $.post("../../api/i/groups/delete", {groupid: gid}, null, "json")
             .done(function(data) {
-                if (data.errorcode === 0) {
-                    $.alert('Group deleted successfully', 'Group Management', function() {
-                        location.assign('../../admin');
+                if ($.apiSuccess(data)) {
+                    $.alert("Group deleted successfully", "Group Management", function() {
+                        location.assign("../../admin");
                     });
                 } else {
-                    $.alert('Error deleting group: '+data.status, 'Group Management');
+                    $.alert(`Error deleting group: ${data.status}`, "Group Management");
                 }
             });
         return;

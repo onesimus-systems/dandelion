@@ -1,15 +1,15 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion\Repos;
 
-use \Dandelion\Repos\Interfaces;
+use Dandelion\Repos\Interfaces;
 
 class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
 {
@@ -78,7 +78,9 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
 
     public function numOfLogs()
     {
-        return $this->database->find($this->table)->count();
+        return $this->database
+            ->find($this->table)
+            ->count();
     }
 
     public function getLogInfo($lid)
@@ -175,10 +177,17 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
                     $params []= $struct['text'];
                     break;
             }
+
+            if ($command === 'log') {
+                // The log command has two placeholders in its
+                // where clause. The rest only have one.
+                $params []= "%{$struct['text']}%";
+            }
         }
 
         $whereClause = trim($whereClause, '& ');
-        $results = $statement->where($whereClause, $params)
+        $results = $statement
+            ->where($whereClause, $params)
             ->read($this->table.'.*, '.$this->prefix.'user.fullname');
 
         return $results;

@@ -1,15 +1,15 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
-use \Dandelion\Repos\Interfaces\CategoriesRepo;
+use Dandelion\Repos\Interfaces\CategoriesRepo;
 
 class Categories
 {
@@ -51,11 +51,13 @@ class Categories
             }
 
             // Sort children alphabetically
-            usort($alphaList, "self::cmp");
+            usort($alphaList, function($a, $b) {
+                return strcasecmp(mb_strtolower($a['description']), mb_strtolower($b['description']));
+            });
 
             // Add children to array for the level
             foreach ($alphaList as $children) {
-                $selected = (isset($cids[$i+1]) && ($children['id'] == $cids[$i+1])) ? true : false;
+                $selected = (isset($cids[$i+1]) && ($children['id'] == $cids[$i+1]));
 
                 $response['levels'][$i][] = [
                     'id' => $children['id'],
@@ -83,19 +85,11 @@ class Categories
 
         $mainJson = json_decode($this->renderChildrenJson($idArr), true);
         if ((count($catstring) + 1) > count($idArr)) {
-            $mainJson['error'] = true;
+            $mainJson['errorcode'] = 1;
         } else {
-            $mainJson['error'] = false;
+            $mainJson['errorcode'] = 0;
         }
         return json_encode($mainJson);
-    }
-
-    /**
-     * Used with usort() to alphabetize the category lists
-     */
-    private function cmp($a, $b)
-    {
-        return strcasecmp($a['description'], $b['description']);
     }
 
     /**
@@ -108,8 +102,7 @@ class Categories
      */
     public function addCategory($parent, $description)
     {
-        $description = str_replace(':', '_', $description);
-
+        $description = $this->normalizeCategoryDesc($description);
         return $this->repo->addCategory($description, $parent);
     }
 
@@ -144,8 +137,20 @@ class Categories
      */
     public function editCategory($cid, $desc)
     {
-        $desc = str_replace(':', '_', $desc);
-
+        $desc = $this->normalizeCategoryDesc($desc);
         return is_numeric($this->repo->updateCategory($desc, $cid));
+    }
+
+    /**
+     * Normalize category descriptions
+     *
+     * @param string $desc description to normalize
+     *
+     * @return string
+     */
+    private function normalizeCategoryDesc($desc)
+    {
+        // Colons are used to separate categories, so remove them
+        return str_replace(':', '_', $desc);
     }
 }

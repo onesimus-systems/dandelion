@@ -1,28 +1,34 @@
 <?php
 /**
-  * Dandelion - Web based log journal
-  *
-  * @author Lee Keitel  <keitellf@gmail.com>
-  * @copyright 2015 Lee Keitel, Onesimus Systems
-  *
-  * @license GNU GPL version 3
-  */
+ * Dandelion - Web based log journal
+ *
+ * @author Lee Keitel  <keitellf@gmail.com>
+ * @copyright 2015 Lee Keitel, Onesimus Systems
+ *
+ * @license GNU GPL version 3
+ */
 namespace Dandelion;
 
-function dandelionAutoloader($className)
+function dandelionApiAutoloader($className)
 {
-    $classInfo = explode('\\', $className);
-    $className = array_pop($classInfo);
-    $namespace = implode('/', $classInfo);
-    $rootDir = __DIR__.'/../app';
+    $rootDir = __DIR__.'/../app/Dandelion/API/Module/';
+    $classMap = [
+        'dandelion\api\module\adminapi'        => 'adminapi.php',
+        'dandelion\api\module\categoriesapi'   => 'categoriesapi.php',
+        'dandelion\api\module\cheestoapi'      => 'cheestoapi.php',
+        'dandelion\api\module\groupsapi'       => 'groupsapi.php',
+        'dandelion\api\module\keymanagerapi'   => 'keymanagerapi.php',
+        'dandelion\api\module\logsapi'         => 'logsapi.php',
+        'dandelion\api\module\usersapi'        => 'usersapi.php',
+        'dandelion\api\module\usersettingsapi' => 'usersettingsapi.php'
+    ];
 
-    // Load API modules
     $className = strtolower($className);
-    if (file_exists($rootDir."/{$namespace}/{$className}.php")) {
-        require ($rootDir."/{$namespace}/{$className}.php");
+    if (array_key_exists($className, $classMap)) {
+        include $rootDir.$classMap[$className];
     } else {
-        trigger_error("Class '{$namespace}/{$className}' was not able to load.", E_USER_ERROR);
+        trigger_error("Class '{$className}' was not found.", E_USER_ERROR);
     }
 }
 
-spl_autoload_register('Dandelion\dandelionAutoloader');
+spl_autoload_register('Dandelion\dandelionApiAutoloader');

@@ -9,13 +9,14 @@
  */
 namespace Dandelion\Controllers;
 
-use \Dandelion\Template;
+use Dandelion\Template;
 
 class NotFoundController extends BaseController
 {
     public function render()
     {
+        $this->app->response->setStatus(404);
         $template = new Template($this->app);
-        $template->render('404notfound');
+        $this->setResponse($template->render('404notfound', 'Page Not Found'));
     }
 }
