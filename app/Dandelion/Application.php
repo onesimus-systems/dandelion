@@ -96,7 +96,7 @@ class Application
             include $this->paths['app'] . '/filters.php';
 
             // The router uses this to determine the route
-            // It's not always necassaily the right full URI
+            // It's not always necessarily the right full URI
             $this->request->set('SERVER_NAME', $this->config['hostname']);
 
             $route = Router::route($this->request);
