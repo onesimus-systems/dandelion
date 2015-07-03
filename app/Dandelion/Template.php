@@ -11,6 +11,7 @@ namespace Dandelion;
 
 use Dandelion\Logging;
 use Dandelion\Application;
+use Dandelion\Utils\Configuration as Config;
 use Dandelion\Exception\AbortException;
 
 use League\Plates\Engine;
@@ -41,12 +42,12 @@ class Template
         $title = $title ?: ucfirst($page);
 
         $this->addData([
-            'appTitle' => $this->app->config['appTitle'],
-            'tagline' => $this->app->config['tagline'],
+            'appTitle' => Config::get('appTitle', ''),
+            'tagline' => Config::get('tagline', ''),
             'appVersion' => Application::VERSION,
             'appVersionName' => Application::VER_NAME,
             'pageTitle' => $title,
-            'hostname' => $this->app->config['hostname']
+            'hostname' => Config::get('hostname', '')
         ]);
 
         try {

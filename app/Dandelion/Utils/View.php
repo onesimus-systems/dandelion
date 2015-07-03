@@ -10,6 +10,7 @@
 namespace Dandelion\Utils;
 
 use Dandelion\Application;
+use Dandelion\Utils\Configuration as Config;
 use Dandelion\Exception\ShutdownException;
 
 class View
@@ -36,18 +37,17 @@ class View
     {
         $scripts = func_get_args();
         $scriptList = '';
-        $config = Configuration::getConfig();
 
         foreach ($scripts as $file) {
             // Check for a keyworded include
-            $builtin = self::isVenderJS($file, $config['hostname']);
+            $builtin = self::isVenderJS($file, Config::get('hostname', ''));
             if ($builtin) {
                 $scriptList .= $builtin;
                 continue;
             }
 
             // Otherwise check for a custom file
-            $custom = self::isJSFile($file, $config['hostname']);
+            $custom = self::isJSFile($file, Config::get('hostname', ''));
             if ($custom) {
                 $scriptList .= $custom;
                 continue;
@@ -99,12 +99,11 @@ class View
      */
     public static function getTheme()
     {
-        $config = Configuration::getConfig();
         $paths = Application::getPaths();
 
-        if (isset($_COOKIE[$config['cookiePrefix'].'usertheme'])) {
-            if (self::isTheme($_COOKIE[$config['cookiePrefix'].'usertheme'])) {
-                return $_COOKIE[$config['cookiePrefix'].'usertheme'];
+        if (isset($_COOKIE[Config::get('cookiePrefix').'usertheme'])) {
+            if (self::isTheme($_COOKIE[Config::get('cookiePrefix').'usertheme'])) {
+                return $_COOKIE[Config::get('cookiePrefix').'usertheme'];
             }
         } elseif (isset($_SESSION['userInfo']['theme'])) {
             if (self::isTheme($_SESSION['userInfo']['theme'])) {
@@ -113,7 +112,7 @@ class View
             }
         }
 
-        return $config['defaultTheme']; // Returns earlier if possible
+        return Config::get('defaultTheme'); // Returns earlier if possible
     }
 
     /**
@@ -138,8 +137,7 @@ class View
      */
     public static function setThemeCookie($theme)
     {
-        $config = Configuration::getConfig();
-        setcookie($config['cookiePrefix'].'usertheme', $theme, time() + 60 * 60 * 24 * 30, '/');
+        setcookie(Config::get('cookiePrefix').'usertheme', $theme, time() + 60 * 60 * 24 * 30, '/');
         return;
     }
 
@@ -189,7 +187,6 @@ class View
         $baseTheme = self::getTheme();
         $cssList = '';
         $paths = Application::getPaths();
-        $config = Configuration::getConfig();
         $themeDir = $paths['public'].'/'.self::$themeHttpDir;
 
         // Determine if the main stylesheet should be loaded
@@ -217,28 +214,28 @@ class View
 
                 // Special case for jQueryUI and jHtmlArea styles
                 if ($normalized == 'jqueryui' && !in_array('jqueryui', $addedSpecial)) {
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jquery/css/jquery-ui.min.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/jquery-ui.min.css">';
                     array_push($addedSpecial, 'jqueryui');
                     continue;
                 } elseif ($normalized == 'jhtmlarea' && !in_array('jhtmlarea', $addedSpecial)) {
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jhtmlarea/styles/jHtmlArea.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jhtmlarea/styles/jHtmlArea.css">';
                     array_push($addedSpecial, 'jhtmlarea');
                     continue;
                 } elseif ($normalized == 'datetimepicker' && !in_array('datetimepicker', $addedSpecial)) {
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/assets/js/vendor/jquery/css/datetimepicker.min.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/datetimepicker.min.css">';
                     array_push($addedSpecial, 'jhtmlarea');
                     continue;
                 }
 
                 // If the theme contains a map to a file for this style, use it
                 if (array_key_exists($normalized, $metaJson['files'])) {
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/' . self::$themeHttpDir . '/' . $theme . '/' . $metaJson['files'][$normalized] . '">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $metaJson['files'][$normalized] . '">';
                 } else {
                     // Otherwise search
                     if (is_file($themeDir . '/' . $theme . '/' . $normalized . '.min.css')) {
-                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.min.css">';
+                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.min.css">';
                     } elseif (is_file($themeDir . '/' . $theme . '/' . $normalized . '.css')) {
-                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.$config['hostname'].'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.css">';
+                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.css">';
                     }
                 }
             }
@@ -304,7 +301,6 @@ class View
      */
     public static function redirect($page)
     {
-        $config = Configuration::getConfig();
         $app = Application::getInstance();
         $allPages = array(
             'home' => '',
@@ -326,7 +322,7 @@ class View
             return;
         }
 
-        $newPath = $config['hostname'] . '/' . $allPages[$page];
+        $newPath = Config::get('hostname', '') . '/' . $allPages[$page];
         $app->response->redirect($newPath);
         throw new ShutdownException();
         return;

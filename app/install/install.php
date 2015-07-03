@@ -21,34 +21,11 @@ $config = [
         'tablePrefix' => $_POST['db_prefix'] ?: 'dan_',
     ],
 
-    'cheesto' => [
-        'statusOptions' => [
-            'Available',
-            'Away From Desk',
-            'At Lunch',
-            'Out for Day',
-            'Out',
-            'Appointment',
-            'Do Not Disturb',
-            'Meeting',
-            'Out Sick',
-            'Vacation'
-        ]
-    ],
-
     'hostname' => $_POST['hostname'] ? rtrim($_POST['hostname'], '/') : 'http://localhost',
     'cookiePrefix' => $_POST['cookie_prefix'] ?: 'dan_',
-    'phpSessionName' => 'session_1',
-    'gcLottery' => [2, 100],
-    'sessionTimeout' => 360,
-    'debugEnabled' => false,
     'installed' => true,
     'appTitle' => $_POST['apptitle'] ?: 'Dandelion Web Log',
-    'tagline' => $_POST['tagline'] ?: '',
-    'defaultTheme' => 'modern',
-    'cheestoEnabled' => true,
-    'publicApiEnabled' => false,
-    'checkForUpdates' => true
+    'tagline' => $_POST['tagline'] ?: ''
 ];
 
 try {

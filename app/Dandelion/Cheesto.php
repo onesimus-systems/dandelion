@@ -9,7 +9,7 @@
  */
 namespace Dandelion;
 
-use Dandelion\Utils\Configuration;
+use Dandelion\Utils\Configuration as Config;
 use Dandelion\Repos\Interfaces\CheestoRepo;
 
 class Cheesto
@@ -19,7 +19,7 @@ class Cheesto
 
     public function __construct(CheestoRepo $repo)
     {
-        $this->statusOptions = Configuration::getConfig()['cheesto']['statusOptions'];
+        $this->statusOptions = Config::get('cheesto', ['statusOptions' => []])['statusOptions'];
         $this->repo = $repo;
         return;
     }

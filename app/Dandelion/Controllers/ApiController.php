@@ -13,6 +13,8 @@ use Dandelion\Rights;
 use Dandelion\Utils\Repos;
 use Dandelion\Application;
 use Dandelion\UrlParameters;
+use Dandelion\Auth\GateKeeper;
+use Dandelion\Utils\Configuration as Config;
 use Dandelion\API\Module\BaseModule;
 use Dandelion\Exception\ApiException;
 
@@ -41,7 +43,7 @@ class ApiController extends BaseController
             return;
         }
 
-        if ($this->app->config['publicApiEnabled']) {
+        if (Config::get('publicApiEnabled')) {
             $urlParams = new UrlParameters();
             $apikey = $urlParams->get('apikey');
             $this->sendResponse($this->processRequest($apikey, false, $module, $method));
@@ -65,7 +67,11 @@ class ApiController extends BaseController
             return;
         }
 
-        $this->sendResponse($this->processRequest($_SESSION['userInfo']['id'], true, $module, $method));
+        if (GateKeeper::authenticated()) {
+            $this->sendResponse($this->processRequest($_SESSION['userInfo']['id'], true, $module, $method));
+        } else {
+            $this->sendResponse($this->formatResponse(3, 'Action requires logged in session', 'api'));
+        }
         return;
     }
 

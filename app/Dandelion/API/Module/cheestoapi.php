@@ -13,6 +13,7 @@ use Dandelion\Cheesto;
 use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
+use Dandelion\Utils\Configuration as Config;
 
 class CheestoAPI extends BaseModule
 {
@@ -23,7 +24,7 @@ class CheestoAPI extends BaseModule
      */
     public function read()
     {
-        if (!$this->app->config['cheestoEnabled']) {
+        if (!Config::get('cheestoEnabled')) {
             throw new ApiException('Cheesto has been disabled', 5);
         }
         if (!$this->ur->authorized('viewcheesto')) {
@@ -39,7 +40,7 @@ class CheestoAPI extends BaseModule
      */
     public function statusTexts()
     {
-        if (!$this->app->config['cheestoEnabled']) {
+        if (!Config::get('cheestoEnabled')) {
             throw new ApiException('Cheesto has been disabled', 5);
         }
         $cheesto = new Cheesto($this->repo);
@@ -53,7 +54,7 @@ class CheestoAPI extends BaseModule
      */
     public function update()
     {
-        if (!$this->app->config['cheestoEnabled']) {
+        if (!Config::get('cheestoEnabled')) {
             throw new ApiException('Cheesto has been disabled', 5);
         }
         if (!$this->ur->authorized('updatecheesto')) {

@@ -11,8 +11,11 @@ namespace Dandelion;
 
 use Dandelion\Utils\View;
 use Dandelion\Auth\GateKeeper;
+use Dandelion\Utils\Configuration;
+
 use Onesimus\Router\Router;
 
+// Used on page requests, redirects to login page if not logged in
 Router::filter('auth', function() {
     if (GateKeeper::authenticated()) {
         return true;
@@ -20,4 +23,36 @@ Router::filter('auth', function() {
         View::redirect('login');
         return false;
     }
+});
+
+// Sets and checks a lastAccessed time on the session. This filter is only
+// used for page requests. Where this filter matters, the auth filter is called
+// afterwards which will redirect to the login page
+Router::filter('sessionLastAccessed', function() {
+    if (isset($_SESSION['lastAccessed'])) {
+        $config = Configuration::getConfig();
+        $timeout = $config['sessionTimeout']*60;
+        $now = time();
+        if (($_SESSION['lastAccessed'] + $timeout) < $now) {
+            GateKeeper::logout();
+            return true;
+        }
+    }
+    $_SESSION['lastAccessed'] = time();
+    return true;
+});
+
+// Used for internal api requests. Only checks for and logs out use. This
+// filter does not update a lastAccessed timestamp. The controller will return
+// an errorcode indicating login required.
+Router::filter('apiSessionLastAccessed', function() {
+    if (isset($_SESSION['lastAccessed'])) {
+        $config = Configuration::getConfig();
+        $timeout = $config['sessionTimeout']*60;
+        $now = time();
+        if (($_SESSION['lastAccessed'] + $timeout) < $now) {
+            GateKeeper::logout();
+        }
+    }
+    return true;
 });

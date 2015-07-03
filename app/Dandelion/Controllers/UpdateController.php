@@ -19,6 +19,8 @@ class UpdateController extends BaseController
     public function update()
     {
         // Temporary redirect, just so the infrastructure is in place
+        Updater::writeUpdateLockFile();
+        $_SESSION['updateInProgress'] = false;
         View::redirect('index');
         return;
 

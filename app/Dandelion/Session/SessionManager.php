@@ -10,6 +10,7 @@
 namespace Dandelion\Session;
 
 use Dandelion\Application;
+use Dandelion\Utils\Configuration as Config;
 
 class SessionManager implements \SessionHandlerInterface
 {
@@ -44,9 +45,9 @@ class SessionManager implements \SessionHandlerInterface
             return;
         }
 
-        self::$instance->timeout = $app->config['sessionTimeout'] * 60;
+        self::$instance->timeout = Config::get('sessionTimeout') * 60;
         self::$instance->app = $app;
-        self::$instance->gcLotto = $app->config['gcLottery'];
+        self::$instance->gcLotto = Config::get('gcLottery');
 
         session_set_save_handler(self::$instance, true);
         return;

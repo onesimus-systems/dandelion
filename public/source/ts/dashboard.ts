@@ -60,7 +60,6 @@ Refresh = {
                 if ($.apiSuccess(json)) {
                     View.makeLogView(json.data);
                 } else {
-                    $("#log-list").html(`<h3>An error has occured. Please check your Dandelion instance.</h3>`);
                     Refresh.stoprefresh();
                 }
             });

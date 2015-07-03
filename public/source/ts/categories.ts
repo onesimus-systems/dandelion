@@ -42,15 +42,15 @@ module Categories {
 
     function renderSelectsFromJson(json: any): string {
         currentSelection = json.currentList;
-        var span = $("<span/>");
+        var html = "";
 
         for (var key in json.levels) {
             if (!json.levels.hasOwnProperty(key)) {
                 continue;
             }
 
-            var select = $(`<select onChange="Categories.selectOnChange(this);">`).attr("id", `level${key}`);
-            select.append(`<option value="">Select:</option>`);
+            html += `<select onChange="Categories.selectOnChange(this);" id="level${key}">`;
+            html += `<option value="">Select:</option>`;
 
             for (var category in json.levels[key]) {
                 if (!json.levels[key].hasOwnProperty(category)) {
@@ -58,14 +58,13 @@ module Categories {
                 }
 
                 var cat = json.levels[key][category];
-                var option = $(`<option value="${key}:${cat.id}">${cat.desc}</option>`);
-                option.attr("selected", cat.selected);
-                select.append(option);
+                var selected = cat.selected ? "selected" : "";
+                html += `<option value="${key}:${cat.id}" ${selected}>${cat.desc}</option>`;
             }
-            span.append(select);
+            html += "</select>";
         }
 
-        return span.html();
+        return `<span>${html}</span>`;
     }
 
     export function renderCategoriesFromString(str: string, elemid: string): void {
