@@ -13,6 +13,7 @@ use Dandelion\Rights;
 use Dandelion\Utils\Repos;
 use Dandelion\Application;
 use Dandelion\UrlParameters;
+use Dandelion\Auth\GateKeeper;
 use Dandelion\API\Module\BaseModule;
 use Dandelion\Exception\ApiException;
 
@@ -65,7 +66,11 @@ class ApiController extends BaseController
             return;
         }
 
-        $this->sendResponse($this->processRequest($_SESSION['userInfo']['id'], true, $module, $method));
+        if (GateKeeper::authenticated()) {
+            $this->sendResponse($this->processRequest($_SESSION['userInfo']['id'], true, $module, $method));
+        } else {
+            $this->sendResponse($this->formatResponse(3, 'Action requires logged in session', 'api'));
+        }
         return;
     }
 

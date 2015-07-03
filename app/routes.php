@@ -13,33 +13,36 @@ use Onesimus\Router\Router;
 
 // Available routes without prior authentication
 Router::group(['rprefix' => '\Dandelion\Controllers\\'], [
-	['get', '/login', 'AuthController@loginPage'],
-	['post', '/login', 'AuthController@login'],
-	['get', '/logout', 'AuthController@logout'],
-	['get', '/update', 'UpdateController@update'],
+    ['get', '/login', 'AuthController@loginPage'],
+    ['post', '/login', 'AuthController@login'],
+    ['get', '/logout', 'AuthController@logout'],
+    ['get', '/update', 'UpdateController@update'],
 
-	['any', '/api/{?module}/{?method}', 'ApiController@apiCall']
+    ['any', '/api/{?module}/{?method}', 'ApiController@apiCall']
 ]);
 
-// Authentication required for these routes
-Router::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'auth'], [
+// Authentication required for these routes, sets last accessed timestamp on session
+Router::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => ['sessionLastAccessed', 'auth']], [
     ['get', '/{page}', 'PageController@render'],
-	['get', '/', 'DashboardController@dashboard'],
-	['get', '/dashboard', 'DashboardController@dashboard'],
-	['get', '/settings', 'SettingsController@settings'],
-    ['any', '/render/{item}', 'RenderController@render'],
+    ['get', '/', 'DashboardController@dashboard'],
+    ['get', '/dashboard', 'DashboardController@dashboard'],
+    ['get', '/settings', 'SettingsController@settings'],
+    ['any', '/render/{item}', 'RenderController@render']
+]);
 
-	['any', '/api/i/{?module}/{?method}', 'ApiController@internalApiCall']
+// Internal API, does not set last accessed timestamp
+Router::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'apiSessionLastAccessed'], [
+    ['any', '/api/i/{?module}/{?method}', 'ApiController@internalApiCall']
 ]);
 
 // Group for Administration pages, requires authentication
 Router::group([
-	'prefix' => '/admin', // All admin pages begin with /admin/{something}
-	'rprefix' => '\Dandelion\Controllers\AdminController',
-	'filter' => 'auth'], [
-	['get', '', '@admin'],
-	['get', '/edituser/{?uid}', '@editUser'],
-	['get', '/editgroup/{?gid}', '@editGroup']
+    'prefix' => '/admin', // All admin pages begin with /admin/{something}
+    'rprefix' => '\Dandelion\Controllers\AdminController',
+    'filter' => 'auth'], [
+    ['get', '', '@admin'],
+    ['get', '/edituser/{?uid}', '@editUser'],
+    ['get', '/editgroup/{?gid}', '@editGroup']
 ]);
 
 Router::register404Route('\Dandelion\Controllers\NotFoundController@render');

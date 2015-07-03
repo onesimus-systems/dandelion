@@ -21,6 +21,9 @@ $.extend({
     apiSuccess: function(response) {
         if (response.errorcode === 0) {
             return true;
+        } else if (response.errorcode === 3) {
+            // Code 3 means the user is not logged in
+            location.assign("login");
         }
         return false;
     }
