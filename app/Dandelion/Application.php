@@ -85,11 +85,11 @@ class Application
         $this->setupLogging();
 
         try {
-            Updater::checkForUpdates($this);
-
             // Setup session manager
             SessionManager::register($this);
             SessionManager::startSession($this->config['cookiePrefix'].$this->config['phpSessionName']);
+
+            Updater::checkForUpdates($this);
 
             // Setup routes and filters
             include $this->paths['app'] . '/routes.php';

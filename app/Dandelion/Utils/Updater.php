@@ -30,12 +30,13 @@ class Updater
         self::$lockFile = $app->paths['app'].'/update.lock';
 
         if (!file_exists(self::$lockFile)) {
-            file_put_contents(self::$lockFile, Application::VERSION.PHP_EOL.Application::VER_NAME);
+            self::writeUpdateLockFile();
             return true;
         }
 
-        if (self::needsUpdated()) {
+        if (self::needsUpdated() && $_SESSION['updateInProgress'] !== true) {
             $app->logger->info('Redirecting to update controller');
+            $_SESSION['updateInProgress'] = true;
             View::redirect('update');
         }
         return true;
@@ -55,9 +56,19 @@ class Updater
         if (version_compare($versionNum, Application::VERSION, '=')) {
             return false;
         } elseif (version_compare($versionNum, Application::VERSION, '>')) {
-            throw new \Exception('Version mismatch. Lock file is higher than application');
+            self::writeUpdateLockFile();
         } else {
             return true;
         }
+    }
+
+    /**
+     * Write a lock file with the current version number and name.
+     *
+     * @return bool
+     */
+    public static function writeUpdateLockFile()
+    {
+        return (bool) file_put_contents(self::$lockFile, Application::VERSION.PHP_EOL.Application::VER_NAME);
     }
 }
