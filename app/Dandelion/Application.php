@@ -14,7 +14,7 @@ use Exception;
 
 use Dandelion\Utils\Updater;
 use Dandelion\Storage\Loader;
-use Dandelion\Utils\Configuration;
+use Dandelion\Utils\Configuration as Config;
 use Dandelion\Session\SessionManager;
 use Dandelion\Exception\AbortException;
 use Dandelion\Exception\ShutdownException;
@@ -76,7 +76,7 @@ class Application
     public function run()
     {
         // Load application configuration
-        if (!$this->config = Configuration::load($this->paths['app'] . '/config/config.php')) {
+        if (!Config::load($this->paths['app'] . '/config')) {
             echo 'Please run the <a href="install.php">Installer</a>';
             exit();
         }
@@ -87,7 +87,7 @@ class Application
         try {
             // Setup session manager
             SessionManager::register($this);
-            SessionManager::startSession($this->config['cookiePrefix'].$this->config['phpSessionName']);
+            SessionManager::startSession(Config::get('cookiePrefix').Config::get('phpSessionName'));
 
             Updater::checkForUpdates($this);
 
@@ -97,7 +97,7 @@ class Application
 
             // The router uses this to determine the route
             // It's not always necessarily the right full URI
-            $this->request->set('SERVER_NAME', $this->config['hostname']);
+            $this->request->set('SERVER_NAME', Config::get('hostname'));
 
             $route = Router::route($this->request);
             $route->dispatch($this);
@@ -128,8 +128,8 @@ class Application
         // Set PHP logging/error values
         error_reporting(E_ALL);
         ini_set('log_errors', true);
-        ini_set('display_errors', $this->config['debugEnabled']);
-        ini_set('display_startup_errors', $this->config['debugEnabled']);
+        ini_set('display_errors', Config::get('debugEnabled'));
+        ini_set('display_startup_errors', Config::get('debugEnabled'));
 
         // Create a file adaptor for logs
         $fileAdaptor = new FileAdaptor($this->paths['logs'].'/logs.log');
@@ -138,7 +138,7 @@ class Application
         // Create debug logger with null adaptor
         $this->debugLogger = new Logger();
 
-        if ($this->config['debugEnabled']) {
+        if (Config::get('debugEnabled')) {
             $fileAdaptor->separateLogFiles('.log');
             // Remove Null adaptor
             $this->debugLogger->removeAdaptor(0);

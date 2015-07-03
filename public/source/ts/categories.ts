@@ -50,7 +50,7 @@ module Categories {
             }
 
             html += `<select onChange="Categories.selectOnChange(this);" id="level${key}">`;
-            html += `<option value="">Select:</option>`
+            html += `<option value="">Select:</option>`;
 
             for (var category in json.levels[key]) {
                 if (!json.levels[key].hasOwnProperty(category)) {
@@ -58,7 +58,7 @@ module Categories {
                 }
 
                 var cat = json.levels[key][category];
-                selected = cat.selected ? "selected" : "";
+                var selected = cat.selected ? "selected" : "";
                 html += `<option value="${key}:${cat.id}" ${selected}>${cat.desc}</option>`;
             }
             html += "</select>";

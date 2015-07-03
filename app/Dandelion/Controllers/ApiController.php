@@ -14,6 +14,7 @@ use Dandelion\Utils\Repos;
 use Dandelion\Application;
 use Dandelion\UrlParameters;
 use Dandelion\Auth\GateKeeper;
+use Dandelion\Utils\Configuration as Config;
 use Dandelion\API\Module\BaseModule;
 use Dandelion\Exception\ApiException;
 
@@ -42,7 +43,7 @@ class ApiController extends BaseController
             return;
         }
 
-        if ($this->app->config['publicApiEnabled']) {
+        if (Config::get('publicApiEnabled')) {
             $urlParams = new UrlParameters();
             $apikey = $urlParams->get('apikey');
             $this->sendResponse($this->processRequest($apikey, false, $module, $method));

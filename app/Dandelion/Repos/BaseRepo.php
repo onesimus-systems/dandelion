@@ -10,7 +10,7 @@
 namespace Dandelion\Repos;
 
 use SC\SC;
-use Dandelion\Utils\Configuration;
+use Dandelion\Utils\Configuration as Config;
 
 abstract class BaseRepo
 {
@@ -23,7 +23,7 @@ abstract class BaseRepo
             // Create new database connection object and cache
             $pdoParams = [];
             self::$dbconnection = new SC();
-            $dbConfig = Configuration::getConfig()['db'];
+            $dbConfig = Config::get('db');
 
             if ($dbConfig['type'] !== 'sqlite') {
                 $pdoParams = [\PDO::ATTR_PERSISTENT => true];
@@ -45,7 +45,7 @@ abstract class BaseRepo
         }
 
         // Set object specific prefix and database connection
-        $this->prefix = Configuration::getConfig()['db']['tablePrefix'];
+        $this->prefix = Config::get('db')['tablePrefix'];
         $this->database = self::$dbconnection;
     }
 }

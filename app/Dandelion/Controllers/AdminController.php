@@ -16,6 +16,7 @@ use Dandelion\Groups;
 use Dandelion\Application;
 use Dandelion\Utils\Repos;
 use Dandelion\Utils\View;
+use Dandelion\Utils\Configuration as Config;
 
 use Dandelion\Factory\UserFactory;
 
@@ -48,7 +49,7 @@ class AdminController extends BaseController
             }
         }
 
-        if ($this->app->config['checkForUpdates']) {
+        if (Config::get('checkForUpdates')) {
             $latest = file('http://onesimussystems.com/dandelion/versioncheck', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
             $latest = json_decode($latest[0], true);
             if (version_compare($latest['version'], Application::VERSION, '>')) {
@@ -64,7 +65,7 @@ class AdminController extends BaseController
             'userlist' => $userlist,
             'grouplist' => $grouplist2,
             'catList' => $this->rights->authorized('createcat', 'editcat', 'deletecat'),
-            'showUpdateSection' => $this->app->config['checkForUpdates'],
+            'showUpdateSection' => Config::get('checkForUpdates'),
             'updates' => $updateArray
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
@@ -92,7 +93,7 @@ class AdminController extends BaseController
             'user' => $user->getUser($uid),
             'cheesto' => $cheesto->getUserStatus($uid),
             'grouplist' => $groups->getGroupList(),
-            'statuslist' => $this->app->config['cheesto']['statusOptions']
+            'statuslist' => Config::get('cheesto', ['statusOptions' => []])['statusOptions']
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
         $this->setResponse($template->render('admin::edituser', 'User Management'));

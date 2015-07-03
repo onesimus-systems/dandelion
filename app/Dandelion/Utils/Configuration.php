@@ -14,18 +14,36 @@ class Configuration
     private static $loaded = false;
     private static $config = [];
 
+    private static $basePath = '';
+
     private function __construct() {}
     private function __clone() {}
     private function __wakeup() {}
 
     public static function load($configPath)
     {
-        if (!file_exists($configPath)) {
+        self::$basePath = $configPath;
+        $defaultSettingsFile = $configPath.'/config.defaults.php';
+        $userSettingsFile = $configPath.'/config.php';
+
+        if (!file_exists($defaultSettingsFile) || !file_exists($userSettingsFile)) {
             return false;
         }
 
         if (!self::$loaded) {
-            self::$config = include $configPath;
+            // Load defaults, the default file has all possible config options
+            $defaults = include $defaultSettingsFile;
+            // Load user specified values
+            $userSettings = include $userSettingsFile;
+
+            // Merge the settings
+            foreach ($defaults as $key => $value) {
+                if (isset($userSettings[$key])) {
+                    $defaults[$key] = $userSettings[$key];
+                }
+            }
+
+            self::$config = $defaults;
             self::$config['hostname'] = rtrim(self::$config['hostname'], '/');
             self::$loaded = true;
         }
@@ -35,5 +53,15 @@ class Configuration
     public static function getConfig()
     {
         return self::$config;
+    }
+
+    public static function set($name, $value)
+    {
+        self::$config[$name] = $value;
+    }
+
+    public static function get($name, $else = null)
+    {
+        return isset(self::$config[$name]) ? self::$config[$name] : $else;
     }
 }
