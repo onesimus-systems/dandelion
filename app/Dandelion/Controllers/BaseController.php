@@ -12,6 +12,7 @@ namespace Dandelion\Controllers;
 use Dandelion\Rights;
 use Dandelion\Application;
 use Dandelion\Utils\Repos;
+use Dandelion\Session\SessionManager as Session;
 
 class BaseController
 {
@@ -27,7 +28,7 @@ class BaseController
     protected function loadRights()
     {
         $rightsRepo = Repos::makeRepo('Groups');
-        $this->rights = new Rights($_SESSION['userInfo']['id'], $rightsRepo);
+        $this->rights = new Rights(Session::get('userInfo')['id'], $rightsRepo);
     }
 
     protected function setResponse($body)

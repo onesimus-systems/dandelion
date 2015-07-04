@@ -12,6 +12,7 @@ namespace Dandelion;
 use Dandelion\Utils\View;
 use Dandelion\Auth\GateKeeper;
 use Dandelion\Utils\Configuration;
+use Dandelion\Session\SessionManager as Session;
 
 use Onesimus\Router\Router;
 
@@ -29,16 +30,16 @@ Router::filter('auth', function() {
 // used for page requests. Where this filter matters, the auth filter is called
 // afterwards which will redirect to the login page
 Router::filter('sessionLastAccessed', function() {
-    if (isset($_SESSION['lastAccessed'])) {
+    if (Session::get('lastAccessed', false)) {
         $config = Configuration::getConfig();
         $timeout = $config['sessionTimeout']*60;
         $now = time();
-        if (($_SESSION['lastAccessed'] + $timeout) < $now) {
+        if ((Session::get('lastAccessed') + $timeout) < $now) {
             GateKeeper::logout();
             return true;
         }
     }
-    $_SESSION['lastAccessed'] = time();
+    Session::set('lastAccessed', time());
     return true;
 });
 
@@ -46,11 +47,11 @@ Router::filter('sessionLastAccessed', function() {
 // filter does not update a lastAccessed timestamp. The controller will return
 // an errorcode indicating login required.
 Router::filter('apiSessionLastAccessed', function() {
-    if (isset($_SESSION['lastAccessed'])) {
+    if (Session::get('lastAccessed', false)) {
         $config = Configuration::getConfig();
         $timeout = $config['sessionTimeout']*60;
         $now = time();
-        if (($_SESSION['lastAccessed'] + $timeout) < $now) {
+        if ((Session::get('lastAccessed') + $timeout) < $now) {
             GateKeeper::logout();
         }
     }
