@@ -117,7 +117,7 @@ View = {
             }
 
             // Display each log entry
-            var html = `<div class="log-entry"><span class="log-title">${log.title}</span>`;
+            var html = `<div class="log-entry"><span class="log-title"><a href="log/${log.id}">${log.title}</a></span>`;
 
             if (log.canEdit) { html += `<button type="button" class="button edit-button" onClick="AddEdit.getEdit(${log.id});">Edit</button>`; }
 
