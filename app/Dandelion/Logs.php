@@ -88,6 +88,10 @@ class Logs
 
     public function getLogComments($logid, $order = 'new')
     {
+        if (!is_numeric($logid) || !$logid) {
+            return [];
+        }
+
         return $this->repo->getLogCommentsById($logid, $order);
     }
 

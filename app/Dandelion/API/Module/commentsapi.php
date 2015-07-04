@@ -34,4 +34,14 @@ class CommentsAPI extends BaseModule
             throw new ApiException('Error creating comment', 5);
         }
     }
+
+    public function get()
+    {
+        $logObject = new Logs($this->makeRepo('Logs'));
+
+        $logId = $this->up->get('logid', null);
+        $order = $this->up->get('order', 'new');
+
+        return $logObject->getLogCommentsComment($logId, $order);
+    }
 }
