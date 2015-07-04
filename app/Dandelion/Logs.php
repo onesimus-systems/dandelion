@@ -85,4 +85,19 @@ class Logs
 
         return is_numeric($this->repo->updateLog($lid, $title, $body, $cat));
     }
+
+    public function getLogComments($logid, $order = 'new')
+    {
+        return $this->repo->getLogCommentsById($logid, $order);
+    }
+
+    public function addComment($logid, $userid, $text)
+    {
+        if (!$logid || !$userid || !$text) {
+            return false;
+        }
+
+        $created = date('Y-m-d H:i:s');
+        return $this->repo->addComment($logid, $userid, $created, $text);
+    }
 }

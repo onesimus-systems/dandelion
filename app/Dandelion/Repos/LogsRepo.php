@@ -192,4 +192,32 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
 
         return $results;
     }
+
+    public function getLogCommentsById($logid, $order = 'new')
+    {
+        $logs = $this->database
+            ->find($this->prefix.'comment')
+            ->belongsTo($this->prefix.'user', 'user_id')
+            ->whereEqual($this->prefix.'comment.log_id', $logid);
+
+        if ($order == 'new') {
+            $logs = $logs->orderDesc($this->prefix.'comment.created');
+        } else {
+            $logs = $logs->orderAsc($this->prefix.'comment.created');
+        }
+
+        $results = $logs->read($this->prefix.'comment.*, '.$this->prefix.'user.fullname');
+
+        return $results;
+    }
+
+    public function addComment($logid, $userid, $created, $text)
+    {
+        return $this->database->createItem($this->prefix.'comment', [
+            'log_id' => $logid,
+            'user_id' => $userid,
+            'created' => $created,
+            'comment' => $text
+        ]);
+    }
 }

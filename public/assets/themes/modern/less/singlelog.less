@@ -1,0 +1,44 @@
+/**
+ * Styles for log page
+ */
+
+@import (reference) "_base";
+
+button {
+    #dandelion-lib > .button();
+    #dandelion-lib > .button-hover();
+}
+
+hr {
+    width: 250px;
+    border: 1px solid gray;
+    margin: 0;
+}
+
+#add-comment-form {
+    display: none;
+    margin: 15px 20px;
+
+    #error-message {
+        color: lighten(black, 10%);
+    }
+}
+
+#comments {
+    margin-left: 20px;
+
+    .comment {
+        &-author {
+            font-weight: bold;
+        }
+
+        &-datetime {
+
+        }
+
+        &-body {
+            display: block;
+            margin: 10px 20px 20px;
+        }
+    }
+}

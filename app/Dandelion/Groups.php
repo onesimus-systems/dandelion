@@ -19,6 +19,7 @@ class Groups
         'createlog' => false,
         'editlog' => false,
         'viewlog' => false,
+        'addcomment' => false,
 
         'createcat' => false,
         'editcat' => false,
@@ -42,6 +43,7 @@ class Groups
         'createlog' => 'Create logs',
         'editlog' => 'Edit logs',
         'viewlog' => 'View the log',
+        'addcomment' => 'Add Comments',
 
         'createcat' => 'Create categories',
         'editcat' => 'Edit categories',
@@ -83,6 +85,7 @@ class Groups
                 $group = $this->repo->getGroupByName($groupID);
             }
             $group['permissions'] = unserialize($group['permissions']);
+            $group['permissions'] = array_merge($this->defaultPermissions, $group['permissions']);
             $group['permissionNames'] = $this->permissionNames;
             return $group;
         }

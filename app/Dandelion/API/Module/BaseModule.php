@@ -30,16 +30,18 @@ abstract class BaseModule
     // Repo for the specific module
     protected $repo;
 
-    public function __construct(Application $app, Rights $ur, UrlParameters $urlParameters) {
+    public function __construct(Application $app, Rights $ur, UrlParameters $urlParameters, $makeRepo = true) {
         $this->app = $app;
         $this->ur = $ur;
         $this->up = $urlParameters;
 
-        // Remove namespace
-        $module = array_reverse(explode('\\', get_class($this)));
-        // Remove the API at the end of the class name
-        $module = substr($module[0], 0, -3);
-        $this->repo = $this->makeRepo($module);
+        if ($makeRepo) {
+            // Remove namespace
+            $module = array_reverse(explode('\\', get_class($this)));
+            // Remove the API at the end of the class name
+            $module = substr($module[0], 0, -3);
+            $this->repo = $this->makeRepo($module);
+        }
     }
 
     protected function makeRepo($module)

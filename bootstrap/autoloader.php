@@ -16,6 +16,7 @@ function dandelionApiAutoloader($className)
         'dandelion\api\module\adminapi'        => 'adminapi.php',
         'dandelion\api\module\categoriesapi'   => 'categoriesapi.php',
         'dandelion\api\module\cheestoapi'      => 'cheestoapi.php',
+        'dandelion\api\module\commentsapi'     => 'commentsapi.php',
         'dandelion\api\module\groupsapi'       => 'groupsapi.php',
         'dandelion\api\module\keymanagerapi'   => 'keymanagerapi.php',
         'dandelion\api\module\logsapi'         => 'logsapi.php',
