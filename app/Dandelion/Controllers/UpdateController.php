@@ -13,6 +13,7 @@ use Dandelion\Template;
 use Dandelion\Utils\View;
 use Dandelion\Utils\Updater;
 use Dandelion\Exception\Template404Exception;
+use Dandelion\Session\SessionManager as Session;
 
 class UpdateController extends BaseController
 {
@@ -20,7 +21,7 @@ class UpdateController extends BaseController
     {
         // Temporary redirect, just so the infrastructure is in place
         Updater::writeUpdateLockFile();
-        $_SESSION['updateInProgress'] = false;
+        Session::set('updateInProgress', false);
         View::redirect('index');
         return;
 

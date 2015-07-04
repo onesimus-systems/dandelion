@@ -12,6 +12,7 @@ namespace Dandelion\Utils;
 use Dandelion\Application;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\Exception\ShutdownException;
+use Dandelion\Session\SessionManager as Session;
 
 class View
 {
@@ -105,10 +106,10 @@ class View
             if (self::isTheme($_COOKIE[Config::get('cookiePrefix').'usertheme'])) {
                 return $_COOKIE[Config::get('cookiePrefix').'usertheme'];
             }
-        } elseif (isset($_SESSION['userInfo']['theme'])) {
-            if (self::isTheme($_SESSION['userInfo']['theme'])) {
-                self::setThemeCookie($_SESSION['userInfo']['theme']);
-                return $_SESSION['userInfo']['theme'];
+        } elseif (isset(Session::get('userInfo')['theme'])) {
+            if (self::isTheme(Session::get('userInfo')['theme'])) {
+                self::setThemeCookie(Session::get('userInfo')['theme']);
+                return Session::get('userInfo')['theme'];
             }
         }
 
