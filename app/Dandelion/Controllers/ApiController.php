@@ -17,6 +17,7 @@ use Dandelion\Auth\GateKeeper;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\API\Module\BaseModule;
 use Dandelion\Exception\ApiException;
+use Dandelion\Session\SessionManager as Session;
 
 class ApiController extends BaseController
 {
@@ -68,7 +69,7 @@ class ApiController extends BaseController
         }
 
         if (GateKeeper::authenticated()) {
-            $this->sendResponse($this->processRequest($_SESSION['userInfo']['id'], true, $module, $method));
+            $this->sendResponse($this->processRequest(Session::get('userInfo')['id'], true, $module, $method));
         } else {
             $this->sendResponse($this->formatResponse(3, 'Action requires logged in session', 'api'));
         }

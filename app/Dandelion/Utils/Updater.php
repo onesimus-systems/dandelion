@@ -10,6 +10,7 @@
 namespace Dandelion\Utils;
 
 use Dandelion\Application;
+use Dandelion\Session\SessionManager as Session;
 
 class Updater
 {
@@ -34,9 +35,9 @@ class Updater
             return true;
         }
 
-        if (self::needsUpdated() && $_SESSION['updateInProgress'] !== true) {
+        if (self::needsUpdated() && Session::get('updateInProgress') !== true) {
             $app->logger->info('Redirecting to update controller');
-            $_SESSION['updateInProgress'] = true;
+            Session::set('updateInProgress', true);
             View::redirect('update');
         }
         return true;

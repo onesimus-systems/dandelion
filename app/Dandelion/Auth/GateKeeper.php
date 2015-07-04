@@ -9,6 +9,7 @@
  */
 namespace Dandelion\Auth;
 
+use Dandelion\Session\SessionManager as Session;
 use Dandelion\Repos\Interfaces\AuthRepo;
 
 class GateKeeper
@@ -36,13 +37,13 @@ class GateKeeper
         session_regenerate_id();
 
         // Set primary session data
-        $_SESSION['loggedin'] = true;
-        $_SESSION['userInfo'] = $userInfo;
-        unset($_SESSION['userInfo']['password']);
+        unset($userInfo['password']);
+        Session::set('loggedin', true);
+        Session::set('userInfo', $userInfo);
 
         if ($remember) {
             // Set remember me cookie
-            setcookie('dan_username', $_SESSION['userInfo']['username'], time() + 60 * 60 * 24 * 30, '/');
+            setcookie('dan_username', $userInfo['username'], time() + 60 * 60 * 24 * 30, '/');
         }
 
         return $userInfo['initial_login']+1;
@@ -75,13 +76,12 @@ class GateKeeper
      */
     public static function authenticated()
     {
-        $loggedin = isset($_SESSION['loggedin']) ? $_SESSION['loggedin'] : false;
-        return $loggedin;
+        return Session::get('loggedin', false);
     }
 
     public static function logout()
     {
-        $_SESSION = [];
+        Session::clear();
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,
