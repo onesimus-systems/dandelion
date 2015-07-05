@@ -125,7 +125,8 @@ View = {
 
             if (log.is_edited == "1") { html += "(Amended)"; }
 
-            html += `</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink('${log.category}');">${log.category}</a></span></p></div>`;
+            html += `</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink('${log.category}');">${log.category}</a></span>`;
+            html += `<span class="log-meta-comments">Comments: <a href="log/${log.id}#comments">${log.num_of_comments}</a></span></p></div>`;
 
             logs += html;
         }

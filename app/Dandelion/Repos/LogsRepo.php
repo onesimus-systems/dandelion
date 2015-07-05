@@ -213,11 +213,29 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
 
     public function addComment($logid, $userid, $created, $text)
     {
-        return $this->database->createItem($this->prefix.'comment', [
+        $commentAdded = $this->database->createItem($this->prefix.'comment', [
             'log_id' => $logid,
             'user_id' => $userid,
             'created' => $created,
             'comment' => $text
         ]);
+
+        if ($commentAdded) {
+            $currentCount = $this->numOfComments($logid);
+            $this->database
+                ->find($this->table)
+                ->whereEqual('id', $logid)
+                ->update(['num_of_comments' => $currentCount]);
+        }
+
+        return $commentAdded;
+    }
+
+    public function numOfComments($logid)
+    {
+        return $this->database
+                ->find($this->prefix.'comment')
+                ->whereEqual('log_id', $logid)
+                ->count();
     }
 }
