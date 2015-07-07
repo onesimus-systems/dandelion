@@ -76,7 +76,7 @@ class LogsAPI extends BaseModule
         if (!$this->ur->isAdmin()) {
             $log = $this->read()[0];
 
-            if (!$this->ur->authorized('editlog') || $log['user_id'] != USER_ID) {
+            if (!$this->ur->authorized('editlog') && $log['user_id'] != USER_ID) {
                 throw new ApiPermissionException();
             }
         }
