@@ -33,7 +33,7 @@ use Onesimus\Logger\Adaptors\ChromeLoggerAdaptor;
  */
 class Application
 {
-    const VERSION = '6.0.2';
+    const VERSION = '6.0.3';
     const VER_NAME = 'Phoenix';
 
     /** @var array Paths for app, public, and root */
