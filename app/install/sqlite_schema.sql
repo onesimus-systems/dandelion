@@ -65,7 +65,7 @@ CREATE TABLE "dan_comment" (
 CREATE TABLE "dan_session" (
     id TEXT,
     data TEXT,
-    last_accessed TEXT
+    last_accessed INTEGER
 );
 
 CREATE TABLE "dan_user" (

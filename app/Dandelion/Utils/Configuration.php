@@ -36,6 +36,10 @@ class Configuration
             // Load user specified values
             $userSettings = include $userSettingsFile;
 
+            if (!is_array($userSettings)) {
+                return false;
+            }
+
             // Merge the settings
             foreach ($defaults as $key => $value) {
                 if (isset($userSettings[$key])) {

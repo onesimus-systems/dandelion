@@ -11,7 +11,7 @@ Requirements
 * Apache or Nginx web server
     - mod_rewrite must be enabled for Apache
 * PHP >= 5.4.0
-* MySQL/Maria DB
+* MySQL/Maria DB or SQLite PHP module
 
 Dandelion has been tested on Ubuntu with Apache and Nginx. Other combos may probably work but YMMV.
 
@@ -69,6 +69,8 @@ Thank you for considering contributing to Dandelion, please make sure to follow 
 I'm using [this style of git branching](http://nvie.com/posts/a-successful-git-branching-model/). For development, you should clone the Dandelion repository, and checkout a new feature branch off of the develop branch (not the master) and name it appropriately such as "issue-48-feature". Commit your changes to that branch and then send pull-requests back into the develop branch.
 
 The exception to this rule is urgent hotfixes to master. To perform a hotfix, make a new branch off of master. When you're ready to submit the changes, make a pull request to both the master and develop branches.
+
+The repository has a vagrant file that you can use for getting started quickly. It will expose 8081 as the web port. The box is automatically configured with MariaDB, NPM, Composer, and git. It will automatically run gulp and composer install. Apart from personal customizations, it should be ready to go out of the box.
 
 Versioning
 ----------

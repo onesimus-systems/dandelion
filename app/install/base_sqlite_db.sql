@@ -63,7 +63,7 @@ CREATE TABLE "{{prefix}}comment" (
 CREATE TABLE "{{prefix}}session" (
     id TEXT,
     data TEXT,
-    last_accessed TEXT
+    last_accessed INTEGER
 );;
 
 CREATE TABLE "{{prefix}}user" (
