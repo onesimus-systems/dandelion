@@ -69,6 +69,16 @@ buildCommand ()
 {
     BRANCH="master"
 
+    case $2 in
+        help)
+            echo "Usage: build -b -t -v"
+            echo "-b Branch to checkout"
+            echo "-t Tag to checkout"
+            echo "-v Version to checkout"
+            echo "Defaults to master branch"
+            exit 0
+    esac
+
     args=`getopt v:t:b: $*`
     if test $? != 0
          then
@@ -99,10 +109,134 @@ buildCommand ()
     buildDandelion $BRANCH
 }
 
+bumpverCommand ()
+{
+    # Setup options
+    COMMIT=false
+    DRY_RUN=false
+
+    # Setup version variables
+    NEW_VERSION=""
+    CURRENT_VERSION=""
+    MAJOR=""
+    MINOR=""
+    PATCH=""
+    BUMP=$2
+
+    # Setup regexes
+    VER_REGEX="^[[:blank:]]*const VERSION = '\([[:digit:]]\.[[:digit:]]\.[[:digit:]]\)"
+    VER_SED_REGEX="\(VERSION[[:blank:]]=[[:blank:]]'\)[[:digit:]]\.[[:digit:]]\.[[:digit:]]"
+    VER_JSON_SED_REGEX="\(\"version\": \"\)[[:digit:]]\.[[:digit:]]\.[[:digit:]]"
+
+    # Setup file pathnams
+    APPFILE="./app/Dandelion/Application.php"
+    COMPOSERFILE="./composer.json"
+    NPMFILE="./package.json"
+
+    # Parse arguments
+    args=`getopt cd $*`
+    if test $? != 0
+         then
+             echo 'Usage: bumpver [major|minor|patch] -c -d'
+             exit 1
+    fi
+    set -- $args
+    for i; do
+      case "$i" in
+            -c)
+                shift
+                COMMIT=true
+                shift
+                ;;
+            -d)
+                shift
+                DRY_RUN=true
+                shift
+      esac
+    done
+
+    # Get current version from application file
+    CURRENT_VERSION=$(grep "$VER_REGEX" $APPFILE)
+    CURRENT_VERSION=$(expr "$CURRENT_VERSION" : "$VER_REGEX")
+    # Explode to array
+    IFS='.' read -a CURRENT <<< "$CURRENT_VERSION"
+    MAJOR=${CURRENT[0]}
+    MINOR=${CURRENT[1]}
+    PATCH=${CURRENT[2]}
+
+    # Bump version as requested
+    case $BUMP in
+        major)
+            MAJOR=$((MAJOR+1))
+            MINOR=0
+            PATCH=0
+            ;;
+        minor)
+            MINOR=$((MINOR+1))
+            PATCH=0
+            ;;
+        patch)
+            PATCH=$((PATCH+1))
+            ;;
+        help)
+            echo "Usage: bumpver [major|minor|patch] -c -d"
+            echo "-c Commit and tag in git"
+            echo "-d Dry run, displays changed files, will not commit"
+            exit 0
+            ;;
+        *)
+            echo "Which version number should be bumped?"
+            exit 1
+    esac
+
+    # Compose new version number
+    NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+    echo "Old Version: $CURRENT_VERSION"
+    echo "New Version: $NEW_VERSION"
+    echo ''
+
+    # Edit main application file
+    if [ "$DRY_RUN" = true ]; then
+        sed "s/$VER_SED_REGEX/\1$NEW_VERSION/" $APPFILE
+    else
+        cat $APPFILE > $APPFILE.bak
+        sed "s/$VER_SED_REGEX/\1$NEW_VERSION/" $APPFILE.bak > $APPFILE
+        rm $APPFILE.bak
+    fi
+
+    # Edit composer file
+    if [ "$DRY_RUN" = true ]; then
+        sed "s/$VER_JSON_SED_REGEX/\1$NEW_VERSION/" $COMPOSERFILE
+    else
+        cat $COMPOSERFILE > $COMPOSERFILE.bak
+        sed "s/$VER_JSON_SED_REGEX/\1$NEW_VERSION/" $COMPOSERFILE.bak > $COMPOSERFILE
+        rm $COMPOSERFILE.bak
+    fi
+
+    # Edit package.json
+    if [ "$DRY_RUN" = true ]; then
+        sed "s/$VER_JSON_SED_REGEX/\1$NEW_VERSION/" $NPMFILE
+    else
+        cat $NPMFILE > $NPMFILE.bak
+        sed "s/$VER_JSON_SED_REGEX/\1$NEW_VERSION/" $NPMFILE.bak > $NPMFILE
+        rm $NPMFILE.bak
+    fi
+
+    # Commit changes and tag commit
+    if [ "$COMMIT" = true -a "$DRY_RUN" = false ]; then
+        echo "Commiting"
+        git commit -am "Bumped $BUMP version"
+        git tag v$NEW_VERSION
+    fi
+}
+
 ### Main Script ###
 case $1 in
     build)
         buildCommand $@
+        ;;
+    bumpver)
+        bumpverCommand $@
         ;;
     *)
         echo "Invalid command"
