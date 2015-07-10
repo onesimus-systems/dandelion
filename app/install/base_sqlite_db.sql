@@ -48,7 +48,16 @@ CREATE TABLE "{{prefix}}log" (
     body TEXT,
     user_id NUMERIC,
     category TEXT,
-    is_edited NUMERIC
+    is_edited NUMERIC,
+    num_of_comments INTEGER DEFAULT 0
+);;
+
+CREATE TABLE "{{prefix}}comment" (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id NUMERIC,
+  comment TEXT,
+  created TEXT,
+  log_id NUMERIC
 );;
 
 CREATE TABLE "{{prefix}}session" (

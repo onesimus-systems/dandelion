@@ -50,7 +50,16 @@ CREATE TABLE "dan_log" (
     body TEXT,
     user_id NUMERIC,
     category TEXT,
-    is_edited NUMERIC
+    is_edited NUMERIC,
+    num_of_comments INTEGER DEFAULT 0
+);
+
+CREATE TABLE "dan_comment" (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id NUMERIC,
+  comment TEXT,
+  created TEXT,
+  log_id NUMERIC
 );
 
 CREATE TABLE "dan_session" (

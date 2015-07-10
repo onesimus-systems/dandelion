@@ -44,6 +44,13 @@ try {
 
         case 'sqlite':
             $config['db']['hostname'] = $configDir.'/dandelion.sqlite';
+            // Truncate file if exists
+            $f = @fopen($config['db']['hostname'], "r+");
+            if ($f !== false) {
+                ftruncate($f, 0);
+                fclose($f);
+            }
+
             $db_connect = "sqlite:{$config['db']['hostname']}";
             break;
 
@@ -52,8 +59,8 @@ try {
             break;
     }
 
-    $conn = new PDO($db_connect, $config['db']['username'], $config['db']['password']);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn = new \PDO($db_connect, $config['db']['username'], $config['db']['password']);
+    $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
     $sql = file_get_contents(__DIR__."/base_{$config['db']['type']}_db.sql");
 
@@ -84,13 +91,9 @@ try {
     $conn = null;
 
     // Save as new configuration file
-    $configFile = '// This file was generated on '.date(DATE_RFC2822)."\n";
-    $configFile .= '<?php return '.var_export($config, true).';';
+    $banner = '// This file was generated on '.date(DATE_RFC2822);
+    $configFile = '<?php '.$banner.PHP_EOL.'return '.var_export($config, true).';';
     file_put_contents($configDir.'/config.php', $configFile);
-
-    // Change config directory to user:readonly for security
-    chmod($configDir.'/config.php', 0400);
-    chmod($configDir, 0500);
 
     session_destroy();
     $_SESSION['error'] = 'Dandelion has been successfully setup! Please go to: <a href="'.$config['hostname'].'">'.$config['hostname'].'</a>';
