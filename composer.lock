@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8f04975e1fd3c7bce4c61ec39183a1e6",
+    "hash": "312ea64908c081cd27d4ec58d37a99d1",
     "packages": [
         {
             "name": "ircmaxell/password-compat",
@@ -149,16 +149,16 @@
         },
         {
             "name": "onesimus-systems/osrouter",
-            "version": "1.0.5",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/osrouter.git",
-                "reference": "77dd3e70235aed4bafdfd0d6e630a575e0448281"
+                "reference": "cfb5707a142d3600d4fea97daf905ffee045c3f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/77dd3e70235aed4bafdfd0d6e630a575e0448281",
-                "reference": "77dd3e70235aed4bafdfd0d6e630a575e0448281",
+                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/cfb5707a142d3600d4fea97daf905ffee045c3f6",
+                "reference": "cfb5707a142d3600d4fea97daf905ffee045c3f6",
                 "shasum": ""
             },
             "require-dev": {
@@ -187,7 +187,7 @@
                 "http",
                 "router"
             ],
-            "time": "2015-06-24 16:12:53"
+            "time": "2015-07-11 01:30:05"
         },
         {
             "name": "onesimus-systems/seed-catalog",
