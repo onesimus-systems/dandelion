@@ -7,7 +7,7 @@ buildDandelion()
     TMP_DIR="/tmp"
     GIT_DIR="dandelion"
     FULL_DIR=$TMP_DIR/$GIT_DIR
-    DELIVERY_DIR="$HOME/Desktop"
+    DELIVERY_DIR=$2
 
     # Git Variables
     GIT_REPO="https://github.com/onesimus-systems/dandelion"
@@ -22,7 +22,7 @@ buildDandelion()
     git clone $GIT_REPO
     cd $GIT_DIR
 
-    echo "Checking out master"
+    echo "Checking out $GIT_BRANCH"
     git checkout $GIT_BRANCH
 
     if test $? != 0
@@ -44,15 +44,28 @@ buildDandelion()
     $TMP_DIR/dandelion/node_modules/.bin/gulp
 
     echo "Removing dev directories"
-    rm -rf $FULL_DIR/.git
-    rm -rf $FULL_DIR/node_modules
-    rm -rf $FULL_DIR/public/source
-    rm -rf $FULL_DIR/public/build/js/maps
+    DEV_ITEMS=(
+        '.git'
+        'node_modules'
+        'vagrant'
+        'public/source'
+        'public/build/js/maps'
+        'public/assets/themes/modern/less'
+        'public/assets/themes/modern/maps'
+        'public/assets/themes/legacy/less'
+        'public/assets/themes/legacy/maps'
+        'composer.*'
+        'package.json'
+        'gulpfile.js'
+        'dev-tools.sh'
+        'Vagrantfile'
+        'server.php'
+    )
 
-    rm -rf $FULL_DIR/public/assets/themes/modern/less
-    rm -rf $FULL_DIR/public/assets/themes/modern/maps
-    rm -rf $FULL_DIR/public/assets/themes/legacy/less
-    rm -rf $FULL_DIR/public/assets/themes/legacy/maps
+    for DIR in "${DEV_ITEMS[@]}"; do
+        echo "Deleting $FULL_DIR/$DIR"
+        rm -rf $FULL_DIR/$DIR
+    done
 
     echo "Creating tarball"
     cd $TMP_DIR
@@ -68,18 +81,21 @@ buildDandelion()
 buildCommand ()
 {
     BRANCH="master"
+    MV_PATH="$HOME/Desktop"
 
     case $2 in
         help)
-            echo "Usage: build -b -t -v"
+            echo "Usage: build -b -t -v -p"
             echo "-b Branch to checkout"
             echo "-t Tag to checkout"
             echo "-v Version to checkout"
-            echo "Defaults to master branch"
+            echo "  Defaults to master branch"
+            echo "-p Path to save gzipped tarball"
+            echo "  Defaults to desktop"
             exit 0
     esac
 
-    args=`getopt v:t:b: $*`
+    args=`getopt v:t:b:p: $*`
     if test $? != 0
          then
              echo 'Usage: build -t tag'
@@ -103,10 +119,15 @@ buildCommand ()
                 shift
                 BRANCH="tags/v$1"
                 shift
+                ;;
+            -p)
+                shift
+                MV_PATH="$1"
+                shift
       esac
     done
 
-    buildDandelion $BRANCH
+    buildDandelion $BRANCH $MV_PATH
 }
 
 bumpverCommand ()
@@ -230,6 +251,19 @@ bumpverCommand ()
     fi
 }
 
+printHelp ()
+{
+    echo "Dev tools script for Dandelion"
+    echo "Copyright 2015 - Onesimus Systems"
+    echo "MIT"
+    echo ''
+    echo "Available commands:"
+    echo "  build: Generate a release tarball"
+    echo "  bumpver: Bump the version"
+    echo ''
+    echo "Type: '[command] help' to get help for a specific command"
+}
+
 ### Main Script ###
 case $1 in
     build)
@@ -237,6 +271,9 @@ case $1 in
         ;;
     bumpver)
         bumpverCommand $@
+        ;;
+    help)
+        printHelp
         ;;
     *)
         echo "Invalid command"
