@@ -15,12 +15,16 @@ use Dandelion\Application;
 use Dandelion\UrlParameters;
 use Dandelion\Auth\GateKeeper;
 use Dandelion\Utils\Configuration as Config;
+use Dandelion\API\ApiCommander;
 use Dandelion\API\Module\BaseModule;
 use Dandelion\Exception\ApiException;
 use Dandelion\Session\SessionManager as Session;
 
 class ApiController extends BaseController
 {
+    private $apiCommander;
+    private $startTime;
+
     public function __construct(Application $app)
     {
         parent::__construct($app);
@@ -28,6 +32,10 @@ class ApiController extends BaseController
             ['Content-Type', 'application/json'],
             ['Access-Control-Allow-Origin', '*']
         ]);
+
+        $apiCommander = new ApiCommander();
+        include $app->paths['app'].'/Dandelion/API/Module/init.php';
+        $this->apiCommander = $apiCommander;
     }
 
     /**
@@ -40,6 +48,7 @@ class ApiController extends BaseController
      */
     public function apiCall($module, $method)
     {
+        $this->startTime = microtime(true);
         if (!$this->isGoodApiCall($module, $method)) {
             return;
         }
@@ -64,6 +73,7 @@ class ApiController extends BaseController
      */
     public function internalApiCall($module, $method)
     {
+        $this->startTime = microtime(true);
         if (!$this->isGoodApiCall($module, $method)) {
             return;
         }
@@ -110,6 +120,7 @@ class ApiController extends BaseController
     private function processRequest($key, $localCall, $module, $request)
     {
         try {
+            $data = '';
             $key = $localCall ? $key : $this->verifyKey($key);
             define('USER_ID', $key);
 
@@ -121,23 +132,11 @@ class ApiController extends BaseController
                 $module = 'keymanager';
             }
 
-            $className = "\Dandelion\API\Module\\{$module}API";
-
-            if (!class_exists($className)) {
-                throw new ApiException('Module not found', 6);
-            }
-            $ApiModule = new $className($this->app, $userRights, $urlParams);
-
-            if (is_callable([$ApiModule, $request])) {
-                try {
-                    $data = $ApiModule->$request();
-                } catch (ApiException $e) {
-                    $e->setModule($module);
-                    throw $e;
-                }
-            } else {
-                throw new ApiException('Bad API call', 5);
-            }
+            $data = $this->apiCommander->dispatchModule(
+                $module,
+                $request,
+                $this->app->request,
+                [$this->app, $userRights, $urlParams]);
 
             return $this->formatResponse(0, 'Completed', $module, $data);
         } catch (ApiException $e) {
@@ -210,11 +209,13 @@ class ApiController extends BaseController
          * 5 - General error
          * 6 - Server error
          */
+        $endTime = round(((microtime(true) - $this->startTime) * 1000), 2);
         $response = [
             'errorcode' => $ecode,
             'status' => $status,
             'module' => $module,
-            'data' => $data ?: $status
+            'data' => $data ?: $status,
+            'requestTime' => $endTime.'ms'
         ];
         return json_encode($response);
     }

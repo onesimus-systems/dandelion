@@ -16,3 +16,4 @@ public/assets/themes/*/maps/
 update.lock
 tsconfig.json
 .vagrant/
+*.bak

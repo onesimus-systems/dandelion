@@ -75,6 +75,8 @@ class Application
      */
     public function run()
     {
+        $startTime = microtime(true);
+
         // Load application configuration
         if (!Config::load($this->paths['app'] . '/config')) {
             echo 'Please run the <a href="install.php">Installer</a>';
@@ -113,6 +115,9 @@ class Application
             $errorPage = new Controllers\PageController($this);
             $errorPage->renderErrorPage();
         }
+
+        $endTime = round(((microtime(true) - $startTime) * 1000), 2);
+        $this->response->headers->set('X-Dandelion-Request-Time', $endTime.'ms');
 
         $this->sendToClient();
         return;
