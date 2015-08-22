@@ -52,8 +52,8 @@ try {
             break;
     }
 
-    $conn = new PDO($db_connect, $config['db']['username'], $config['db']['password']);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn = new \PDO($db_connect, $config['db']['username'], $config['db']['password']);
+    $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
     $sql = file_get_contents(__DIR__."/base_{$config['db']['type']}_db.sql");
 
