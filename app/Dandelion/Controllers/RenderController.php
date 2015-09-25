@@ -44,7 +44,7 @@ class RenderController extends BaseController
         $urlParams = new UrlParameters();
 
         $past = json_decode(stripslashes($urlParams->pastSelection));
-        $catRepo = $catRepo = Repos::makeRepo('Categories');
+        $catRepo = Repos::makeRepo('Categories');
         $displayCats = new Categories($catRepo);
         $this->setResponse($displayCats->renderChildrenJson($past));
         return;

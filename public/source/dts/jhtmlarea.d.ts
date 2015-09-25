@@ -3,5 +3,5 @@
 interface JQuery {
 	htmlarea(): JQuery;
 	htmlarea(options?: any): JQuery;
-	htmlarea(method: 'updateHtmlArea'): any;
+	htmlarea(method: "updateHtmlArea"): any;
 }

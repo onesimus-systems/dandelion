@@ -117,6 +117,7 @@ var Cheesto = {
                 },
                 buttons: {
                     "Save": function() {
+                        $(this).dialog("close");
                         Cheesto.processStatus(newStatus);
                     },
                     Cancel: function() {
@@ -136,11 +137,11 @@ var Cheesto = {
         var returnTime = $("#cheesto-date-pick");
 
         Cheesto.sendNewStatus(status, returnTime.val(), message.val());
-        $("#cheesto-status-form").dialog("close");
 
         $("#status-select").prop("selectedIndex", 0);
         message.val("");
         returnTime.val("Today");
+        $("input[name=quicktime]").prop("checked", false);
     },
 
     sendNewStatus: function (stat: string, rt: string, message: string): void {

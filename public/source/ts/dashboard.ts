@@ -121,12 +121,12 @@ View = {
 
             if (log.canEdit) { html += `<button type="button" class="button edit-button" onClick="AddEdit.getEdit(${log.id});">Edit</button>`; }
 
-            html += `<p class="log-body">${log.body}</p><p class="log-metadata"><span class="log-meta-author">Created by ${creator} on ${log.date_created} @ ${log.time_created} `;
+            html += `<div class="log-body">${log.body}</div><div class="log-metadata"><span class="log-meta-author">Created by ${creator} on ${log.date_created} @ ${log.time_created} `;
 
             if (log.is_edited == "1") { html += "(Amended)"; }
 
             html += `</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink('${log.category}');">${log.category}</a></span>`;
-            html += `<span class="log-meta-comments">Comments: <a href="log/${log.id}#comments">${log.num_of_comments}</a></span></p></div>`;
+            html += `<span class="log-meta-comments">Comments: <a href="log/${log.id}#comments">${log.num_of_comments}</a></span></div></div>`;
 
             logs += html;
         }
