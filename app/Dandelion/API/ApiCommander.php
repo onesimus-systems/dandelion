@@ -15,6 +15,7 @@ use Onesimus\Router\Http\Request;
 
 class ApiCommander
 {
+    // path -> module keyed array of registered modules
     private $modules = [];
 
     /**
@@ -26,17 +27,20 @@ class ApiCommander
     public function registerModule($path, $className = '', array $methods = [])
     {
         if ($path instanceof ApiModule) {
+            // Function was given an already created ApiModule object
             $module = $path;
         } else {
+            // ApiModule needs to be created
             $module = new ApiModule($path, $className);
             $module->addMethods($methods);
-            $this->modules[$path] = $module;
         }
+        // Add module to list
+        $this->modules[$module->getPath()] = $module;
     }
 
     /**
      * Returns if the module $module is registered
-     * @param  string  $module Module name to check
+     * @param  string  $module Module name to check (base path)
      * @return boolean
      */
     public function hasModule($module)
@@ -46,7 +50,7 @@ class ApiCommander
 
     /**
      * Return the module named $module
-     * @param  string $module Module to return
+     * @param  string $module Module to return (base path)
      * @return ApiModule OR null
      */
     public function getModule($module)
@@ -59,7 +63,7 @@ class ApiCommander
 
     /**
      * Returns if $module exists with $method registered
-     * @param  string $module Module name to check
+     * @param  string $module Module name to check (base path)
      * @param  string $method Method name to check
      * @return boolean
      */
@@ -79,12 +83,13 @@ class ApiCommander
     {
         $response = '';
 
+        // Check module exists
         if (!$this->hasModule($module)) {
             throw new ApiException('Module not found', 6);
         }
 
         $dispatching = $this->modules[$module];
-
+        // Check module has a path for the requested URL
         if (!$dispatching->hasMatchingMethod($path, $request)) {
             throw new ApiException('Bad API call', 5);
         }

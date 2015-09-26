@@ -30,15 +30,17 @@ class ApiModule
         $this->class = $class;
     }
 
+    public function getPath() {
+        return $this->path;
+    }
+
     /**
      * Add method mappings to the module
      * @param array  $methods Array of path -> method pairs. An element that's an array of count 1 or
-     *                         	that's a string will be assumed that the value is both the path and method name.
-     *                          A 1 length array can also be an ApiModuleMethod object, in which case it will
-     *                          added as is.
-     *                          Ex: [["path1", "method1"], ["path2"], "path3"] evaluates to
-     *                          Path "path1" calls "method1", "path2" called method named "path2", "path3"
-     *                          calls "path3".
+     *    that's a string will be assumed that the value is both the path and method name.
+     *    A 1 length array can also be an ApiModuleMethod object, in which case it will added as is.
+     *    Ex: [["path1", "method1"], ["path2"], "path3"] evaluates to
+     *    Path "path1" calls "method1", "path2" called method named "path2", "path3" calls "path3".
      */
     public function addMethods(array $methods)
     {
@@ -97,6 +99,14 @@ class ApiModule
         return null;
     }
 
+    /**
+     * hasMatchingMethod checks if this module has a method that matches an incoming request.
+     * The call to the method's matches() will validate any options for the method and return false
+     * if all options aren't met.
+     * @param  string  $path    URI path requested
+     * @param  Request $request HTTP request information
+     * @return boolean
+     */
     public function hasMatchingMethod($path, Request $request)
     {
         return ($this->hasMethod($path) && $this->methods[$path]->matches($path, $request));

@@ -15,8 +15,11 @@ use Onesimus\Router\Http\Request;
 
 class ApiModuleMethod
 {
+    // URI location of this method
     private $path = '';
+    // Name of method to call
     private $method = '';
+    // Options for method such as HTTP method, URL values, etc.
     private $opts = [];
 
     /**
@@ -39,21 +42,21 @@ class ApiModuleMethod
     }
 
     /**
-     * Returns if this method matches the given path
+     * Returns if this method matches the given path and set options
      * @param  string $path Path to check
      * @return boolean
      */
     public function matches($path, Request $request)
     {
+        // Check paths match
         if ($this->path != $path) {
             return false;
         }
 
+        // Check if an http_method option was set
         if ($http_method = $this->getOpt('http_method')) {
             $http_method = 'is'.ucfirst($http_method);
-            if (!$request->$http_method()) {
-                return false;
-            }
+            return $request->$http_method();
         }
 
         return true;
@@ -77,7 +80,7 @@ class ApiModuleMethod
     {
         $newOpts = $name;
         // Convert a single option set to an array pair
-        if (!is_array($name) && is_null($value)) {
+        if (!is_array($name)) {
             $newOpts = [$name => $value];
         }
 
@@ -96,11 +99,12 @@ class ApiModuleMethod
     {
         if (is_null($name)) {
             return $this->opts;
-        } else {
-            if (array_key_exists($name, $this->opts)) {
-                return $this->opts[$name];
-            }
         }
+
+        if (array_key_exists($name, $this->opts)) {
+            return $this->opts[$name];
+        }
+
         return $else;
     }
 }

@@ -40,7 +40,7 @@ $apiCommander->registerModule('groups', __NAMESPACE__.'\GroupsAPI',
         ['getuserrights', 'getUserRights', ['http_method' => 'get']]
     ]);
 
-$apiCommander->registerModule('keymanager', __NAMESPACE__.'\KeyManagerAPI',
+$apiCommander->registerModule('key', __NAMESPACE__.'\KeyManagerAPI',
     [
         ['get', null, ['http_method' => 'get']],
         ['generate', null, ['http_method' => 'post']],
