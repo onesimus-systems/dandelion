@@ -61,7 +61,6 @@ INSERT INTO `dan_category` (`id`, `description`, `parent`) VALUES
 CREATE TABLE IF NOT EXISTS `dan_cheesto` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `fullname` text NOT NULL,
   `status` tinytext NOT NULL,
   `message` text NOT NULL,
   `returntime` text NOT NULL,
@@ -74,8 +73,8 @@ CREATE TABLE IF NOT EXISTS `dan_cheesto` (
 -- Dumping data for table `dan_cheesto`
 --
 
-INSERT INTO `dan_cheesto` (`id`, `user_id`, `fullname`, `status`, `message`, `returntime`, `modified`, `disabled`) VALUES
-(1, 1, 'Administrator', 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);
+INSERT INTO `dan_cheesto` (`id`, `user_id`, `status`, `message`, `returntime`, `modified`, `disabled`) VALUES
+(1, 1, 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);
 
 -- --------------------------------------------------------
 

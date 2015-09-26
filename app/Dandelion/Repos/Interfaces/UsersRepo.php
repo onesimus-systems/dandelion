@@ -12,9 +12,8 @@ namespace Dandelion\Repos\Interfaces;
 interface UsersRepo
 {
     public function saveUser($uid, $realname, $role, $theme, $first);
-    public function saveUserCheesto($uid, $realname);
     public function createUser($username, $password, $realname, $role, $date);
-    public function createUserCheesto($uid, $realname, $date);
+    public function createUserCheesto($uid, $date);
     public function isUser($username);
     public function resetPassword($uid, $pass);
     public function deleteUser($uid);

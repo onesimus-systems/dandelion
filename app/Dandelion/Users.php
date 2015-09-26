@@ -60,13 +60,7 @@ class Users
             $this->userInfo['initial_login']
         );
 
-        // Update Cheesto information
-        $userCheestoSaved = $this->repo->saveUserCheesto(
-            $this->userInfo['id'],
-            $this->userInfo['fullname']
-        );
-
-        return (is_numeric($userSaved) && is_numeric($userCheestoSaved));
+        return is_numeric($userSaved);
     }
 
     public function createUser($username, $password, $fullname, $gid, $cheesto = true)

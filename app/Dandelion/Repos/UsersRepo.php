@@ -31,14 +31,6 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
         ]);
     }
 
-    public function saveUserCheesto($uid, $fullname)
-    {
-        return $this->database
-            ->find($this->prefix.'cheesto')
-            ->whereEqual('user_id', $uid)
-            ->update(['fullname' => $fullname]);
-    }
-
     public function createUser($username, $password, $fullname, $role, $date)
     {
         return $this->database->createItem($this->table, [
@@ -50,10 +42,9 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
         ]);
     }
 
-    public function createUserCheesto($uid, $fullname, $date)
+    public function createUserCheesto($uid, $date)
     {
         return $this->database->createItem($this->prefix.'cheesto', [
-            'fullname' => $fullname,
             'status' => 'Available',
             'message' => '',
             'returntime' => '00:00:00',
