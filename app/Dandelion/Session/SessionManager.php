@@ -72,6 +72,15 @@ class SessionManager
     }
 
     /**
+     * Remove data from the session
+     * @param  string $name Name of data to remove
+     */
+    public static function remove($name)
+    {
+        unset($_SESSION[$name]);
+    }
+
+    /**
      * Clear session data
      */
     public static function clear()

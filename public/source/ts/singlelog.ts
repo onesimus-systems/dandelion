@@ -3,18 +3,27 @@
 
 "use strict"; // jshint ignore:line
 
-var Comments;
+var Comments, Logs;
 
 $(document).ready(function(){
     $("#add-comment-btn").click(Comments.showAddForm);
     $("#add-comment-form").submit(Comments.saveComment);
     $("#cancel-new-btn").click(Comments.hideAddForm);
+    $("#edit-log-btn").click(Logs.edit);
 });
+
+Logs = {
+    edit: function(): void {
+        var logid: string = $("#logid").val();
+        location.assign(`edit/${logid}`);
+    },
+};
 
 Comments = {
     showAddForm: function(): void {
         $("#newComment").val("");
         $("#add-comment-form").show();
+        $("#newComment").focus();
     },
 
     hideAddForm: function(): void {

@@ -60,7 +60,7 @@ class Categories
                 $selected = (isset($cids[$i+1]) && ($children['id'] == $cids[$i+1]));
 
                 $response['levels'][$i][] = [
-                    'id' => $children['id'],
+                    'id' => (int) $children['id'],
                     'desc' => $children['description'],
                     'selected' => $selected
                 ];
@@ -70,26 +70,28 @@ class Categories
         return json_encode($response);
     }
 
-    public function renderFromString($catstring)
+    public function renderFromString($catstring, $json = true)
     {
-        $catstring = explode(':', $catstring);
+        $catStrExploded = explode(':', $catstring);
         $idArr = [0];
         $pid = 0;
 
-        for ($i = 0; $i < count($catstring); $i++) {
-            $pid = $this->repo->getIdForCategoryWithParent($catstring[$i], $pid);
+        for ($i = 0; $i < count($catStrExploded); $i++) {
+            $pid = (int) $this->repo->getIdForCategoryWithParent($catStrExploded[$i], $pid);
             if ($pid) {
                 array_push($idArr, $pid);
             }
         }
 
         $mainJson = json_decode($this->renderChildrenJson($idArr), true);
-        if ((count($catstring) + 1) > count($idArr)) {
+        if ((count($catStrExploded) + 1) > count($idArr)) {
             $mainJson['errorcode'] = 1;
         } else {
             $mainJson['errorcode'] = 0;
         }
-        return json_encode($mainJson);
+        $mainJson['string'] = $catstring;
+
+        return $json ? json_encode($mainJson) : $mainJson;
     }
 
     /**

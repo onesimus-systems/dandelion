@@ -17,6 +17,7 @@ interface apiResponse {
 
 interface JQueryStatic {
 	alert(message: string, title: string, callback?: () => void): void;
+	decodeHTMLEntities(str: string): string;
     apiSuccess(response: apiResponse): boolean;
 	flashMessage(message: string, domid?: string): void;
 	confirmBox(message: string, title: string, ycallback?: () => void, ncallback?: () => void): void;

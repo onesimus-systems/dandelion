@@ -18,6 +18,22 @@ $.extend({
 });
 
 $.extend({
+    decodeHTMLEntities: function(str) {
+        if(str && typeof str === "string") {
+            var element = document.createElement("div");
+            // strip script/html tags
+            str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, "");
+            str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, "");
+            element.innerHTML = str;
+            str = element.textContent;
+            element.textContent = "";
+        }
+
+        return str;
+      }
+});
+
+$.extend({
     apiSuccess: function(response) {
         if (response.errorcode === 0) {
             return true;

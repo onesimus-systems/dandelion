@@ -28,7 +28,10 @@ Router::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => ['sessionLas
     ['get', '/dashboard', 'DashboardController@dashboard'],
     ['get', '/settings', 'SettingsController@settings'],
     ['any', '/render/{item}', 'RenderController@render'],
-    ['get', '/log/{id}', 'LogController@render']
+    ['get', '/log/{id}', 'LogController@render'],
+    ['get', '/log/new', 'LogController@create'],
+    ['get', '/log/edit/{id}', 'LogController@edit'],
+    ['post', '/log/save', 'LogController@save']
 ]);
 
 // Internal API, does not set last accessed timestamp

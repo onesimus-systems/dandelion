@@ -68,8 +68,8 @@ class View
             case 'jqueryui':
                 $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-ui-1.11.3.min.js"></script>';
                 break;
-            case 'jhtmlarea':
-                $include = '<script src="'.$hostname.'/assets/js/vendor/jhtmlarea/jHtmlArea-0.8.min.js"></script>';
+            case 'ckeditor':
+                $include = '<script src="'.$hostname.'/assets/js/vendor/ckeditor/ckeditor.js"></script>';
                 break;
         }
         return $include;
@@ -213,18 +213,14 @@ class View
                 $normalized = str_replace('.min.css', '', $normalized);
                 $normalized = str_replace('.css', '', $normalized);
 
-                // Special case for jQueryUI and jHtmlArea styles
+                // Special case for jQueryUI and datetimepicker styles
                 if ($normalized == 'jqueryui' && !in_array('jqueryui', $addedSpecial)) {
                     $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/jquery-ui.min.css">';
                     array_push($addedSpecial, 'jqueryui');
                     continue;
-                } elseif ($normalized == 'jhtmlarea' && !in_array('jhtmlarea', $addedSpecial)) {
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jhtmlarea/styles/jHtmlArea.css">';
-                    array_push($addedSpecial, 'jhtmlarea');
-                    continue;
                 } elseif ($normalized == 'datetimepicker' && !in_array('datetimepicker', $addedSpecial)) {
                     $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/datetimepicker.min.css">';
-                    array_push($addedSpecial, 'jhtmlarea');
+                    array_push($addedSpecial, 'datetimepicker');
                     continue;
                 }
 
