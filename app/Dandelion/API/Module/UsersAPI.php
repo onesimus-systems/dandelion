@@ -135,9 +135,10 @@ class UsersAPI extends BaseModule
         }
 
         if ($user->saveUser()) {
-            return 'User enabled';
+            return $disable ? 'User disabled' : 'User enabled';
         } else {
-            throw new ApiException('Error enabling user', 5);
+            $msg = $disable ? 'Error disabling user' : 'Error enabling user';
+            throw new ApiException($msg, 5);
         }
     }
 
