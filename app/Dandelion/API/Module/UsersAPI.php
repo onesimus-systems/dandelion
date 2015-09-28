@@ -101,6 +101,47 @@ class UsersAPI extends BaseModule
     }
 
     /**
+     * Disable user
+     */
+    public function disable()
+    {
+        return $this->enableDisable(true);
+    }
+
+    /**
+     * Enable user
+     */
+    public function enable()
+    {
+        return $this->enableDisable(false);
+    }
+
+    private function enableDisable($disable)
+    {
+        if (!$this->ur->authorized('edituser')) {
+            throw new ApiPermissionException();
+        }
+
+        $uid = $this->up->uid;
+        if (!$uid) {
+            throw new ApiException('No user id given', 5);
+        }
+
+        $user = new Users($this->repo, $uid, true);
+        if ($disable) {
+            $user->disable();
+        } else {
+            $user->enable();
+        }
+
+        if ($user->saveUser()) {
+            return 'User enabled';
+        } else {
+            throw new ApiException('Error enabling user', 5);
+        }
+    }
+
+    /**
      * Delete a user
      */
     public function delete()

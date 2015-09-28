@@ -62,6 +62,8 @@ $apiCommander->registerModule('users', __NAMESPACE__.'\UsersAPI',
         ['create', null, ['http_method' => 'post']],
         ['edit', null, ['http_method' => 'post']],
         ['delete', null, ['http_method' => 'post']],
+        ['enable', null, ['http_method' => 'post']],
+        ['disable', null, ['http_method' => 'post']],
         ['getusers', 'getUsers', ['http_method' => 'get']],
         ['getuser', 'getUser', ['http_method' => 'get']]
     ]);

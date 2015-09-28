@@ -113,8 +113,8 @@ View = {
             var log = data[key];
 
             var creator = log.fullname;
-            if (creator === "") {
-                creator = "Unknown User";
+            if (creator === "" || creator === null) {
+                creator = "Deleted User";
             }
 
             // Display each log entry

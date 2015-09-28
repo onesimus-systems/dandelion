@@ -75,7 +75,7 @@ $.extend({
             resizable: false,
             title: title,
             modal: true
-        }).text(message);
+        }).html(message);
     }
 });
 
