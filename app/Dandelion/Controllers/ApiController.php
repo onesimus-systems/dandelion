@@ -127,11 +127,6 @@ class ApiController extends BaseController
             $userRights = new Rights(USER_ID, Repos::makeRepo('Groups'));
             $urlParams = new UrlParameters();
 
-            // Shortened alias for keymanager
-            if ($module === 'key') {
-                $module = 'keymanager';
-            }
-
             $data = $this->apiCommander->dispatchModule(
                 $module,
                 $request,
@@ -198,6 +193,7 @@ class ApiController extends BaseController
          * status - String message of error or feedback
          * module - String name of the API module that was called
          * data - Data returned by API module
+         * requestTime - Time it took for the request to finish
          *
          * Error Code Meanings:
          *

@@ -18,7 +18,6 @@ INSERT INTO "{{prefix}}category" ("id", "description", "parent") VALUES
 CREATE TABLE "{{prefix}}cheesto" (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id NUMERIC,
-    fullname TEXT,
     status TEXT,
     message TEXT,
     returntime TEXT,
@@ -26,8 +25,8 @@ CREATE TABLE "{{prefix}}cheesto" (
     disabled NUMERIC
 );;
 
-INSERT INTO "{{prefix}}cheesto" ("id", "user_id", "fullname", "status", "message", "returntime", "modified", "disabled") VALUES
-(1, 1, 'Administrator', 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);;
+INSERT INTO "{{prefix}}cheesto" ("id", "user_id", "status", "message", "returntime", "modified", "disabled") VALUES
+(1, 1, 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);;
 
 CREATE TABLE "{{prefix}}group" (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

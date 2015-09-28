@@ -41,20 +41,48 @@ class SessionManager
         return;
     }
 
+    /**
+     * Return session data named $name. If it doesn't exist, return $else.
+     * @param  mixed $name Name of session data to return
+     * @param  mixed $else Value to return if session doesn't contine data $name
+     * @return mixed
+     */
     public static function get($name, $else = null)
     {
         return isset($_SESSION[$name]) ? $_SESSION[$name] : $else;
     }
 
+    /**
+     * Set/overwrite session data named $name with data $value.
+     * @param mixed $name  Name of session data to set
+     * @param mixed $value Value of $name
+     */
     public static function set($name, $value)
     {
-        if (is_array($value) && self::get($name)) {
-            $_SESSION[$name] = array_merge($_SESSION[$name], $value);
-        } else {
-            $_SESSION[$name] = $value;
-        }
+        $_SESSION[$name] = $value;
     }
 
+    /**
+     * Merge arrays in session data
+     * @param  mixed $name   Name of session data to merge
+     * @param  array  $value Array to merge
+     */
+    public static function merge($name, array $value) {
+        $_SESSION[$name] = array_merge($_SESSION[$name], $value);
+    }
+
+    /**
+     * Remove data from the session
+     * @param  string $name Name of data to remove
+     */
+    public static function remove($name)
+    {
+        unset($_SESSION[$name]);
+    }
+
+    /**
+     * Clear session data
+     */
     public static function clear()
     {
         $_SESSION = [];

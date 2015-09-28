@@ -123,7 +123,8 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         return $this->database->updateItem($this->table, $lid, [
             'title' => $title,
             'body' => $body,
-            'category' => $cat
+            'category' => $cat,
+            'is_edited' => 1
         ]);
     }
 

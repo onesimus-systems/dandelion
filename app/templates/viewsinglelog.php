@@ -12,8 +12,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['singlelog']]);
 <!-- Begin Page Body -->
 <div id="content">
     <div id="log-data">
-        <h2>Log #<?= $this->e($id) ?> - <?= $this->e($title) ?></h2>
-        <!-- <?= $editButton ?> -->
+        <h2>Log #<?= $this->e($id) ?> - <?= $this->e($title) ?></h2> <?= $editButton ?>
 
         <p>
             <strong>Author:</strong> <?= $this->e($author) ?>
@@ -32,7 +31,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['singlelog']]);
             <strong>Log Contents:</strong>
         </p>
         <p>
-            <span class="log-body"><?= $this->e($body) ?></span>
+            <span class="log-body"><?= $body ?></span>
         </p>
     </div>
 

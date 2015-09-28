@@ -37,6 +37,11 @@ sed -i.bak "s/sendfile on/sendfile off/" /etc/nginx/nginx.conf
 rm /etc/nginx/nginx.conf.bak
 service nginx restart
 
+# Set timezone in PHP
+sed -i.bak "s/;date.timezone =/date.timezone = America\/Chicago/" /etc/php5/fpm/php.ini
+rm /etc/php5/fpm/php.ini.bak
+service php5-fpm restart
+
 # Copy Dandelion configuration
 if [ -e /vagrant/app/config/config.php ]; then
     # Create backup of old

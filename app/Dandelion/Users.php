@@ -51,22 +51,21 @@ class Users
             return false;
         }
 
+        if (!isset($this->userInfo['disabled'])) {
+            $this->userInfo['disabled'] = 0;
+        }
+
         // Update main user row
         $userSaved = $this->repo->saveUser(
             $this->userInfo['id'],
             $this->userInfo['fullname'],
             $this->userInfo['group_id'],
             $this->userInfo['theme'],
-            $this->userInfo['initial_login']
+            $this->userInfo['initial_login'],
+            $this->userInfo['disabled']
         );
 
-        // Update Cheesto information
-        $userCheestoSaved = $this->repo->saveUserCheesto(
-            $this->userInfo['id'],
-            $this->userInfo['fullname']
-        );
-
-        return (is_numeric($userSaved) && is_numeric($userCheestoSaved));
+        return is_numeric($userSaved);
     }
 
     public function createUser($username, $password, $fullname, $gid, $cheesto = true)
@@ -114,7 +113,7 @@ class Users
         return $this->repo->resetPassword($uid, $pass);
     }
 
-    public function deleteUser($uid, Permissions $permissions)
+    public function deleteUser($uid, Groups $permissions)
     {
         if (!$uid) {
             if ($this->userInfo['id']) {
@@ -153,6 +152,16 @@ class Users
         } else {
             return 'At least one admin account must be left to delete another admin account';
         }
+    }
+
+    public function enable()
+    {
+        $this->userInfo['disabled'] = 0;
+    }
+
+    public function disable()
+    {
+        $this->userInfo['disabled'] = 1;
     }
 
     public function getUserList()

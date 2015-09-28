@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'jhtmlarea', 'datetimepicker']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'datetimepicker']]);
 ?>
 <div id="add-edit-form" class="hidden-dialog">
     <form>
@@ -139,4 +139,4 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     <?php endif; ?>
 </section>
 
-<?= $this->loadJS(['jquery', 'jqueryui', 'jhtmlarea', 'timepicker', 'common', 'categories', 'cheesto', 'dashboard']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'common', 'categories', 'cheesto', 'dashboard']) ?>

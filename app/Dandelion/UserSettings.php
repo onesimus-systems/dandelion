@@ -31,7 +31,7 @@ class UserSettings
         }
 
         if ($this->repo->saveLogViewLimit($user, $limit)) {
-            Session::set('userInfo', ['logs_per_page' => $limit]);
+            Session::merge('userInfo', ['logs_per_page' => $limit]);
             return true;
         }
         return false;
@@ -40,7 +40,7 @@ class UserSettings
     public function saveTheme($theme = '', $user)
     {
         if ($this->repo->saveUserTheme($user, $theme)) {
-            Session::set('userInfo', ['theme' => $theme]);
+            Session::merge('userInfo', ['theme' => $theme]);
             Utils\View::setThemeCookie($theme);
             return true;
         }

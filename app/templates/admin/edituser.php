@@ -21,6 +21,11 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
 </div>
 
 <div id="control-panel">
+    <?php if ($user['disabled']): ?>
+        <button type="button" id="enable-user-btn">Enable User</button>
+    <?php else: ?>
+        <button type="button" id="disable-user-btn">Disable User</button>
+    <?php endif; ?>
     <button type="button" id="delete-user-btn">Delete User</button>
     <button type="button" id="reset-pwd-btn">Reset Password</button>
     <button type="button" id="revoke-api-btn">Revoke API Key</button>
@@ -59,6 +64,10 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
         <tr>
             <td class="field-name">Date Created:</td>
             <td><?= $this->e($user['created']) ?></td>
+        </tr>
+        <tr>
+            <td class="field-name">Disabled:</td>
+            <td><?= $user['disabled'] ? 'Yes' : 'No' ?></td>
         </tr>
     </table>
 </section>
