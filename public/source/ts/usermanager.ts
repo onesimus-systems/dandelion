@@ -8,6 +8,12 @@
 
 var UserManage = {
     init: function(): void {
+        var disableBtn = $("#disable-user-btn");
+        if (disableBtn.length) {
+            disableBtn.click(UserManage.disableUser);
+        } else {
+            $("#enable-user-btn").click(UserManage.enableUser);
+        }
         $("#delete-user-btn").click(UserManage.confirmDeleteUser);
         $("#reset-pwd-btn").click(UserManage.showPasswordDialog);
         $("#revoke-api-btn").click(UserManage.confirmRevokeKey);
@@ -20,8 +26,36 @@ var UserManage = {
         });
     },
 
+    enableUser: function(): void {
+        var userId = $("#user-id").val();
+        $.post("../../api/i/users/enable", {uid: userId}, null, "json")
+            .done(function(data) {
+                if ($.apiSuccess(data)) {
+                    $.alert("User enabled", "User Management", function() {
+                        location.reload(true);
+                    });
+                } else {
+                    $.alert("Error enabling user", "User Management");
+                }
+            });
+    },
+
+    disableUser: function(): void {
+        var userId = $("#user-id").val();
+        $.post("../../api/i/users/disable", {uid: userId}, null, "json")
+            .done(function(data) {
+                if ($.apiSuccess(data)) {
+                    $.alert("User disabled", "User Management", function() {
+                        location.reload(true);
+                    });
+                } else {
+                    $.alert("Error disabling user", "User Management");
+                }
+            });
+    },
+
     confirmDeleteUser: function(): void {
-        $.confirmBox("Are you sure you want to delete this user?",
+        $.confirmBox("Disabling a user is prefered over deletion.<br><br>Are you sure you want to delete this user?",
             "Delete User",
             UserManage.deleteUser
         );

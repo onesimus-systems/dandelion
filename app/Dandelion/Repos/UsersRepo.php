@@ -21,13 +21,14 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
         $this->table = $this->prefix.'user';
     }
 
-    public function saveUser($uid, $realname, $role, $theme, $first)
+    public function saveUser($uid, $realname, $role, $theme, $first, $disabled)
     {
         return $this->database->updateItem($this->table, $uid, [
             'fullname' => $realname,
             'group_id' => $role,
             'initial_login' => $first,
-            'theme' => $theme
+            'theme' => $theme,
+            'disabled' => $disabled
         ]);
     }
 
@@ -58,6 +59,7 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
         return $this->database
             ->find($this->table)
             ->whereEqual('username', $username)
+            ->whereEqual('disabled', 0)
             ->readRecord();
     }
 
@@ -67,23 +69,15 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
             ->updateItem($this->table, $uid, ['password' => $pass, 'initial_login' => 0]);
     }
 
-    // TODO: Add a disabled field so a user's info isn't really deleted
     public function deleteUser($uid)
     {
-        // May return 0 or 1 row affected
-        $this->database
-            ->find($this->prefix.'cheesto')
-            ->whereEqual('user_id', $uid)
-            ->delete();
-
-        // May return 0 or 1 row affected
-        $this->database
-            ->find($this->prefix.'apikey')
-            ->whereEqual('user_id', $uid)
-            ->delete();
-
-        // Should return 1 row affected
         return $this->database->deleteItem($this->table, $uid);
+    }
+
+    public function disableUser($uid, $disabled = 1)
+    {
+        return $this->database
+            ->updateItem($this->table, $uid, ['disabled' => $disabled]);
     }
 
     public function getUserRole($uid, $invert = false)
@@ -97,17 +91,19 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
         }
     }
 
-    public function getUsers($uid = null)
+    public function getUsers($uid = null, $disabled = 0)
     {
-        $fields = 'id, fullname, username, group_id, created, initial_login, theme';
+        $fields = 'id, fullname, username, group_id, created, initial_login, theme, disabled';
         if ($uid) {
             return $this->database
                     ->find($this->table)
                     ->whereEqual('id', $uid)
+                    //->whereEqual('disabled', $disabled)
                     ->read($fields);
         } else {
             return $this->database
                     ->find($this->table)
+                    //->whereEqual('disabled', $disabled)
                     ->read($fields);
         }
     }
