@@ -15,5 +15,5 @@ return array(
     'hostname' => 'http://localhost',
     'appTitle' => 'Dandelion Web Log',
     'tagline' => 'Website Slogan',
-    'installed' => 'true'
+    'installed' => true
 );

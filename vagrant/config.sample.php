@@ -15,7 +15,7 @@ return array(
     'hostname' => 'http://localhost:8081',
     'appTitle' => 'Dandelion Web Log',
     'tagline' => 'Website Slogan',
-    'installed' => 'true',
+    'installed' => true,
     'debugEnabled' => true,
     'publicApiEnabled' => true
 );
