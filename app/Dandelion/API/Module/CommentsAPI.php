@@ -10,25 +10,24 @@
 namespace Dandelion\API\Module;
 
 use Dandelion\Application;
-use Dandelion\Rights;
-use Dandelion\UrlParameters;
+use Dandelion\User;
 use Dandelion\Logs;
 use Dandelion\Exception\ApiException;
 
 class CommentsAPI extends BaseModule
 {
-    public function __construct(Application $app, Rights $ur, UrlParameters $urlParameters) {
-        parent::__construct($app, $ur, $urlParameters, false);
+    public function __construct(Application $app, User $user) {
+        parent::__construct($app, $user, false);
     }
 
     public function add()
     {
         $logObject = new Logs($this->makeRepo('Logs'));
 
-        $logId = $this->up->get('logid', null);
-        $commentText = $this->up->get('comment', '');
+        $logId = $this->request->postParam('logid', null);
+        $commentText = $this->request->postParam('comment', '');
 
-        if ($logObject->addComment($logId, USER_ID, $commentText)) {
+        if ($logObject->addComment($logId, $this->requestUser->get('id'), $commentText)) {
             return 'Comment created successfully';
         } else {
             throw new ApiException('Error creating comment', 5);
@@ -39,8 +38,8 @@ class CommentsAPI extends BaseModule
     {
         $logObject = new Logs($this->makeRepo('Logs'));
 
-        $logId = $this->up->get('logid', null);
-        $order = $this->up->get('order', 'new');
+        $logId = $this->request->getParam('logid', null);
+        $order = $this->request->getParam('order', 'new');
 
         return $logObject->getLogCommentsComment($logId, $order);
     }

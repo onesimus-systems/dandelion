@@ -31,7 +31,7 @@ class GroupsAPI extends BaseModule
     public function getGroup()
     {
         $permissions = new Groups($this->repo);
-        $gid = $this->up->groupid;
+        $gid = $this->request->getParam('groupid');
         return $permissions->getGroupList($gid);
     }
 
@@ -40,13 +40,13 @@ class GroupsAPI extends BaseModule
      */
     public function edit()
     {
-        if (!$this->ur->authorized('editgroup')) {
+        if (!$this->authorized($this->requestUser, 'edit_group')) {
             throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
-        $gid = $this->up->groupid;
-        $rights = json_decode($this->up->rights, true);
+        $gid = $this->request->postParam('groupid');
+        $rights = json_decode($this->request->postParam('rights'), true);
 
         if ($permissions->editGroup($gid, $rights)) {
             return 'User group saved';
@@ -60,13 +60,13 @@ class GroupsAPI extends BaseModule
      */
     public function create()
     {
-        if (!$this->ur->authorized('creategroup')) {
+        if (!$this->authorized($this->requestUser, 'create_group')) {
             throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
-        $name = $this->up->name;
-        $rights = $this->up->get('rights', []);
+        $name = $this->request->postParam('name');
+        $rights = $this->request->postParam('rights', []);
 
         if ($rights) {
             $rights = json_decode($rights, true);
@@ -84,12 +84,12 @@ class GroupsAPI extends BaseModule
      */
     public function delete()
     {
-        if (!$this->ur->authorized('deletegroup')) {
+        if (!$this->authorized($this->requestUser, 'delete_group')) {
             throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
-        $gid = $this->up->groupid;
+        $gid = $this->request->postParam('groupid');
         $users = $permissions->usersExistInGroup($gid);
 
         if ($users) {
@@ -105,6 +105,6 @@ class GroupsAPI extends BaseModule
      */
     public function getUserRights()
     {
-        return $this->ur->getRightsForUser();
+        return $this->requestUser->getKeycard()->readAll();
     }
 }

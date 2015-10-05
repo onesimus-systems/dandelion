@@ -14,35 +14,34 @@ use Dandelion\Groups;
 use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
+use Dandelion\Factories\UserFactory;
 
 class UsersAPI extends BaseModule
 {
     /**
      * Reset a user's password
+     * POST
      */
     public function resetPassword()
     {
-        $userid = USER_ID;
-
         // Check permissions
-        if ($this->up->uid) {
-            if ($this->up->uid == USER_ID || $this->ur->authorized('edituser')) {
-                $userid = $this->up->uid;
-            } else {
-                throw new ApiPermissionException();
-            }
+        $userid = $this->request->postParam('uid', $this->requestUser->get('id'));
+        if ($userid != $this->requestUser->get('id') && !$this->authorized($this->requestUser, 'edit_user')) {
+            throw new ApiPermissionException();
         }
 
         // Validate password
-        $newPass = $this->up->pw;
+        $newPass = $this->request->postParam('pw');
         if (!$newPass) {
             throw new ApiException('New password is invalid', 5);
         }
 
         // Do action
-        $user = new Users($this->repo, $userid);
+        $uf = new UserFactory();
+        $user = $uf->get($userid);
+        $user->setPassword($newPass);
 
-        if ($user->resetPassword($newPass)) {
+        if ($user->save()) {
             return 'Password changed successfully';
         } else {
             throw new ApiException('Error changing password', 5);
@@ -51,22 +50,22 @@ class UsersAPI extends BaseModule
 
     /**
      * Create a new user
+     * POST
      */
     public function create()
     {
-        if (!$this->ur->authorized('createuser')) {
+        if (!$this->authorized($this->requestUser, 'create_user')) {
             throw new ApiPermissionException();
         }
 
-        $username = $this->up->username;
-        $password = $this->up->password;
-        $fullname = $this->up->fullname;
-        $role = $this->up->group;
-        $cheesto = $this->up->get('cheesto', true);
+        $uf = new UserFactory();
+        $user = $uf->create();
+        $user->set('username', $this->request->postParam('username'));
+        $user->set('fullname', $this->request->postParam('fullname'));
+        $user->set('group_id', $this->request->postParam('group'));
+        $user->setPassword($this->request->postParam('password'));
 
-        $user = new Users($this->repo);
-
-        if ($user->createUser($username, $password, $fullname, $role, $cheesto)) {
+        if ($user->save()) {
             return 'User created successfully';
         } else {
             throw new ApiException('Error creating user', 5);
@@ -75,25 +74,27 @@ class UsersAPI extends BaseModule
 
     /**
      * Save edits to a user
+     * POST
      */
     public function edit()
     {
-        if (!$this->ur->authorized('edituser')) {
+        if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
 
-        $uid = $this->up->uid;
+        $uid = $this->request->postParam('uid');
         if (!$uid) {
             throw new ApiException('No user id given', 5);
         }
 
-        $user = new Users($this->repo, $uid, true);
-        $user->userInfo['fullname'] = $this->up->get('fullname', $user->userInfo['fullname']);
-        $user->userInfo['group_id'] = $this->up->get('role', $user->userInfo['group_id']);
-        $user->userInfo['initial_login'] = $this->up->get('prompt', $user->userInfo['initial_login']);
-        $user->userInfo['theme'] = $this->up->get('theme', $user->userInfo['theme']);
+        $uf = new UserFactory();
+        $user = $uf->get($uid);
+        $user->set('fullname', $this->request->postParam('fullname', $user->get('fullname')));
+        $user->set('group_id', $this->request->postParam('role', $user->get('group_id')));
+        $user->set('initial_login', $this->request->postParam('prompt', $user->get('initial_login')));
+        $user->set('theme', $this->request->postParam('theme', $user->get('theme')));
 
-        if ($user->saveUser()) {
+        if ($user->save()) {
             return 'User saved successfully';
         } else {
             throw new ApiException('Error saving user', 5);
@@ -102,6 +103,7 @@ class UsersAPI extends BaseModule
 
     /**
      * Disable user
+     * POST
      */
     public function disable()
     {
@@ -110,6 +112,7 @@ class UsersAPI extends BaseModule
 
     /**
      * Enable user
+     * POST
      */
     public function enable()
     {
@@ -118,23 +121,24 @@ class UsersAPI extends BaseModule
 
     private function enableDisable($disable)
     {
-        if (!$this->ur->authorized('edituser')) {
+        if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
 
-        $uid = $this->up->uid;
+        $uid = $this->request->postParam('uid');
         if (!$uid) {
             throw new ApiException('No user id given', 5);
         }
 
-        $user = new Users($this->repo, $uid, true);
+        $uf = new UserFactory();
+        $user = $uf->get($uid);
         if ($disable) {
             $user->disable();
         } else {
             $user->enable();
         }
 
-        if ($user->saveUser()) {
+        if ($user->save()) {
             return $disable ? 'User disabled' : 'User enabled';
         } else {
             $msg = $disable ? 'Error disabling user' : 'Error enabling user';
@@ -144,17 +148,18 @@ class UsersAPI extends BaseModule
 
     /**
      * Delete a user
+     * POST
      */
     public function delete()
     {
-        if (USER_ID == $this->up->uid) {
+        $userid = $this->request->postParam('uid');
+
+        if ($this->requestUser->get('id') == $userid) {
             throw new ApiException('Can\'t delete yourself', 5);
         }
 
         // Check permissions
-        if ($this->ur->authorized('deleteuser')) {
-            $userid = $this->up->uid;
-        } else {
+        if (!$this->authorized($this->requestUser, 'delete_user')) {
             throw new ApiPermissionException();
         }
 
@@ -170,11 +175,12 @@ class UsersAPI extends BaseModule
 
     /**
      * Get list of user accounts
+     * GET
      */
     public function getUsers()
     {
         // Check permissions
-        if (!$this->ur->authorized('edituser')) {
+        if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
         $list = new Users($this->repo);
@@ -183,15 +189,16 @@ class UsersAPI extends BaseModule
 
     /**
      * Get information for a single user
+     * GET
      */
     public function getUser()
     {
         // Check permissions
-        if (!$this->ur->authorized('edituser')) {
+        if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
 
-        $uid = $this->up->uid;
+        $uid = $this->request->getParam('uid');
         if (!$uid) {
             throw new ApiException('No user id given', 5);
         }

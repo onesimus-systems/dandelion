@@ -23,12 +23,12 @@ class CategoriesAPI extends BaseModule
      */
     public function create()
     {
-        if (!$this->ur->authorized('createcat')) {
+        if (!$this->authorized($this->requestUser, 'create_cat')) {
             throw new ApiPermissionException();
         }
 
-        $parent = $this->up->pid;
-        $desc = $this->up->description;
+        $parent = $this->request->postParam('pid');
+        $desc = $this->request->postParam('description');
         $createCat = new Categories($this->repo);
 
         if ($createCat->addCategory($parent, $desc)) {
@@ -45,12 +45,12 @@ class CategoriesAPI extends BaseModule
      */
     public function edit()
     {
-        if (!$this->ur->authorized('editcat')) {
+        if (!$this->authorized($this->requestUser, 'edit_cat')) {
             throw new ApiPermissionException();
         }
 
-        $cid = $this->up->cid;
-        $desc = $this->up->description;
+        $cid = $this->request->postParam('cid');
+        $desc = $this->request->postParam('description');
         $editCat = new Categories($this->repo);
 
         if ($editCat->editCategory($cid, $desc)) {
@@ -67,11 +67,11 @@ class CategoriesAPI extends BaseModule
      */
     public function delete()
     {
-        if (!$this->ur->authorized('deletecat')) {
+        if (!$this->authorized($this->requestUser, 'delete_cat')) {
             throw new ApiPermissionException();
         }
 
-        $cat = $this->up->cid;
+        $cat = $this->request->postParam('cid');
         $deleteCat = new Categories($this->repo);
 
         if ($deleteCat->delCategory($cat)) {

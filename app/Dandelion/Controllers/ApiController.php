@@ -125,7 +125,6 @@ class ApiController extends BaseController
         try {
             $data = '';
             $userid = $localCall ? $key : $this->verifyKey($key);
-            define('USER_ID', $userid);
 
             $uf = new UserFactory();
             $user = $uf->getWithKeycard($userid);

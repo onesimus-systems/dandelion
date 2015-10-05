@@ -25,15 +25,15 @@ class LogsAPI extends BaseModule
      */
     public function read()
     {
-        if (!$this->ur->authorized('viewlog')) {
+        if (!$this->authorized($this->requestUser, 'view_log')) {
             throw new ApiPermissionException();
         }
 
         $return = [];
         $logs = new Logs($this->repo, $this->ur);
 
-        if ($this->up->logid) {
-            $return = $logs->getLogInfo($this->up->logid);
+        if ($this->request->getParam('logid')) {
+            $return = $logs->getLogInfo($this->request->getParam('logid'));
         } else {
             $metadata = $this->offsetLimitCommon();
             $return = $logs->getLogList($metadata['limit'], $metadata['offset']);
@@ -49,17 +49,17 @@ class LogsAPI extends BaseModule
      */
     public function create()
     {
-        if (!$this->ur->authorized('createlog')) {
+        if (!$this->authorized($this->requestUser, 'create_log')) {
             throw new ApiPermissionException();
         }
 
-        $title = $this->up->title;
-        $body = $this->up->body;
-        $cat = rtrim($this->up->cat, ':');
+        $title = $this->request->postParam('title');
+        $body = $this->request->postParam('body');
+        $cat = rtrim($this->request->postParam('cat'), ':');
 
         $logs = new Logs($this->repo);
 
-        if ($logs->addLog($title, $body, $cat, USER_ID)) {
+        if ($logs->addLog($title, $body, $cat, $this->requestUser->get('id'))) {
             return 'Log created successfully';
         } else {
             throw new ApiException('Error creating log', 5);
@@ -71,19 +71,21 @@ class LogsAPI extends BaseModule
      */
     public function edit()
     {
-        $lid = $this->up->logid;
+        $lid = $this->request->postParam('logid');
+        $log = $this->read()[0];
 
-        if (!$this->ur->isAdmin()) {
-            $log = $this->read()[0];
+        $canEdit = (
+            $this->authorized($this->requestUser, 'admin') ||
+            ($this->authorized($this->requestUser, 'edit_log') && $log['user_id'] == $this->requestUser->get('id'))
+        );
 
-            if (!$this->ur->authorized('editlog') && $log['user_id'] != USER_ID) {
-                throw new ApiPermissionException();
-            }
+        if (!$canEdit) {
+            throw new ApiPermissionException();
         }
 
-        $title = $this->up->title;
-        $body = $this->up->body;
-        $cat = rtrim($this->up->cat, ':');
+        $title = $this->request->postParam('title');
+        $body = $this->request->postParam('body');
+        $cat = rtrim($this->request->postParam('cat'), ':');
 
         $logs = new Logs($this->repo);
 
@@ -100,11 +102,11 @@ class LogsAPI extends BaseModule
      */
     public function search()
     {
-        if (!$this->ur->authorized('viewlog')) {
+        if (!$this->authorized($this->requestUser, 'view_log')) {
             throw new ApiPermissionException();
         }
 
-        $query = $this->up->query;
+        $query = $this->request->getParam('query');
 
         $metadata = $this->offsetLimitCommon();
 
@@ -126,9 +128,9 @@ class LogsAPI extends BaseModule
     private function offsetLimitCommon()
     {
         $userLimit = new UserSettings($this->makeRepo('UserSettings'));
-        $limit = $userLimit->getSetting('logs_per_page', USER_ID);
-        $limit = (int) $this->up->get('limit', $limit);
-        $offset = (int) $this->up->get('offset', 0);
+        $limit = $userLimit->getSetting('logs_per_page', $this->requestUser->get('id'));
+        $limit = (int) $this->request->getParam('limit', $limit);
+        $offset = (int) $this->request->getParam('offset', 0);
         $offset = $offset < 0 ? 0 : $offset;
 
         $logSize = $this->repo->numOfLogs();

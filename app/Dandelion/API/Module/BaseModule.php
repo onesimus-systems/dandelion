@@ -9,31 +9,59 @@
  */
 namespace Dandelion\API\Module;
 
-use Dandelion\Rights;
+use Dandelion\User;
 use Dandelion\Application;
-use Dandelion\UrlParameters;
+use Dandelion\Auth\GateKeeper;
 use Dandelion\Utils\Repos;
 use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 
+// Shim class until conversion to Keycard authorization
+// TODO: Remove shim class
+class UserRightsShim
+{
+    private $card;
+
+    public function __construct(User $user)
+    {
+        $this->card = $user->getKeycard();
+    }
+
+    public function authorized($permission)
+    {
+        return $this->card->read($permission);
+    }
+
+    public function isAdmin()
+    {
+        return $this->authorized('admin');
+    }
+}
+
 abstract class BaseModule
 {
+    // Shim classes
+    // TODO: Remove properties
+    protected $ur;
+
     // Application
     protected $app;
 
     // User rights
-    protected $ur;
+    protected $requestUser;
 
     // URL parameters
-    protected $up;
+    protected $request;
 
     // Repo for the specific module
     protected $repo;
 
-    public function __construct(Application $app, Rights $ur, UrlParameters $urlParameters, $makeRepo = true) {
+    public function __construct(Application $app, User $user, $makeRepo = true) {
         $this->app = $app;
-        $this->ur = $ur;
-        $this->up = $urlParameters;
+        $this->requestUser = $user;
+        $this->request = $app->request;
+        // TODO: Remove these objects
+        $this->ur = new UserRightsShim($user);
 
         if ($makeRepo) {
             // Remove namespace
@@ -52,5 +80,10 @@ abstract class BaseModule
         } else {
             throw new ApiException('Error initializing API request', 6);
         }
+    }
+
+    protected function authorized(User $user, $task)
+    {
+        return GateKeeper::authorized($user, $task);
     }
 }

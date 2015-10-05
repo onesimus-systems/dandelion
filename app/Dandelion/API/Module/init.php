@@ -27,7 +27,7 @@ $apiCommander->registerModule('cheesto', __NAMESPACE__.'\CheestoAPI',
 $apiCommander->registerModule('comments', __NAMESPACE__.'\CommentsAPI',
     [
         ['add', null, ['http_method' => 'post']],
-        ['get', null, ['http_method' => 'post']]
+        ['get', null, ['http_method' => 'get']]
     ]);
 
 $apiCommander->registerModule('groups', __NAMESPACE__.'\GroupsAPI',
@@ -58,7 +58,7 @@ $apiCommander->registerModule('logs', __NAMESPACE__.'\LogsAPI',
 
 $apiCommander->registerModule('users', __NAMESPACE__.'\UsersAPI',
     [
-        ['resetpassword', 'resetPassword', ['http_method' => 'post']],
+        ['resetPassword', 'resetPassword', ['http_method' => 'post']],
         ['create', null, ['http_method' => 'post']],
         ['edit', null, ['http_method' => 'post']],
         ['delete', null, ['http_method' => 'post']],

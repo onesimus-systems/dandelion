@@ -27,12 +27,12 @@ class CheestoAPI extends BaseModule
         if (!Config::get('cheestoEnabled')) {
             throw new ApiException('Cheesto has been disabled', 5);
         }
-        if (!$this->ur->authorized('viewcheesto')) {
+        if (!$this->authorized($this->requestUser, 'view_cheesto')) {
             throw new ApiPermissionException();
         }
 
         $cheesto = new Cheesto($this->repo);
-        return $cheesto->getUserStatus($this->up->get('uid', null));
+        return $cheesto->getUserStatus($this->request->getParam('uid'));
     }
 
     /**
@@ -57,19 +57,20 @@ class CheestoAPI extends BaseModule
         if (!Config::get('cheestoEnabled')) {
             throw new ApiException('Cheesto has been disabled', 5);
         }
-        if (!$this->ur->authorized('updatecheesto')) {
+        if (!$this->authorized($this->requestUser, 'update_cheesto')) {
             throw new ApiPermissionException();
         }
 
         $cheesto = new Cheesto($this->repo);
-        $message = $this->up->get('message', '');
-        $status = $this->up->get('status', 'Available');
-        $returntime = $this->up->get('returntime', '00:00:00');
-        $userid = USER_ID;
+        $message = $this->request->postParam('message', '');
+        $status = $this->request->postParam('status', 'Available');
+        $returntime = $this->request->postParam('returntime', '00:00:00');
+        $userid = $this->requestUser->get('id');
+        $requestedUid = $this->request->postParam('uid');
 
-        if ($this->up->uid) { // A status of another user is trying to be updated
-            if ($this->up->uid == USER_ID || $this->ur->authorized('edituser')) {
-                $userid = $this->up->uid;
+        if ($requestedUid) { // A status of another user is trying to be updated
+            if ($requestedUid == $userid || $this->authorized($this->requestUser, 'edit_user')) {
+                $userid = $requestedUid;
             } else {
                 throw new ApiPermissionException();
             }
