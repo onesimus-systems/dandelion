@@ -12,7 +12,6 @@ namespace Dandelion\Controllers;
 use Dandelion\Rights;
 use Dandelion\Utils\Repos;
 use Dandelion\Application;
-use Dandelion\UrlParameters;
 use Dandelion\Auth\GateKeeper;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\API\ApiCommander;

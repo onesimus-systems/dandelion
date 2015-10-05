@@ -12,25 +12,11 @@ namespace Dandelion\Controllers;
 use Dandelion\Utils\View;
 use Dandelion\Utils\Repos;
 use Dandelion\Application;
-use Dandelion\UrlParameters;
 use Dandelion\Auth\GateKeeper;
 use League\Plates\Engine;
 
 class AuthController extends BaseController
 {
-    // Repo for authentication object
-    private $repo;
-
-    // URL parameters
-    private $up;
-
-    public function __construct(Application $app)
-    {
-        parent::__construct($app);
-
-        $this->up = new UrlParameters();
-    }
-
     public function loginPage()
     {
         if (GateKeeper::authenticated()) {
@@ -52,11 +38,11 @@ class AuthController extends BaseController
     public function login()
     {
         $auth = new GateKeeper();
-        $rem = $this->up->remember == 'true' ? true : false;
+        $rem = $this->request->postParam('remember') == 'true' ? true : false;
 
-        $tryAuth = $auth->login($this->up->user, $this->up->pass, $rem);
+        $tryAuth = $auth->login($this->request->postParam('user'), $this->request->postParam('pass'), $rem);
         if (!$tryAuth) {
-            $this->app->logger->info("Failed login attempt by user '{user}'", ['user' => $this->up->user]);
+            $this->app->logger->info("Failed login attempt by user '{user}'", ['user' => $this->request->postParam('user')]);
         }
 
         $this->setResponse(json_encode($tryAuth));
