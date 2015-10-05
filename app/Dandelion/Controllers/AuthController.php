@@ -28,8 +28,6 @@ class AuthController extends BaseController
     {
         parent::__construct($app);
 
-        $this->repo = Repos::makeRepo('Auth');
-
         $this->up = new UrlParameters();
     }
 
@@ -53,11 +51,8 @@ class AuthController extends BaseController
 
     public function login()
     {
-        $auth = new GateKeeper($this->repo);
-        $rem = false;
-        if ($this->up->remember == 'true') {
-            $rem = true;
-        }
+        $auth = new GateKeeper();
+        $rem = $this->up->remember == 'true' ? true : false;
 
         $tryAuth = $auth->login($this->up->user, $this->up->pass, $rem);
         if (!$tryAuth) {

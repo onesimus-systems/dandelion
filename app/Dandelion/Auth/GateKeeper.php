@@ -10,65 +10,115 @@
 namespace Dandelion\Auth;
 
 use Dandelion\Session\SessionManager as Session;
-use Dandelion\Repos\Interfaces\AuthRepo;
+use Dandelion\User;
+use Dandelion\Factories\UserFactory;
 
 class GateKeeper
 {
-    public function __construct(AuthRepo $repo)
+    // Array of task => permissions needed
+    private static $taskPermissions = [
+        // For arrays, the first element must be one of these:
+        // 'r1' = requires at lease one permission in the set
+        // 'ra' = requires all permissions in the set
+        // Defaults to 'ra'
+        'manage_current_users' => ['r1', 'edituser', 'deleteuser'],
+        'manage_users' => ['r1', 'createuser', 'edituser', 'deleteuser'],
+
+        'manage_current_groups' => ['r1', 'editgroup', 'deletegroup'],
+        'manage_groups' => ['r1', 'creategroup', 'editgroup', 'deletegroup'],
+
+        'manage_current_categories' => ['r1', 'editcat', 'deletecat'],
+        'manage_categories' => ['r1', 'createcat', 'editcat', 'deletecat'],
+
+        'create_log' => 'createlog',
+        'edit_log' => 'editlog',
+        'view_log' => 'viewlog',
+        'add_comment' => 'addcomment',
+
+        'create_cat' => 'createcat',
+        'edit_cat' => 'editcat',
+        'delete_cat' => 'deletecat',
+
+        'create_user' => 'createuser',
+        'edit_user' => 'edituser',
+        'delete_user' => 'deleteuser',
+
+        'create_group' => 'creategroup',
+        'edit_group' => 'editgroup',
+        'delete_group' => 'deletegroup',
+
+        'view_cheesto' => 'viewcheesto',
+        'update_cheesto' => 'updatecheesto',
+
+        'admin' => 'admin'
+    ];
+
+    public function __construct()
     {
-        $this->repo = $repo;
     }
 
     /**
      * Perform a user logon.
      */
-    public function login($user, $pass, $remember = false)
+    public function login($username, $password, $remember = false)
     {
-        if (!$user || !$pass) {
+        if (!$username || !$password) {
             return false;
         }
 
-        $userInfo = $this->isUser($user, $pass);
+        $user = $this->checkUser($username, $password);
 
-        if (!$userInfo) {
+        if (!$user) {
             return false;
         }
 
         session_regenerate_id();
 
         // Set primary session data
-        unset($userInfo['password']);
+        $userData = $user->get([
+            'id',
+            'username',
+            'fullname',
+            'group_id',
+            'created',
+            'initial_login',
+            'logs_per_page',
+            'theme',
+            'disabled'
+        ]);
         Session::set('loggedin', true);
-        Session::set('userInfo', $userInfo);
+        Session::set('userInfo', $userData);
 
         if ($remember) {
             // Set remember me cookie
-            setcookie('dan_username', $userInfo['username'], time() + 60 * 60 * 24 * 30, '/');
+            setcookie('dan_username', $userData['username'], time() + 60 * 60 * 24 * 30, '/');
         }
 
-        return $userInfo['initial_login']+1;
+        return $userData['initial_login']+1;
     }
 
     /**
      * Checks if a provided username is an actual user
      * and if the provided password is correct.
      *
-     * @param string $user - Username
-     * @param string $pass - Password
+     * @param string $username
+     * @param string $password
      *
-     * @return bool or array - Array containing row of user data from database, false on error
+     * @return User object or null
      */
-    private function isUser($user, $pass)
+    private function checkUser($username, $password)
     {
-        $user = $this->repo->isUser($user);
+        $uf = new UserFactory();
+        $user = $uf->getByUsername($username);
 
-        if ($user) {
-            if ($user['password'] && password_verify($pass, $user['password'])) { // Check if password is correct
+        if ($user->isValid() && $user->enabled()) {
+            $pass = $user->get('password');
+            if (password_verify($password, $pass)) {
                 return $user;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -91,5 +141,47 @@ class GateKeeper
         }
         session_unset();
         session_destroy();
+    }
+
+    public static function authorized(User $user, $task)
+    {
+        $keycard = $user->getKeycard();
+
+        if (!array_key_exists($task, self::$taskPermissions)) {
+            return false;
+        }
+
+        $neededPermissions = self::$taskPermissions[$task];
+        if (!is_array($neededPermissions)) {
+            // Simple mapping of task to permission
+            return $keycard->read($neededPermissions);
+        }
+
+        // Multiple permissions need checked
+        $mode = $neededPermissions[0];
+        if ($mode != 'r1' && $mode != 'ra') {
+            // Mode defaults to require all
+            $mode = 'ra';
+        } else {
+            // Remove mode from front of array
+            array_shift($neededPermissions);
+        }
+
+        foreach ($neededPermissions as $permission) {
+            if ($mode === 'r1' && $keycard->read($permission) === true) {
+                return true;
+            }
+
+            if ($mode === 'ra' && $keycard->read($permission) === false) {
+                return false;
+            }
+        }
+
+        switch ($mode) {
+        case 'r1':
+            return false;
+        case 'ra':
+            return true;
+        }
     }
 }

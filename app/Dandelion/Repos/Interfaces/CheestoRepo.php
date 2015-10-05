@@ -14,4 +14,5 @@ interface CheestoRepo
     public function getAllStatuses();
     public function getUserStatus($uid);
     public function updateStatus($uid, $status, $message, $return, $date);
+    public function createCheesto($uid, $date);
 }

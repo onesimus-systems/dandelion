@@ -21,9 +21,7 @@ class LogController extends BaseController
 {
     public function render($logid)
     {
-        $this->loadRights();
-
-        if (!$logid || !$this->rights->authorized('viewlog')) {
+        if (!$logid || !$this->authorized($this->sessionUser, 'view_log')) {
             View::redirect('dashboard');
             return;
         }
@@ -46,12 +44,15 @@ class LogController extends BaseController
                 }
             }
 
-            if ($this->rights->authorized('addcomment')) {
+            if ($this->authorized($this->sessionUser, 'add_comment')) {
                 $addCommentButton = '<button type="button" id="add-comment-btn">Add Comment</button>';
             }
         }
 
-        $canEdit = ($this->rights->isAdmin() || $log['user_id'] == $this->rights->userid);
+        $canEdit = (
+            $this->authorized($this->sessionUser, 'admin') ||
+            ($this->authorized($this->sessionUser, 'edit_log') && $log['user_id'] == $this->sessionUser->get('id'))
+        );
 
         $template = new Template($this->app);
 
@@ -98,18 +99,14 @@ class LogController extends BaseController
 
     public function edit($logid)
     {
-        $this->loadRights();
+        $canEdit = (
+            $this->authorized($this->sessionUser, 'admin') ||
+            ($this->authorized($this->sessionUser, 'edit_log') && $log['user_id'] == $this->sessionUser->get('id'))
+        );
 
-        $canEdit = ($this->rights->isAdmin() || $log['user_id'] == $this->rights->userid);
-
-        if (!$logid || !$this->rights->authorized('editlog') || !$canEdit) {
-            if ($this->rights->authorized('viewlog')) {
-                $this->app->response->redirect(Config::get('hostname').'/log/'.$logid);
-                return;
-            } else {
-                View::redirect('dashboard');
-                return;
-            }
+        if (!$logid || !$canEdit) {
+            View::redirect('dashboard');
+            return;
         }
 
         $logs = new Logs(Repos::makeRepo('Logs'));
@@ -138,7 +135,6 @@ class LogController extends BaseController
 
     public function save()
     {
-        $this->loadRights();
         $postParams = $this->app->request->postParam();
 
         $logid = $postParams['log-id'];
@@ -151,7 +147,7 @@ class LogController extends BaseController
 
     private function saveNew(array $postParams)
     {
-        if (!$this->rights->authorized('createlog')) {
+        if (!$this->authorized($this->sessionUser, 'create_log')) {
             View::redirect('dashboard');
             return;
         }
@@ -175,14 +171,16 @@ class LogController extends BaseController
     {
         $logid = $postParams['log-id'];
         $logs = new Logs(Repos::makeRepo('Logs'));
+        $log = $this->getLog($logid, $logs);
 
-        if (!$this->rights->isAdmin()) {
-            $log = $this->getLog($logid, $logs);
+        $canEdit = (
+            $this->authorized($this->sessionUser, 'admin') ||
+            ($this->authorized($this->sessionUser, 'edit_log') && $log['user_id'] == $this->sessionUser->get('id'))
+        );
 
-            if (!$this->rights->authorized('editlog') && $log['user_id'] != USER_ID) {
-                View::redirect('dashboard');
-                return;
-            }
+        if (!$canEdit) {
+            View::redirect('dashboard');
+            return;
         }
 
         $title = $postParams['title'];
