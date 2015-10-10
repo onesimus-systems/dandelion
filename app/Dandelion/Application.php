@@ -9,11 +9,9 @@
  */
 namespace Dandelion;
 
-use SC\SC;
 use Exception;
 
 use Dandelion\Utils\Updater;
-use Dandelion\Storage\Loader;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\Session\SessionManager;
 use Dandelion\Exception\AbortException;

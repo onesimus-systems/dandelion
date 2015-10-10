@@ -19,7 +19,7 @@ use Dandelion\Session\SessionManager as Session;
 
 class LogController extends BaseController
 {
-    public function render($logid)
+    public function show($logid)
     {
         if (!$logid || !$this->authorized($this->sessionUser, 'view_log')) {
             View::redirect('dashboard');

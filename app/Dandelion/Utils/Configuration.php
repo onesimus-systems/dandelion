@@ -14,23 +14,22 @@ class Configuration
     private static $loaded = false;
     private static $config = [];
 
-    private static $basePath = '';
-
     private function __construct() {}
     private function __clone() {}
     private function __wakeup() {}
 
     public static function load($configPath)
     {
-        self::$basePath = $configPath;
-        $defaultSettingsFile = $configPath.'/config.defaults.php';
-        $userSettingsFile = $configPath.'/config.php';
+        if (is_array($configPath)) {
+            self::$config = $configPath;
+        } elseif (!self::$loaded) {
+            $defaultSettingsFile = $configPath.'/config.defaults.php';
+            $userSettingsFile = $configPath.'/config.php';
 
-        if (!file_exists($defaultSettingsFile) || !file_exists($userSettingsFile)) {
-            return false;
-        }
+            if (!file_exists($defaultSettingsFile) || !file_exists($userSettingsFile)) {
+                return false;
+            }
 
-        if (!self::$loaded) {
             // Load defaults, the default file has all possible config options
             $defaults = include $defaultSettingsFile;
             // Load user specified values
@@ -40,17 +39,13 @@ class Configuration
                 return false;
             }
 
-            // Merge the settings
-            foreach ($defaults as $key => $value) {
-                if (isset($userSettings[$key])) {
-                    $defaults[$key] = $userSettings[$key];
-                }
-            }
+            $mergedSettings = array_merge($defaults, $userSettings);
 
-            self::$config = $defaults;
+            self::$config = $mergedSettings;
             self::$config['hostname'] = rtrim(self::$config['hostname'], '/');
-            self::$loaded = true;
         }
+
+        self::$loaded = true;
         return self::$config;
     }
 

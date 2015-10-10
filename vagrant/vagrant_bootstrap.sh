@@ -6,8 +6,8 @@ apt-get update
 apt-get install -y python-software-properties
 apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
 
-# Add repositories for PHP 5.6 and MariaDB 10.0
-add-apt-repository -y ppa:ondrej/php5-5.6
+# Add repositories for PHP 5.4 and MariaDB 10.0
+add-apt-repository -y ppa:ondrej/php5-5.4
 add-apt-repository -y 'deb http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu trusty main'
 
 # Set the root password for MariaDB install

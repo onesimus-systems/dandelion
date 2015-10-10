@@ -9,7 +9,9 @@
  */
 namespace Dandelion\Repos;
 
+use PDO;
 use SC\SC;
+use Exception;
 use Dandelion\Utils\Configuration as Config;
 
 abstract class BaseRepo
@@ -26,7 +28,7 @@ abstract class BaseRepo
             $dbConfig = Config::get('db');
 
             if ($dbConfig['type'] !== 'sqlite') {
-                $pdoParams = [\PDO::ATTR_PERSISTENT => true];
+                $pdoParams = [PDO::ATTR_PERSISTENT => true];
             }
 
             // Connect to database
@@ -40,7 +42,7 @@ abstract class BaseRepo
 
             // Check for proper connection
             if (!self::$dbconnection->pdo()) {
-                throw new \Exception("Error Connecting to Database", 1);
+                throw new Exception("Error Connecting to Database", 1);
             }
         }
 
