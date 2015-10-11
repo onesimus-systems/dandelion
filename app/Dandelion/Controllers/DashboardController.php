@@ -15,18 +15,16 @@ class DashboardController extends BaseController
 {
 	public function dashboard()
 	{
-        $this->loadRights();
-
-        $showCheesto = $this->rights->authorized('viewcheesto');
-        $showLog = $this->rights->authorized('viewlog');
-        $showCreateButton = $this->rights->authorized('createlog');
+        $showCheesto = $this->authorized($this->sessionUser, 'view_cheesto');
+        $showLog = $this->authorized($this->sessionUser, 'view_log');
+        $showCreateButton = $this->authorized($this->sessionUser, 'create_log');
 
         $template = new Template($this->app);
 
         $template->addData([
             'showCheesto' => $showCheesto,
             'showLog' => $showLog,
-            'createButton' => $showCreateButton ? '<button type="button" class="button" id="create-log-button">Create New</button>' : ''
+            'showCreateButton' => $showCreateButton
         ]);
 
         $this->setResponse($template->render('dashboard', 'Dashboard'));

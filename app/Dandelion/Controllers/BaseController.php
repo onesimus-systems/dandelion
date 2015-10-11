@@ -9,30 +9,36 @@
  */
 namespace Dandelion\Controllers;
 
-use Dandelion\Rights;
+use Dandelion\User;
 use Dandelion\Application;
-use Dandelion\Utils\Repos;
 use Dandelion\Session\SessionManager as Session;
+use Dandelion\Factories\UserFactory;
+use Dandelion\Auth\GateKeeper;
 
 class BaseController
 {
     // Instance of running application
     protected $app;
+    protected $request;
     protected $rights;
+    protected $sessionUser;
 
     public function __construct(Application $app)
     {
         $this->app = $app;
-    }
+        $this->request = $app->request;
 
-    protected function loadRights()
-    {
-        $rightsRepo = Repos::makeRepo('Groups');
-        $this->rights = new Rights(Session::get('userInfo')['id'], $rightsRepo);
+        $uf = new UserFactory;
+        $this->sessionUser = $uf->getWithKeycard(Session::get('userInfo')['id']);
     }
 
     protected function setResponse($body)
     {
         $this->app->response->setBody($body);
+    }
+
+    protected function authorized(User $user, $task)
+    {
+        return GateKeeper::authorized($user, $task);
     }
 }

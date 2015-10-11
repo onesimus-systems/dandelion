@@ -28,6 +28,11 @@ class Cheesto
     {
         if ($uid) {
             $statuses = $this->repo->getUserStatus($uid);
+            if (count($statuses) > 0) {
+                $statuses = $statuses[0];
+            } else {
+                return false;
+            }
         } else {
             $statuses = $this->repo->getAllStatuses();
         }

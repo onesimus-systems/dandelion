@@ -25,9 +25,7 @@ class KeyManagerAPI extends BaseModule
      */
     public function get($user = null, $force = false)
     {
-        if (!$user) {
-            $user = USER_ID;
-        }
+        $user = $user ?: $this->requestUser->get('id');
         $key = new KeyManager($this->repo);
         return $key->getKey($user, $force);
     }
@@ -37,7 +35,7 @@ class KeyManagerAPI extends BaseModule
      */
     public function generate()
     {
-        return self::get(USER_ID, true);
+        return self::get($this->requestUser->get('id'), true);
     }
 
     /**
@@ -45,12 +43,13 @@ class KeyManagerAPI extends BaseModule
      */
     public function revoke()
     {
-        $userid = USER_ID;
+        $userid = $this->requestUser->get('id');
+        $requestedUid = $this->request->postParam('uid');
 
         // Check permissions
-        if ($this->up->uid) {
-            if ($this->ur->authorized('edituser') || $this->up->uid == USER_ID) {
-                $userid = $this->up->uid;
+        if ($requestedUid) {
+            if ($this->authorized($this->requestUser, 'edit_user') || $requestedUid == $userid) {
+                $userid = $requestedUid;
             } else {
                 throw new ApiPermissionException();
             }

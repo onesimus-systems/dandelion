@@ -19,7 +19,8 @@
         "ircmaxell/password-compat": "~1.0",
         "onesimus-systems/seed-catalog": "^1.0.0",
         "onesimus-systems/osrouter": "^1.0.0",
-        "onesimus-systems/oslogger": "^2.0.0"
+        "onesimus-systems/oslogger": "^2.0.0",
+        "onesimus-systems/ossession": "0.1.0"
     },
 
     "require-dev": {

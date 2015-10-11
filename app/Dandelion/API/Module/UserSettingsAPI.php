@@ -17,12 +17,12 @@ class UserSettingsAPI extends BaseModule
 {
     public function saveLogLimit()
     {
-        return $this->saveSetting('LogLimit', $this->up->limit);
+        return $this->saveSetting('LogLimit', $this->request->postParam('limit'));
     }
 
     public function saveTheme()
     {
-        return $this->saveSetting('Theme', $this->up->theme);
+        return $this->saveSetting('Theme', $this->request->postParam('theme'));
     }
 
     private function saveSetting($setting, $value)
@@ -30,7 +30,7 @@ class UserSettingsAPI extends BaseModule
         $settings = new UserSettings($this->repo);
         $method = "save{$setting}";
 
-        if ($settings->$method($value, USER_ID)) {
+        if ($settings->$method($value, $this->requestUser->get('id'))) {
             return 'Setting saved';
         } else {
             throw new ApiException('Error saving setting', 5);

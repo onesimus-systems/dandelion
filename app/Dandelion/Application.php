@@ -9,11 +9,9 @@
  */
 namespace Dandelion;
 
-use SC\SC;
 use Exception;
 
 use Dandelion\Utils\Updater;
-use Dandelion\Storage\Loader;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\Session\SessionManager;
 use Dandelion\Exception\AbortException;
@@ -88,7 +86,7 @@ class Application
 
         try {
             // Setup session manager
-            SessionManager::register($this);
+            SessionManager::register();
             SessionManager::startSession(Config::get('cookiePrefix').Config::get('phpSessionName'));
 
             Updater::checkForUpdates($this);

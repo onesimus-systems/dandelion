@@ -42,7 +42,7 @@ class Groups
     private $permissionNames = [
         'createlog' => 'Create logs',
         'editlog' => 'Edit logs',
-        'viewlog' => 'View the log',
+        'viewlog' => 'View logs',
         'addcomment' => 'Add Comments',
 
         'createcat' => 'Create categories',

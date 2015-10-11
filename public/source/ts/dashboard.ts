@@ -106,7 +106,7 @@ View = {
         var logs = `<div id="log-list">`;
 
         for (var key in data) {
-            if (!data.hasOwnProperty(key) || key == "metadata") {
+            if (!data.hasOwnProperty(key) || !$.isNumeric(key)) {
                 continue;
             }
 
@@ -332,7 +332,7 @@ Search = {
         if (typeof query === "undefined") { return false; }
         if (typeof offset === "undefined") { offset = 0; }
 
-        $.post("api/i/logs/search", {query: query, offset: offset}, function(json) {
+        $.get("api/i/logs/search", {query: query, offset: offset}, function(json) {
             search = true;
             Refresh.stoprefresh();
             View.makeLogView(json.data);

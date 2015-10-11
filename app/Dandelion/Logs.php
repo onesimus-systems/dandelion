@@ -13,7 +13,7 @@ use Dandelion\Repos\Interfaces\LogsRepo;
 
 class Logs
 {
-    public function __construct(LogsRepo $repo, Rights $ur = null)
+    public function __construct(LogsRepo $repo, $ur = null)
     {
         $this->repo = $repo;
         $this->ur = $ur;

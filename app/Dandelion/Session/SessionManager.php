@@ -9,36 +9,39 @@
  */
 namespace Dandelion\Session;
 
-use Dandelion\Application;
 use Dandelion\Utils\Configuration as Config;
 
+use Onesimus\Session\SessionManager as SM;
+
+/**
+ * The implementation of this class is a temporary solution.
+ * Right now it's simply a wrapper for the Onesimus session manager.
+ */
 class SessionManager
 {
-    private static $handler;
-
     private function __construct() {}
     private function __clone() {}
 
-    public static function register(Application $app)
+    public static function register()
     {
-        if (self::$handler !== null) {
-            return;
-        }
+        $options = [
+            'timeout' => Config::get('sessionTimeout') * 60,
+            'gclotto' => Config::get('gcLottery'),
+            'table' => 'dan_session'
+        ];
 
-        $timeout = Config::get('sessionTimeout') * 60;
-        $gcLotto = Config::get('gcLottery');
+        // Simplist way to get the PDO object for the database
+        $repoName = "\\Dandelion\\Repos\\SessionRepo";
+        $repo = new $repoName();
+        $pdo = $repo->getPDO();
 
-        self::$handler = new SessionHandler($app, $timeout, $gcLotto);
-
-        session_set_save_handler(self::$handler, true);
+        SM::register($pdo, $options);
         return;
     }
 
     public static function startSession($name)
     {
-        session_name($name);
-        session_start();
-        return;
+        SM::startSession($name);
     }
 
     /**
@@ -49,7 +52,7 @@ class SessionManager
      */
     public static function get($name, $else = null)
     {
-        return isset($_SESSION[$name]) ? $_SESSION[$name] : $else;
+        return SM::get($name, $else);
     }
 
     /**
@@ -59,7 +62,7 @@ class SessionManager
      */
     public static function set($name, $value)
     {
-        $_SESSION[$name] = $value;
+        SM::set($name, $value);
     }
 
     /**
@@ -67,8 +70,9 @@ class SessionManager
      * @param  mixed $name   Name of session data to merge
      * @param  array  $value Array to merge
      */
-    public static function merge($name, array $value) {
-        $_SESSION[$name] = array_merge($_SESSION[$name], $value);
+    public static function merge($name, array $value)
+    {
+        SM::merge($name, $value);
     }
 
     /**
@@ -77,7 +81,7 @@ class SessionManager
      */
     public static function remove($name)
     {
-        unset($_SESSION[$name]);
+        SM::remove($name);
     }
 
     /**
@@ -85,6 +89,6 @@ class SessionManager
      */
     public static function clear()
     {
-        $_SESSION = [];
+        SM::clear();
     }
 }

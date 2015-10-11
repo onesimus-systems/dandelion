@@ -35,7 +35,7 @@ class CheestoRepo extends BaseRepo implements Interfaces\CheestoRepo
         return $this->database
             ->find($this->table)
             ->belongsTo($this->prefix.'user', 'user_id')
-            ->whereEqual($this->table.'.id', $lid)
+            ->whereEqual($this->prefix.'user.id', $uid)
             ->whereEqual($this->prefix.'user.disabled', 0)
             ->read($this->table.'.*, '.$this->prefix.'user.fullname');
     }
@@ -51,5 +51,16 @@ class CheestoRepo extends BaseRepo implements Interfaces\CheestoRepo
                 'returntime' => $return,
                 'modified' => $date
             ]);
+    }
+
+    public function createCheesto($uid, $date)
+    {
+        return $this->database->createItem($this->table, [
+            'status' => 'Available',
+            'message' => '',
+            'returntime' => '00:00:00',
+            'modified' => $date,
+            'user_id' => $uid
+        ]);
     }
 }

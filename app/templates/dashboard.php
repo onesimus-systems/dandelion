@@ -9,14 +9,6 @@
  */
 $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'datetimepicker']]);
 ?>
-<div id="add-edit-form" class="hidden-dialog">
-    <form>
-        Title: <input type="text" id="log-title" value="" size="60"><br><br>
-        <textarea id="log-body" rows="10"></textarea><br>
-        <div>Category: <span id="categories"></span></div>
-    </form>
-    <div id="messages"></div>
-</div>
 
 <div id="query-builder-form" class="hidden-dialog">
     <form>
@@ -127,7 +119,9 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
         <div class="top-controls">
             <form>
                 <button type="button" class="button" id="prev-page-button">Prev</button>
-                <?= $createButton ?>
+                <?php if ($showCreateButton): ?>
+                <button type="button" class="button" id="create-log-button">Create New</button>
+                <?php endif; ?>
                 <button type="button" class="button button-right" id="next-page-button">Next</button>
                 <button type="button" class="button button-right" id="clear-search-button">Clear Search</button>
             </form>

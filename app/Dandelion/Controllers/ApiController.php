@@ -12,13 +12,13 @@ namespace Dandelion\Controllers;
 use Dandelion\Rights;
 use Dandelion\Utils\Repos;
 use Dandelion\Application;
-use Dandelion\UrlParameters;
 use Dandelion\Auth\GateKeeper;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\API\ApiCommander;
 use Dandelion\API\Module\BaseModule;
 use Dandelion\Exception\ApiException;
 use Dandelion\Session\SessionManager as Session;
+use Dandelion\Factories\UserFactory;
 
 class ApiController extends BaseController
 {
@@ -54,8 +54,10 @@ class ApiController extends BaseController
         }
 
         if (Config::get('publicApiEnabled')) {
-            $urlParams = new UrlParameters();
-            $apikey = $urlParams->get('apikey');
+            $apikey = $this->request->isGet() ?
+                      $this->request->getParam('apikey', '') :
+                      $this->request->postParam('apikey', '');
+
             $this->sendResponse($this->processRequest($apikey, false, $module, $method));
         } else {
             $this->sendResponse($this->formatResponse(2, 'Public API disabled', 'api'));
@@ -79,7 +81,7 @@ class ApiController extends BaseController
         }
 
         if (GateKeeper::authenticated()) {
-            $this->sendResponse($this->processRequest(Session::get('userInfo')['id'], true, $module, $method));
+            $this->sendResponse($this->processRequest($this->sessionUser->get('id'), true, $module, $method));
         } else {
             $this->sendResponse($this->formatResponse(3, 'Action requires logged in session', 'api'));
         }
@@ -121,17 +123,16 @@ class ApiController extends BaseController
     {
         try {
             $data = '';
-            $key = $localCall ? $key : $this->verifyKey($key);
-            define('USER_ID', $key);
+            $userid = $localCall ? $key : $this->verifyKey($key);
 
-            $userRights = new Rights(USER_ID, Repos::makeRepo('Groups'));
-            $urlParams = new UrlParameters();
+            $uf = new UserFactory();
+            $user = $uf->getWithKeycard($userid);
 
             $data = $this->apiCommander->dispatchModule(
                 $module,
                 $request,
                 $this->app->request,
-                [$this->app, $userRights, $urlParams]);
+                [$this->app, $user]);
 
             return $this->formatResponse(0, 'Completed', $module, $data);
         } catch (ApiException $e) {
