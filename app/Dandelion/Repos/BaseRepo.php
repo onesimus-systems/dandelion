@@ -50,4 +50,9 @@ abstract class BaseRepo
         $this->prefix = Config::get('db')['tablePrefix'];
         $this->database = self::$dbconnection;
     }
+
+    public function getPDO()
+    {
+        return $this->database->pdo();
+    }
 }

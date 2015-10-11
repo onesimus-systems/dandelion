@@ -17,7 +17,7 @@ sudo debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password_
 
 # Update apt-get, install Nginx, PHP, and MariaDB
 apt-get update
-apt-get install -y nginx php5-fpm php5-mysql mariadb-server npm nodejs-legacy git
+apt-get install -y nginx php5-fpm php5-cli php5-mysql mariadb-server npm nodejs-legacy git
 
 ## Setup configurations
 # Link /var/www to dandelion

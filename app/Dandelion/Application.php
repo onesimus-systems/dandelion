@@ -86,7 +86,7 @@ class Application
 
         try {
             // Setup session manager
-            SessionManager::register($this);
+            SessionManager::register();
             SessionManager::startSession(Config::get('cookiePrefix').Config::get('phpSessionName'));
 
             Updater::checkForUpdates($this);
