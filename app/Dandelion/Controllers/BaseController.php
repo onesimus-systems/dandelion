@@ -15,7 +15,7 @@ use Dandelion\Session\SessionManager as Session;
 use Dandelion\Factories\UserFactory;
 use Dandelion\Auth\GateKeeper;
 
-class BaseController
+abstract class BaseController
 {
     // Instance of running application
     protected $app;
@@ -30,6 +30,8 @@ class BaseController
 
         $uf = new UserFactory;
         $this->sessionUser = $uf->getWithKeycard(Session::get('userInfo')['id']);
+
+        $this->init();
     }
 
     protected function setResponse($body)
@@ -37,8 +39,15 @@ class BaseController
         $this->app->response->setBody($body);
     }
 
+    protected function setHttpCode($code)
+    {
+        $this->app->response->setStatus($code);
+    }
+
     protected function authorized(User $user, $task)
     {
         return GateKeeper::authorized($user, $task);
     }
+
+    protected function init() { }
 }

@@ -29,7 +29,8 @@
 
     "autoload": {
         "psr-4": {
-            "Dandelion\\": "app/Dandelion/"
+            "Dandelion\\": "app/Dandelion/",
+            "Dandelion2\\": "app/Dandelion2/"
         }
     }
 }

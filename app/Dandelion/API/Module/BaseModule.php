@@ -16,8 +16,10 @@ use Dandelion\Utils\Repos;
 use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 
-// Shim class until conversion to Keycard authorization
-// TODO: Remove shim class
+/**
+ * Shim class until conversion to Keycard authorization
+ * TODO: Remove shim class
+ */
 class UserRightsShim
 {
     private $card;
