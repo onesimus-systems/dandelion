@@ -29,7 +29,9 @@ Vagrant.configure(2) do |config|
         config.vm.provision :shell, path: "vagrant/vagrant_bootstrap.sh", args: "npm"
     end
 
-    config.trigger.before :destroy do
-        run "vagrant/destroy.sh"
-    end
+	if !OS.windows?
+		config.trigger.before :destroy do
+			run "vagrant/destroy.sh"
+		end
+	end
 end
