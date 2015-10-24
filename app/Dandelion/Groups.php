@@ -98,7 +98,7 @@ class Groups
      * @param array $rights - Array containing rights
      * @return int - ID of new group
      */
-    public function createGroup($name, $rights)
+    public function createGroup($name, array $rights)
     {
         $rights = array_merge($this->defaultPermissions, $rights);
         $rights = serialize($rights);
@@ -123,7 +123,7 @@ class Groups
      * @param array $rights - Group rights
      * @return bool - Status of query
      */
-    public function editGroup($gid, $rights)
+    public function editGroup($gid, array $rights)
     {
         $rights = array_merge($this->defaultPermissions, $rights);
         $rights = serialize($rights);

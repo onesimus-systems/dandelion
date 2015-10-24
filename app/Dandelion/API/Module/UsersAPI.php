@@ -22,16 +22,16 @@ class UsersAPI extends BaseModule
      * Reset a user's password
      * POST
      */
-    public function resetPassword()
+    public function resetPassword($params)
     {
         // Check permissions
-        $userid = $this->request->postParam('uid', $this->requestUser->get('id'));
+        $userid = $params->uid ?: $this->requestUser->get('id');
         if ($userid != $this->requestUser->get('id') && !$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
 
         // Validate password
-        $newPass = $this->request->postParam('pw');
+        $newPass = $params->pw;
         if (!$newPass) {
             throw new ApiException('New password is invalid', 5);
         }
@@ -52,7 +52,7 @@ class UsersAPI extends BaseModule
      * Create a new user
      * POST
      */
-    public function create()
+    public function create($params)
     {
         if (!$this->authorized($this->requestUser, 'create_user')) {
             throw new ApiPermissionException();
@@ -60,10 +60,11 @@ class UsersAPI extends BaseModule
 
         $uf = new UserFactory();
         $user = $uf->create();
-        $user->set('username', $this->request->postParam('username'));
-        $user->set('fullname', $this->request->postParam('fullname'));
-        $user->set('group_id', $this->request->postParam('group'));
-        $user->setPassword($this->request->postParam('password'));
+        $user->set('username', $params->username);
+        $user->set('fullname', $params->fullname);
+        $user->set('group_id', $params->group);
+        $user->setPassword($params->password);
+        $user->setMakeCheesto($params->cheesto);
 
         if ($user->save()) {
             return 'User created successfully';
@@ -76,23 +77,29 @@ class UsersAPI extends BaseModule
      * Save edits to a user
      * POST
      */
-    public function edit()
+    public function edit($params)
     {
         if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
 
-        $uid = $this->request->postParam('uid');
+        $uid = $params->uid;
         if (!$uid) {
             throw new ApiException('No user id given', 5);
         }
 
         $uf = new UserFactory();
         $user = $uf->get($uid);
-        $user->set('fullname', $this->request->postParam('fullname', $user->get('fullname')));
-        $user->set('group_id', $this->request->postParam('role', $user->get('group_id')));
-        $user->set('initial_login', $this->request->postParam('prompt', $user->get('initial_login')));
-        $user->set('theme', $this->request->postParam('theme', $user->get('theme')));
+
+        $fn = $params->fullname ?: $user->get('fullname');
+        $gi = $params->role ?: $user->get('group_id');
+        $il = $params->prompt ?: $user->get('initial_login');
+        $t = $params->theme ?: $user->get('theme');
+
+        $user->set('fullname', $fn);
+        $user->set('group_id', $gi);
+        $user->set('initial_login', $il);
+        $user->set('theme', $t);
 
         if ($user->save()) {
             return 'User saved successfully';
@@ -105,29 +112,24 @@ class UsersAPI extends BaseModule
      * Disable user
      * POST
      */
-    public function disable()
+    public function disable($params)
     {
-        return $this->enableDisable(true);
+        return $this->enableDisable($params->uid, true);
     }
 
     /**
      * Enable user
      * POST
      */
-    public function enable()
+    public function enable($params)
     {
-        return $this->enableDisable(false);
+        return $this->enableDisable($params->uid, false);
     }
 
-    private function enableDisable($disable)
+    private function enableDisable($uid, $disable)
     {
         if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
-        }
-
-        $uid = $this->request->postParam('uid');
-        if (!$uid) {
-            throw new ApiException('No user id given', 5);
         }
 
         $uf = new UserFactory();
@@ -150,9 +152,9 @@ class UsersAPI extends BaseModule
      * Delete a user
      * POST
      */
-    public function delete()
+    public function delete($params)
     {
-        $userid = $this->request->postParam('uid');
+        $userid = $params->uid;
 
         if ($this->requestUser->get('id') == $userid) {
             throw new ApiException('Can\'t delete yourself', 5);
@@ -191,14 +193,14 @@ class UsersAPI extends BaseModule
      * Get information for a single user
      * GET
      */
-    public function getUser()
+    public function getUser($params)
     {
         // Check permissions
         if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
 
-        $uid = $this->request->getParam('uid');
+        $uid = $params->uid;
         if (!$uid) {
             throw new ApiException('No user id given', 5);
         }

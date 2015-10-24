@@ -20,27 +20,20 @@ class CommentsAPI extends BaseModule
         parent::__construct($app, $user, false);
     }
 
-    public function add()
+    public function add($params)
     {
         $logObject = new Logs($this->makeRepo('Logs'));
 
-        $logId = $this->request->postParam('logid', null);
-        $commentText = $this->request->postParam('comment', '');
-
-        if ($logObject->addComment($logId, $this->requestUser->get('id'), $commentText)) {
+        if ($logObject->addComment($params->logid, $this->requestUser->get('id'), $params->comment)) {
             return 'Comment created successfully';
         } else {
             throw new ApiException('Error creating comment', 5);
         }
     }
 
-    public function get()
+    public function get($params)
     {
         $logObject = new Logs($this->makeRepo('Logs'));
-
-        $logId = $this->request->getParam('logid', null);
-        $order = $this->request->getParam('order', 'new');
-
-        return $logObject->getLogCommentsComment($logId, $order);
+        return $logObject->getLogCommentsComment($params->logid, $params->order);
     }
 }

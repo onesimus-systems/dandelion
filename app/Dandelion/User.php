@@ -19,6 +19,7 @@ class User
     private $cheestoRepo;
     private $keycard;
     private $valid = true;
+    private $createCheesto = true;
 
     // User data
     private $userInfo = [];
@@ -131,6 +132,11 @@ class User
         return $this->keycard;
     }
 
+    public function setMakeCheesto($b = true)
+    {
+        $this->createCheesto = $b;
+    }
+
     private function update()
     {
         if ($this->get('disabled') === null) {
@@ -165,10 +171,14 @@ class User
         );
 
         $userCheestoCreated = true;
-        $userCheestoCreated = $this->cheestoRepo->createCheesto(
-            $userCreated,
-            $date->format('Y-m-d H:i:s')
-        );
+        if ($this->createCheesto) {
+            $userCheestoCreated = $this->cheestoRepo->createCheesto(
+                $userCreated,
+                $date->format('Y-m-d H:i:s')
+            );
+        } else {
+            $userCheestoCreated = 1;
+        }
 
         return (is_numeric($userCreated) && is_numeric($userCheestoCreated));
     }

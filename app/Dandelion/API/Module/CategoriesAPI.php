@@ -21,17 +21,15 @@ class CategoriesAPI extends BaseModule
      *
      *  @return JSON
      */
-    public function create()
+    public function create($params)
     {
         if (!$this->authorized($this->requestUser, 'create_cat')) {
             throw new ApiPermissionException();
         }
 
-        $parent = $this->request->postParam('pid');
-        $desc = $this->request->postParam('description');
         $createCat = new Categories($this->repo);
 
-        if ($createCat->addCategory($parent, $desc)) {
+        if ($createCat->addCategory($params->pid, $params->description)) {
             return 'Category created successfully';
         } else {
             throw new ApiException('Error creating category', 5);
@@ -43,17 +41,15 @@ class CategoriesAPI extends BaseModule
      *
      *  @return JSON
      */
-    public function edit()
+    public function edit($params)
     {
         if (!$this->authorized($this->requestUser, 'edit_cat')) {
             throw new ApiPermissionException();
         }
 
-        $cid = $this->request->postParam('cid');
-        $desc = $this->request->postParam('description');
         $editCat = new Categories($this->repo);
 
-        if ($editCat->editCategory($cid, $desc)) {
+        if ($editCat->editCategory($params->cid, $params->description)) {
             return 'Category edited successfully';
         } else {
             throw new ApiException('Error editing category', 5);
@@ -65,16 +61,15 @@ class CategoriesAPI extends BaseModule
      *
      *  @return JSON
      */
-    public function delete()
+    public function delete($params)
     {
         if (!$this->authorized($this->requestUser, 'delete_cat')) {
             throw new ApiPermissionException();
         }
 
-        $cat = $this->request->postParam('cid');
         $deleteCat = new Categories($this->repo);
 
-        if ($deleteCat->delCategory($cat)) {
+        if ($deleteCat->delCategory($params->cid)) {
             return 'Category deleted successfully';
         } else {
             throw new ApiException('Error deleting category', 5);

@@ -15,15 +15,24 @@ use Dandelion\Exception\ApiPermissionException;
 
 class KeyManagerAPI extends BaseModule
 {
+    // Public facing methods can only accept a parameter of the url parameters.
+    // Get doesn't take any parameters they would interfere if the internal
+    // get method was set as the public one. Thus, this is simply a wrapper.
+    public function get()
+    {
+        return $this->getInternal($this->requestUser->get('id'), false);
+    }
+
     /**
      *  Retrieve key from database for current user.
      *  If a key isn't present, create one
      *
-     *  @param bool $force - Force a new key to be generated
+     *  @param int  $user Id of user to get api key
+     *  @param bool $force Force a new key to be generated
      *
      *  @return JSON - API Key or error message
      */
-    public function get($user = null, $force = false)
+    protected function getInternal($user = null, $force = false)
     {
         $user = $user ?: $this->requestUser->get('id');
         $key = new KeyManager($this->repo);
@@ -35,16 +44,16 @@ class KeyManagerAPI extends BaseModule
      */
     public function generate()
     {
-        return self::get($this->requestUser->get('id'), true);
+        return $this->getInternal($this->requestUser->get('id'), true);
     }
 
     /**
      *  Delete a user's key rendering it void
      */
-    public function revoke()
+    public function revoke($params)
     {
         $userid = $this->requestUser->get('id');
-        $requestedUid = $this->request->postParam('uid');
+        $requestedUid = $params->uid;
 
         // Check permissions
         if ($requestedUid) {

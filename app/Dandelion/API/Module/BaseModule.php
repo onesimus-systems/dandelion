@@ -23,10 +23,12 @@ use Dandelion\Controllers\ApiController;
 class UserRightsShim
 {
     private $card;
+    public $userid;
 
     public function __construct(User $user)
     {
         $this->card = $user->getKeycard();
+        $this->userid = $user->get('id');
     }
 
     public function authorized($permission)
