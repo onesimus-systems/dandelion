@@ -15,6 +15,8 @@ use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
 use Dandelion\Utils\Configuration as Config;
 
+use Dandelion2\Validator;
+
 class CheestoAPI extends BaseModule
 {
     /**
@@ -22,17 +24,17 @@ class CheestoAPI extends BaseModule
      *
      *  @return JSON
      */
-    public function read()
+    public function read($params)
     {
         if (!Config::get('cheestoEnabled')) {
-            throw new ApiException('Cheesto has been disabled', 5);
+            throw new ApiException('Cheesto has been disabled', 10);
         }
         if (!$this->authorized($this->requestUser, 'view_cheesto')) {
             throw new ApiPermissionException();
         }
 
         $cheesto = new Cheesto($this->repo);
-        return $cheesto->getUserStatus($this->request->getParam('uid'));
+        return $cheesto->getUserStatus($params->uid);
     }
 
     /**
@@ -41,7 +43,7 @@ class CheestoAPI extends BaseModule
     public function statusTexts()
     {
         if (!Config::get('cheestoEnabled')) {
-            throw new ApiException('Cheesto has been disabled', 5);
+            throw new ApiException('Cheesto has been disabled', 10);
         }
         $cheesto = new Cheesto($this->repo);
         return $cheesto->getStatusText();
@@ -50,33 +52,33 @@ class CheestoAPI extends BaseModule
     /**
      *  Update the status of user
      *
-     *  @return JSON
+     *  @return string
      */
-    public function update()
+    public function update($params)
     {
         if (!Config::get('cheestoEnabled')) {
-            throw new ApiException('Cheesto has been disabled', 5);
+            throw new ApiException('Cheesto has been disabled', 10);
         }
         if (!$this->authorized($this->requestUser, 'update_cheesto')) {
             throw new ApiPermissionException();
         }
 
         $cheesto = new Cheesto($this->repo);
-        $message = $this->request->postParam('message', '');
-        $status = $this->request->postParam('status', 'Available');
-        $returntime = $this->request->postParam('returntime', '00:00:00');
         $userid = $this->requestUser->get('id');
-        $requestedUid = $this->request->postParam('uid');
 
-        if ($requestedUid) { // A status of another user is trying to be updated
-            if ($requestedUid == $userid || $this->authorized($this->requestUser, 'edit_user')) {
-                $userid = $requestedUid;
+        if ($params->uid) { // A status of another user is trying to be updated
+            if ($params->uid == $userid || $this->authorized($this->requestUser, 'edit_user')) {
+                $userid = $params->uid;
             } else {
                 throw new ApiPermissionException();
             }
         }
 
-        if ($cheesto->updateStatus($message, $status, $returntime, $userid)) {
+        if ($cheesto->updateStatus(
+            $params->message,
+            $params->status,
+            $params->returntime,
+            $userid)) {
             return 'Status updated successfully';
         } else {
             throw new ApiException('Error updating status', 5);

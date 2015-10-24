@@ -59,6 +59,12 @@ cd /vagrant
 composer install
 
 # Setup Node
-npm install -g gulp
-npm install
-gulp
+# Windows doesn't handle linux NPM correctly due to symlinks
+# If Vagrant is running on Windows, the first arg nonpm will be set
+if [ "$1" != "nonpm" ]; then
+    npm install -g gulp
+    npm install
+    gulp
+else
+    echo "Windows detected, not running 'npm install'"
+fi

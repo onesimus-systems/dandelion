@@ -27,10 +27,6 @@ class ACLFactory
     public function get($groupid)
     {
         return;
-
-        $userRepo = new Repos\UserRepo();
-        $cheestoRepo = new Repos\CheestoRepo();
-        return new User($userRepo, $cheestoRepo, $userid);
     }
 
     public function createKeycard($id)

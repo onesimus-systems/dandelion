@@ -9,17 +9,16 @@
  */
 namespace Dandelion;
 
-use \Dandelion\Application;
-
-$paths = require __DIR__.'/paths.php';
+use Onesimus\Router\Http\Request;
 
 // Check PHP version, Dandelion supports only PHP 5.4 and above
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.4.0', '<')) {
     exit(1);
 }
 
-$app = new Application();
+$paths = require __DIR__.'/paths.php';
 
+$app = Application::getInstance(Request::getRequest());
 $app->bindInstallPaths($paths, true);
 
 return $app;

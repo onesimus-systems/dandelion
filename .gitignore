@@ -17,3 +17,4 @@ update.lock
 tsconfig.json
 .vagrant/
 *.bak
+uml/

@@ -109,6 +109,9 @@ class ApiModule
      */
     public function hasMatchingMethod($path, Request $request)
     {
-        return ($this->hasMethod($path) && $this->methods[$path]->matches($path, $request));
+        if ($this->hasMethod($path)) {
+            return $this->methods[$path]->matches($path, $request);
+        }
+        return false;
     }
 }

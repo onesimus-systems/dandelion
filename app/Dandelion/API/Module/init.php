@@ -19,9 +19,25 @@ $apiCommander->registerModule('categories', __NAMESPACE__.'\CategoriesAPI',
 
 $apiCommander->registerModule('cheesto', __NAMESPACE__.'\CheestoAPI',
     [
-        ['read', null, ['http_method' => 'get']],
+        ['read', null, [
+            'http_method' => 'get',
+            'parameters' => [
+                'uid' => [null, 'int']
+            ]
+        ]],
+
         ['statustexts', 'statusTexts', ['http_method' => 'get']],
-        ['update', null, ['http_method' => 'post']]
+
+        ['update', null, [
+            'http_method' => 'post',
+            'parameters' => [
+                // 'url-parameter-name' => ['default', 'type', 'priority']
+                'message' => ['', 'string'],
+                'status' => ['Available', 'string'],
+                'returntime' => ['00:00:00', 'string'],
+                'uid' => [null, 'int']
+            ]
+        ]]
     ]);
 
 $apiCommander->registerModule('comments', __NAMESPACE__.'\CommentsAPI',
@@ -58,7 +74,7 @@ $apiCommander->registerModule('logs', __NAMESPACE__.'\LogsAPI',
 
 $apiCommander->registerModule('users', __NAMESPACE__.'\UsersAPI',
     [
-        ['resetPassword', 'resetPassword', ['http_method' => 'post']],
+        ['resetpassword', 'resetPassword', ['http_method' => 'post']],
         ['create', null, ['http_method' => 'post']],
         ['edit', null, ['http_method' => 'post']],
         ['delete', null, ['http_method' => 'post']],

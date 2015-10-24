@@ -10,6 +10,7 @@
 namespace Dandelion\API;
 
 use Dandelion\Exception\ApiException;
+use Dandelion2\Validator;
 
 use Onesimus\Router\Http\Request;
 
@@ -23,7 +24,7 @@ class ApiModuleMethod
     private $opts = [];
 
     /**
-     * [__construct description]
+     * Create a new ApiModuleMethod
      * @param string $path   URL path this method maps to
      * @param string $method The method to call for this path
      * @param array $opts   Options to set
@@ -44,7 +45,7 @@ class ApiModuleMethod
     /**
      * Returns if this method matches the given path and set options
      * @param  string $path Path to check
-     * @return boolean
+     * @return boolean | StdClass (validated data)
      */
     public function matches($path, Request $request)
     {
@@ -53,10 +54,36 @@ class ApiModuleMethod
             return false;
         }
 
-        // Check if an http_method option was set
+        // Check if an http_method option was set and matches
         if ($http_method = $this->getOpt('http_method')) {
-            $http_method = 'is'.ucfirst($http_method);
-            return $request->$http_method();
+            $http_method_func = 'is'.ucfirst($http_method);
+            if (!$request->$http_method_func()) {
+                return false;
+            }
+        }
+
+        // Checks if parameters were set and validates
+        if ($params = $this->getOpt('parameters')) {
+            $batchValidations = [];
+            $paramFunc = $http_method ?: 'get';
+            $paramFunc .= 'Param';
+            foreach ($params as $id => $opts) {
+                $default = isset($opts[0]) ? $opts[0] : null;
+                $type = isset($opts[1]) ? $opts[1] : 'string';
+                $priority = isset($opts[2]) ? $opts[2] : 'optional';
+
+                $validation = [$request->$paramFunc($id, $default), $type, $priority];
+                $batchValidations[$id] = $validation;
+            }
+
+            $validatedData = Validator::validateBatchKeys($batchValidations);
+            if (!$validatedData->_valid) {
+                throw new ApiException(
+                    'Invalid parameters \''.implode(', ', $validatedData->_invalidFields).'\'',
+                    7,
+                    422);
+            }
+            return $validatedData;
         }
 
         return true;

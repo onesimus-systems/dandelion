@@ -25,16 +25,19 @@ class ApiController extends BaseController
     private $apiCommander;
     private $startTime;
 
-    public function __construct(Application $app)
+    /**
+     * Inializer called by parent constructor
+     * @return void
+     */
+    protected function init()
     {
-        parent::__construct($app);
-        $app->response->headers->replace([
+        $this->app->response->headers->replace([
             ['Content-Type', 'application/json'],
             ['Access-Control-Allow-Origin', '*']
         ]);
 
         $apiCommander = new ApiCommander();
-        include $app->paths['app'].'/Dandelion/API/Module/init.php';
+        include $this->app->paths['app'].'/Dandelion/API/Module/init.php';
         $this->apiCommander = $apiCommander;
     }
 
@@ -58,9 +61,9 @@ class ApiController extends BaseController
                       $this->request->getParam('apikey', '') :
                       $this->request->postParam('apikey', '');
 
-            $this->sendResponse($this->processRequest($apikey, false, $module, $method));
+            $this->setResponse($this->processRequest($apikey, false, $module, $method));
         } else {
-            $this->sendResponse($this->formatResponse(2, 'Public API disabled', 'api'));
+            $this->setResponse($this->formatResponse(2, 'Public API disabled', 'api'));
         }
         return;
     }
@@ -81,9 +84,9 @@ class ApiController extends BaseController
         }
 
         if (GateKeeper::authenticated()) {
-            $this->sendResponse($this->processRequest($this->sessionUser->get('id'), true, $module, $method));
+            $this->setResponse($this->processRequest($this->sessionUser->get('id'), true, $module, $method));
         } else {
-            $this->sendResponse($this->formatResponse(3, 'Action requires logged in session', 'api'));
+            $this->setResponse($this->formatResponse(3, 'Action requires logged in session', 'api'));
         }
         return;
     }
@@ -103,7 +106,7 @@ class ApiController extends BaseController
                 "Bad API call for Module: '{mod}' and Method: '{met}'",
                 ['mod' => $module, 'met' => $method]
             );
-            $this->sendResponse($this->formatResponse(5, 'Bad API call', 'api'));
+            $this->setResponse($this->formatResponse(5, 'Bad API call', 'api'));
             return false;
         }
         return true;
@@ -143,6 +146,7 @@ class ApiController extends BaseController
                 );
             }
 
+            $this->setHttpCode($e->getHttpCode());
             return $this->formatResponse($e->getCode(), $e->getMessage(), $e->getModule(), '');
         } catch (\Exception $e) {
             header("HTTP/1.1 500 Internal Server Error");
@@ -205,6 +209,10 @@ class ApiController extends BaseController
          * 4 - Insufficient permissions
          * 5 - General error
          * 6 - Server error
+         * 7 - Invalid API call
+         * 8 - Module not found
+         * 9 - Module path not found
+         * 10 - Cheesto disabled
          */
         $endTime = round(((microtime(true) - $this->startTime) * 1000), 2);
         $response = [
@@ -215,16 +223,5 @@ class ApiController extends BaseController
             'requestTime' => $endTime.'ms'
         ];
         return json_encode($response);
-    }
-
-    /**
-     * Send response back to client
-     *
-     * @param  string $body Response body
-     * @return null
-     */
-    protected function sendResponse($body)
-    {
-        $this->setResponse($body);
     }
 }

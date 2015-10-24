@@ -23,6 +23,7 @@ class ApiCommander
      * @param  string/ApiModule $path    URL path to module OR an ApiModule object
      * @param  string $className    Classname of module
      * @param  array  $methods    Array of methods to add to module object
+     * @return void
      */
     public function registerModule($path, $className = '', array $methods = [])
     {
@@ -51,7 +52,7 @@ class ApiCommander
     /**
      * Return the module named $module
      * @param  string $module Module to return (base path)
-     * @return ApiModule OR null
+     * @return ApiModule | null
      */
     public function getModule($module)
     {
@@ -73,7 +74,7 @@ class ApiCommander
     }
 
     /**
-     * [dispatchModule description]
+     * Dispatch the module and call the appropiate method for the request
      * @param  string $module Module to run
      * @param  string $path   Path mapped to method to call
      * @param  array  $args   Arguments to pass to module at construction
@@ -85,34 +86,39 @@ class ApiCommander
 
         // Check module exists
         if (!$this->hasModule($module)) {
-            throw new ApiException('Module not found', 6);
+            throw new ApiException('Module not found', 8);
         }
 
         $dispatching = $this->modules[$module];
         // Check module has a path for the requested URL
-        if (!$dispatching->hasMatchingMethod($path, $request)) {
-            throw new ApiException('Bad API call', 5);
+        $injectData = $dispatching->hasMatchingMethod($path, $request);
+        if ($injectData === false) {
+            throw new ApiException('Bad API call', 9);
         }
 
+        // Get the names of the class and method to call
         $className = $dispatching->getClass();
         $methodName = $dispatching->getMethod($path)->getMethod();
 
         if (!class_exists($className)) {
-            throw new ApiException('Module not found', 6);
+            throw new ApiException('Module not found', 8);
         }
 
+        // Create a new class using $args as the parameters
         $reflectedClass = new \ReflectionClass($className);
         $ApiModule = $reflectedClass->newInstanceArgs($args);
 
-        if (is_callable([$ApiModule, $methodName])) {
-            try {
-                $response = $ApiModule->$methodName();
-            } catch (ApiException $e) {
-                $e->setModule($module);
-                throw $e;
-            }
-        } else {
-            throw new ApiException('Bad API call', 5);
+        // Check the method is available
+        if (!is_callable([$ApiModule, $methodName])) {
+            throw new ApiException('Bad API call', 9);
+        }
+
+        // Attempt calling the method
+        try {
+            $response = $ApiModule->$methodName($injectData);
+        } catch (ApiException $e) {
+            $e->setModule($module);
+            throw $e;
         }
 
         return $response;
