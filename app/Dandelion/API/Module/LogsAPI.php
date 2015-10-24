@@ -23,7 +23,7 @@ class LogsAPI extends BaseModule
      *
      *  @return array
      */
-    public function read()
+    public function read($params)
     {
         if (!$this->authorized($this->requestUser, 'view_log')) {
             throw new ApiPermissionException();
@@ -32,10 +32,10 @@ class LogsAPI extends BaseModule
         $return = [];
         $logs = new Logs($this->repo, $this->ur);
 
-        if ($this->request->getParam('logid')) {
-            $return = $logs->getLogInfo($this->request->getParam('logid'));
+        if ($params->logid) {
+            $return = $logs->getLogInfo($params->logid);
         } else {
-            $metadata = $this->offsetLimitCommon();
+            $metadata = $this->offsetLimitCommon($params);
             $return = $logs->getLogList($metadata['limit'], $metadata['offset']);
             $metadata['resultCount'] = count($return);
             $return['metadata'] = $metadata;
@@ -47,15 +47,15 @@ class LogsAPI extends BaseModule
     /**
      *  Add a new log
      */
-    public function create()
+    public function create($params)
     {
         if (!$this->authorized($this->requestUser, 'create_log')) {
             throw new ApiPermissionException();
         }
 
-        $title = $this->request->postParam('title');
-        $body = $this->request->postParam('body');
-        $cat = rtrim($this->request->postParam('cat'), ':');
+        $title = $params->title;
+        $body = $params->body;
+        $cat = rtrim($params->cat, ':');
 
         $logs = new Logs($this->repo);
 
@@ -69,10 +69,9 @@ class LogsAPI extends BaseModule
     /**
      * Save an edit to an existing log
      */
-    public function edit()
+    public function edit($params)
     {
-        $lid = $this->request->postParam('logid');
-        $log = $this->read()[0];
+        $log = $this->read($params)[0];
 
         $canEdit = (
             $this->authorized($this->requestUser, 'admin') ||
@@ -83,9 +82,10 @@ class LogsAPI extends BaseModule
             throw new ApiPermissionException();
         }
 
-        $title = $this->request->postParam('title');
-        $body = $this->request->postParam('body');
-        $cat = rtrim($this->request->postParam('cat'), ':');
+        $lid = $params->logid;
+        $title = $params->title;
+        $body = $params->body;
+        $cat = rtrim($this->cat, ':');
 
         $logs = new Logs($this->repo);
 
@@ -100,15 +100,15 @@ class LogsAPI extends BaseModule
      * Search logs using provided query string
      * @return array
      */
-    public function search()
+    public function search($params)
     {
         if (!$this->authorized($this->requestUser, 'view_log')) {
             throw new ApiPermissionException();
         }
 
-        $query = $this->request->getParam('query');
+        $query = $params->query;
 
-        $metadata = $this->offsetLimitCommon();
+        $metadata = $this->offsetLimitCommon($params);
 
         $logs = new LogSearch($this->repo);
         // It would appear the +1 extra log, and the -1 count would cancel out...
@@ -125,12 +125,12 @@ class LogsAPI extends BaseModule
      * Processes and compiles the offset, limit, and logsize used for paging
      * @return array Metadata used in the query and returned to client
      */
-    private function offsetLimitCommon()
+    private function offsetLimitCommon($params)
     {
         $userLimit = new UserSettings($this->makeRepo('UserSettings'));
         $limit = $userLimit->getSetting('logs_per_page', $this->requestUser->get('id'));
-        $limit = (int) $this->request->getParam('limit', $limit);
-        $offset = (int) $this->request->getParam('offset', 0);
+        $limit = $params->limit ?: $limit;
+        $offset = $params->offset;
         $offset = $offset < 0 ? 0 : $offset;
 
         $logSize = $this->repo->numOfLogs();

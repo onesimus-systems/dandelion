@@ -113,7 +113,7 @@ var UserManage = {
         $("#pass2").val("");
 
         if (pass1 === pass2 && pass1 !== "") {
-            $.post("../../api/i/users/resetPassword", {pw: pass1, uid: $("#user-id").val()}, null, "json")
+            $.post("../../api/i/users/resetpassword", {pw: pass1, uid: $("#user-id").val()}, null, "json")
                 .done(function(data) {
                     $.alert(data.data, "User Management");
                 });

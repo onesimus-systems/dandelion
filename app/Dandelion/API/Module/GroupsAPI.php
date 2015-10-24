@@ -28,25 +28,24 @@ class GroupsAPI extends BaseModule
     /**
      * Gets the rights for a specific group
      */
-    public function getGroup()
+    public function getGroup($params)
     {
         $permissions = new Groups($this->repo);
-        $gid = $this->request->getParam('groupid');
-        return $permissions->getGroupList($gid);
+        return $permissions->getGroupList($params->groupid);
     }
 
     /**
      * Save rights for a group
      */
-    public function edit()
+    public function edit($params)
     {
         if (!$this->authorized($this->requestUser, 'edit_group')) {
             throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
-        $gid = $this->request->postParam('groupid');
-        $rights = json_decode($this->request->postParam('rights'), true);
+        $gid = $params->groupid;
+        $rights = json_decode($params->rights, true);
 
         if ($permissions->editGroup($gid, $rights)) {
             return 'User group saved';
@@ -58,18 +57,20 @@ class GroupsAPI extends BaseModule
     /**
      * Create new rights group
      */
-    public function create()
+    public function create($params)
     {
         if (!$this->authorized($this->requestUser, 'create_group')) {
             throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
-        $name = $this->request->postParam('name');
-        $rights = $this->request->postParam('rights', []);
+        $name = $params->name;
+        $rights = $params->rights;
 
         if ($rights) {
             $rights = json_decode($rights, true);
+        } else {
+            $rights = [];
         }
 
         if (is_numeric($permissions->createGroup($name, $rights))) {
@@ -82,14 +83,14 @@ class GroupsAPI extends BaseModule
     /**
      * Delete rights group
      */
-    public function delete()
+    public function delete($params)
     {
         if (!$this->authorized($this->requestUser, 'delete_group')) {
             throw new ApiPermissionException();
         }
 
         $permissions = new Groups($this->repo);
-        $gid = $this->request->postParam('groupid');
+        $gid = $params->groupid;
         $users = $permissions->usersExistInGroup($gid);
 
         if ($users) {

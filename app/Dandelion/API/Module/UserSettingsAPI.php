@@ -15,14 +15,14 @@ use Dandelion\Exception\ApiException;
 
 class UserSettingsAPI extends BaseModule
 {
-    public function saveLogLimit()
+    public function saveLogLimit($params)
     {
-        return $this->saveSetting('LogLimit', $this->request->postParam('limit'));
+        return $this->saveSetting('LogLimit', $params->limit);
     }
 
-    public function saveTheme()
+    public function saveTheme($params)
     {
-        return $this->saveSetting('Theme', $this->request->postParam('theme'));
+        return $this->saveSetting('Theme', $params->theme);
     }
 
     private function saveSetting($setting, $value)

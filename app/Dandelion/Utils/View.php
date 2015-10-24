@@ -125,6 +125,10 @@ class View
      */
     private static function isTheme($slug)
     {
+        if (!$slug) {
+            return false;
+        }
+
         $paths = Application::getPaths();
         return is_file($paths['public'].'/assets/themes/'.$slug.'/metadata.json');
     }

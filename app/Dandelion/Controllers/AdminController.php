@@ -48,7 +48,7 @@ class AdminController extends BaseController
         }
 
         if (Config::get('checkForUpdates')) {
-            $latest = file('http://onesimussystems.com/dandelion/versioncheck', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+            $latest = file(Config::get('updateUrl'), FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
             $latest = json_decode($latest[0], true);
             if (version_compare($latest['version'], Application::VERSION, '>')) {
                 $updateArray['current'] = Application::VERSION;
