@@ -39,9 +39,8 @@ class Configuration
                 return false;
             }
 
-            $mergedSettings = array_merge($defaults, $userSettings);
-
-            self::$config = $mergedSettings;
+            self::$config = self::array_merge_recursive_deep($defaults, $userSettings);
+            // Ensure hostname is formatted properly for rest of application
             self::$config['hostname'] = rtrim(self::$config['hostname'], '/');
         }
 
@@ -62,5 +61,31 @@ class Configuration
     public static function get($name, $else = null)
     {
         return isset(self::$config[$name]) ? self::$config[$name] : $else;
+    }
+
+    /**
+     * Recursively merges arrays but doesn't append values like PHP's array_merge_recursive()
+     *
+     * @param array $ Arrays to merge, values in later arrays will overwrite earlier values
+     * @return array Merged values
+     */
+    private static function array_merge_recursive_deep()
+    {
+        $arrays = func_get_args();
+        $result = [];
+
+        foreach ($arrays as $array) {
+            foreach ($array as $key => $value) {
+                if (is_integer($key)) {
+                    $result[] = $value;
+                } elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
+                    $result[$key] = self::array_merge_recursive_deep($result[$key], $value);
+                } else {
+                    $result[$key] = $value;
+                }
+            }
+        }
+
+        return $result;
     }
 }
