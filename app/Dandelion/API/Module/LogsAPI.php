@@ -75,6 +75,7 @@ class LogsAPI extends BaseModule
 
         $canEdit = (
             $this->authorized($this->requestUser, 'admin') ||
+            $this->authorized($this->requestUser, 'edit_any_log') ||
             ($this->authorized($this->requestUser, 'edit_log') && $log['user_id'] == $this->requestUser->get('id'))
         );
 

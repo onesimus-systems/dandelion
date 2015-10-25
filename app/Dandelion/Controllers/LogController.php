@@ -51,6 +51,7 @@ class LogController extends BaseController
 
         $canEdit = (
             $this->authorized($this->sessionUser, 'admin') ||
+            $this->authorized($this->sessionUser, 'edit_any_log') ||
             ($this->authorized($this->sessionUser, 'edit_log') && $log['user_id'] == $this->sessionUser->get('id'))
         );
 
@@ -99,18 +100,28 @@ class LogController extends BaseController
 
     public function edit($logid)
     {
-        $canEdit = (
-            $this->authorized($this->sessionUser, 'admin') ||
-            ($this->authorized($this->sessionUser, 'edit_log') && $log['user_id'] == $this->sessionUser->get('id'))
-        );
-
-        if (!$logid || !$canEdit) {
+        // Check for a logid
+        if (!$logid) {
             View::redirect('dashboard');
             return;
         }
 
         $logs = new Logs(Repos::makeRepo('Logs'));
         $log = $this->getLog($logid, $logs);
+
+        // Determine if the user has the correct rights to edit the log
+        $canEdit = (
+            $this->authorized($this->sessionUser, 'admin') ||
+            $this->authorized($this->sessionUser, 'edit_any_log') ||
+            ($this->authorized($this->sessionUser, 'edit_log')
+                && $log['user_id'] == $this->sessionUser->get('id'))
+        );
+
+        // If not, boot them out
+        if (!$canEdit) {
+            View::redirect('dashboard');
+            return;
+        }
 
         $displayCats = new Categories(Repos::makeRepo('Categories'));
         $cats = $displayCats->renderFromString($log['category']);
@@ -175,6 +186,7 @@ class LogController extends BaseController
 
         $canEdit = (
             $this->authorized($this->sessionUser, 'admin') ||
+            $this->authorized($this->sessionUser, 'edit_any_log') ||
             ($this->authorized($this->sessionUser, 'edit_log') && $log['user_id'] == $this->sessionUser->get('id'))
         );
 

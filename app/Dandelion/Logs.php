@@ -13,6 +13,9 @@ use Dandelion\Repos\Interfaces\LogsRepo;
 
 class Logs
 {
+    private $repo;
+    private $ur;
+
     public function __construct(LogsRepo $repo, $ur = null)
     {
         $this->repo = $repo;
@@ -27,7 +30,7 @@ class Logs
      *
      * @return array with log data
      */
-    public function getLogInfo($logid = '')
+    public function getLogInfo($logid = 0)
     {
         return $this->repo->getLogInfo($logid);
     }

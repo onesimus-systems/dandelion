@@ -32,6 +32,7 @@ class GateKeeper
 
         'create_log' => 'createlog',
         'edit_log' => 'editlog',
+        'edit_any_log' => 'editlogall',
         'view_log' => 'viewlog',
         'add_comment' => 'addcomment',
 

@@ -52,7 +52,7 @@ class LogSearch
                 'fullname' => 'Search',
                 'time_created' => date('H:i:s'),
                 'title' => 'No Results',
-                'user_id' => -1,
+                'user_id' => 0,
                 'num_of_comments' => 0,
             ];
         }

@@ -18,6 +18,7 @@ class Groups
     private $defaultPermissions = [
         'createlog' => false,
         'editlog' => false,
+        'editlogall' => false,
         'viewlog' => false,
         'addcomment' => false,
 
@@ -41,7 +42,8 @@ class Groups
 
     private $permissionNames = [
         'createlog' => 'Create logs',
-        'editlog' => 'Edit logs',
+        'editlog' => 'Edit logs created by user',
+        'editlogall' => 'Edit any log',
         'viewlog' => 'View logs',
         'addcomment' => 'Add Comments',
 
