@@ -25,7 +25,7 @@ class Categories
      *
      * @param array $cids - Category IDs of selected starting with 0 at index 0 as root
      *
-     * @return string - HTML of category select group
+     * @return string - JSON of categories at each level
      */
     public function renderChildrenJson($cids)
     {
@@ -38,30 +38,24 @@ class Categories
 
         // Cycle through each level
         foreach ($cids as $i => $cid) {
-            $alphaList = array();
+            $children = [];
             // Find children
             foreach ($cats as $isChild) {
                 if($isChild['parent'] == $cid) {
-                    $child = array(
+                    array_push($children, [
                         'id' =>  $isChild['id'],
                         'description' => $isChild['description']
-                    );
-                    array_push($alphaList, $child);
+                    ]);
                 }
             }
 
-            // Sort children alphabetically
-            usort($alphaList, function($a, $b) {
-                return strcasecmp(mb_strtolower($a['description']), mb_strtolower($b['description']));
-            });
-
             // Add children to array for the level
-            foreach ($alphaList as $children) {
-                $selected = (isset($cids[$i+1]) && ($children['id'] == $cids[$i+1]));
+            foreach ($children as $child) {
+                $selected = (isset($cids[$i+1]) && ($child['id'] == $cids[$i+1]));
 
                 $response['levels'][$i][] = [
-                    'id' => (int) $children['id'],
-                    'desc' => $children['description'],
+                    'id' => (int) $child['id'],
+                    'desc' => $child['description'],
                     'selected' => $selected
                 ];
             }
@@ -70,12 +64,20 @@ class Categories
         return json_encode($response);
     }
 
+    /**
+     * Converts a category string to an array (or JSON string) of category levels
+     * @param string $catstring String of category hierarchy
+     * @param bool $json Return a json string
+     *
+     * @return string | array
+     */
     public function renderFromString($catstring, $json = true)
     {
         $catStrExploded = explode(':', $catstring);
         $idArr = [0];
         $pid = 0;
 
+        // TODO: Refactor so the database isn't being read with each iteration
         for ($i = 0; $i < count($catStrExploded); $i++) {
             $pid = (int) $this->repo->getIdForCategoryWithParent($catStrExploded[$i], $pid);
             if ($pid) {
