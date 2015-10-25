@@ -1,9 +1,9 @@
-Dandelion v6.0.0
+Dandelion v6.1.0
 ================
 
 Dandelion is a web-based logbook designed to make it dead simple to keep logs. Dandelion helps you remember what you did four months ago. Dandelion developed out of the mindset of IT but is versatile enough to use in just about any situation.
 
-Website and Docs: http://onesimussystems.com/dandelion
+Website and Docs: http://blog.onesimussystems.com/dandelion
 
 Requirements
 ------------
@@ -32,6 +32,20 @@ I've also taken the time to develop a small Chrome extension that can interface 
 
 Release Notes
 -------------
+
+v6.1.0
+
+- Ability to disable users instead of deleting them.
+- Commenting on logs.
+- Fixed display issues on the dashboard.
+- Permalink for individual logs
+- Creating and editing logs moved to separate page
+- Centralized session manager
+- Improved build script
+- Created development Vagrant Configuration
+- Improved internal permissions
+- Validation of API request parameters
+- Misc. fixes and improvements
 
 v6.0.0
 
