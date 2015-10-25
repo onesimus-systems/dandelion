@@ -40,6 +40,7 @@ class UsersAPI extends BaseModule
         $uf = new UserFactory();
         $user = $uf->get($userid);
         $user->setPassword($newPass);
+        $user->set('initial_login', 0);
 
         if ($user->save()) {
             return 'Password changed successfully';
@@ -62,7 +63,7 @@ class UsersAPI extends BaseModule
         $user = $uf->create();
         $user->set('username', $params->username);
         $user->set('fullname', $params->fullname);
-        $user->set('group_id', $params->group);
+        $user->set('group_id', $params->role);
         $user->setPassword($params->password);
         $user->setMakeCheesto($params->cheesto);
 

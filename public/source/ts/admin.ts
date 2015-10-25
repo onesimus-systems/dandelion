@@ -72,7 +72,7 @@ var Admin = {
         var fullname = $("#add_fullname").val();
         var group = $("#add_group").val();
 
-        $.post("api/i/users/create", {username: username, password: password, fullname: fullname, group: group}, null, "json")
+        $.post("api/i/users/create", {username: username, password: password, fullname: fullname, role: group}, null, "json")
             .done(function(data) {
                 location.reload();
             });
