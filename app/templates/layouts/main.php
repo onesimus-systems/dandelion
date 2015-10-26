@@ -28,9 +28,11 @@
 
             <nav>
                 <ul>
+                    <?php if (!isset($logoutOnly)): ?>
                     <li><a href="<?= $this->e($hostname) ?>/">Dashboard</a></li>
                     <li><a href="<?= $this->e($hostname) ?>/settings">Settings</a></li>
                     <li><a href="<?= $this->e($hostname) ?>/admin">Administration</a></li>
+                    <?php endif; ?>
                     <li><a href="<?= $this->e($hostname) ?>/logout">Logout</a></li>
                 </ul>
             </nav>

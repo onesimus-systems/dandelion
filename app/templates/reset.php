@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui'], 'logoutOnly' => true]);
 ?>
 <!-- Begin Page Body -->
 
