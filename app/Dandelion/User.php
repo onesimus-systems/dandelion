@@ -64,6 +64,11 @@ class User
 
     public function set($key, $value)
     {
+        // The id is protected and can't be modified
+        if ($key === 'id') {
+            return false;
+        }
+
         $this->userInfo[$key] = $value;
     }
 
@@ -85,7 +90,7 @@ class User
 
     public function save()
     {
-        if ($this->get('id') === 0) {
+        if ($this->get('id') <= 0) {
             return $this->create();
         } else {
             return $this->update();
@@ -160,6 +165,8 @@ class User
     private function create()
     {
         $date = new \DateTime();
+        $il = $this->get('initial_login');
+        $il = is_null($il) ? 1 : $il;
 
         // Create row in users table
         $userCreated = $this->repo->createUser(
@@ -167,7 +174,8 @@ class User
             $this->get('password'),
             $this->get('fullname'),
             $this->get('group_id'),
-            $date->format('Y-m-d')
+            $date->format('Y-m-d'),
+            $il
         );
 
         $userCheestoCreated = true;

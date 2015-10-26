@@ -17,6 +17,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
     <table>
         <tr><td>New Password:</td><td><input type="password" id="pass1"></td></tr>
         <tr><td>Repeat Password:</td><td><input type="password" id="pass2"></td></tr>
+        <tr><td>Force Password Reset:</td><td><input type="checkbox" id="force-reset-chk" checked="true"></td></tr>
     </table>
 </div>
 

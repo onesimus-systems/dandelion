@@ -40,7 +40,11 @@ class UsersAPI extends BaseModule
         $uf = new UserFactory();
         $user = $uf->get($userid);
         $user->setPassword($newPass);
-        $user->set('initial_login', 0);
+        if ($params->force_reset) {
+            $user->set('initial_login', 1);
+        } else {
+            $user->set('initial_login', 0);
+        }
 
         if ($user->save()) {
             return 'Password changed successfully';
@@ -66,6 +70,11 @@ class UsersAPI extends BaseModule
         $user->set('group_id', $params->role);
         $user->setPassword($params->password);
         $user->setMakeCheesto($params->cheesto);
+        if ($params->force_reset) {
+            $user->set('initial_login', 1);
+        } else {
+            $user->set('initial_login', 0);
+        }
 
         if ($user->save()) {
             return 'User created successfully';

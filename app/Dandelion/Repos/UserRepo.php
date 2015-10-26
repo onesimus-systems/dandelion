@@ -38,14 +38,15 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
         return $this->database->updateItem($this->table, $uid, $fields);
     }
 
-    public function createUser($username, $password, $fullname, $role, $date)
+    public function createUser($username, $password, $fullname, $role, $date, $prompt)
     {
         return $this->database->createItem($this->table, [
             'username' => $username,
             'password' => $password,
             'fullname' => $fullname,
             'group_id' => $role,
-            'created'  => $date
+            'created'  => $date,
+            'initial_login' => $prompt
         ]);
     }
 

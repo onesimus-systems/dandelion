@@ -79,7 +79,7 @@ var UserManage = {
         $("#pwd-reset-dialog").dialog({
             modal: true,
             width: 400,
-            height: 200,
+            height: 250,
             show: {
                 effect: "fade",
                 duration: 500
@@ -107,13 +107,15 @@ var UserManage = {
     },
 
     resetPassword: function(): void {
+        var uid: number = $("#user-id").val();
         var pass1: string = $("#pass1").val();
         var pass2: string = $("#pass2").val();
+        var force_reset: boolean = $("#force-reset-chk").prop("checked");
         $("#pass1").val("");
         $("#pass2").val("");
 
         if (pass1 === pass2 && pass1 !== "") {
-            $.post("../../api/i/users/resetpassword", {pw: pass1, uid: $("#user-id").val()}, null, "json")
+            $.post("../../api/i/users/resetpassword", {pw: pass1, uid: uid, force_reset: force_reset}, null, "json")
                 .done(function(data) {
                     $.alert(data.data, "User Management");
                 });

@@ -40,11 +40,21 @@ Settings = {
         if (pw1 === pw2 && pw1 !== "") {
             $.post("api/i/users/resetpassword", {"pw": pw1}, null, "json")
                 .done(function(msg) {
-                    $.alert(msg.data, "Password Reset", function() {
-                        if (page === "initialReset") {
-                            location.assign(".");
-                        }
-                    });
+                    if (!$.apiSuccess(msg)) {
+                        // Display error if password didn't save correctly
+                        $.alert("Error saving password: "+msg.data, "Password Reset", function() {
+                            $("#new-password-1").focus();
+                        });
+                        return;
+                    }
+
+                    // If the page is an initial reset, redirect to dashboard
+                    // otherwise show a confirmation box
+                    if (page === "initialReset") {
+                        location.assign(".");
+                    } else {
+                        $.alert(msg.data, "Password Reset");
+                    }
                 });
         } else {
             $.alert("Passwords do not match or are empty", "Password Reset", function() {

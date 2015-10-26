@@ -35,6 +35,7 @@ var Admin = {
                     table.append(`<tr><td>Username:</td><td><input type="text" id="add_user" autocomplete="off"></td></tr>`);
                     table.append(`<tr><td>Password:</td><td><input type="password" id="add_pass"></td></tr>`);
                     table.append(`<tr><td>Real Name:</td><td><input type="text" id="add_fullname" autocomplete="off"></td></tr>`);
+                    table.append(`<tr><td>Force Password Reset:</td><td><input type="checkbox" id="add_force_reset" checked="true"></td></tr>`);
 
                     var roleRow = $("<tr/>");
                     roleRow.append("<td>Role:</td>");
@@ -71,8 +72,9 @@ var Admin = {
         var password = $("#add_pass").val();
         var fullname = $("#add_fullname").val();
         var group = $("#add_group").val();
+        var force_reset = $("#add_force_reset").prop("checked");
 
-        $.post("api/i/users/create", {username: username, password: password, fullname: fullname, role: group}, null, "json")
+        $.post("api/i/users/create", {username: username, password: password, fullname: fullname, role: group, force_reset: force_reset}, null, "json")
             .done(function(data) {
                 location.reload();
             });

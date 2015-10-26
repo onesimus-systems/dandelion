@@ -162,7 +162,8 @@ $apiCommander->registerModule('users', __NAMESPACE__.'\UsersAPI',
             'http_method' => 'post',
             'parameters' => [
                 'uid' => [null, 'int'],
-                'pw' => [null, 'string', 'required']
+                'pw' => [null, 'string', 'required'],
+                'force_reset' => [false, 'bool']
             ]
         ]],
         ['create', null, [
@@ -172,7 +173,8 @@ $apiCommander->registerModule('users', __NAMESPACE__.'\UsersAPI',
                 'password' => [null, 'string', 'required'],
                 'fullname' => [null, 'string', 'required'],
                 'role' => [null, 'int', 'required'],
-                'cheesto' => [true, 'bool']
+                'cheesto' => [true, 'bool'],
+                'force_reset' => [true, 'bool']
             ]
         ]],
         ['edit', null, [
