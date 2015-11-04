@@ -150,16 +150,16 @@
         },
         {
             "name": "onesimus-systems/osrouter",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/osrouter.git",
-                "reference": "cfb5707a142d3600d4fea97daf905ffee045c3f6"
+                "reference": "1b87b0b91c227752cc6d3e09cc02d9d2bb4bc7de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/cfb5707a142d3600d4fea97daf905ffee045c3f6",
-                "reference": "cfb5707a142d3600d4fea97daf905ffee045c3f6",
+                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/1b87b0b91c227752cc6d3e09cc02d9d2bb4bc7de",
+                "reference": "1b87b0b91c227752cc6d3e09cc02d9d2bb4bc7de",
                 "shasum": ""
             },
             "require-dev": {
@@ -188,7 +188,7 @@
                 "http",
                 "router"
             ],
-            "time": "2015-07-11 01:30:05"
+            "time": "2015-11-04 03:58:24"
         },
         {
             "name": "onesimus-systems/ossession",

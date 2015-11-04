@@ -138,8 +138,12 @@ class Application
             include $this->paths['app'] . '/filters.php';
 
             // The router uses this to determine the route
-            // It's not always necessarily the right full URI
-            $this->request->set('SERVER_NAME', Config::get('hostname'));
+            // We need to correct it to reflect if we're in a subdirectory
+            $ruri = $this->request->get('REQUEST_URI');
+            if (Config::get('subdirectory')) {
+                $ruri = substr($ruri, strlen(Config::get('subdirectory')));
+            }
+            $this->request->set('REQUEST_URI', $ruri);
 
             $route = Router::route($this->request);
             $route->dispatch($this);

@@ -40,8 +40,15 @@ class Configuration
             }
 
             self::$config = self::array_merge_recursive_deep($defaults, $userSettings);
+
+            if (self::$config['subdirectory'] !== '') {
+                self::$config['subdirectory'] = '/'.trim(self::$config['subdirectory'], '/');
+                if (self::$config['subdirectory'] === '/') {
+                    self::$config['subdirectory'] = '';
+                }
+            }
             // Ensure hostname is formatted properly for rest of application
-            self::$config['hostname'] = rtrim(self::$config['hostname'], '/');
+            self::$config['hostname'] = rtrim(self::$config['hostname'], '/').self::$config['subdirectory'];
         }
 
         self::$loaded = true;
