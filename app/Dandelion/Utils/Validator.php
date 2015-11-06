@@ -2,7 +2,7 @@
 /**
  * Validator is a simple library for validating data.
  */
-namespace Dandelion2;
+namespace Dandelion\Utils;
 
 class Validator
 {

@@ -10,7 +10,7 @@
 namespace Dandelion\API;
 
 use Dandelion\Exception\ApiException;
-use Dandelion2\Validator;
+use Dandelion\Utils\Validator;
 
 use Onesimus\Router\Http\Request;
 

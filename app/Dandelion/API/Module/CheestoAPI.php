@@ -15,8 +15,6 @@ use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
 use Dandelion\Utils\Configuration as Config;
 
-use Dandelion2\Validator;
-
 class CheestoAPI extends BaseModule
 {
     /**
