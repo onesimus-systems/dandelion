@@ -29,9 +29,6 @@ fi
 
 # Copy Nginx config, set to listen on port 8081, restart Nginx
 cp /vagrant/app/install/Nginx-sample-config.conf /etc/nginx/sites-enabled/default
-# Set listening port
-sed -i.bak "s/listen 80/listen 8081/" /etc/nginx/sites-enabled/default
-rm /etc/nginx/sites-enabled/default.bak
 # Turn off sendfile
 sed -i.bak "s/sendfile on/sendfile off/" /etc/nginx/nginx.conf
 rm /etc/nginx/nginx.conf.bak

@@ -28,16 +28,10 @@ class Validator
     protected static function validateObject($obj, array $options)
     {
         if (isset($options['class'])) {
-            if ($obj instanceof $options['class']) {
-                return $obj;
-            } else {
-                return null;
-            }
-        } elseif (is_object($obj)) {
-            return $obj;
+            return ($obj instanceof $options['class']) ? $obj : null;
         }
 
-        return null;
+        return is_object($obj) ? $obj : null;
     }
 
     /**
