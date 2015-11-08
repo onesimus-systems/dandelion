@@ -34,6 +34,11 @@ $apiCommander->registerModule('categories', __NAMESPACE__.'\CategoriesAPI',
         ]]
     ]);
 
+$apiCommander->registerModule('dandelion', __NAMESPACE__.'\DandelionAPI',
+    [
+        ['version', null, ['http_method' => 'get']],
+    ]);
+
 $apiCommander->registerModule('cheesto', __NAMESPACE__.'\CheestoAPI',
     [
         ['read', null, [
@@ -209,7 +214,7 @@ $apiCommander->registerModule('users', __NAMESPACE__.'\UsersAPI',
         ['getuser', 'getUser', [
             'http_method' => 'get',
             'parameters' => [
-                'uid' => [null, 'int', 'required']
+                'uid' => [null, 'int']
             ]
         ]]
     ]);

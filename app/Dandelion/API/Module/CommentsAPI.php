@@ -16,9 +16,7 @@ use Dandelion\Exception\ApiException;
 
 class CommentsAPI extends BaseModule
 {
-    public function __construct(Application $app, User $user) {
-        parent::__construct($app, $user, false);
-    }
+    protected $makeRepo = false;
 
     public function add($params)
     {

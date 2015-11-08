@@ -195,4 +195,18 @@ class User
     {
         return password_hash($s, PASSWORD_BCRYPT);
     }
+
+    public function getApiData()
+    {
+        return [
+            'id' => $this->get('id'),
+            'fullname' => $this->get('fullname'),
+            'username' => $this->get('username'),
+            'group_id' => $this->get('group_id'),
+            'created' => $this->get('created'),
+            'theme' => $this->get('theme'),
+            'initial_login' => $this->get('initial_login'),
+            'disabled' => $this->get('disabled'),
+        ];
+    }
 }

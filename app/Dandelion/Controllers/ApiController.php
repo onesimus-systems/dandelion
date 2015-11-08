@@ -130,6 +130,10 @@ class ApiController extends BaseController
 
             $uf = new UserFactory();
             $user = $uf->getWithKeycard($userid);
+            // Make sure they're not disabled
+            if ($user->get('disabled')) {
+                throw new ApiException('Invalid user', 5);
+            }
 
             $data = $this->apiCommander->dispatchModule(
                 $module,

@@ -206,16 +206,16 @@ class UsersAPI extends BaseModule
     public function getUser($params)
     {
         // Check permissions
+        $userid = $params->uid ?: $this->requestUser->get('id');
+        if ($userid == $this->requestUser->get('id')) {
+            return [$this->requestUser->getApiData()];
+        }
+
         if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
 
-        $uid = $params->uid;
-        if (!$uid) {
-            throw new ApiException('No user id given', 5);
-        }
-
         $user = new Users($this->repo);
-        return $user->getUser($uid);
+        return $user->getUser($userid);
     }
 }

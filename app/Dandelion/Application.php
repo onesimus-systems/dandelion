@@ -34,7 +34,7 @@ class Application
     /**
      * @const string Current version number
      */
-    const VERSION = '6.0.3';
+    const VERSION = '6.1.0';
 
     /**
      * @const string Current version name

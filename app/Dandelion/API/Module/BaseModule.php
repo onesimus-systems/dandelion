@@ -60,14 +60,16 @@ abstract class BaseModule
     // Repo for the specific module
     protected $repo;
 
-    public function __construct(Application $app, User $user, $makeRepo = true) {
+    protected $makeRepo = true;
+
+    public function __construct(Application $app, User $user) {
         $this->app = $app;
         $this->requestUser = $user;
         $this->request = $app->request;
         // TODO: Remove these objects
         $this->ur = new UserRightsShim($user);
 
-        if ($makeRepo) {
+        if ($this->makeRepo) {
             // Remove namespace
             $module = array_reverse(explode('\\', get_class($this)));
             // Remove the API at the end of the class name
