@@ -21,13 +21,11 @@ apt-get install -y nginx php5-fpm php5-cli php5-mysql mariadb-server npm nodejs-
 
 ## Setup configurations
 # Link /var/www to dandelion
-if ! [ -L /var/www ]; then
-    rm -rf /var/www
-    mkdir /var/www
-    ln -fs /vagrant /var/www/dandelion
-fi
+rm -rf /var/www
+mkdir /var/www
+ln -fs /vagrant /var/www/dandelion
 
-# Copy Nginx config, set to listen on port 8081, restart Nginx
+# Copy Nginx config
 cp /vagrant/app/install/Nginx-sample-config.conf /etc/nginx/sites-enabled/default
 # Turn off sendfile
 sed -i.bak "s/sendfile on/sendfile off/" /etc/nginx/nginx.conf
@@ -48,7 +46,8 @@ cp /vagrant/vagrant/config.sample.php /vagrant/app/config/config.php
 
 # Setup database
 mysql -u root -p"a" -e "CREATE DATABASE dandelion;"
-mysql -u root -p"a" dandelion < /vagrant/app/install/mysql_schema.sql
+mysql -u root -p"a" dandelion < /vagrant/app/install/mysql_schema.sql # 6.0.x base
+mysql -u root -p"a" dandelion < /vagrant/app/upgrades/db_upgrade_mysql_6.1.0.sql
 
 # Setup Composer
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer

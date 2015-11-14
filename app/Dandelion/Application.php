@@ -131,8 +131,6 @@ class Application
             SessionManager::register();
             SessionManager::startSession(Config::get('cookiePrefix').Config::get('phpSessionName'));
 
-            Updater::checkForUpdates($this);
-
             // Setup routes and filters
             include $this->paths['app'] . '/routes.php';
             include $this->paths['app'] . '/filters.php';

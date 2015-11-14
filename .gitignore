@@ -18,3 +18,4 @@ tsconfig.json
 .vagrant/
 *.bak
 uml/
+public/test.html
