@@ -27,6 +27,12 @@ class AdminController extends BaseController
         $grouplist = [];
         $grouplist2 = [];
         $updateArray = [];
+        $updateArray = [
+            'available' => false,
+            'current' => Application::VERSION,
+            'url' => '',
+            'latest' => '???',
+        ];
 
         if ($this->authorized($this->sessionUser, 'manage_current_users')) {
             $userObj = new Users(Repos::makeRepo('Users'));
@@ -48,11 +54,12 @@ class AdminController extends BaseController
         }
 
         if (Config::get('checkForUpdates')) {
-            $latest = file(Config::get('updateUrl'), FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
-            $latest = json_decode($latest[0], true);
+            $latest = file_get_contents(Config::get('updateUrl'));
+            $latest = json_decode($latest, true);
+            $updateArray['latest'] = $latest['version'];
+
             if (version_compare($latest['version'], Application::VERSION, '>')) {
-                $updateArray['current'] = Application::VERSION;
-                $updateArray['latest'] = $latest['version'];
+                $updateArray['available'] = true;
                 $updateArray['url'] = $latest['url'];
             }
         }
