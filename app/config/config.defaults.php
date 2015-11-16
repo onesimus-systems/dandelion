@@ -27,8 +27,6 @@ return array(
     // Application configuration
     // FQDN/IP for the application
     'hostname' => '',
-    // If dandelion is in a subdirectory instead of the root, what's the path?
-    'subdirectory' => '',
     // Prefix for cookies managed by Dandelion
     'cookiePrefix' => 'dan_',
     // Name of PHP session for Dandelion, make unique for each instance of Dandelion

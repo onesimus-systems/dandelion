@@ -135,13 +135,7 @@ class Application
             include $this->paths['app'] . '/routes.php';
             include $this->paths['app'] . '/filters.php';
 
-            // The router uses this to determine the route
-            // We need to correct it to reflect if we're in a subdirectory
-            $ruri = $this->request->get('REQUEST_URI');
-            if (Config::get('subdirectory')) {
-                $ruri = substr($ruri, strlen(Config::get('subdirectory')));
-            }
-            $this->request->set('REQUEST_URI', $ruri);
+            $this->request->set('REQUEST_URI', $this->getRequestPath());
 
             $route = Router::route($this->request);
             $route->dispatch($this);
@@ -242,5 +236,17 @@ class Application
         }
 
         echo $httpBody;
+    }
+
+    protected function getRequestPath()
+    {
+        $r = $this->request;
+        $fullUrl = $r->get('URL_SCHEME').'://'.$r->get('SERVER_NAME');
+        $port = $r->get('SERVER_PORT');
+        if ($port != '80' && $port != '443') {
+            $fullUrl .= ':'.$port;
+        }
+        $fullUrl .= $r->get('REQUEST_URI');
+        return substr($fullUrl, strlen(Config::get('hostname')));
     }
 }
