@@ -135,7 +135,7 @@ class Application
             include $this->paths['app'] . '/routes.php';
             include $this->paths['app'] . '/filters.php';
 
-            $this->request->set('REQUEST_URI', $this->getRequestPath());
+            $this->request->set('REQUEST_URI', $this->getRealRequestURI());
 
             $route = Router::route($this->request);
             $route->dispatch($this);
@@ -238,15 +238,22 @@ class Application
         echo $httpBody;
     }
 
-    protected function getRequestPath()
+    protected function getRealRequestURI()
     {
         $r = $this->request;
-        $fullUrl = $r->get('URL_SCHEME').'://'.$r->get('SERVER_NAME');
-        $port = $r->get('SERVER_PORT');
-        if ($port != '80' && $port != '443') {
-            $fullUrl .= ':'.$port;
+        // Get the base URI from the hostname
+        preg_match("~https?://.*?/(.*)~", Config::get('hostname'), $subDirMatch);
+        // Get the request URI as set the web server
+        $realRequestUri = $r->get('REQUEST_URI');
+        // If there's a base URI in the hostname, deal with it
+        if (count($subDirMatch) > 0) {
+            // Chop off the base URI from the given URI
+            $realRequestUri = substr($realRequestUri, strlen($subDirMatch[1])+1);
+            // If for some reason substr returns false or an empty string, make it the root path
+            if ($realRequestUri === false) {
+                $realRequestUri = '/';
+            }
         }
-        $fullUrl .= $r->get('REQUEST_URI');
-        return substr($fullUrl, strlen(Config::get('hostname')));
+        return $realRequestUri;
     }
 }
