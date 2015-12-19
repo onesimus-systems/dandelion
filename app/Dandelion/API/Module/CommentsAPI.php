@@ -13,6 +13,7 @@ use Dandelion\Application;
 use Dandelion\User;
 use Dandelion\Logs;
 use Dandelion\Exception\ApiException;
+use Dandelion\API\ApiCommander;
 
 class CommentsAPI extends BaseModule
 {
@@ -25,7 +26,7 @@ class CommentsAPI extends BaseModule
         if ($logObject->addComment($params->logid, $this->requestUser->get('id'), $params->comment)) {
             return 'Comment created successfully';
         } else {
-            throw new ApiException('Error creating comment', 5);
+            throw new ApiException('Error creating comment',ApiCommander::API_GENERAL_ERROR);
         }
     }
 

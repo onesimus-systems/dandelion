@@ -63,7 +63,7 @@ class ApiController extends BaseController
 
             $this->setResponse($this->processRequest($apikey, false, $module, $method));
         } else {
-            $this->setResponse($this->formatResponse(2, 'Public API disabled', 'api'));
+            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Public API disabled', 'api'));
         }
         return;
     }
@@ -86,7 +86,7 @@ class ApiController extends BaseController
         if (GateKeeper::authenticated()) {
             $this->setResponse($this->processRequest($this->sessionUser->get('id'), true, $module, $method));
         } else {
-            $this->setResponse($this->formatResponse(3, 'Action requires logged in session', 'api'));
+            $this->setResponse($this->formatResponse(ApiCommander::API_LOGIN_REQUIRED, 'Action requires logged in session', 'api'));
         }
         return;
     }
@@ -106,7 +106,7 @@ class ApiController extends BaseController
                 "Bad API call for Module: '{mod}' and Method: '{met}'",
                 ['mod' => $module, 'met' => $method]
             );
-            $this->setResponse($this->formatResponse(5, 'Bad API call', 'api'));
+            $this->setResponse($this->formatResponse(ApiCommander::API_INVALID_CALL, 'Bad API call', 'api'));
             return false;
         }
         return true;
@@ -132,7 +132,7 @@ class ApiController extends BaseController
             $user = $uf->getWithKeycard($userid);
             // Make sure they're not disabled
             if ($user->get('disabled')) {
-                throw new ApiException('Invalid user', 5);
+                throw new ApiException('Invalid user', ApiCommander::API_INSUFFICIENT_PERMISSIONS);
             }
 
             $data = $this->apiCommander->dispatchModule(
@@ -141,7 +141,7 @@ class ApiController extends BaseController
                 $this->app->request,
                 [$this->app, $user]);
 
-            return $this->formatResponse(0, 'Completed', $module, $data);
+            return $this->formatResponse(ApiCommander::API_SUCCESS, 'Completed', $module, $data);
         } catch (ApiException $e) {
             if ($e->getCode() !== 1) { // Don't log invalid key exceptions
                 $this->app->logger->error(
@@ -153,9 +153,9 @@ class ApiController extends BaseController
             $this->setHttpCode($e->getHttpCode());
             return $this->formatResponse($e->getCode(), $e->getMessage(), $e->getModule(), '');
         } catch (\Exception $e) {
-            header("HTTP/1.1 500 Internal Server Error");
             $this->app->logger->error($e->getMessage());
-            return $this->formatResponse(6, 'Oops, something happened', 'api');
+            $this->setHttpCode(500);
+            return $this->formatResponse(ApiCommander::API_SERVER_ERROR, 'Oops, something happened', 'api');
         }
     }
 
@@ -169,7 +169,7 @@ class ApiController extends BaseController
     private function verifyKey($key)
     {
         if (!$key) {
-            throw new ApiException('API key is not valid', 1);
+            throw new ApiException('API key is not valid', ApiCommander::API_INVALID_KEY);
         }
 
         $repo = Repos::makeRepo('Api');
@@ -178,7 +178,7 @@ class ApiController extends BaseController
         if ($keyValid) {
             return $keyValid['user_id'];
         } else {
-            throw new ApiException('API key is not valid', 1);
+            throw new ApiException('API key is not valid', ApiCommander::API_INVALID_KEY);
         }
         return;
     }
@@ -204,19 +204,7 @@ class ApiController extends BaseController
          * data - Data returned by API module
          * requestTime - Time it took for the request to finish
          *
-         * Error Code Meanings:
-         *
-         * 0 - Successful API call
-         * 1 - Invalid API key
-         * 2 - Public API disabled
-         * 3 - Action requires active login
-         * 4 - Insufficient permissions
-         * 5 - General error
-         * 6 - Server error
-         * 7 - Invalid API call
-         * 8 - Module not found
-         * 9 - Module path not found
-         * 10 - Cheesto disabled
+         * Error Code Meanings are defined in the ApiCommander class.
          */
         $endTime = round(((microtime(true) - $this->startTime) * 1000), 2);
         $response = [

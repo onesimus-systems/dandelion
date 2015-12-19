@@ -15,6 +15,7 @@ use Dandelion\UserSettings;
 use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
+use Dandelion\API\ApiCommander;
 
 class LogsAPI extends BaseModule
 {
@@ -62,7 +63,7 @@ class LogsAPI extends BaseModule
         if ($logs->addLog($title, $body, $cat, $this->requestUser->get('id'))) {
             return 'Log created successfully';
         } else {
-            throw new ApiException('Error creating log', 5);
+            throw new ApiException('Error creating log', ApiCommander::API_GENERAL_ERROR);
         }
     }
 
@@ -93,7 +94,7 @@ class LogsAPI extends BaseModule
         if ($logs->editLog($lid, $title, $body, $cat)) {
             return "'{$title}' edited successfully";
         } else {
-            throw new ApiException("Error saving log", 5);
+            throw new ApiException("Error saving log", ApiCommander::API_GENERAL_ERROR);
         }
     }
 

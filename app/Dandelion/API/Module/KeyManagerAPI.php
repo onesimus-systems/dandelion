@@ -12,6 +12,7 @@ namespace Dandelion\API\Module;
 use Dandelion\KeyManager;
 use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
+use Dandelion\API\ApiCommander;
 
 class KeyManagerAPI extends BaseModule
 {
@@ -69,7 +70,7 @@ class KeyManagerAPI extends BaseModule
         if (is_numeric($key->revoke($userid))) {
             return 'Key revoked successfully';
         } else {
-            throw new ApiException('Error revoking key', 5);
+            throw new ApiException('Error revoking key', ApiCommander::API_GENERAL_ERROR);
         }
     }
 

@@ -58,6 +58,7 @@ class ApiModuleMethod
         if ($http_method = $this->getOpt('http_method')) {
             $http_method_func = 'is'.ucfirst($http_method);
             if (!$request->$http_method_func()) {
+                throw new ApiException('Incorrect HTTP method', ApiCommander::API_INVALID_CALL, 405);
                 return false;
             }
         }
@@ -80,8 +81,8 @@ class ApiModuleMethod
             if (!$validatedData->_valid) {
                 throw new ApiException(
                     'Invalid parameters \''.implode(', ', $validatedData->_invalidFields).'\'',
-                    7,
-                    422);
+                    ApiCommander::API_INVALID_CALL,
+                    400);
             }
             return $validatedData;
         }

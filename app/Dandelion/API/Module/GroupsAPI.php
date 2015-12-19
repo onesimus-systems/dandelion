@@ -13,6 +13,7 @@ use Dandelion\Groups;
 use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
+use Dandelion\API\ApiCommander;
 
 class GroupsAPI extends BaseModule
 {
@@ -50,7 +51,7 @@ class GroupsAPI extends BaseModule
         if ($permissions->editGroup($gid, $rights)) {
             return 'User group saved';
         } else {
-            throw new ApiException('Error saving user group', 5);
+            throw new ApiException('Error saving user group', ApiCommander::API_GENERAL_ERROR);
         }
     }
 
@@ -76,7 +77,7 @@ class GroupsAPI extends BaseModule
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return 'User group created successfully';
         } else {
-            throw new ApiException('Error creating user group', 5);
+            throw new ApiException('Error creating user group', ApiCommander::API_GENERAL_ERROR);
         }
     }
 
@@ -94,7 +95,7 @@ class GroupsAPI extends BaseModule
         $users = $permissions->usersExistInGroup($gid);
 
         if ($users) {
-            throw new ApiException('This group is assigned to users. Cannot delete group.', 5);
+            throw new ApiException('This group is assigned to users. Cannot delete group.', ApiCommander::API_GENERAL_ERROR);
         } else {
             $permissions->deleteGroup($gid);
             return 'Group deleted successfully.';

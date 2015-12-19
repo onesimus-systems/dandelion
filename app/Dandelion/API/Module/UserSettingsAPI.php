@@ -12,6 +12,7 @@ namespace Dandelion\API\Module;
 use Dandelion\UserSettings;
 use Dandelion\Utils\View;
 use Dandelion\Exception\ApiException;
+use Dandelion\API\ApiCommander;
 
 class UserSettingsAPI extends BaseModule
 {
@@ -33,7 +34,7 @@ class UserSettingsAPI extends BaseModule
         if ($settings->$method($value, $this->requestUser->get('id'))) {
             return 'Setting saved';
         } else {
-            throw new ApiException('Error saving setting', 5);
+            throw new ApiException('Error saving setting', ApiCommander::API_GENERAL_ERROR);
         }
     }
 

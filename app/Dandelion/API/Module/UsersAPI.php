@@ -15,6 +15,7 @@ use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
 use Dandelion\Factories\UserFactory;
+use Dandelion\API\ApiCommander;
 
 class UsersAPI extends BaseModule
 {
@@ -33,7 +34,7 @@ class UsersAPI extends BaseModule
         // Validate password
         $newPass = $params->pw;
         if (!$newPass) {
-            throw new ApiException('New password is invalid', 5);
+            throw new ApiException('New password is invalid', ApiCommander::API_GENERAL_ERROR);
         }
 
         // Do action
@@ -49,7 +50,7 @@ class UsersAPI extends BaseModule
         if ($user->save()) {
             return 'Password changed successfully';
         } else {
-            throw new ApiException('Error changing password', 5);
+            throw new ApiException('Error changing password', ApiCommander::API_GENERAL_ERROR);
         }
     }
 
@@ -79,7 +80,7 @@ class UsersAPI extends BaseModule
         if ($user->save()) {
             return 'User created successfully';
         } else {
-            throw new ApiException('Error creating user', 5);
+            throw new ApiException('Error creating user', ApiCommander::API_GENERAL_ERROR);
         }
     }
 
@@ -95,7 +96,7 @@ class UsersAPI extends BaseModule
 
         $uid = $params->uid;
         if (!$uid) {
-            throw new ApiException('No user id given', 5);
+            throw new ApiException('No user id given', ApiCommander::API_GENERAL_ERROR);
         }
 
         $uf = new UserFactory();
@@ -114,7 +115,7 @@ class UsersAPI extends BaseModule
         if ($user->save()) {
             return 'User saved successfully';
         } else {
-            throw new ApiException('Error saving user', 5);
+            throw new ApiException('Error saving user', ApiCommander::API_GENERAL_ERROR);
         }
     }
 
@@ -154,7 +155,7 @@ class UsersAPI extends BaseModule
             return $disable ? 'User disabled' : 'User enabled';
         } else {
             $msg = $disable ? 'Error disabling user' : 'Error enabling user';
-            throw new ApiException($msg, 5);
+            throw new ApiException($msg, ApiCommander::API_GENERAL_ERROR);
         }
     }
 
@@ -167,7 +168,7 @@ class UsersAPI extends BaseModule
         $userid = $params->uid;
 
         if ($this->requestUser->get('id') == $userid) {
-            throw new ApiException('Can\'t delete yourself', 5);
+            throw new ApiException('Can\'t delete yourself', ApiCommander::API_GENERAL_ERROR);
         }
 
         // Check permissions
@@ -181,7 +182,7 @@ class UsersAPI extends BaseModule
         if ($user->deleteUser($userid, $permissions)) {
             return 'User deleted successfully';
         } else {
-            throw new ApiException('Error deleting user', 5);
+            throw new ApiException('Error deleting user', ApiCommander::API_GENERAL_ERROR);
         }
     }
 

@@ -13,6 +13,7 @@ use Dandelion\User;
 use Dandelion\Application;
 use Dandelion\Auth\GateKeeper;
 use Dandelion\Utils\Repos;
+use Dandelion\API\ApiCommander;
 use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 
@@ -84,7 +85,7 @@ abstract class BaseModule
         if ($repo) {
             return $repo;
         } else {
-            throw new ApiException('Error initializing API request', 6);
+            throw new ApiException('Error initializing API request', ApiCommander::API_SERVER_ERROR);
         }
     }
 

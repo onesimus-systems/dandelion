@@ -15,6 +15,18 @@ use Onesimus\Router\Http\Request;
 
 class ApiCommander
 {
+    const API_SUCCESS = 0;
+    const API_INVALID_KEY = 1;
+    const API_DISABLED = 2;
+    const API_LOGIN_REQUIRED = 3;
+    const API_INSUFFICIENT_PERMISSIONS = 4;
+    const API_GENERAL_ERROR = 5;
+    const API_SERVER_ERROR = 6;
+    const API_INVALID_CALL = 7;
+    const API_MODULE_NOT_FOUND = 8;
+    const API_MODULE_METHOD_NOT_FOUND = 9;
+    const API_CHEESTO_DISABLED = 10;
+
     // path -> module keyed array of registered modules
     private $modules = [];
 
@@ -86,14 +98,14 @@ class ApiCommander
 
         // Check module exists
         if (!$this->hasModule($module)) {
-            throw new ApiException('Module not found', 8);
+            throw new ApiException('Module not found', self::API_MODULE_NOT_FOUND);
         }
 
         $dispatching = $this->modules[$module];
         // Check module has a path for the requested URL
         $injectData = $dispatching->hasMatchingMethod($path, $request);
         if ($injectData === false) {
-            throw new ApiException('Bad API call', 9);
+            throw new ApiException('Module doesn\'t have method', self::API_MODULE_METHOD_NOT_FOUND);
         }
 
         // Get the names of the class and method to call
@@ -101,7 +113,7 @@ class ApiCommander
         $methodName = $dispatching->getMethod($path)->getMethod();
 
         if (!class_exists($className)) {
-            throw new ApiException('Module not found', 8);
+            throw new ApiException('Module not found', self::API_MODULE_NOT_FOUND);
         }
 
         // Create a new class using $args as the parameters
@@ -110,7 +122,7 @@ class ApiCommander
 
         // Check the method is available
         if (!is_callable([$ApiModule, $methodName])) {
-            throw new ApiException('Bad API call', 9);
+            throw new ApiException('Controller method is not callable', self::API_MODULE_METHOD_NOT_FOUND);
         }
 
         // Attempt calling the method

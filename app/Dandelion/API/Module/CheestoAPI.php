@@ -14,6 +14,7 @@ use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
 use Dandelion\Utils\Configuration as Config;
+use Dandelion\API\ApiCommander;
 
 class CheestoAPI extends BaseModule
 {
@@ -25,7 +26,7 @@ class CheestoAPI extends BaseModule
     public function read($params)
     {
         if (!Config::get('cheestoEnabled')) {
-            throw new ApiException('Cheesto has been disabled', 10);
+            throw new ApiException('Cheesto has been disabled', ApiCommander::API_CHEESTO_DISABLED);
         }
         if (!$this->authorized($this->requestUser, 'view_cheesto')) {
             throw new ApiPermissionException();
@@ -41,7 +42,7 @@ class CheestoAPI extends BaseModule
     public function statusTexts()
     {
         if (!Config::get('cheestoEnabled')) {
-            throw new ApiException('Cheesto has been disabled', 10);
+            throw new ApiException('Cheesto has been disabled', ApiCommander::API_CHEESTO_DISABLED);
         }
         $cheesto = new Cheesto($this->repo);
         return $cheesto->getStatusText();
@@ -55,7 +56,7 @@ class CheestoAPI extends BaseModule
     public function update($params)
     {
         if (!Config::get('cheestoEnabled')) {
-            throw new ApiException('Cheesto has been disabled', 10);
+            throw new ApiException('Cheesto has been disabled', ApiCommander::API_CHEESTO_DISABLED);
         }
         if (!$this->authorized($this->requestUser, 'update_cheesto')) {
             throw new ApiPermissionException();
@@ -79,7 +80,7 @@ class CheestoAPI extends BaseModule
             $userid)) {
             return 'Status updated successfully';
         } else {
-            throw new ApiException('Error updating status', 5);
+            throw new ApiException('Error updating status', ApiCommander::API_GENERAL_ERROR);
         }
     }
 }
