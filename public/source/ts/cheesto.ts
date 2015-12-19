@@ -23,6 +23,7 @@ var Cheesto = {
         $.getJSON("api/i/cheesto/read",
             function (data) {
                 if (!$.apiSuccess(data)) {
+                    setTimeout(Cheesto.getStatuses, 60000);
                     return;
                 }
 

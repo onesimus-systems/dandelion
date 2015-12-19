@@ -336,6 +336,9 @@ Search = {
             search = true;
             Refresh.stoprefresh();
             View.makeLogView(json.data);
-        }, "json");
+        }, "json")
+        .fail(function(json) {
+            $.alert(json.responseJSON.status, "Server Error");
+        });
     }
 }; // Search

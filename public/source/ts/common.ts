@@ -34,7 +34,7 @@ $.extend({
 });
 
 $.extend({
-    apiSuccess: function(response) {
+    apiSuccess: function(response: apiResponse) {
         if (response.errorcode === 0) {
             return true;
         } else if (response.errorcode === 3) {
