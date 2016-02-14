@@ -10,7 +10,7 @@ buildDandelion()
     DELIVERY_DIR=$2
 
     # Git Variables
-    GIT_REPO="https://github.com/onesimus-systems/dandelion"
+    GIT_REPO="https://git.keitel.xyz:3000/onesimus-systems/dandelion"
     GIT_BRANCH=$1
     GIT_BRANCH_FILENAME=${GIT_BRANCH#tags/}
 
@@ -25,10 +25,9 @@ buildDandelion()
     echo "Checking out $GIT_BRANCH"
     git checkout $GIT_BRANCH
 
-    if test $? != 0
-         then
-             echo "Error checking out branch $GIT_BRANCH"
-             exit 1
+    if test $? -ne 0; then
+         echo "Error checking out branch $GIT_BRANCH"
+         exit 1
     fi
 
     echo "Installing Composer"
@@ -96,14 +95,12 @@ buildCommand ()
     esac
 
     args=`getopt v:t:b:p: $*`
-    if test $? != 0
-         then
-             echo 'Usage: build -t tag'
-             exit 1
+    if test $? -ne 0; then
+         echo 'Usage: build -t tag'
+         exit 1
     fi
     set -- $args
-    for i
-    do
+    for i; do
       case "$i" in
             -b)
                 shift
@@ -156,10 +153,9 @@ bumpverCommand ()
 
     # Parse arguments
     args=`getopt cd $*`
-    if test $? != 0
-         then
-             echo 'Usage: bumpver [major|minor|patch] -c -d'
-             exit 1
+    if test $? -ne 0; then
+         echo 'Usage: bumpver [major|minor|patch] -c -d'
+         exit 1
     fi
     set -- $args
     for i; do
