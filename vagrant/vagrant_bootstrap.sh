@@ -26,7 +26,7 @@ mkdir /var/www
 ln -fs /vagrant /var/www/dandelion
 
 # Copy Nginx config
-cp /vagrant/app/install/Nginx-sample-config.conf /etc/nginx/sites-enabled/default
+cp /vagrant/app/config/Nginx-sample-config.conf /etc/nginx/sites-enabled/default
 # Turn off sendfile
 sed -i.bak "s/sendfile on/sendfile off/" /etc/nginx/nginx.conf
 rm /etc/nginx/nginx.conf.bak
@@ -47,7 +47,7 @@ cp /vagrant/vagrant/config.sample.php /vagrant/app/config/config.php
 # Setup database
 mysql -u root -p"a" -e "CREATE DATABASE dandelion;"
 mysql -u root -p"a" dandelion < /vagrant/app/install/mysql_schema.sql # 6.0.x base
-mysql -u root -p"a" dandelion < /vagrant/app/upgrades/db_upgrade_mysql_6.1.0.sql
+mysql -u root -p"a" dandelion < /vagrant/app/install/upgrades/db_upgrade_mysql_6.1.0.sql
 
 # Setup Composer
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer
@@ -56,7 +56,7 @@ composer install
 
 # Setup Node
 # Windows doesn't handle linux NPM correctly due to symlinks
-# If Vagrant is running on Windows, the first arg nonpm will be set
+# If Vagrant is running on Windows, the first arg "nonpm" will be set
 if [ "$1" != "nonpm" ]; then
     npm install -g gulp
     npm install

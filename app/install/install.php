@@ -62,7 +62,7 @@ try {
     $conn = new \PDO($db_connect, $config['db']['username'], $config['db']['password']);
     $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-    $sql = file_get_contents(__DIR__."/base_{$config['db']['type']}_db.sql");
+    $sql = file_get_contents(__DIR__."/{$config['db']['type']}_schema_template.tmpl");
 
     // Replace the prefix placeholder with the user defined prefix
     $sql = str_replace('{{prefix}}', $config['db']['tablePrefix'], $sql);
