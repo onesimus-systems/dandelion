@@ -143,7 +143,7 @@ class LogsAPI extends BaseModule
 
         return [
             'offset' => $offset,
-            'limit'  => $limit,
+            'limit'  => (int) $limit,
             'logSize' => $logSize
         ];
     }
