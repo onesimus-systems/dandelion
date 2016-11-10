@@ -6,11 +6,11 @@ buildDandelion()
     # Directory Variables
     TMP_DIR="/tmp"
     GIT_DIR="dandelion"
-    FULL_DIR=$TMP_DIR/$GIT_DIR
-    DELIVERY_DIR=$2
+    FULL_DIR="$TMP_DIR/$GIT_DIR"
+    DELIVERY_DIR="$2"
 
     # Git Variables
-    GIT_REPO="https://git.keitel.xyz:3000/onesimus-systems/dandelion"
+    GIT_REPO="https://github.com/onesimus-systems/dandelion"
     GIT_BRANCH=$1
     GIT_BRANCH_FILENAME=${GIT_BRANCH#tags/}
 
@@ -19,13 +19,13 @@ buildDandelion()
     rm -rf $GIT_DIR
 
     echo "Cloning git repo"
-    git clone $GIT_REPO
-    cd $GIT_DIR
+    git clone $GIT_REPO $FULL_DIR
+    cd $FULL_DIR
 
     echo "Checking out $GIT_BRANCH"
     git checkout $GIT_BRANCH
 
-    if test $? -ne 0; then
+    if [ $? -ne 0 ]; then
          echo "Error checking out branch $GIT_BRANCH"
          exit 1
     fi
@@ -33,14 +33,30 @@ buildDandelion()
     echo "Installing Composer"
     composer install --no-dev
 
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
+
     echo "Optimizing Autoloader"
     composer dump-autoload --optimize --no-dev
 
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
+
     echo "Installing Node Modules"
-    npm install >> /dev/null
+    npm install
+
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
 
     echo "Running Gulp"
     $TMP_DIR/dandelion/node_modules/.bin/gulp
+
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
 
     echo "Removing dev directories"
     DEV_ITEMS=(

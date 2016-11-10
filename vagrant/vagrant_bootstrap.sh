@@ -4,20 +4,20 @@
 # Install python software tools, add key for mariadb repo
 apt-get update
 apt-get install -y python-software-properties
-apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
 
-# Add repositories for PHP 5.4 and MariaDB 10.0
-add-apt-repository -y ppa:ondrej/php5-5.4
-add-apt-repository -y 'deb http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu trusty main'
+# Add repositories for PHP and MariaDB 10.1
+add-apt-repository -y ppa:ondrej/php
+add-apt-repository -y 'deb http://nyc2.mirrors.digitalocean.com/mariadb/repo/10.1/ubuntu xenial main'
 
 # Set the root password for MariaDB install
 export DEBIAN_FRONTEND=noninteractive
-sudo debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password password a'
-sudo debconf-set-selections <<< 'mariadb-server-10.0 mysql-server/root_password_again password a'
+sudo debconf-set-selections <<< 'mariadb-server-10.1 mysql-server/root_password password a'
+sudo debconf-set-selections <<< 'mariadb-server-10.1 mysql-server/root_password_again password a'
 
 # Update apt-get, install Nginx, PHP, and MariaDB
 apt-get update
-apt-get install -y nginx php5-fpm php5-cli php5-mysql mariadb-server npm nodejs-legacy git
+apt-get install -y nginx php5.5-fpm php5.5-cli php5.5-mysql mariadb-server git unzip
 
 ## Setup configurations
 # Link /var/www to dandelion
@@ -58,6 +58,7 @@ composer install
 # Windows doesn't handle linux NPM correctly due to symlinks
 # If Vagrant is running on Windows, the first arg "nonpm" will be set
 if [ "$1" != "nonpm" ]; then
+    apt-get install -y npm nodejs
     npm install -g gulp
     npm install
     gulp
