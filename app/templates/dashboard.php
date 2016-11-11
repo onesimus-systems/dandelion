@@ -106,7 +106,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     <div class="control-panel">
         <div class="search-console">
             <div class="search-buttons">
-                <button type="button" id="query-builder-btn">Builder</button>
+                <button type="button" id="query-builder-btn">Filter</button>
             </div>
             <span class="query-box">
                 <input type="search" id="search-query" placeholder="Search" value="" autocomplete="off">

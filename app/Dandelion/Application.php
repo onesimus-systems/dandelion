@@ -11,7 +11,6 @@ namespace Dandelion;
 
 use Exception;
 
-use Dandelion\Utils\Updater;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\Session\SessionManager;
 use Dandelion\Exception\AbortException;

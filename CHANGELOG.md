@@ -1,7 +1,7 @@
 Release Notes
 =============
 
-**v6.1.0** - **Current Unstable (develop)**
+**v6.1.0** - **Current Stable (master branch)**
 
 - Ability to disable users instead of deleting them.
 - Commenting on logs.
@@ -15,7 +15,7 @@ Release Notes
 - Validation of API request parameters
 - Misc. fixes and improvements
 
-**v6.0.3** - **Current Stable (master branch)**
+**v6.0.3**
 
 - Fixed: Non admin users couldn't edit logs
 
