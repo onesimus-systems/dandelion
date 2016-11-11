@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS `dan_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NULL,
+  `comment` mediumtext NOT NULL,
+  `created` datetime NOT NULL,
+  `log_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
 -- Cheesto table schema
 ALTER TABLE `dan_cheesto` DROP COLUMN `fullname`;
 
@@ -8,12 +17,8 @@ ALTER TABLE `dan_log`
     int(11)
     NULL;
 
--- Comment table schema
-ALTER TABLE `dan_comment`
-    CHANGE `user_id`
-    `user_id`
-    int(11)
-    NULL;
+-- Log table number of comments
+ALTER TABLE `dan_log` ADD COLUMN (`num_of_comments` int(11) NOT NULL DEFAULT '0');
 
 -- Foreign key constraints
 

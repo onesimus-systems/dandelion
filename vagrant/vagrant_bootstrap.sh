@@ -46,8 +46,7 @@ cp /vagrant/vagrant/config.sample.php /vagrant/app/config/config.php
 
 # Setup database
 mysql -u root -p"a" -e "CREATE DATABASE dandelion;"
-mysql -u root -p"a" dandelion < /vagrant/app/install/mysql_schema.sql # 6.0.x base
-mysql -u root -p"a" dandelion < /vagrant/app/install/upgrades/db_upgrade_mysql_6.1.0.sql
+mysql -u root -p"a" dandelion < /vagrant/app/install/mysql_schema.sql # 6.1.x base
 
 # Setup Composer
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer

@@ -37,8 +37,8 @@ CREATE TABLE "dan_group" (
 );
 
 INSERT INTO "dan_group" ("id", "name", "permissions") VALUES
-(1, 'user', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
-(2, 'admin', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:11:"creategroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
+(1, 'user', 'a:17:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:10:"editlogall";b:0;s:7:"viewlog";b:1;s:10:"addcomment";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
+(2, 'admin', 'a:17:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:10:"editlogall";b:1;s:7:"viewlog";b:1;s:10:"addcomment";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:11:"creategroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
 (3, 'guest', 'a:15:{s:9:"createlog";b:0;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:9:"createcat";b:0;s:7:"editcat";b:0;s:9:"deletecat";b:0;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:0;s:5:"admin";b:0;}');
 
 CREATE TABLE "dan_log" (
