@@ -2,7 +2,7 @@
   "name": "Dandelion-Log",
   "description": "Web-based journal",
   "repository": "https://github.com/onesimus-systems/dandelion",
-  "license": "GPL-2.0",
+  "license": "GPL-3.0",
   "version": "6.1.0",
   "devDependencies": {
     "gulp": "^3.9.1",
