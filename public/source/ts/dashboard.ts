@@ -1,6 +1,5 @@
 /// <reference path="cheesto.ts" />
 /// <reference path="categories.ts" />
-/// <reference path="../dts/jhtmlarea.d.ts" />
 /**
  * Scripts for Dashboard
  */
@@ -87,7 +86,9 @@ View = {
     init: function(): void {
         $("#prev-page-button").click(View.loadPrevPage);
         $("#next-page-button").click(View.loadNextPage);
-        $("#create-log-button").click(AddEdit.showAddInputs);
+        $("#create-log-button").click(function() {
+            location.assign("log/new");
+        });
         $("#clear-search-button").click(function() {
             $("#search-query").val("");
             Refresh.refreshLog(true);
@@ -105,27 +106,26 @@ View = {
         var logs = `<div id="log-list">`;
 
         for (var key in data) {
-            if (!data.hasOwnProperty(key) || key == "metadata") {
+            if (!data.hasOwnProperty(key) || !$.isNumeric(key)) {
                 continue;
             }
 
             var log = data[key];
 
             var creator = log.fullname;
-            if (creator === "") {
-                creator = "Unknown User";
+            if (creator === "" || creator === null) {
+                creator = "Deleted User";
             }
 
             // Display each log entry
-            var html = `<div class="log-entry"><span class="log-title">${log.title}</span>`;
+            var html = `<div class="log-entry"><span class="log-title"><a href="log/${log.id}">${log.title}</a></span>`;
 
-            if (log.canEdit) { html += `<button type="button" class="button edit-button" onClick="AddEdit.getEdit(${log.id});">Edit</button>`; }
-
-            html += `<p class="log-body">${log.body}</p><p class="log-metadata"><span class="log-meta-author">Created by ${creator} on ${log.date_created} @ ${log.time_created} `;
+            html += `<div class="log-body">${log.body}</div><div class="log-metadata"><span class="log-meta-author">Created by ${creator} on ${log.date_created} @ ${log.time_created} `;
 
             if (log.is_edited == "1") { html += "(Amended)"; }
 
-            html += `</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink('${log.category}');">${log.category}</a></span></p></div>`;
+            html += `</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink('${log.category}');">${log.category}</a></span>`;
+            html += `<span class="log-meta-comments">Comments: <a href="log/${log.id}#comments">${log.num_of_comments}</a></span></div></div>`;
 
             logs += html;
         }
@@ -332,103 +332,13 @@ Search = {
         if (typeof query === "undefined") { return false; }
         if (typeof offset === "undefined") { offset = 0; }
 
-        $.post("api/i/logs/search", {query: query, offset: offset}, function(json) {
+        $.get("api/i/logs/search", {query: query, offset: offset}, function(json) {
             search = true;
             Refresh.stoprefresh();
             View.makeLogView(json.data);
-        }, "json");
+        }, "json")
+        .fail(function(json) {
+            $.alert(json.responseJSON.status, "Server Error");
+        });
     }
 }; // Search
-
-AddEdit = {
-    showDialog: function(title: string, okText: string, okCall: () => void): void {
-        var dialogButtons = {
-            Cancel: null
-        };
-        dialogButtons[okText] = okCall;
-        dialogButtons.Cancel = function() { $(this).dialog("close"); };
-
-        $("#add-edit-form").dialog({
-            height: 450,
-            width: 610,
-            title: title,
-            modal: true,
-            open: function(evt, ui) {
-                $("#log-body").htmlarea({
-                    toolbar: [
-                        ["bold", "italic", "underline", "strikethrough", "|", "forecolor"],
-                        ["p", "h1", "h2", "h3", "h4", "h5", "h6"],
-                        ["link", "unlink", "|", "orderedList", "unorderedList", "|", "superscript", "subscript"]
-                    ],
-                    css: "assets/js/vendor/jhtmlarea/styles/jHtmlArea.Editor.css"
-                });
-                $("#log-body").htmlarea("updateHtmlArea");
-            },
-            show: {
-                effect: "fade",
-                duration: 500
-            },
-            hide: {
-                effect: "fade",
-                duration: 500
-            },
-            buttons: dialogButtons
-        });
-    },
-
-    showEditInputs: function(logInfo: apiResponse): void {
-        $("#log-title").val(logInfo.data[0].title);
-        $("#log-body").val(logInfo.data[0].body);
-        $("#categories").text("Loading categories...");
-
-        Categories.renderCategoriesFromString(logInfo.data[0].category, "#categories");
-
-        AddEdit.showDialog("Edit Log", "Save Edit", function() {
-            AddEdit.saveLog(false, logInfo.data[0].id);
-        });
-    },
-
-    showAddInputs: function(): void {
-        $("#log-title").val("");
-        $("#log-body").val("");
-        $("#categories").empty();
-
-        Categories.grabFirstLevel("#categories");
-
-        AddEdit.showDialog("Create Log", "Save Log", function() {
-            AddEdit.saveLog(true);
-        });
-    },
-
-    getEdit: function(logid): void {
-        $.post("api/i/logs/read", {logid: logid}, AddEdit.showEditInputs, "json");
-    },
-
-    saveLog: function(isnew: boolean, id?: number): void {
-        var urlvars = {};
-        var url = "";
-        var title = $("#log-title").val();
-        var entry = $("#log-body").val();
-        var cat = Categories.getCatString();
-
-        if (isnew) {
-            urlvars = { title: title, body: entry, cat: cat };
-            url = "api/i/logs/create";
-        } else {
-            urlvars = { logid: id, title: title, body: entry, cat: cat };
-            url = "api/i/logs/edit";
-        }
-
-        if (title && entry && cat) {
-            $.post(url, urlvars, function(json) {
-                    Refresh.refreshLog();
-                    $.alert(json.data, "Create Log", function() {
-                        $("#add-edit-form").dialog("close");
-                    });
-                }, "json");
-        } else {
-            $("#messages").html(`<span class="bad">Log entries must have a title, category, and entry text.</span>`).fadeIn();
-            setTimeout(function() { $("#messages").fadeOut(); }, 10000);
-        }
-    }
-}; // AddEdit

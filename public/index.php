@@ -19,11 +19,6 @@ if (!file_exists(__DIR__.'/../vendor/autoload.php')) {
 require __DIR__.'/../vendor/autoload.php';
 
 /**
- * Register the Dandelion specific autoloader for the API
- */
-require __DIR__.'/../bootstrap/autoloader.php';
-
-/**
  * Bootstrap.php does quite a bit of set for Dandelion
  */
 $app = require __DIR__.'/../bootstrap/start.php';

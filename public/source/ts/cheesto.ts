@@ -23,6 +23,7 @@ var Cheesto = {
         $.getJSON("api/i/cheesto/read",
             function (data) {
                 if (!$.apiSuccess(data)) {
+                    setTimeout(Cheesto.getStatuses, 60000);
                     return;
                 }
 
@@ -67,9 +68,23 @@ var Cheesto = {
             if (dataObj.hasOwnProperty(key)) {
                 if (key !== "statusOptions") {
                     var user = dataObj[key];
+                    var html = "";
+                    // The modified date is in the format %Y-%m-%d %H:%m:%s
+                    // To match the return date, format to %m/%d/%Y %H:%m
+                    var modDate = new Date(user.modified);
+                    var formatMin = (modDate.getMinutes() < 10) ? "0"+modDate.getMinutes() : modDate.getMinutes();
+                    var formatHour = (modDate.getHours() < 10) ? "0"+modDate.getHours() : modDate.getHours();
+                    var formatModDate = (modDate.getMonth()+1)+"/"+modDate.getDate()+"/"+modDate.getFullYear();
+                    formatModDate += " "+formatHour+":"+formatMin;
 
-                    var html = `<tr><td>${user.fullname}</td><td class="status-cell" title="Message: ${user.message}\n
-                        Return: ${user.returntime}">${user.status}</td></tr>`;
+                    if (user.status === "Available") {
+                        html = `<tr><td>${user.fullname}</td><td class="status-cell" title="Last Changed: ${formatModDate}">${user.status}</td></tr>`;
+                    } else {
+                        // If the status is not Available show the return time and message
+                        var message = (user.message === "") ? "" : `Message: ${user.message}\n\n`;
+                        html = `<tr><td>${user.fullname}</td><td class="status-cell" title="${message}Return: ${user.returntime}\n
+                            Last Changed: ${formatModDate}">${user.status}</td></tr>`;
+                    }
 
                     table.append(html);
                 }
@@ -117,6 +132,7 @@ var Cheesto = {
                 },
                 buttons: {
                     "Save": function() {
+                        $(this).dialog("close");
                         Cheesto.processStatus(newStatus);
                     },
                     Cancel: function() {
@@ -136,11 +152,11 @@ var Cheesto = {
         var returnTime = $("#cheesto-date-pick");
 
         Cheesto.sendNewStatus(status, returnTime.val(), message.val());
-        $("#cheesto-status-form").dialog("close");
 
         $("#status-select").prop("selectedIndex", 0);
         message.val("");
         returnTime.val("Today");
+        $("input[name=quicktime]").prop("checked", false);
     },
 
     sendNewStatus: function (stat: string, rt: string, message: string): void {

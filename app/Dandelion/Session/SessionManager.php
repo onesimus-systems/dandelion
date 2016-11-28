@@ -9,106 +9,86 @@
  */
 namespace Dandelion\Session;
 
-use Dandelion\Application;
 use Dandelion\Utils\Configuration as Config;
 
-class SessionManager implements \SessionHandlerInterface
+use Onesimus\Session\SessionManager as SM;
+
+/**
+ * The implementation of this class is a temporary solution.
+ * Right now it's simply a wrapper for the Onesimus session manager.
+ */
+class SessionManager
 {
-    private $sessionName;
-    private $timeout;
-    private $gcLotto;
-    private $repo;
-    private $app;
-
-    private static $instance;
-    public static $session = [];
-
     private function __construct() {}
     private function __clone() {}
 
-    public static function get($name)
+    public static function register()
     {
-        return self::$session[$name];
-    }
+        $options = [
+            'timeout' => Config::get('sessionTimeout') * 60,
+            'gclotto' => Config::get('gcLottery'),
+            'table' => 'dan_session'
+        ];
 
-    public static function set($name, $value)
-    {
-        self::$session[$name] = $value;
-        return;
-    }
+        // Simplist way to get the PDO object for the database
+        $repoName = "\\Dandelion\\Repos\\SessionRepo";
+        $repo = new $repoName();
+        $pdo = $repo->getPDO();
 
-    public static function register(Application $app)
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        } else {
-            return;
-        }
-
-        self::$instance->timeout = Config::get('sessionTimeout') * 60;
-        self::$instance->app = $app;
-        self::$instance->gcLotto = Config::get('gcLottery');
-
-        session_set_save_handler(self::$instance, true);
+        SM::register($pdo, $options);
         return;
     }
 
     public static function startSession($name)
     {
-        session_name($name);
-        session_start();
-        self::$session = &$_SESSION;
-        return;
+        SM::startSession($name);
     }
 
-    public function open($savePath, $sessionName)
+    /**
+     * Return session data named $name. If it doesn't exist, return $else.
+     * @param  mixed $name Name of session data to return
+     * @param  mixed $else Value to return if session doesn't contine data $name
+     * @return mixed
+     */
+    public static function get($name, $else = null)
     {
-        $this->sessionName = $sessionName;
-        $repo = "\\Dandelion\\Repos\\SessionRepo";
-        $this->repo = new $repo();
-
-        // Garbage collection
-        $odds = $this->gcLotto[0];
-        $max = $this->gcLotto[1];
-        if (mt_rand(0, $max - 1) < $odds) {
-            $this->gc($this->timeout);
-        }
-        return true;
+        return SM::get($name, $else);
     }
 
-    public function close()
+    /**
+     * Set/overwrite session data named $name with data $value.
+     * @param mixed $name  Name of session data to set
+     * @param mixed $value Value of $name
+     */
+    public static function set($name, $value)
     {
-        unset($this->repo);
-        return true;
+        SM::set($name, $value);
     }
 
-    public function read($id)
+    /**
+     * Merge arrays in session data
+     * @param  mixed $name   Name of session data to merge
+     * @param  array  $value Array to merge
+     */
+    public static function merge($name, array $value)
     {
-        $r = $this->repo->read($id);
-
-        if (is_null($r)) {
-            return '';
-        } else {
-            return $r;
-        }
+        SM::merge($name, $value);
     }
 
-    public function write($id, $data)
+    /**
+     * Remove data from the session
+     * @param  string $name Name of data to remove
+     */
+    public static function remove($name)
     {
-        $this->repo->write($id, $data);
-        return;
+        SM::remove($name);
     }
 
-    public function destroy($id)
+    /**
+     * Clear session data
+     */
+    public static function clear()
     {
-        $this->repo->destroy($id);
-        $_SESSION = [];
-        return;
-    }
-
-    public function gc($maxlifetime)
-    {
-        $this->app->logger->info('Executing session garbage collection...');
-        return (bool) $this->repo->gc($maxlifetime);
+        SM::clear();
     }
 }

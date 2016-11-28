@@ -8,6 +8,12 @@
 
 var UserManage = {
     init: function(): void {
+        var disableBtn = $("#disable-user-btn");
+        if (disableBtn.length) {
+            disableBtn.click(UserManage.disableUser);
+        } else {
+            $("#enable-user-btn").click(UserManage.enableUser);
+        }
         $("#delete-user-btn").click(UserManage.confirmDeleteUser);
         $("#reset-pwd-btn").click(UserManage.showPasswordDialog);
         $("#revoke-api-btn").click(UserManage.confirmRevokeKey);
@@ -20,8 +26,36 @@ var UserManage = {
         });
     },
 
+    enableUser: function(): void {
+        var userId = $("#user-id").val();
+        $.post("../../api/i/users/enable", {uid: userId}, null, "json")
+            .done(function(data) {
+                if ($.apiSuccess(data)) {
+                    $.alert("User enabled", "User Management", function() {
+                        location.reload(true);
+                    });
+                } else {
+                    $.alert("Error enabling user", "User Management");
+                }
+            });
+    },
+
+    disableUser: function(): void {
+        var userId = $("#user-id").val();
+        $.post("../../api/i/users/disable", {uid: userId}, null, "json")
+            .done(function(data) {
+                if ($.apiSuccess(data)) {
+                    $.alert("User disabled", "User Management", function() {
+                        location.reload(true);
+                    });
+                } else {
+                    $.alert("Error disabling user", "User Management");
+                }
+            });
+    },
+
     confirmDeleteUser: function(): void {
-        $.confirmBox("Are you sure you want to delete this user?",
+        $.confirmBox("Disabling a user is prefered over deletion.<br><br>Are you sure you want to delete this user?",
             "Delete User",
             UserManage.deleteUser
         );
@@ -45,7 +79,7 @@ var UserManage = {
         $("#pwd-reset-dialog").dialog({
             modal: true,
             width: 400,
-            height: 200,
+            height: 250,
             show: {
                 effect: "fade",
                 duration: 500
@@ -73,13 +107,15 @@ var UserManage = {
     },
 
     resetPassword: function(): void {
+        var uid: number = $("#user-id").val();
         var pass1: string = $("#pass1").val();
         var pass2: string = $("#pass2").val();
+        var force_reset: boolean = $("#force-reset-chk").prop("checked");
         $("#pass1").val("");
         $("#pass2").val("");
 
         if (pass1 === pass2 && pass1 !== "") {
-            $.post("../../api/i/users/resetPassword", {pw: pass1, uid: $("#user-id").val()}, null, "json")
+            $.post("../../api/i/users/resetpassword", {pw: pass1, uid: uid, force_reset: force_reset}, null, "json")
                 .done(function(data) {
                     $.alert(data.data, "User Management");
                 });

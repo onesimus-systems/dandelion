@@ -7,6 +7,11 @@
 module Categories {
     var currentSelection: number[] = [];
     var domid: string = "";
+    var urlPrefix: string = "";
+
+    export function setUrlPrefix(pre: string): void {
+        urlPrefix = pre;
+    }
 
     export function grabNextLevel(pid: string): void {
         var pidSplit = pid.split(":");
@@ -21,7 +26,7 @@ module Categories {
 
         currentSelection[level] = cid;
 
-        $.get("render/categoriesJson", {pastSelection: JSON.stringify(currentSelection)}, null, "json")
+        $.get(urlPrefix+"render/categoriesJson", {pastSelection: JSON.stringify(currentSelection)}, null, "json")
             .done(function(json) {
                 $(domid).empty();
                 $(domid).html(renderSelectsFromJson(json));
@@ -40,7 +45,7 @@ module Categories {
         Categories.grabNextLevel(elem.value);
     }
 
-    function renderSelectsFromJson(json: any): string {
+    export function renderSelectsFromJson(json: any): string {
         currentSelection = json.currentList;
         var html = "";
 
@@ -68,7 +73,7 @@ module Categories {
     }
 
     export function renderCategoriesFromString(str: string, elemid: string): void {
-        $.get("render/editcat", {catstring: str}, null, "json")
+        $.get(urlPrefix+"render/editcat", {catstring: str}, null, "json")
             .done(function(json) {
                 var rendered = renderSelectsFromJson(json);
                 domid = elemid;

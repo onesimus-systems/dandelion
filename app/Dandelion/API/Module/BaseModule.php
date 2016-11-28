@@ -9,37 +9,74 @@
  */
 namespace Dandelion\API\Module;
 
-use Dandelion\Rights;
+use Dandelion\User;
 use Dandelion\Application;
-use Dandelion\UrlParameters;
+use Dandelion\Auth\GateKeeper;
 use Dandelion\Utils\Repos;
+use Dandelion\API\ApiCommander;
 use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 
+/**
+ * Shim class until conversion to Keycard authorization
+ * TODO: Remove shim class
+ */
+class UserRightsShim
+{
+    private $card;
+    public $userid;
+
+    public function __construct(User $user)
+    {
+        $this->card = $user->getKeycard();
+        $this->userid = $user->get('id');
+    }
+
+    public function authorized($permission)
+    {
+        return $this->card->read($permission);
+    }
+
+    public function isAdmin()
+    {
+        return $this->authorized('admin');
+    }
+}
+
 abstract class BaseModule
 {
+    // Shim classes
+    // TODO: Remove properties
+    protected $ur;
+
     // Application
     protected $app;
 
     // User rights
-    protected $ur;
+    protected $requestUser;
 
     // URL parameters
-    protected $up;
+    protected $request;
 
     // Repo for the specific module
     protected $repo;
 
-    public function __construct(Application $app, Rights $ur, UrlParameters $urlParameters) {
-        $this->app = $app;
-        $this->ur = $ur;
-        $this->up = $urlParameters;
+    protected $makeRepo = true;
 
-        // Remove namespace
-        $module = array_reverse(explode('\\', get_class($this)));
-        // Remove the API at the end of the class name
-        $module = substr($module[0], 0, -3);
-        $this->repo = $this->makeRepo($module);
+    public function __construct(Application $app, User $user) {
+        $this->app = $app;
+        $this->requestUser = $user;
+        $this->request = $app->request;
+        // TODO: Remove these objects
+        $this->ur = new UserRightsShim($user);
+
+        if ($this->makeRepo) {
+            // Remove namespace
+            $module = array_reverse(explode('\\', get_class($this)));
+            // Remove the API at the end of the class name
+            $module = substr($module[0], 0, -3);
+            $this->repo = $this->makeRepo($module);
+        }
     }
 
     protected function makeRepo($module)
@@ -48,7 +85,12 @@ abstract class BaseModule
         if ($repo) {
             return $repo;
         } else {
-            throw new ApiException('Error initializing API request', 6);
+            throw new ApiException('Error initializing API request', ApiCommander::API_SERVER_ERROR);
         }
+    }
+
+    protected function authorized(User $user, $task)
+    {
+        return GateKeeper::authorized($user, $task);
     }
 }

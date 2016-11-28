@@ -10,17 +10,23 @@
 $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','datetimepicker']]);
 ?>
 
-<h1>Manage User - <?= $this->e($user['fullname']) ?></h1>
+<h1>Manage User - <?= $this->e($user->get('fullname')) ?></h1>
 
 <form>
 <div id="pwd-reset-dialog" title="Reset Password">
     <table>
         <tr><td>New Password:</td><td><input type="password" id="pass1"></td></tr>
         <tr><td>Repeat Password:</td><td><input type="password" id="pass2"></td></tr>
+        <tr><td>Force Password Reset:</td><td><input type="checkbox" id="force-reset-chk" checked="true"></td></tr>
     </table>
 </div>
 
 <div id="control-panel">
+    <?php if ($user->enabled()): ?>
+        <button type="button" id="disable-user-btn">Disable User</button>
+    <?php else: ?>
+        <button type="button" id="enable-user-btn">Enable User</button>
+    <?php endif; ?>
     <button type="button" id="delete-user-btn">Delete User</button>
     <button type="button" id="reset-pwd-btn">Reset Password</button>
     <button type="button" id="revoke-api-btn">Revoke API Key</button>
@@ -30,15 +36,15 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
 
 <section id="general-info">
     <h2>General Information</h2>
-    <input type="hidden" id="user-id" value="<?= $this->e($user['id']) ?>">
+    <input type="hidden" id="user-id" value="<?= $this->e($user->get('id')) ?>">
     <table>
         <tr>
             <td class="field-name">Username:</td>
-            <td><?= $this->e($user['username']) ?></td>
+            <td><?= $this->e($user->get('username')) ?></td>
         </tr>
         <tr>
             <td class="field-name">Full Name:</td>
-            <td><input type="text" id="fullname" value="<?= $this->e($user['fullname']) ?>"></td>
+            <td><input type="text" id="fullname" value="<?= $this->e($user->get('fullname')) ?>"></td>
         </tr>
         <tr>
             <td class="field-name">Group:</td>
@@ -46,7 +52,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
                 <select id="user-group">
                 <?php
                     foreach ($grouplist as $group) {
-                        if ($user['group_id'] == $group['id']) {
+                        if ($user->get('group_id') == $group['id']) {
                             echo '<option value="'.$group['id'].'" selected>'.ucfirst($group['name']).'</option>';
                         } else {
                             echo '<option value="'.$group['id'].'">'.ucfirst($group['name']).'</option>';
@@ -58,7 +64,11 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
         </tr>
         <tr>
             <td class="field-name">Date Created:</td>
-            <td><?= $this->e($user['created']) ?></td>
+            <td><?= $this->e($user->get('created')) ?></td>
+        </tr>
+        <tr>
+            <td class="field-name">Disabled:</td>
+            <td><?= $user->enabled() ? 'No' : 'Yes' ?></td>
         </tr>
     </table>
 </section>

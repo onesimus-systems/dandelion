@@ -17,27 +17,31 @@ use Dandelion\Application;
 use Dandelion\Utils\Repos;
 use Dandelion\Utils\View;
 use Dandelion\Utils\Configuration as Config;
-
-use Dandelion\Factory\UserFactory;
+use Dandelion\Factories\UserFactory;
 
 class AdminController extends BaseController
 {
     public function admin()
     {
-        $this->loadRights();
         $userlist = [];
         $grouplist = [];
+        $grouplist2 = [];
         $updateArray = [];
+        $updateArray = [
+            'available' => false,
+            'current' => Application::VERSION,
+            'url' => '',
+            'latest' => '???',
+        ];
 
-        if ($this->rights->authorized('edituser', 'deleteuser')) {
+        if ($this->authorized($this->sessionUser, 'manage_current_users')) {
             $userObj = new Users(Repos::makeRepo('Users'));
             $userlist = $userObj->getUserList();
         }
 
-        if ($this->rights->authorized('creategroup', 'editgroup', 'deletegroup')) {
+        if ($this->authorized($this->sessionUser, 'manage_groups')) {
             $permObj = new Groups(Repos::makeRepo('Groups'));
             $grouplist = $permObj->getGroupList();
-            $grouplist2 = [];
 
             foreach ($grouplist as $group) {
                 $grouplist2[$group['id']] = ['name' => $group['name'], 'users' => []];
@@ -50,11 +54,12 @@ class AdminController extends BaseController
         }
 
         if (Config::get('checkForUpdates')) {
-            $latest = file('http://onesimussystems.com/dandelion/versioncheck', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
-            $latest = json_decode($latest[0], true);
+            $latest = file_get_contents(Config::get('updateUrl'));
+            $latest = json_decode($latest, true);
+            $updateArray['latest'] = $latest['version'];
+
             if (version_compare($latest['version'], Application::VERSION, '>')) {
-                $updateArray['current'] = Application::VERSION;
-                $updateArray['latest'] = $latest['version'];
+                $updateArray['available'] = true;
                 $updateArray['url'] = $latest['url'];
             }
         }
@@ -64,7 +69,7 @@ class AdminController extends BaseController
             'userRights' => $this->rights,
             'userlist' => $userlist,
             'grouplist' => $grouplist2,
-            'catList' => $this->rights->authorized('createcat', 'editcat', 'deletecat'),
+            'catList' => $this->authorized($this->sessionUser, 'manage_categories'),
             'showUpdateSection' => Config::get('checkForUpdates'),
             'updates' => $updateArray
         ]);
@@ -78,19 +83,18 @@ class AdminController extends BaseController
             View::redirect('adminSettings');
         }
 
-        $this->loadRights();
         // Users without the proper permissions are redirected to the dashboard
-        if (!$this->rights->authorized('edituser', 'deleteuser')) {
+        if (!$this->authorized($this->sessionUser, 'manage_current_users')) {
             View::redirect('dashboard');
         }
 
-        $user = new Users(Repos::makeRepo('Users'));
+        $uf = new UserFactory();
         $groups = new Groups(Repos::makeRepo('Groups'));
         $cheesto = new Cheesto(Repos::makeRepo('Cheesto'));
 
         $template = new Template($this->app);
         $template->addData([
-            'user' => $user->getUser($uid),
+            'user' => $uf->get($uid),
             'cheesto' => $cheesto->getUserStatus($uid),
             'grouplist' => $groups->getGroupList(),
             'statuslist' => Config::get('cheesto', ['statusOptions' => []])['statusOptions']
@@ -105,9 +109,8 @@ class AdminController extends BaseController
             View::redirect('adminSettings');
         }
 
-        $this->loadRights();
         // Users without the proper permissions are redirected to the dashboard
-        if (!$this->rights->authorized('editgroup')) {
+        if (!$this->authorized($this->sessionUser, 'manage_current_groups')) {
             View::redirect('dashboard');
         }
 

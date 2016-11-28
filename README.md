@@ -1,9 +1,9 @@
-Dandelion v6.0.0
+Dandelion v6.1.0
 ================
 
 Dandelion is a web-based logbook designed to make it dead simple to keep logs. Dandelion helps you remember what you did four months ago. Dandelion developed out of the mindset of IT but is versatile enough to use in just about any situation.
 
-Website and Docs: http://onesimussystems.com/dandelion
+Website and Docs: http://blog.onesimussystems.com/dandelion
 
 Requirements
 ------------
@@ -11,7 +11,7 @@ Requirements
 * Apache or Nginx web server
     - mod_rewrite must be enabled for Apache
 * PHP >= 5.4.0
-* MySQL/Maria DB
+* MySQL/Maria DB or SQLite PHP module
 
 Dandelion has been tested on Ubuntu with Apache and Nginx. Other combos may probably work but YMMV.
 
@@ -23,52 +23,12 @@ Is it any good?
 Installation Instructions
 -------------------------
 
-Installation docs are available on the website [here](http://onesimussystems.com/dandelion/install/).
+Installation docs are available on the website [here](http://blog.onesimussystems.com/dandelion/install/).
 
 Chrome Extension for Cheesto
 ----------------------------
 
 I've also taken the time to develop a small Chrome extension that can interface with any Dandelion installation version 5 and above. The extension is available for install on the [Chrome Store](https://chrome.google.com/webstore/detail/cheesto-user-status/npggfenlbmepblpeenickeifmiionmli) and is free and released under the GPL v3 like Dandelion. The source is available on [GitHub](https://github.com/dragonrider23/Cheesto-Chrome).
-
-Release Notes
--------------
-
-v6.0.0
-
-- New look
-    * Dandelion has been updated with a fresh, new look. But don't worry, if you don't like the new look, just switch to the Legacy theme.
-- The category of a log can be edited
-- Completed and cleaned public API
-    * All tasks can now be done through the API.
-    * [Documentation](http://onesimussystems.com/dandelion/api)
-- Major source rewrite
-    * Isolated public and application folders
-    * Improved application structure for looser dependencies
-    * Ability to interface with different databases (Postgres and SQLite coming)
-    * New routing functionality
-    * Better templating
-    * Cleaner bootstrap and application initialization
-- Unified, simplified, and more powerful search!!!
-    * Search now uses a simple syntax to search any part of a log
-    * Sample syntax: ```title:"router 1" categories:"Configuration:Routes"```
-    * [Documentation](http://onesimussystems.com/dandelion/search)
-- New theme management system
-    * Themes are handled a bit more elegantly and the structure has been simplified. Making creating themes much easier.
-
-[Full Release Notes](http://onesimussystems.com/dandelion/release-notes)
-
-Contributing
-------------
-
-Thank you for considering contributing to Dandelion, please make sure to follow these guidelines:
-
-* Use PSR-2 code style
-* For items that are not specified in PSR-2, please conform to the surrounding code
-* If you are wanting to contribute a large feature, please let me know before you start
-
-I'm using [this style of git branching](http://nvie.com/posts/a-successful-git-branching-model/). For development, you should clone the Dandelion repository, and checkout a new feature branch off of the develop branch (not the master) and name it appropriately such as "issue-48-feature". Commit your changes to that branch and then send pull-requests back into the develop branch.
-
-The exception to this rule is urgent hotfixes to master. To perform a hotfix, make a new branch off of master. When you're ready to submit the changes, make a pull request to both the master and develop branches.
 
 Versioning
 ----------

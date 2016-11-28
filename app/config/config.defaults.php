@@ -51,5 +51,7 @@ return array(
     // If the public api is enabled
     'publicApiEnabled' => false,
     // Have Dandelion check online for a new version
-    'checkForUpdates' => true
+    'checkForUpdates' => true,
+    // URL to check for updates
+    'updateUrl' => 'http://blog.onesimussystems.com/dandelion/versioncheck',
 );

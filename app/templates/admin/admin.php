@@ -25,15 +25,18 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['admin','jqueryui']]);
                 <th>Username</th>
                 <th>Role</th>
                 <th class="non-essential-info">Created</th>
+                <th class="non-essential-info">Disabled</th>
             </tr>
 
             <?php
             foreach ($userlist as $user) {
-                echo '<tr onClick="Admin.editUser('.$user['id'].')">';
-                echo '<td>'.$user['fullname'].'</td>';
-                echo '<td>'.$user['username'].'</td>';
-                echo '<td>'.$grouplist[$user['group_id']]['name'].'</td>';
-                echo '<td class="non-essential-info">'.$user['created'].'</td>';
+                $user['disabled'] = $user['disabled'] ? 'Yes' : 'No';
+                echo '<tr onClick="Admin.editUser('.$this->e($user['id']).')">';
+                echo '<td>'.$this->e($user['fullname']).'</td>';
+                echo '<td>'.$this->e($user['username']).'</td>';
+                echo '<td>'.$this->e($grouplist[$user['group_id']]['name']).'</td>';
+                echo '<td class="non-essential-info">'.$this->e($user['created']).'</td>';
+                echo '<td class="non-essential-info">'.$user['disabled'].'</td>';
                 echo '</tr>';
             } ?>
         </table>
@@ -56,9 +59,9 @@ if ($grouplist): ?>
 
             <?php
             foreach ($grouplist as $id => $group) {
-                echo '<tr onClick="Admin.editGroup(\''.$id.'\')">';
-                echo '<td>'.$group['name'].'</td>';
-                echo '<td>'.implode(', ', $group['users']).'</td>';
+                echo '<tr onClick="Admin.editGroup(\''.$this->e($id).'\')">';
+                echo '<td>'.$this->e($group['name']).'</td>';
+                echo '<td>'.$this->e(implode(', ', $group['users'])).'</td>';
                 echo '</tr>';
             } ?>
         </table>
@@ -83,13 +86,13 @@ if ($catList): ?>
 if ($showUpdateSection): ?>
 <section id="version-update">
 	<h2>Updates</h2>
-	<?php if (!$updates): ?>
+        <strong>Installed Version</strong>: <?= $this->e($updates['current']) ?><br><br>
+        <strong>Latest Version</strong>: <?= $this->e($updates['latest']) ?><br><br>
+	<?php if (!$updates['available']): ?>
 		No updates currently available
 	<?php else: ?>
 		<strong>An update is available!</strong><br><br>
-		<strong>Installed Version</strong>: <?= $this->e($updates['current']) ?><br><br>
-		<strong>Latest Version</strong>: <?= $this->e($updates['latest']) ?><br><br>
-		<a href="<?= $this->e($updates['url']) ?>">Download Update</a>
+		<a href="<?= $this->e($updates['url']) ?>" target="_blank">Download Update</a>
 	<?php endif; ?>
 </section>
 <?php endif;

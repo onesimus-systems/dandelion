@@ -15,3 +15,7 @@ public/assets/themes/*/maps/
 *.sqlite
 update.lock
 tsconfig.json
+.vagrant/
+*.bak
+uml/
+public/test.html

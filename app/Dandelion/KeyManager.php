@@ -23,10 +23,12 @@ class KeyManager
 
     public function getKey($uid, $force = false)
     {
-        $key = $this->repo->getKeyForUser($uid);
+        if (!$force) {
+            $key = $this->repo->getKeyForUser($uid);
 
-        if ($key && !$force) {
-            return $key['keystring'];
+            if ($key) {
+                return $key['keystring'];
+            }
         }
 
         // Clear database of old keys for user
@@ -63,9 +65,9 @@ class KeyManager
     private function generateKey($length = 10)
     {
         $bin = openssl_random_pseudo_bytes($length, $cstrong);
-        if (!$cstrong && !$bin) {
+        if (!$cstrong || !$bin) {
             return '';
         }
-        return bin2hex(base64_encode($bin));
+        return bin2hex($bin);
     }
 }

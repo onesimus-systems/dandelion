@@ -123,7 +123,8 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         return $this->database->updateItem($this->table, $lid, [
             'title' => $title,
             'body' => $body,
-            'category' => $cat
+            'category' => $cat,
+            'is_edited' => 1
         ]);
     }
 
@@ -191,5 +192,51 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
             ->read($this->table.'.*, '.$this->prefix.'user.fullname');
 
         return $results;
+    }
+
+    public function getLogCommentsById($logid, $order = 'new')
+    {
+        $logs = $this->database
+            ->find($this->prefix.'comment')
+            ->belongsTo($this->prefix.'user', 'user_id')
+            ->whereEqual($this->prefix.'comment.log_id', $logid);
+
+        if ($order == 'new') {
+            $logs = $logs->orderDesc($this->prefix.'comment.created');
+        } else {
+            $logs = $logs->orderAsc($this->prefix.'comment.created');
+        }
+
+        $results = $logs->read($this->prefix.'comment.*, '.$this->prefix.'user.fullname');
+
+        return $results;
+    }
+
+    public function addComment($logid, $userid, $created, $text)
+    {
+        $commentAdded = $this->database->createItem($this->prefix.'comment', [
+            'log_id' => $logid,
+            'user_id' => $userid,
+            'created' => $created,
+            'comment' => $text
+        ]);
+
+        if ($commentAdded) {
+            $currentCount = $this->numOfComments($logid);
+            $this->database
+                ->find($this->table)
+                ->whereEqual('id', $logid)
+                ->update(['num_of_comments' => $currentCount]);
+        }
+
+        return $commentAdded;
+    }
+
+    public function numOfComments($logid)
+    {
+        return $this->database
+                ->find($this->prefix.'comment')
+                ->whereEqual('log_id', $logid)
+                ->count();
     }
 }

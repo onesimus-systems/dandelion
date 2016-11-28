@@ -10,7 +10,6 @@
 namespace Dandelion\Controllers;
 
 use Dandelion\Categories;
-use Dandelion\UrlParameters;
 use Dandelion\Utils\Repos;
 
 class RenderController extends BaseController
@@ -26,9 +25,7 @@ class RenderController extends BaseController
      */
     public function editcat()
     {
-        $urlParams = new UrlParameters();
-
-        if ($urlParams->catstring) {
+        if ($this->request->postParam('catstring')) {
             $catRepo = Repos::makeRepo('Categories');
             $displayCats = new Categories($catRepo);
             $this->setResponse($displayCats->renderFromString($urlParams->catstring));
@@ -41,10 +38,8 @@ class RenderController extends BaseController
      */
     public function categoriesJson()
     {
-        $urlParams = new UrlParameters();
-
-        $past = json_decode(stripslashes($urlParams->pastSelection));
-        $catRepo = $catRepo = Repos::makeRepo('Categories');
+        $past = json_decode(stripslashes($this->request->getParam('pastSelection')));
+        $catRepo = Repos::makeRepo('Categories');
         $displayCats = new Categories($catRepo);
         $this->setResponse($displayCats->renderChildrenJson($past));
         return;

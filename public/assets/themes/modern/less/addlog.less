@@ -1,0 +1,22 @@
+/**
+ * Styles for edit log page
+ */
+
+@import (reference) "_base";
+
+button {
+    #dandelion-lib > .button();
+    #dandelion-lib > .button-hover();
+}
+
+select {
+    #dandelion-lib > .select();
+    background-color: lighten(@dandelion-mid-grey, 20%);
+    color: black;
+    margin-left: 5px;
+
+    #dandelion-lib > .media-query(screen, small, {
+        display: block;
+        margin-bottom: 10px;
+    });
+}

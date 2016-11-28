@@ -24,15 +24,20 @@ class CheestoRepo extends BaseRepo implements Interfaces\CheestoRepo
     public function getAllStatuses()
     {
         return $this->database
-            ->find($this->table)->read();
+            ->find($this->table)
+            ->belongsTo($this->prefix.'user', 'user_id')
+            ->whereEqual($this->prefix.'user.disabled', 0)
+            ->read($this->table.'.*, '.$this->prefix.'user.fullname');
     }
 
     public function getUserStatus($uid)
     {
         return $this->database
             ->find($this->table)
-            ->whereEqual('user_id', $uid)
-            ->readRecord();
+            ->belongsTo($this->prefix.'user', 'user_id')
+            ->whereEqual($this->prefix.'user.id', $uid)
+            ->whereEqual($this->prefix.'user.disabled', 0)
+            ->read($this->table.'.*, '.$this->prefix.'user.fullname');
     }
 
     public function updateStatus($uid, $status, $message, $return, $date)
@@ -46,5 +51,16 @@ class CheestoRepo extends BaseRepo implements Interfaces\CheestoRepo
                 'returntime' => $return,
                 'modified' => $date
             ]);
+    }
+
+    public function createCheesto($uid, $date)
+    {
+        return $this->database->createItem($this->table, [
+            'status' => 'Available',
+            'message' => '',
+            'returntime' => '00:00:00',
+            'modified' => $date,
+            'user_id' => $uid
+        ]);
     }
 }

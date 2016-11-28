@@ -1,0 +1,59 @@
+/**
+ * Styles for log page
+ */
+
+@import (reference) "_base";
+
+button {
+    #dandelion-lib > .button();
+    #dandelion-lib > .button-hover();
+}
+
+#log-data {
+    text-align: left;
+    margin: 0 auto;
+    width: 500px;
+}
+
+h2 {
+    display: inline-block;
+}
+
+hr {
+    width: 500px;
+    border: 1px solid lighten(black, 30%);
+}
+
+#add-comment-form {
+    display: none;
+    margin: 15px 20px;
+
+    #error-message {
+        color: lighten(black, 10%);
+    }
+}
+
+#comment-section {
+    text-align: left;
+    margin: 0 auto;
+    width: 500px;
+}
+
+#comments {
+    margin-left: 20px;
+
+    .comment {
+        &-author {
+            font-weight: bold;
+        }
+
+        &-datetime {
+
+        }
+
+        &-body {
+            display: block;
+            margin: 10px 20px 20px;
+        }
+    }
+}

@@ -17,4 +17,5 @@ interface LogsRepo
     public function addLog($uid, $title, $body, $cat, $date, $time);
     public function updateLog($lid, $title, $body, $cat);
     public function getLogsBySearch($query, $limit, $offset);
+    public function addComment($logid, $userid, $created, $text);
 }

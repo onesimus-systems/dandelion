@@ -22,7 +22,9 @@ Router::group(['rprefix' => '\Dandelion\Controllers\\'], [
 ]);
 
 // Authentication required for these routes, sets last accessed timestamp on session
-Router::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => ['sessionLastAccessed', 'auth']], [
+Router::group([
+    'rprefix' => '\Dandelion\Controllers\\',
+    'filter' => ['sessionLastAccessed', 'auth']], [
     ['get', '/{page}', 'PageController@render'],
     ['get', '/', 'DashboardController@dashboard'],
     ['get', '/dashboard', 'DashboardController@dashboard'],
@@ -30,8 +32,21 @@ Router::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => ['sessionLas
     ['any', '/render/{item}', 'RenderController@render']
 ]);
 
+// Routes for /log
+Router::group([
+    'prefix' => '/log',
+    'rprefix' => '\Dandelion\Controllers\LogController',
+    'filter' => ['sessionLastAccessed', 'auth']], [
+    ['get', '/{id}', '@show'],
+    ['get', '/new', '@create'],
+    ['get', '/edit/{id}', '@edit'],
+    ['post', '/save', '@save']
+]);
+
 // Internal API, does not set last accessed timestamp
-Router::group(['rprefix' => '\Dandelion\Controllers\\', 'filter' => 'apiSessionLastAccessed'], [
+Router::group([
+    'rprefix' => '\Dandelion\Controllers\\',
+    'filter' => 'apiSessionLastAccessed'], [
     ['any', '/api/i/{?module}/{?method}', 'ApiController@internalApiCall']
 ]);
 

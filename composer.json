@@ -1,31 +1,30 @@
 {
     "name": "onesimus-systems/dandelion",
     "description": "Web based log journal",
-    "version": "6.0.3",
+    "version": "6.1.0",
     "type": "package",
     "license": "GPL-3.0+",
     "homepage": "http://onesimussystems.com/dandelion",
-
-    "authors": [{
-        "name": "Lee Keitel",
-        "email": "keitellf@gmail.com",
-        "homepage": "http://dragonrider23.github.io",
-        "role": "Developer"
-    }],
-
+    "authors": [
+        {
+            "name": "Lee Keitel",
+            "email": "keitellf@gmail.com",
+            "homepage": "http://blog.onesimussystems.com/dandelion",
+            "role": "Developer"
+        }
+    ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "league/plates": "3.*",
         "ircmaxell/password-compat": "~1.0",
         "onesimus-systems/seed-catalog": "^1.0.0",
         "onesimus-systems/osrouter": "^1.0.0",
-        "onesimus-systems/oslogger": "^2.0.0"
+        "onesimus-systems/oslogger": "^2.0.0",
+        "onesimus-systems/ossession": "0.1.0"
     },
-
     "require-dev": {
         "phpunit/phpunit": "4.7.*"
     },
-
     "autoload": {
         "psr-4": {
             "Dandelion\\": "app/Dandelion/"

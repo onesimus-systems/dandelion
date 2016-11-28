@@ -7,16 +7,8 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'jhtmlarea', 'datetimepicker']]);
+$this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'datetimepicker']]);
 ?>
-<div id="add-edit-form" class="hidden-dialog">
-    <form>
-        Title: <input type="text" id="log-title" value="" size="60"><br><br>
-        <textarea id="log-body" rows="10"></textarea><br>
-        <div>Category: <span id="categories"></span></div>
-    </form>
-    <div id="messages"></div>
-</div>
 
 <div id="query-builder-form" class="hidden-dialog">
     <form>
@@ -114,7 +106,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     <div class="control-panel">
         <div class="search-console">
             <div class="search-buttons">
-                <button type="button" id="query-builder-btn">Builder</button>
+                <button type="button" id="query-builder-btn">Filter</button>
             </div>
             <span class="query-box">
                 <input type="search" id="search-query" placeholder="Search" value="" autocomplete="off">
@@ -127,7 +119,9 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
         <div class="top-controls">
             <form>
                 <button type="button" class="button" id="prev-page-button">Prev</button>
-                <?= $createButton ?>
+                <?php if ($showCreateButton): ?>
+                <button type="button" class="button" id="create-log-button">Create New</button>
+                <?php endif; ?>
                 <button type="button" class="button button-right" id="next-page-button">Next</button>
                 <button type="button" class="button button-right" id="clear-search-button">Clear Search</button>
             </form>
@@ -139,4 +133,4 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     <?php endif; ?>
 </section>
 
-<?= $this->loadJS(['jquery', 'jqueryui', 'jhtmlarea', 'timepicker', 'common', 'categories', 'cheesto', 'dashboard']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'common', 'categories', 'cheesto', 'dashboard']) ?>

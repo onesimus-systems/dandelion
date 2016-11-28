@@ -14,26 +14,25 @@ use Dandelion\Utils\View;
 use Dandelion\Utils\Repos;
 use Dandelion\KeyManager;
 use Dandelion\Utils\Configuration as Config;
+use Dandelion\Session\SessionManager as Session;
 
 class SettingsController extends BaseController
 {
     public function settings()
     {
-        $this->loadRights();
-
         $template = new Template($this->app);
 
         $key = '';
         if (Config::get('publicApiEnabled')) {
             $keyManager = new KeyManager(Repos::makeRepo('KeyManager'));
-            $key = $keyManager->getKey($_SESSION['userInfo']['id']);
+            $key = $keyManager->getKey($this->sessionUser->get('id'));
         }
 
         $template->addData([
             'publicApiEnabled' => Config::get('publicApiEnabled'),
             'apiKey' => $key,
             'themeInfo' => View::getThemeListArray(),
-            'logsPerPage' => $_SESSION['userInfo']['logs_per_page']
+            'logsPerPage' => $this->sessionUser->get('logs_per_page')
         ]);
 
         $this->setResponse($template->render('settings', 'User Settings'));

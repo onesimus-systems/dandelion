@@ -1,22 +1,6 @@
--- Host: localhost
--- Generation Time: May 17, 2015 at 08:51 PM
--- Server version: 5.5.43-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.9
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Database: `dandy_base`
---
-
--- --------------------------------------------------------
+SET FOREIGN_KEY_CHECKS = 0;
 
 --
 -- Table structure for table `dan_apikey`
@@ -31,6 +15,17 @@ CREATE TABLE IF NOT EXISTS `dan_apikey` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `keystring` (`keystring`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `dan_apikey`
+    ADD INDEX  `fk_key_to_user` (`user_id`)
+    COMMENT  '';
+
+ALTER TABLE `dan_apikey`
+    ADD CONSTRAINT `fk_key_to_user_ct`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `dan_user`(`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION;
 
 -- --------------------------------------------------------
 
@@ -61,7 +56,6 @@ INSERT INTO `dan_category` (`id`, `description`, `parent`) VALUES
 CREATE TABLE IF NOT EXISTS `dan_cheesto` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `fullname` text NOT NULL,
   `status` tinytext NOT NULL,
   `message` text NOT NULL,
   `returntime` text NOT NULL,
@@ -69,6 +63,17 @@ CREATE TABLE IF NOT EXISTS `dan_cheesto` (
   `disabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+ALTER TABLE `dan_cheesto`
+    ADD INDEX `fk_status_to_user` (`user_id`)
+    COMMENT '';
+
+ALTER TABLE `dan_cheesto`
+    ADD CONSTRAINT `fk_status_to_user_ct`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `dan_user`(`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION;
 
 --
 -- Dumping data for table `dan_cheesto`
@@ -95,8 +100,8 @@ CREATE TABLE IF NOT EXISTS `dan_group` (
 --
 
 INSERT INTO `dan_group` (`id`, `name`, `permissions`) VALUES
-(1, 'user', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
-(2, 'admin', 'a:15:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:7:"viewlog";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:11:"creategroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
+(1, 'user', 'a:17:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:10:"editlogall";b:0;s:7:"viewlog";b:1;s:10:"addcomment";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
+(2, 'admin', 'a:17:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:10:"editlogall";b:1;s:7:"viewlog";b:1;s:10:"addcomment";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:11:"creategroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
 (3, 'guest', 'a:15:{s:9:"createlog";b:0;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:9:"createcat";b:0;s:7:"editcat";b:0;s:9:"deletecat";b:0;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:0;s:5:"admin";b:0;}');
 
 -- --------------------------------------------------------
@@ -111,11 +116,61 @@ CREATE TABLE IF NOT EXISTS `dan_log` (
   `time_created` time NOT NULL,
   `title` varchar(300) NOT NULL,
   `body` longtext NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` int(11) NULL,
   `category` text NOT NULL,
   `is_edited` tinyint(1) NOT NULL DEFAULT '0',
+  `num_of_comments` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `dan_log`
+    ADD INDEX `fk_log_to_user` (`user_id`)
+    COMMENT '';
+
+ALTER TABLE `dan_log`
+    ADD CONSTRAINT `fk_log_to_user_ct`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `dan_user`(`id`)
+    ON DELETE SET NULL
+    ON UPDATE NO ACTION;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dan_comment`
+--
+
+CREATE TABLE IF NOT EXISTS `dan_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NULL,
+  `comment` mediumtext NOT NULL,
+  `created` datetime NOT NULL,
+  `log_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+ALTER TABLE `dan_comment`
+    ADD INDEX `fk_comment_to_user` (`user_id`)
+    COMMENT '';
+
+ALTER TABLE `dan_comment`
+    ADD INDEX `fk_comment_to_log` (`log_id`)
+    COMMENT '';
+
+ALTER TABLE `dan_comment`
+    ADD CONSTRAINT `fk_comment_to_user_ct`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `dan_user`(`id`)
+    ON DELETE SET NULL
+    ON UPDATE NO ACTION;
+
+ALTER TABLE `dan_comment`
+    ADD CONSTRAINT `fk_comment_to_log_ct`
+    FOREIGN KEY (`log_id`)
+    REFERENCES `dan_log`(`id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION;
+
 
 -- --------------------------------------------------------
 
@@ -138,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `dan_session` (
 
 CREATE TABLE IF NOT EXISTS `dan_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` tinytext NOT NULL,
+  `username` VARCHAR(255) NOT NULL,
   `password` tinytext NOT NULL,
   `fullname` text NOT NULL,
   `group_id` int(11) NOT NULL,
@@ -148,7 +203,22 @@ CREATE TABLE IF NOT EXISTS `dan_user` (
   `theme` tinytext NOT NULL,
   `disabled` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+ALTER TABLE  `dan_user` ADD UNIQUE (
+    `username`
+);
+
+ALTER TABLE `dan_user`
+    ADD INDEX `fk_user_to_group` (`group_id`)
+    COMMENT '';
+
+ALTER TABLE `dan_user`
+    ADD CONSTRAINT `fk_user_to_group_ct`
+    FOREIGN KEY (`group_id`)
+    REFERENCES `dan_group`(`id`)
+    ON DELETE RESTRICT
+    ON UPDATE NO ACTION;
 
 --
 -- Dumping data for table `dan_user`
@@ -157,6 +227,4 @@ CREATE TABLE IF NOT EXISTS `dan_user` (
 INSERT INTO `dan_user` (`id`, `username`, `password`, `fullname`, `group_id`, `created`, `initial_login`, `logs_per_page`, `theme`, `disabled`) VALUES
 (1, 'admin', '$2y$10$zibMP6jZw5PRMGHGdo/JzeXkb3re0WEIulmkgRe4PC76GwT4M8G5u', 'Administrator', 2, '2015-01-01', 1, 25, '', 0);
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+SET FOREIGN_KEY_CHECKS = 1;

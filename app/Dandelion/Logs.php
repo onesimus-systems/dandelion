@@ -13,7 +13,10 @@ use Dandelion\Repos\Interfaces\LogsRepo;
 
 class Logs
 {
-    public function __construct(LogsRepo $repo, Rights $ur = null)
+    private $repo;
+    private $ur;
+
+    public function __construct(LogsRepo $repo, $ur = null)
     {
         $this->repo = $repo;
         $this->ur = $ur;
@@ -27,7 +30,7 @@ class Logs
      *
      * @return array with log data
      */
-    public function getLogInfo($logid = '')
+    public function getLogInfo($logid = 0)
     {
         return $this->repo->getLogInfo($logid);
     }
@@ -84,5 +87,24 @@ class Logs
         }
 
         return is_numeric($this->repo->updateLog($lid, $title, $body, $cat));
+    }
+
+    public function getLogComments($logid, $order = 'new')
+    {
+        if (!is_numeric($logid) || !$logid) {
+            return [];
+        }
+
+        return $this->repo->getLogCommentsById($logid, $order);
+    }
+
+    public function addComment($logid, $userid, $text)
+    {
+        if (!$logid || !$userid || !$text) {
+            return false;
+        }
+
+        $created = date('Y-m-d H:i:s');
+        return $this->repo->addComment($logid, $userid, $created, $text);
     }
 }

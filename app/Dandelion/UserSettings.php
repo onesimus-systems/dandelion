@@ -10,6 +10,7 @@
 namespace Dandelion;
 
 use Dandelion\Utils;
+use Dandelion\Session\SessionManager as Session;
 use Dandelion\Repos\Interfaces\UserSettingsRepo;
 
 class UserSettings
@@ -30,7 +31,7 @@ class UserSettings
         }
 
         if ($this->repo->saveLogViewLimit($user, $limit)) {
-            $_SESSION['userInfo']['logs_per_page'] = $limit;
+            Session::merge('userInfo', ['logs_per_page' => $limit]);
             return true;
         }
         return false;
@@ -39,7 +40,7 @@ class UserSettings
     public function saveTheme($theme = '', $user)
     {
         if ($this->repo->saveUserTheme($user, $theme)) {
-            $_SESSION['userInfo']['theme'] = $theme;
+            Session::merge('userInfo', ['theme' => $theme]);
             Utils\View::setThemeCookie($theme);
             return true;
         }

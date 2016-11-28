@@ -9,11 +9,8 @@
  */
 namespace Dandelion;
 
-use SC\SC;
 use Exception;
 
-use Dandelion\Utils\Updater;
-use Dandelion\Storage\Loader;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\Session\SessionManager;
 use Dandelion\Exception\AbortException;
@@ -33,48 +30,92 @@ use Onesimus\Logger\Adaptors\ChromeLoggerAdaptor;
  */
 class Application
 {
-    const VERSION = '6.0.3';
+    /**
+     * @const string Current version number
+     */
+    const VERSION = '6.1.0';
+
+    /**
+     * @const string Current version name
+     */
     const VER_NAME = 'Phoenix';
 
-    /** @var array Paths for app, public, and root */
+    /**
+     * Base file paths used throughout the application
+     * @var array
+     */
     public $paths = [];
-    /** @var array Loaded configuration */
-    public $config;
-    /** @var Onesimus\Logger\Logger Main logger, goes to file */
+    /**
+     * Main logger, goes to a single file
+     * @var Onesimus\Logger\Logger
+     */
     public $logger;
-    /** @var Onesimus\Logger\Logger Debug logger, goes to Chrome Logger if debug enabled, otherwise null */
+    /**
+     * Debug logger, goes to Chrome Logger if debug enabled, otherwise null
+     * @var Onesimus\Logger\Logger
+     */
     public $debugLogger;
-    /** @var Onesimus\Logger\ErrorHandler Handles errors, shutdown errors, and uncaught exceptions */
-    private $errorHandler;
-    /** @var Onesimus\Router\Http\Request HTTP object for current request */
+    /**
+     * HTTP object for current request
+     * @var Onesimus\Router\Http\Request
+     */
     public $request;
-    /** @var Onesimus\Router\Http\Response HTTP response object */
+    /**
+     * HTTP response object
+     * @var Onesimus\Router\Http\Response
+     */
     public $response;
-    /** @var Application Instance */
+
+    /**
+     * Application instance
+     * @var Application
+     * @access private
+     * @static
+     */
     private static $instance;
+    /**
+     * Handles errors, shutdown errors, and uncaught exceptions
+     * @var Onesimus\Logger\ErrorHandler
+     * @access private
+     */
+    private $errorHandler;
 
-    public function __construct()
+    /**
+     * Create object instance
+     * @param Request $req Incoming HTTP request
+     * @return void
+     */
+    private function __construct(Request $req)
     {
-        if (is_null(self::$instance)) {
-            self::$instance = $this;
-        }
-
-        $this->request = Request::getRequest();
+        $this->request = $req;
         $this->response = new Response();
     }
 
-    public static function getInstance()
+    /**
+     * Get instance of Application
+     * @param  Request $req Incoming HTTP request, forwarded to constructor. This is only needed at application launch.
+     * @return Application Current instance
+     */
+    public static function getInstance(Request $req = null)
     {
+        if (is_null(self::$instance)) {
+            if (is_null($req)) {
+                throw new \InvalidArgumentException('A request object must be passed to the application.');
+            }
+            self::$instance = new Application($req);
+        }
+
         return self::$instance;
     }
 
     /**
-     * Load and run the application
-     *
-     * @return null
+     * Setup and run the application
+     * @return void
      */
     public function run()
     {
+        $startTime = microtime(true);
+
         // Load application configuration
         if (!Config::load($this->paths['app'] . '/config')) {
             echo 'Please run the <a href="install.php">Installer</a>';
@@ -86,18 +127,14 @@ class Application
 
         try {
             // Setup session manager
-            SessionManager::register($this);
+            SessionManager::register();
             SessionManager::startSession(Config::get('cookiePrefix').Config::get('phpSessionName'));
-
-            Updater::checkForUpdates($this);
 
             // Setup routes and filters
             include $this->paths['app'] . '/routes.php';
             include $this->paths['app'] . '/filters.php';
 
-            // The router uses this to determine the route
-            // It's not always necessarily the right full URI
-            $this->request->set('SERVER_NAME', Config::get('hostname'));
+            $this->request->set('REQUEST_URI', $this->getRealRequestURI());
 
             $route = Router::route($this->request);
             $route->dispatch($this);
@@ -114,14 +151,16 @@ class Application
             $errorPage->renderErrorPage();
         }
 
+        $endTime = round(((microtime(true) - $startTime) * 1000), 2);
+        $this->response->headers->set('X-Dandelion-Request-Time', $endTime.'ms');
+
         $this->sendToClient();
         return;
     }
 
     /**
      * Create and set main and debug loggers plus error handlers
-     *
-     * @return null
+     * @return void
      */
     protected function setupLogging()
     {
@@ -158,9 +197,9 @@ class Application
 
     /**
      * Add paths to Application path variable
-     * @param  array  $paths Keyed array of paths
-     * @param  bool $reset Reset the paths array to what's given
-     * @return null
+     * @param array $paths keyed array of base file paths
+     * @param bool $reset Reset the paths array to what's given
+     * @return void
      */
     public function bindInstallPaths(array $paths, $reset = false)
     {
@@ -173,8 +212,7 @@ class Application
     }
 
     /**
-     * Return paths array statically
-     *
+     * Get current base filepaths
      * @return array
      */
     public static function getPaths()
@@ -184,8 +222,7 @@ class Application
 
     /**
      * Send final output to client including headers, status, and body
-     *
-     * @return null
+     * @return void
      */
     protected function sendToClient()
     {
@@ -198,5 +235,24 @@ class Application
         }
 
         echo $httpBody;
+    }
+
+    protected function getRealRequestURI()
+    {
+        $r = $this->request;
+        // Get the base URI from the hostname
+        preg_match("~https?://.*?/(.*)~", Config::get('hostname'), $subDirMatch);
+        // Get the request URI as set the web server
+        $realRequestUri = $r->get('REQUEST_URI');
+        // If there's a base URI in the hostname, deal with it
+        if (count($subDirMatch) > 0) {
+            // Chop off the base URI from the given URI
+            $realRequestUri = substr($realRequestUri, strlen($subDirMatch[1])+1);
+            // If for some reason substr returns false or an empty string, make it the root path
+            if ($realRequestUri === false) {
+                $realRequestUri = '/';
+            }
+        }
+        return $realRequestUri;
     }
 }

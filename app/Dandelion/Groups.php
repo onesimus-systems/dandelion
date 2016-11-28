@@ -18,7 +18,9 @@ class Groups
     private $defaultPermissions = [
         'createlog' => false,
         'editlog' => false,
+        'editlogall' => false,
         'viewlog' => false,
+        'addcomment' => false,
 
         'createcat' => false,
         'editcat' => false,
@@ -40,8 +42,10 @@ class Groups
 
     private $permissionNames = [
         'createlog' => 'Create logs',
-        'editlog' => 'Edit logs',
-        'viewlog' => 'View the log',
+        'editlog' => 'Edit logs created by user',
+        'editlogall' => 'Edit any log',
+        'viewlog' => 'View logs',
+        'addcomment' => 'Add Comments',
 
         'createcat' => 'Create categories',
         'editcat' => 'Edit categories',
@@ -83,6 +87,7 @@ class Groups
                 $group = $this->repo->getGroupByName($groupID);
             }
             $group['permissions'] = unserialize($group['permissions']);
+            $group['permissions'] = array_merge($this->defaultPermissions, $group['permissions']);
             $group['permissionNames'] = $this->permissionNames;
             return $group;
         }
@@ -95,7 +100,7 @@ class Groups
      * @param array $rights - Array containing rights
      * @return int - ID of new group
      */
-    public function createGroup($name, $rights)
+    public function createGroup($name, array $rights)
     {
         $rights = array_merge($this->defaultPermissions, $rights);
         $rights = serialize($rights);
@@ -120,7 +125,7 @@ class Groups
      * @param array $rights - Group rights
      * @return bool - Status of query
      */
-    public function editGroup($gid, $rights)
+    public function editGroup($gid, array $rights)
     {
         $rights = array_merge($this->defaultPermissions, $rights);
         $rights = serialize($rights);

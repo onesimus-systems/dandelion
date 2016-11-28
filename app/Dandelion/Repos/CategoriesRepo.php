@@ -25,6 +25,7 @@ class CategoriesRepo extends BaseRepo implements Interfaces\CategoriesRepo
     {
         return $this->database
             ->find($this->table)
+            ->orderAsc($this->table.'.description')
             ->read();
     }
 

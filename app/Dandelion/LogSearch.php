@@ -43,7 +43,7 @@ class LogSearch
 
         if (!$matches) {
             // Simple generic message saying no results were found
-            $notFound = [[
+            $matches[] = [
                 'category' => 'Not Found',
                 'date_created' => date('Y-m-d'),
                 'is_edited' => 0,
@@ -52,12 +52,13 @@ class LogSearch
                 'fullname' => 'Search',
                 'time_created' => date('H:i:s'),
                 'title' => 'No Results',
-                'user_id' => '-1'
-            ]];
-            return $notFound;
-        } else {
-            return $matches;
+                'user_id' => 0,
+                'num_of_comments' => 0,
+            ];
         }
+
+        $matches['queryData'] = $parsedQuery;
+        return $matches;
     }
 
     /**
