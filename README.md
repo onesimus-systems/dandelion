@@ -10,7 +10,7 @@ Requirements
 
 * Apache or Nginx web server
     - mod_rewrite must be enabled for Apache
-* PHP >= 5.5.0
+* PHP >= 5.4.0
 * MySQL/Maria DB or SQLite PHP module
 
 Dandelion has been tested on Ubuntu with Apache and Nginx. Other combos may probably work but YMMV.
