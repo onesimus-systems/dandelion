@@ -1,7 +1,7 @@
 {
     "name": "onesimus-systems/dandelion",
     "description": "Web based log journal",
-    "version": "6.1.0",
+    "version": "6.1.1",
     "type": "package",
     "license": "GPL-3.0+",
     "homepage": "http://onesimussystems.com/dandelion",
