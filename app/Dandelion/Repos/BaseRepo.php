@@ -28,11 +28,14 @@ abstract class BaseRepo
             $dbConfig = Config::get('db');
 
             if ($dbConfig['type'] !== 'sqlite') {
-                $pdoParams = [PDO::ATTR_PERSISTENT => true];
+                $pdoParams = [
+                    PDO::ATTR_PERSISTENT => true,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                ];
             }
 
             // Connect to database
-            self::$dbconnection->connect(
+            $ok = self::$dbconnection->connect(
                 $dbConfig['type'],
                 $dbConfig['hostname'],
                 $dbConfig['dbname'],
@@ -41,7 +44,7 @@ abstract class BaseRepo
                 $pdoParams);
 
             // Check for proper connection
-            if (!self::$dbconnection->pdo()) {
+            if (!$ok || !self::$dbconnection->pdo()) {
                 throw new Exception("Error Connecting to Database", 1);
             }
         }

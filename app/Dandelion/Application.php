@@ -33,7 +33,7 @@ class Application
     /**
      * @const string Current version number
      */
-    const VERSION = '6.1.0';
+    const VERSION = '6.1.1';
 
     /**
      * @const string Current version name
@@ -147,7 +147,7 @@ class Application
             $this->logger->error($e->getMessage());
             $this->debugLogger->error($e->getMessage());
 
-            $errorPage = new Controllers\PageController($this);
+            $errorPage = new Controllers\PageController($this, false);
             $errorPage->renderErrorPage();
         }
 

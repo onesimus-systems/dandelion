@@ -1,0 +1,33 @@
+version: '2'
+services:
+    dandy-app:
+        image: 'bitnami/php-fpm:${DANDY_PHP_VER}'
+        container_name: 'dandy-app'
+        volumes:
+            - .:/app
+            - ./docker/config.php:/app/app/config/config.php
+
+    dandy-web:
+        image: nginx:alpine
+        container_name: 'dandy-web'
+        depends_on:
+            - dandy-app
+            - dandy-db
+        links:
+            - dandy-app
+            - dandy-db
+        volumes:
+            - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+            - ./public:/app/public
+        ports:
+            - "${DANDY_HOST_PORT}:80"
+        command: "nginx -g 'daemon off;'"
+
+    dandy-db:
+        image: mariadb:latest
+        container_name: 'dandy-db'
+        environment:
+            MYSQL_ROOT_PASSWORD: dandy_dev
+            MYSQL_DATABASE: dandelion
+        volumes:
+            - ./app/install/mysql_schema.sql:/docker-entrypoint-initdb.d/a.sql

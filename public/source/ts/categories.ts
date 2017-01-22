@@ -13,6 +13,10 @@ module Categories {
         urlPrefix = pre;
     }
 
+    export function setDomID(id: string): void {
+        domid = id;
+    }
+
     export function grabNextLevel(pid: string): void {
         var pidSplit = pid.split(":");
         var level = +pidSplit[0] + 1;
@@ -26,9 +30,8 @@ module Categories {
 
         currentSelection[level] = cid;
 
-        $.get(urlPrefix+"render/categoriesJson", {pastSelection: JSON.stringify(currentSelection)}, null, "json")
-            .done(function(json) {
-                $(domid).empty();
+        $.get(urlPrefix + "render/categoriesJson", { pastSelection: JSON.stringify(currentSelection) }, null, "json")
+            .done(function (json) {
                 $(domid).html(renderSelectsFromJson(json));
             });
     }
@@ -73,8 +76,8 @@ module Categories {
     }
 
     export function renderCategoriesFromString(str: string, elemid: string): void {
-        $.get(urlPrefix+"render/editcat", {catstring: str}, null, "json")
-            .done(function(json) {
+        $.get(urlPrefix + "render/editcat", { catstring: str }, null, "json")
+            .done(function (json) {
                 var rendered = renderSelectsFromJson(json);
                 domid = elemid;
 
@@ -97,16 +100,16 @@ module Categories {
         }
 
         var dialog = `${message}${catString}<input type="text" id="new_category">`;
-        $.dialogBox(dialog, addNew, null, {title: "Create new category", buttonText1: "Create", height: 200, width: 500});
+        $.dialogBox(dialog, addNew, null, { title: "Create new category", buttonText1: "Create", height: 200, width: 500 });
     }
 
     function addNew(): void {
         var newCatDesc = $("#new_category").val();
-        var parent = currentSelection[currentSelection.length-1];
+        var parent = currentSelection[currentSelection.length - 1];
 
         if (newCatDesc) {
-            $.post("api/i/categories/create", {pid: parent, description: newCatDesc}, null, "json")
-                .done(function(json) {
+            $.post("api/i/categories/create", { pid: parent, description: newCatDesc }, null, "json")
+                .done(function (json) {
                     $.alert(json.data, "Categories");
                     getCatsAfterAction();
                 });
@@ -116,8 +119,8 @@ module Categories {
     }
 
     export function editCat(): void {
-        var cid = currentSelection[currentSelection.length-1];
-        var lvl = currentSelection.length-2;
+        var cid = currentSelection[currentSelection.length - 1];
+        var lvl = currentSelection.length - 2;
 
         var elt = $(`#level${lvl} option:selected`);
 
@@ -126,11 +129,11 @@ module Categories {
 
             var dialog = `Edit Category Description:<br><br><input type="text" id="edited_category" value="${editString}">`;
             $.dialogBox(dialog,
-                function() {
+                function () {
                     var editedCat = $("#edited_category").val();
                     if (editedCat) {
-                        $.post("api/i/categories/edit", {cid: cid, description: encodeURIComponent(editedCat)}, null, "json")
-                            .done(function(json) {
+                        $.post("api/i/categories/edit", { cid: cid, description: encodeURIComponent(editedCat) }, null, "json")
+                            .done(function (json) {
                                 $.alert(json.data, "Categories");
                                 getCatsAfterAction();
                             });
@@ -139,24 +142,24 @@ module Categories {
                     }
                 },
                 null,
-                {title: "Edit category", buttonText1: "Save", height: 200, width: 300}
+                { title: "Edit category", buttonText1: "Save", height: 200, width: 300 }
             );
         }
     }
 
     export function deleteCat(): void {
         var myCatString = getCatString();
-        var cid = currentSelection[currentSelection.length-1];
+        var cid = currentSelection[currentSelection.length - 1];
 
         if (myCatString !== "") {
             $.confirmBox(`Delete "${myCatString}"?\n\nChildren categories will be reassigned one level up`,
                 "Delete Category",
-                function() {
-                    $.post("api/i/categories/delete", {cid: cid}, null ,"json")
-                    .done(function(json) {
-                        $.alert(json.data, "Categories");
-                        getCatsAfterAction();
-                    });
+                function () {
+                    $.post("api/i/categories/delete", { cid: cid }, null, "json")
+                        .done(function (json) {
+                            $.alert(json.data, "Categories");
+                            getCatsAfterAction();
+                        });
                 });
         }
     }
@@ -165,7 +168,7 @@ module Categories {
         if (currentSelection.length <= 2) {
             grabFirstLevel(domid);
         } else {
-            grabNextLevel(`${(currentSelection.length-3)}:${currentSelection[currentSelection.length-2]}`);
+            grabNextLevel(`${(currentSelection.length - 3)}:${currentSelection[currentSelection.length - 2]}`);
         }
     }
 
@@ -184,9 +187,9 @@ module Categories {
          * the select elements. What's weirder, is according to the dev console, the option's selected attribute is
          * applied appropiatly, and yet jQuery doesn't see it. I don't know. The below statement works. So that's nice.
          */
-        for (var i=0; i<currentSelection.length; i++) {
+        for (var i = 0; i < currentSelection.length; i++) {
             if ($(`#level${(i)}`)) {
-                var optVal = `${i}:${currentSelection[i+1]}`;
+                var optVal = `${i}:${currentSelection[i + 1]}`;
                 var elt = $(`#level${(i)} option[value='${optVal}']:first`);
                 catString += `${elt.text()}:`;
             }

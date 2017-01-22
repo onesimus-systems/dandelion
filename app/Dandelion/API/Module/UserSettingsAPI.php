@@ -31,11 +31,18 @@ class UserSettingsAPI extends BaseModule
         $settings = new UserSettings($this->repo);
         $method = "save{$setting}";
 
-        if ($settings->$method($value, $this->requestUser->get('id'))) {
-            return 'Setting saved';
-        } else {
-            throw new ApiException('Error saving setting', ApiCommander::API_GENERAL_ERROR);
+        try {
+            $settings->$method($value, $this->requestUser->get('id'));
+        } catch(\PDOException $e) {
+            throw new ApiException(
+                'Error saving setting',
+                ApiCommander::API_GENERAL_ERROR,
+                0,
+                $e->getMessage()
+            );
         }
+
+        return 'Setting saved';
     }
 
     public function getThemeList()

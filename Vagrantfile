@@ -17,11 +17,11 @@ Vagrant.configure(2) do |config|
         config.vm.provision :shell, path: "vagrant/vagrant_bootstrap.sh", args: "npm"
     end
 
-	if !OS.windows?
-		config.trigger.before :destroy do
-			run "vagrant/destroy.sh"
-		end
-	end
+    if !OS.windows?
+        config.trigger.before :destroy do
+            run "vagrant/destroy.sh"
+        end
+    end
 
     config.vbguest.auto_update = true
 end

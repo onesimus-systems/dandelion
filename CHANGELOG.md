@@ -1,7 +1,14 @@
 Release Notes
 =============
 
-**v6.1.0** - **Current Stable (master branch)**
+**v6.1.1**
+
+- Fixed bug when changing the category of an existing log
+- Fixed application crash when showing error page with no database
+- Fixed MySQL schema file
+- Added full Docker support
+
+**v6.1.0**
 
 - Ability to disable users instead of deleting them.
 - Commenting on logs.

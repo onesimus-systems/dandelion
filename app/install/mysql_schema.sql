@@ -79,8 +79,8 @@ ALTER TABLE `dan_cheesto`
 -- Dumping data for table `dan_cheesto`
 --
 
-INSERT INTO `dan_cheesto` (`id`, `user_id`, `fullname`, `status`, `message`, `returntime`, `modified`, `disabled`) VALUES
-(1, 1, 'Administrator', 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);
+INSERT INTO `dan_cheesto` (`id`, `user_id`, `status`, `message`, `returntime`, `modified`, `disabled`) VALUES
+(1, 1, 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);
 
 -- --------------------------------------------------------
 
