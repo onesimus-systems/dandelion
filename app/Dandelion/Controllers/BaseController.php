@@ -23,13 +23,15 @@ abstract class BaseController
     protected $rights;
     protected $sessionUser;
 
-    public function __construct(Application $app)
+    public function __construct(Application $app, $getUser=true)
     {
         $this->app = $app;
         $this->request = $app->request;
 
-        $uf = new UserFactory;
-        $this->sessionUser = $uf->getWithKeycard(Session::get('userInfo')['id']);
+        if ($getUser) {
+            $uf = new UserFactory;
+            $this->sessionUser = $uf->getWithKeycard(Session::get('userInfo')['id']);
+        }
 
         $this->init();
     }

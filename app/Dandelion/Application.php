@@ -147,7 +147,7 @@ class Application
             $this->logger->error($e->getMessage());
             $this->debugLogger->error($e->getMessage());
 
-            $errorPage = new Controllers\PageController($this);
+            $errorPage = new Controllers\PageController($this, false);
             $errorPage->renderErrorPage();
         }
 
