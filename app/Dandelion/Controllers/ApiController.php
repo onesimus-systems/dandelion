@@ -146,16 +146,16 @@ class ApiController extends BaseController
             if ($e->getCode() !== 1) { // Don't log invalid key exceptions
                 $this->app->logger->error(
                     "{mess} :: Module: '{mod}'",
-                    ['mess' => $e->getMessage(), 'mod' => $e->getModule()]
+                    ['mess' => $e->getInternalMessage(), 'mod' => $e->getModule()]
                 );
             }
 
             $this->setHttpCode($e->getHttpCode());
             return $this->formatResponse($e->getCode(), $e->getMessage(), $e->getModule(), '');
         } catch (\Exception $e) {
-            $this->app->logger->error($e->getMessage());
+            $this->app->logger->error($e->getInternalMessage());
             $this->setHttpCode(500);
-            return $this->formatResponse(ApiCommander::API_SERVER_ERROR, 'Oops, something happened', 'api');
+            return $this->formatResponse(ApiCommander::API_SERVER_ERROR, 'Internal Server Error', 'api');
         }
     }
 

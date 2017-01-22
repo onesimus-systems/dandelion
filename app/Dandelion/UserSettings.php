@@ -24,6 +24,10 @@ class UserSettings
 
     public function saveLogLimit($limit = 25, $user)
     {
+        if (Session::get('userInfo')['logs_per_page'] == $limit) {
+            return true;
+        }
+
         if ($limit < 5) {
           $limit = 5;
         } elseif ($limit > 500) {
@@ -39,6 +43,10 @@ class UserSettings
 
     public function saveTheme($theme = '', $user)
     {
+        if (Session::get('userInfo')['theme'] == $theme) {
+            return true;
+        }
+
         if ($this->repo->saveUserTheme($user, $theme)) {
             Session::merge('userInfo', ['theme' => $theme]);
             Utils\View::setThemeCookie($theme);

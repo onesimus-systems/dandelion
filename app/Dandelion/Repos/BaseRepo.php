@@ -28,7 +28,10 @@ abstract class BaseRepo
             $dbConfig = Config::get('db');
 
             if ($dbConfig['type'] !== 'sqlite') {
-                $pdoParams = [PDO::ATTR_PERSISTENT => true];
+                $pdoParams = [
+                    PDO::ATTR_PERSISTENT => true,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                ];
             }
 
             // Connect to database

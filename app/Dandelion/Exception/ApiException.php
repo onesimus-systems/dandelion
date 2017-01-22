@@ -13,11 +13,17 @@ class ApiException extends \Exception
 {
     protected $module;
     protected $httpCode;
+    protected $internalMsg;
 
-    public function __construct($message = '', $code = 0, $httpCode = 200)
+    public function __construct($message = '', $code = 0, $httpCode = 200, $internal = '')
     {
         parent::__construct($message, $code);
+        if ($httpCode === 0) {
+            $httpCode = 200;
+        }
+
         $this->httpCode = $httpCode;
+        $this->internalMsg = $internal;
     }
 
     public function setModule($module = 'api')
@@ -33,5 +39,13 @@ class ApiException extends \Exception
     public function getHttpCode()
     {
         return $this->httpCode;
+    }
+
+    public function getInternalMessage()
+    {
+        if ($this->internalMsg !== '') {
+            return $this->internalMsg;
+        }
+        return $this-getMessage();
     }
 }
