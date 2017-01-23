@@ -263,6 +263,11 @@ bumpverCommand ()
     fi
 }
 
+gulpCommand ()
+{
+    docker run --rm -i -v $(pwd):/src:rw mkenney/npm:alpine /run-as-user /usr/local/bin/gulp
+}
+
 printHelp ()
 {
     echo "Dev tools script for Dandelion"
@@ -283,6 +288,9 @@ case $1 in
         ;;
     bumpver)
         bumpverCommand $@
+        ;;
+    gulp)
+        gulpCommand $@
         ;;
     help)
         printHelp
