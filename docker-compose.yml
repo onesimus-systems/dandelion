@@ -31,3 +31,4 @@ services:
             MYSQL_DATABASE: dandelion
         volumes:
             - ./app/install/mysql_schema.sql:/docker-entrypoint-initdb.d/a.sql
+            - ./app/install/upgrades/db_upgrade_mysql_6.2.0.sql:/docker-entrypoint-initdb.d/b.sql
