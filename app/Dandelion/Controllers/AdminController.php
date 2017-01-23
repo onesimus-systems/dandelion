@@ -31,7 +31,7 @@ class AdminController extends BaseController
             'available' => false,
             'current' => Application::VERSION,
             'url' => '',
-            'latest' => '???',
+            'latest' => '',
         ];
 
         if ($this->authorized($this->sessionUser, 'manage_current_users')) {
@@ -54,13 +54,15 @@ class AdminController extends BaseController
         }
 
         if (Config::get('checkForUpdates')) {
-            $latest = file_get_contents(Config::get('updateUrl'));
-            $latest = json_decode($latest, true);
-            $updateArray['latest'] = $latest['version'];
+            $latest = @file_get_contents(Config::get('updateUrl'));
+            if ($latest !== false) {
+                $latest = json_decode($latest, true);
+                $updateArray['latest'] = $latest['version'];
 
-            if (version_compare($latest['version'], Application::VERSION, '>')) {
-                $updateArray['available'] = true;
-                $updateArray['url'] = $latest['url'];
+                if (version_compare($latest['version'], Application::VERSION, '>')) {
+                    $updateArray['available'] = true;
+                    $updateArray['url'] = $latest['url'];
+                }
             }
         }
 
@@ -88,13 +90,13 @@ class AdminController extends BaseController
             View::redirect('dashboard');
         }
 
-        $uf = new UserFactory();
+        $user = (new UserFactory())->get($uid);
         $groups = new Groups(Repos::makeRepo('Groups'));
         $cheesto = new Cheesto(Repos::makeRepo('Cheesto'));
 
         $template = new Template($this->app);
         $template->addData([
-            'user' => $uf->get($uid),
+            'user' => $user,
             'cheesto' => $cheesto->getUserStatus($uid),
             'grouplist' => $groups->getGroupList(),
             'statuslist' => Config::get('cheesto', ['statusOptions' => []])['statusOptions']

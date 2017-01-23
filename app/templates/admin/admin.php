@@ -85,15 +85,18 @@ if ($catList): ?>
 
 if ($showUpdateSection): ?>
 <section id="version-update">
-	<h2>Updates</h2>
-        <strong>Installed Version</strong>: <?= $this->e($updates['current']) ?><br><br>
-        <strong>Latest Version</strong>: <?= $this->e($updates['latest']) ?><br><br>
-	<?php if (!$updates['available']): ?>
-		No updates currently available
-	<?php else: ?>
-		<strong>An update is available!</strong><br><br>
-		<a href="<?= $this->e($updates['url']) ?>" target="_blank">Download Update</a>
-	<?php endif; ?>
+    <h2>Updates</h2>
+    <strong>Installed Version</strong>: <?= $this->e($updates['current']) ?><br><br>
+    <strong>Latest Version</strong>:
+        <?= $this->e($updates['latest']) ?: 'Unknown' ?><br><br>
+    <?php if ($updates['latest'] === ''): ?>
+        Failed to get update information
+    <?php elseif (!$updates['available']): ?>
+        No updates currently available
+    <?php else: ?>
+        <strong>An update is available!</strong><br><br>
+        <a href="<?= $this->e($updates['url']) ?>" target="_blank">Download Update</a>
+    <?php endif; ?>
 </section>
 <?php endif;
 
