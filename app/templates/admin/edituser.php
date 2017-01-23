@@ -70,6 +70,19 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
             <td class="field-name">Disabled:</td>
             <td><?= $user->enabled() ? 'No' : 'Yes' ?></td>
         </tr>
+        <tr>
+            <td class="field-name">Allow API Access:</td>
+            <td>
+                <select id="user-api-override">
+                    <option value="2"
+                        <?= $user->get('api_override') == 2 ? 'selected' : '' ?>>Global</option>
+                    <option value="1"
+                        <?= $user->get('api_override') == 1 ? 'selected' : '' ?>>Allow</option>
+                    <option value="0"
+                        <?= $user->get('api_override') == 0 ? 'selected' : '' ?>>Deny</option>
+                </select>
+            </td>
+        </tr>
     </table>
 </section>
 

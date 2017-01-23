@@ -50,6 +50,8 @@ return array(
     'cheestoEnabled' => true,
     // If the public api is enabled
     'publicApiEnabled' => false,
+    // If the public api is enabled for whitelisted users only
+    'whitelistApiEnabled' => false,
     // Have Dandelion check online for a new version
     'checkForUpdates' => true,
     // URL to check for updates

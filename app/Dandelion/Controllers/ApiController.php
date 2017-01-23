@@ -18,6 +18,7 @@ use Dandelion\API\ApiCommander;
 use Dandelion\API\Module\BaseModule;
 use Dandelion\Exception\ApiException;
 use Dandelion\Session\SessionManager as Session;
+use Dandelion\User;
 use Dandelion\Factories\UserFactory;
 
 class ApiController extends BaseController
@@ -51,20 +52,46 @@ class ApiController extends BaseController
      */
     public function apiCall($module, $method)
     {
+        $publicEnabled = Config::get('publicApiEnabled');
+        // If the full public api is enabled, whitelisting is not
+        $whitelistEnabled = $publicEnabled ? false : Config::get('whitelistApiEnabled');
+
         $this->startTime = microtime(true);
         if (!$this->isGoodApiCall($module, $method)) {
             return;
         }
 
-        if (Config::get('publicApiEnabled')) {
-            $apikey = $this->request->isGet() ?
-                      $this->request->getParam('apikey', '') :
-                      $this->request->postParam('apikey', '');
-
-            $this->setResponse($this->processRequest($apikey, false, $module, $method));
-        } else {
+        if (!$publicEnabled && !$whitelistEnabled) {
             $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Public API disabled', 'api'));
+            return;
         }
+
+        $apikey = $this->request->isGet() ?
+                  $this->request->getParam('apikey', '') :
+                  $this->request->postParam('apikey', '');
+
+        $userid = $this->verifyKey($apikey);
+
+        if ($userid === false) {
+            $msg = $publicEnabled ? 'Invalid API key' : 'Public API disabled';
+            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, $msg, 'api'));
+            return;
+        }
+
+        // API key is valid
+        $user = (new UserFactory())->getWithKeycard($userid);
+
+        if (!$user->enabled() || !$user->get('api_override')) {
+            $this->setResponse($this->formatResponse(ApiCommander::API_INSUFFICIENT_PERMISSIONS, 'API disabled', 'api'));
+            return;
+        }
+
+        if ($whitelistEnabled && $user->get('api_override') != 1) {
+            $this->setResponse($this->formatResponse(ApiCommander::API_INSUFFICIENT_PERMISSIONS, 'API disabled', 'api'));
+            return;
+        }
+
+        $this->setResponse($this->processRequest($user, $module, $method));
         return;
     }
 
@@ -84,7 +111,8 @@ class ApiController extends BaseController
         }
 
         if (GateKeeper::authenticated()) {
-            $this->setResponse($this->processRequest($this->sessionUser->get('id'), true, $module, $method));
+            $user = (new UserFactory())->getWithKeycard($this->sessionUser->get('id'));
+            $this->setResponse($this->processRequest($user, $module, $method));
         } else {
             $this->setResponse($this->formatResponse(ApiCommander::API_LOGIN_REQUIRED, 'Action requires logged in session', 'api'));
         }
@@ -122,19 +150,9 @@ class ApiController extends BaseController
      *
      * @return string json
      */
-    private function processRequest($key, $localCall, $module, $request)
+    private function processRequest(User $user, $module, $request)
     {
         try {
-            $data = '';
-            $userid = $localCall ? $key : $this->verifyKey($key);
-
-            $uf = new UserFactory();
-            $user = $uf->getWithKeycard($userid);
-            // Make sure they're not disabled
-            if ($user->get('disabled')) {
-                throw new ApiException('Invalid user', ApiCommander::API_INSUFFICIENT_PERMISSIONS);
-            }
-
             $data = $this->apiCommander->dispatchModule(
                 $module,
                 $request,
@@ -153,7 +171,7 @@ class ApiController extends BaseController
             $this->setHttpCode($e->getHttpCode());
             return $this->formatResponse($e->getCode(), $e->getMessage(), $e->getModule(), '');
         } catch (\Exception $e) {
-            $this->app->logger->error($e->getInternalMessage());
+            $this->app->logger->error($e->getMessage());
             $this->setHttpCode(500);
             return $this->formatResponse(ApiCommander::API_SERVER_ERROR, 'Internal Server Error', 'api');
         }
@@ -169,7 +187,7 @@ class ApiController extends BaseController
     private function verifyKey($key)
     {
         if (!$key) {
-            throw new ApiException('API key is not valid', ApiCommander::API_INVALID_KEY);
+            return false;
         }
 
         $repo = Repos::makeRepo('Api');
@@ -177,10 +195,8 @@ class ApiController extends BaseController
 
         if ($keyValid) {
             return $keyValid['user_id'];
-        } else {
-            throw new ApiException('API key is not valid', ApiCommander::API_INVALID_KEY);
         }
-        return;
+        return false;
     }
 
     /**

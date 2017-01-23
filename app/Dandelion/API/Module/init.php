@@ -179,7 +179,8 @@ $apiCommander->registerModule('users', __NAMESPACE__.'\UsersAPI',
                 'fullname' => [null, 'string', 'required'],
                 'role' => [null, 'int', 'required'],
                 'cheesto' => [true, 'bool'],
-                'force_reset' => [true, 'bool']
+                'force_reset' => [true, 'bool'],
+                'api_override' => [2, 'int']
             ]
         ]],
         ['edit', null, [
@@ -189,7 +190,8 @@ $apiCommander->registerModule('users', __NAMESPACE__.'\UsersAPI',
                 'fullname' => [null, 'string'],
                 'role' => [null, 'int'],
                 'prompt' => [null, 'int'],
-                'theme' => [null, 'string']
+                'theme' => [null, 'string'],
+                'api_override' => [null, 'int']
             ]
         ]],
         ['delete', null, [

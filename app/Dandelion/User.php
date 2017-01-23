@@ -117,6 +117,11 @@ class User
         $this->set('disabled', 1);
     }
 
+    public function setApiOverride($override)
+    {
+        $this->set('api_override', $override);
+    }
+
     public function enabled()
     {
         return !((bool) $this->get('disabled'));
@@ -156,6 +161,7 @@ class User
             $this->get('theme'),
             $this->get('initial_login'),
             $this->get('disabled'),
+            $this->get('api_override'),
             $this->get('password')
         );
 
@@ -175,7 +181,8 @@ class User
             $this->get('fullname'),
             $this->get('group_id'),
             $date->format('Y-m-d'),
-            $il
+            $il,
+            $this->get('api_override')
         );
 
         $userCheestoCreated = true;
@@ -207,6 +214,7 @@ class User
             'theme' => $this->get('theme'),
             'initial_login' => $this->get('initial_login'),
             'disabled' => $this->get('disabled'),
+            'api_override' => $this->get('api_override'),
         ];
     }
 }

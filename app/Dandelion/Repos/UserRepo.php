@@ -21,14 +21,15 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
         $this->table = $this->prefix.'user';
     }
 
-    public function saveUser($uid, $realname, $role, $theme, $first, $disabled, $password = null)
+    public function saveUser($uid, $realname, $role, $theme, $first, $disabled, $apiOverride, $password = null)
     {
         $fields = [
             'fullname' => $realname,
             'group_id' => $role,
             'initial_login' => $first,
             'theme' => $theme,
-            'disabled' => $disabled
+            'disabled' => $disabled,
+            'api_override' => $apiOverride,
         ];
 
         if ($password !== null) {
@@ -38,7 +39,7 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
         return $this->database->updateItem($this->table, $uid, $fields);
     }
 
-    public function createUser($username, $password, $fullname, $role, $date, $prompt)
+    public function createUser($username, $password, $fullname, $role, $date, $prompt, $apiOverride)
     {
         return $this->database->createItem($this->table, [
             'username' => $username,
@@ -46,7 +47,8 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
             'fullname' => $fullname,
             'group_id' => $role,
             'created'  => $date,
-            'initial_login' => $prompt
+            'initial_login' => $prompt,
+            'api_override' => $apiOverride,
         ]);
     }
 
@@ -67,7 +69,7 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
 
     private function getUserByField($field, $condition)
     {
-        $fields = 'id, fullname, username, password, group_id, created, initial_login, logs_per_page, theme, disabled';
+        $fields = 'id, fullname, username, password, group_id, created, initial_login, logs_per_page, theme, disabled, api_override';
         return $this->database
             ->find($this->table)
             ->whereEqual($field, $condition)

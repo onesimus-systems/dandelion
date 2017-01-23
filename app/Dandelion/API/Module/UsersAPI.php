@@ -69,6 +69,7 @@ class UsersAPI extends BaseModule
         $user->set('username', $params->username);
         $user->set('fullname', $params->fullname);
         $user->set('group_id', $params->role);
+        $user->set('api_override', $params->api_override);
         $user->setPassword($params->password);
         $user->setMakeCheesto($params->cheesto);
         if ($params->force_reset) {
@@ -102,15 +103,17 @@ class UsersAPI extends BaseModule
         $uf = new UserFactory();
         $user = $uf->get($uid);
 
-        $fn = $params->fullname ?: $user->get('fullname');
-        $gi = $params->role ?: $user->get('group_id');
-        $il = $params->prompt ?: $user->get('initial_login');
-        $t = $params->theme ?: $user->get('theme');
+        $fn = $params->fullname ?? $user->get('fullname');
+        $gi = $params->role ?? $user->get('group_id');
+        $il = $params->prompt ?? $user->get('initial_login');
+        $t = $params->theme ?? $user->get('theme');
+        $ao = $params->api_override ?? $user->get('api_override');
 
         $user->set('fullname', $fn);
         $user->set('group_id', $gi);
         $user->set('initial_login', $il);
         $user->set('theme', $t);
+        $user->set('api_override', $ao);
 
         if ($user->save()) {
             return 'User saved successfully';

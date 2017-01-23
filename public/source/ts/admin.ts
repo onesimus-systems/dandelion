@@ -77,6 +77,9 @@ var Admin = {
         $.post("api/i/users/create", {username: username, password: password, fullname: fullname, role: group, force_reset: force_reset}, null, "json")
             .done(function(data) {
                 location.reload();
+            }).fail(function(req) {
+                var json = JSON.parse(req.responseText);
+                $.alert(json.status, "Add User");
             });
         return;
     },

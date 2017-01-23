@@ -46,6 +46,6 @@ class ApiException extends \Exception
         if ($this->internalMsg !== '') {
             return $this->internalMsg;
         }
-        return $this-getMessage();
+        return $this->getMessage();
     }
 }
