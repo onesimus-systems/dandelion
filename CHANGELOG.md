@@ -1,6 +1,10 @@
 Release Notes
 =============
 
+**v6.2.0**
+
+- **PHP 7.0 is now the minimum version to run Dandelion**
+
 **v6.1.1**
 
 - Fixed bug when changing the category of an existing log

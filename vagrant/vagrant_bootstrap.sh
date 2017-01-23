@@ -17,7 +17,7 @@ sudo debconf-set-selections <<< 'mariadb-server-10.1 mysql-server/root_password_
 
 # Update apt-get, install Nginx, PHP, and MariaDB
 apt-get update
-apt-get install -y nginx php5.5-fpm php5.5-cli php5.5-mysql mariadb-server git unzip
+apt-get install -y nginx php7.0-fpm php7.0-cli php7.0-mysql mariadb-server git unzip
 
 ## Setup configurations
 # Link /var/www to dandelion

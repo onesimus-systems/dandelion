@@ -1,4 +1,4 @@
-Dandelion v6.1.0
+Dandelion v6.2.0
 ================
 
 Dandelion is a web-based logbook designed to make it dead simple to keep logs. Dandelion helps you remember what you did four months ago. Dandelion developed out of the mindset of IT but is versatile enough to use in just about any situation.
@@ -10,7 +10,7 @@ Requirements
 
 * Apache or Nginx web server
     - mod_rewrite must be enabled for Apache
-* PHP >= 5.6.0
+* PHP >= 7.0
 * MySQL/Maria DB or SQLite PHP module
 
 Dandelion has been tested on Ubuntu with Apache and Nginx. Other combos may probably work but YMMV.

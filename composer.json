@@ -1,22 +1,21 @@
 {
     "name": "onesimus-systems/dandelion",
     "description": "Web based log journal",
-    "version": "6.1.1",
+    "version": "6.2.0",
     "type": "package",
     "license": "GPL-3.0+",
-    "homepage": "http://onesimussystems.com/dandelion",
+    "homepage": "http://blog.onesimussystems.com/dandelion",
     "authors": [
         {
             "name": "Lee Keitel",
-            "email": "keitellf@gmail.com",
+            "email": "lee@onesimussystems.com",
             "homepage": "http://blog.onesimussystems.com/dandelion",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=7.0.0",
         "league/plates": "3.*",
-        "ircmaxell/password-compat": "~1.0",
         "onesimus-systems/seed-catalog": "^1.0.0",
         "onesimus-systems/osrouter": "^1.0.0",
         "onesimus-systems/oslogger": "^2.0.0",
