@@ -43,12 +43,8 @@ if [[ "$1" == apache2* ]]; then
 		exit 1
 	fi
 
-    cd ..
-
-    if ! [ -d dandelion ]; then
-        mkdir dandelion
-    fi
-
+    cd /var/www
+	mkdir -p dandelion
     cd dandelion
 
     if ! [ -e public/index.php ]; then
@@ -77,29 +73,51 @@ if [[ "$1" == apache2* ]]; then
 		fi
 	fi
 
-    if ! [ -e app/config/config.php ]; then
-        cp app/config/config.sample.php app/config/config.php
-        cat << 'EOPHP' >> app/config/config.php
-// If we're behind a proxy server and using HTTPS, we need to alert Wordpress of that fact
-// see also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy
+    if ! [ -e config/config.php ]; then
+		mkdir -p config
+        cp config/config.sample.php config/config.php
+
+        cat << 'EOPHP' >> config/config.php
+// If we're behind a proxy server and using HTTPS, we need to alert Dandelion of that fact
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
 	$_SERVER['HTTPS'] = 'on';
 }
 EOPHP
-        chown www-data:www-data app/config/config.php
+        chown www-data:www-data config/config.php
+
+		php_escape() {
+			php -r 'var_export(('$2') $argv[1]);' -- "$1"
+		}
+		set_config() {
+			key="$1"
+			value="$2"
+			var_type="${3:-string}"
+
+			echo "\$config${key} = $(php_escape "$value" "$var_type");" >> config/config.php
+		}
+
+		set_config '["db"]["hostname"]' "$DANDELION_DB_HOST"
+		set_config '["db"]["username"]' "$DANDELION_DB_USER"
+		set_config '["db"]["password"]' "$DANDELION_DB_PASSWORD"
+		set_config '["db"]["dbname"]' "$DANDELION_DB_NAME"
+
+		file_env 'DANDELION_HOSTNAME'
+		set_config '["hostname"]' "${DANDELION_HOSTNAME:-localhost}"
+
+		file_env 'DANDELION_APPTITLE'
+		set_config '["appTitle"]' "${DANDELION_APPTITLE:-Dandelion}"
+
+		file_env 'DANDELION_TAGLINE'
+		set_config '["tagline"]' "$DANDELION_TAGLINE"
+
+		file_env 'DANDELION_DEBUG'
+		set_config '["debugEnabled"]' "$DANDELION_DEBUG" 'bool'
+
+		file_env 'DANDELION_PUBLIC_API'
+		set_config '["publicApiEnabled"]' "$DANDELION_PUBLIC_API" 'bool'
+
+		set_config '["installed"]' 'true' 'bool'
     fi
-
-    set_config() {
-        key="$1"
-        value="$2"
-
-        echo "\$config${key} = \"${value}\";" >> app/config/config.php
-    }
-
-    set_config '["db"]["hostname"]' "$DANDELION_DB_HOST"
-	set_config '["db"]["username"]' "$DANDELION_DB_USER"
-	set_config '["db"]["password"]' "$DANDELION_DB_PASSWORD"
-	set_config '["db"]["dbname"]' "$DANDELION_DB_NAME"
 fi
 
 exec "$@"
