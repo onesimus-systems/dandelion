@@ -9,7 +9,7 @@
  */
 namespace Dandelion;
 
-$configDir = __DIR__.'/../config';
+$configDir = __DIR__.'/../../config';
 
 $config = [
     'db' => [
@@ -92,7 +92,7 @@ try {
 
     // Save as new configuration file
     $banner = '// This file was generated on '.date(DATE_RFC2822);
-    $configFile = '<?php '.$banner.PHP_EOL.'return '.var_export($config, true).';';
+    $configFile = '<?php '.$banner.PHP_EOL.'$config = '.var_export($config, true).';';
     file_put_contents($configDir.'/config.php', $configFile);
 
     session_destroy();

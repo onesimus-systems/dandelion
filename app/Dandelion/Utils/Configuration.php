@@ -36,7 +36,7 @@ class Configuration
             $config = [];
             $legacyConfig = include $userSettingsFile;
             // Support the older style of returning an array
-            if (!is_null($legacyConfig)) {
+            if ($legacyConfig !== 1) {
                 $config = $legacyConfig;
             }
 
