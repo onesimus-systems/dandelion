@@ -4,6 +4,8 @@ Release Notes
 **v6.2.0**
 
 - **PHP 7.0 is now the minimum version to run Dandelion**
+- **Config location changed** - The configuration is now located in $approot/config instead of $approot/app/config. From the $approot simply run `mv app/config config`.
+- New configuration syntax - Settings can now use the syntax `$config[$key] = $value;` to set configuration settings. The old syntax where config.php returned an array is still supported but is now deprecated and will be removed in a future release.
 
 **v6.1.1**
 
