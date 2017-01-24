@@ -1,34 +1,29 @@
 version: '2'
 services:
     dandy-app:
-        image: 'bitnami/php-fpm:${DANDY_PHP_VER}'
-        container_name: 'dandy-app'
-        volumes:
-            - .:/app
-            - ./docker/config.php:/app/app/config/config.php
-
-    dandy-web:
-        image: nginx:alpine
-        container_name: 'dandy-web'
+        image: lfkeitel/dandelion:latest
+        container_name: dandy-app
         depends_on:
-            - dandy-app
             - dandy-db
-        links:
-            - dandy-app
-            - dandy-db
-        volumes:
-            - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
-            - ./public:/app/public
+        environment:
+            - DANDELION_DB_HOST=dandy-db
+            - DANDELION_DB_USER=root
+            - DANDELION_DB_PASSWORD=dandy_dev
+            - "DANDELION_HOSTNAME=http://localhost:${DANDY_HOST_PORT}"
+            - DANDELION_DEBUG=true
+            - DANDELION_PUBLIC_API=true
         ports:
             - "${DANDY_HOST_PORT}:80"
-        command: "nginx -g 'daemon off;'"
+        volumes:
+            - .:/var/www/dandelion
+            - ./docker/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
 
     dandy-db:
         image: mariadb:latest
-        container_name: 'dandy-db'
+        container_name: dandy-db
         environment:
             MYSQL_ROOT_PASSWORD: dandy_dev
             MYSQL_DATABASE: dandelion
         volumes:
-            - ./app/install/mysql_schema.sql:/docker-entrypoint-initdb.d/a.sql
-            - ./app/install/upgrades/db_upgrade_mysql_6.2.0.sql:/docker-entrypoint-initdb.d/b.sql
+            - ./app/install/mysql_schema.sql:/docker-entrypoint-initdb.d/a.sql:ro
+            - ./app/install/upgrades/db_upgrade_mysql_6.2.0.sql:/docker-entrypoint-initdb.d/b.sql:ro

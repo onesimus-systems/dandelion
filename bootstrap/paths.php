@@ -32,5 +32,10 @@ return array(
     *  the application, public files, etc.
     */
 
-    'base' => __DIR__.'/..'
-);
+    'base' => __DIR__.'/..',
+
+    /**
+    *  Config Path - The path to the configuration directory
+    */
+    'config' => __DIR__.'/../config'
+ );

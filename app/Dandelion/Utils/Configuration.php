@@ -33,13 +33,18 @@ class Configuration
             // Load defaults, the default file has all possible config options
             $defaults = include $defaultSettingsFile;
             // Load user specified values
-            $userSettings = include $userSettingsFile;
+            $config = [];
+            $legacyConfig = include $userSettingsFile;
+            // Support the older style of returning an array
+            if ($legacyConfig !== 1) {
+                $config = $legacyConfig;
+            }
 
-            if (!is_array($userSettings)) {
+            if (!is_array($config)) {
                 return false;
             }
 
-            self::$config = self::array_merge_recursive_deep($defaults, $userSettings);
+            self::$config = self::array_merge_recursive_deep($defaults, $config);
             // Ensure hostname is formatted properly for rest of application
             self::$config['hostname'] = rtrim(self::$config['hostname'], '/');
         }

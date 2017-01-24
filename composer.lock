@@ -4,50 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a9540bfeb7d9b2516d6eaf0a90e402f",
+    "content-hash": "3149ce816b11513ce36d85667b0dd01b",
     "packages": [
-        {
-            "name": "ircmaxell/password-compat",
-            "version": "v1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ircmaxell/password_compat.git",
-                "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ircmaxell/password_compat/zipball/5c5cde8822a69545767f7c7f3058cb15ff84614c",
-                "reference": "5c5cde8822a69545767f7c7f3058cb15ff84614c",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/password.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anthony Ferrara",
-                    "email": "ircmaxell@php.net",
-                    "homepage": "http://blog.ircmaxell.com"
-                }
-            ],
-            "description": "A compatibility library for the proposed simplified password hashing algorithm: https://wiki.php.net/rfc/password_hash",
-            "homepage": "https://github.com/ircmaxell/password_compat",
-            "keywords": [
-                "hashing",
-                "password"
-            ],
-            "time": "2014-11-20T16:49:30+00:00"
-        },
         {
             "name": "league/plates",
             "version": "3.3.0",
@@ -194,16 +152,16 @@
         },
         {
             "name": "onesimus-systems/ossession",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/ossession.git",
-                "reference": "4796c1165479ffade0d04f421a9399f8a8858bc0"
+                "reference": "6d1ee79ceb8065be4ca5b7e1a20710577ecd1370"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/ossession/zipball/4796c1165479ffade0d04f421a9399f8a8858bc0",
-                "reference": "4796c1165479ffade0d04f421a9399f8a8858bc0",
+                "url": "https://api.github.com/repos/onesimus-systems/ossession/zipball/6d1ee79ceb8065be4ca5b7e1a20710577ecd1370",
+                "reference": "6d1ee79ceb8065be4ca5b7e1a20710577ecd1370",
                 "shasum": ""
             },
             "require": {
@@ -234,7 +192,7 @@
             "keywords": [
                 "session"
             ],
-            "time": "2017-01-21T18:47:12+00:00"
+            "time": "2017-01-23T19:37:01+00:00"
         },
         {
             "name": "onesimus-systems/seed-catalog",
@@ -1452,7 +1410,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5.0"
+        "php": ">=7.0.0"
     },
     "platform-dev": []
 }
