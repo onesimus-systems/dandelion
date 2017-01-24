@@ -117,9 +117,10 @@ class Application
         $startTime = microtime(true);
 
         // Load application configuration
-        if (!Config::load($this->paths['config'])) {
-            echo 'Please run the <a href="install.php">Installer</a>';
-            exit();
+        if (!Config::load($this->paths['config']) || !Config::get('installed')) {
+            $this->response->redirect('install.php');
+            $this->sendToClient();
+            return;
         }
 
         // Register logging system

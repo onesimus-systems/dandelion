@@ -10,12 +10,17 @@
 session_start();
 $_SESSION['error'] = '';
 
+use \Dandelion\Utils\Configuration as Config;
+
+require __DIR__.'/../vendor/autoload.php';
+$app = require __DIR__.'/../bootstrap/start.php';
+
 // Check for existing configuration and redirect if exists and installed
-if (file_exists(__DIR__.'/../app/config/config.php')) {
-    $currConfig = include __DIR__.'/../app/config/config.php';
-    if ($currConfig['installed']) {
-        header("Location: {$currConfig['hostname']}");
-        echo 'Redirecting to: '.$currConfig['hostname'];
+if (file_exists($app->paths['config'].'/config.php')) {
+    if (Config::load($app->paths['config']) && Config::get('installed')) {
+        $hostname = Config::get('hostname');
+        header("Location: $hostname");
+        echo 'Redirecting to: '.$hostname;
         exit();
     }
 }
@@ -70,23 +75,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <table id="mysql_only" style="display:inline;">
                 <tr>
                     <td class="labels">*Username:</td>
-                    <td class="field"><input type="text" name="db_user"></td>
+                    <td class="field"><input type="text" name="db_user" value="<?= $_POST['db_user'] ?: '' ?>"></td>
                 </tr>
                 <tr>
                     <td class="labels">*Password:</td>
-                    <td class="field"><input type="password" name="db_pass"></td>
+                    <td class="field"><input type="password" name="db_pass" value=""></td>
                 </tr>
                 <tr>
                     <td class="labels">*Host/IP Address:</td>
-                    <td class="field"><input type="text" name="db_host"></td>
+                    <td class="field"><input type="text" name="db_host" value="<?= $_POST['db_host'] ?: '' ?>"></td>
                 </tr>
                 <tr>
                     <td class="labels">*Database Name:</td>
-                    <td class="field"><input type="text" name="db_name"></td>
+                    <td class="field"><input type="text" name="db_name" value="<?= $_POST['db_name'] ?: '' ?>"></td>
                 </tr>
                 <tr>
                     <td class="labels">Table Prefix:</td>
-                    <td class="field"><input type="text" name="db_prefix" value="dan_"></td>
+                    <td class="field"><input type="text" name="db_prefix" value="<?= $_POST['db_prefix'] ?: 'dan_' ?>"></td>
                 </tr>
             </table>
 
@@ -94,19 +99,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <table>
                 <tr>
                     <td class="labels">Application Hostname:</td>
-                    <td class="field"><input type="text" name="hostname" value="http://localhost"></td>
+                    <td class="field"><input type="text" name="hostname" value="<?= $_POST['hostname'] ?: 'http://localhost' ?>"></td>
                 </tr>
                 <tr>
                     <td class="labels">Application Header:</td>
-                    <td class="field"><input type="text" name="apptitle" value="Dandelion Web Log"></td>
+                    <td class="field"><input type="text" name="apptitle" value="<?= $_POST['apptitle'] ?: 'Dandelion Web Log' ?>"></td>
                 </tr>
                 <tr>
                     <td class="labels">Application Subheader:</td>
-                    <td class="field"><input type="text" name="tagline"></td>
+                    <td class="field"><input type="text" name="tagline" value="<?= $_POST['tagline'] ?: '' ?>"></td>
                 </tr>
                 <tr>
                     <td class="labels">Cookie Prefix:</td>
-                    <td class="field"><input type="text" name="cookie_prefix" value="dan_"></td>
+                    <td class="field"><input type="text" name="cookie_prefix" value="<?= $_POST['cookie_prefix'] ?: 'dan_' ?>"></td>
                 </tr>
             </table>
             <table>

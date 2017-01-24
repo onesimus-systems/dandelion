@@ -11,8 +11,8 @@ namespace Dandelion;
 
 use Onesimus\Router\Http\Request;
 
-// Check PHP version, Dandelion supports only PHP 5.4 and above
-if (!function_exists('version_compare') || version_compare(PHP_VERSION, '5.4.0', '<')) {
+// Check PHP version, Dandelion supports only PHP 7.0 and above
+if (!function_exists('version_compare') || version_compare(PHP_VERSION, '7.0.0', '<')) {
     exit(1);
 }
 

@@ -30,7 +30,7 @@ $config = [
 
 try {
     if (!is_writable($configDir)) { // Is it possible to write the config file?
-        throw new Exception('Dandelion does not have sufficient write permissions to create configuration.<br />Please make the app/config directory writeable to Dandelion and try again.');
+        throw new \Exception('Dandelion does not have sufficient write permissions to create configuration.<br />Please make the app/config directory writeable to Dandelion and try again.');
     }
 
     switch ($config['db']['type']) {
@@ -38,7 +38,7 @@ try {
             if ($config['db']['hostname'] && $config['db']['dbname']) {
                 $db_connect = "mysql:host={$config['db']['hostname']};dbname={$config['db']['dbname']}";
             } else {
-                throw new Exception('No hostname or database name specified');
+                throw new \Exception('No hostname or database name specified');
             }
             break;
 
@@ -55,7 +55,7 @@ try {
             break;
 
         default:
-            throw new Exception('No database driver loaded.');
+            throw new \Exception('No database driver loaded.');
             break;
     }
 
@@ -67,6 +67,7 @@ try {
     // Replace the prefix placeholder with the user defined prefix
     $sql = str_replace('{{prefix}}', $config['db']['tablePrefix'], $sql);
 
+    $success = false;
     if ($config['db']['type'] === 'sqlite') {
         // SQLite doesn't like multiple statements in a single query
         // so the file is separated by double semicolons for each
@@ -77,15 +78,19 @@ try {
         foreach ($queries as $query) {
             $query = trim($query);
             if ($query) {
-                $success = $conn->query($query);
+                $success = $conn->exec($query);
             }
         }
     } else { // MySQL
-        $success = $conn->query($sql);
+        $stmt = $conn->prepare($sql);
+        $success = $stmt->execute();
+        while ($stmt->nextRowset()) {
+            /* https://bugs.php.net/bug.php?id=61613 */
+        };
     }
 
     if (!$success) {
-        throw new Exception('Problem installing initial data into database.');
+        throw new \Exception('Problem installing initial data into database.');
     }
 
     $conn = null;
@@ -98,8 +103,8 @@ try {
     session_destroy();
     $_SESSION['error'] = 'Dandelion has been successfully setup! Please go to: <a href="'.$config['hostname'].'">'.$config['hostname'].'</a>';
     header("Location: {$config['hostname']}");
-} catch (PDOException $e) {
-    $_SESSION['error'] = 'Error setting up database. Please verify database name, address, username, and password. ';
-} catch (Exception $e) {
+} catch (\PDOException $e) {
+    $_SESSION['error'] = 'Error setting up database. Please verify database name, address, username, and password. '.$e->getMessage();
+} catch (\Exception $e) {
     $_SESSION['error'] = 'Error: '.$e->getMessage();
 }

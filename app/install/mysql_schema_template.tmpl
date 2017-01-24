@@ -3,7 +3,7 @@ SET time_zone = "+00:00";
 SET FOREIGN_KEY_CHECKS = 0;
 
 --
--- Table structure for table `dan_apikey`
+-- Table structure for table `{{prefix}}apikey`
 --
 
 CREATE TABLE IF NOT EXISTS `{{prefix}}apikey` (
@@ -16,21 +16,21 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}apikey` (
   UNIQUE KEY `keystring` (`keystring`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-ALTER TABLE `dan_apikey`
+ALTER TABLE `{{prefix}}apikey`
     ADD INDEX  `fk_key_to_user` (`user_id`)
     COMMENT  '';
 
-ALTER TABLE `dan_apikey`
+ALTER TABLE `{{prefix}}apikey`
     ADD CONSTRAINT `fk_key_to_user_ct`
     FOREIGN KEY (`user_id`)
-    REFERENCES `dan_user`(`id`)
+    REFERENCES `{{prefix}}user`(`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_category`
+-- Table structure for table `{{prefix}}category`
 --
 
 CREATE TABLE IF NOT EXISTS `{{prefix}}category` (
@@ -41,16 +41,16 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}category` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `dan_category`
+-- Dumping data for table `{{prefix}}category`
 --
 
-INSERT INTO `dan_category` (`id`, `description`, `parent`) VALUES
+INSERT INTO `{{prefix}}category` (`id`, `description`, `parent`) VALUES
 (1, 'Logs', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_cheesto`
+-- Table structure for table `{{prefix}}cheesto`
 --
 
 CREATE TABLE IF NOT EXISTS `{{prefix}}cheesto` (
@@ -64,28 +64,28 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}cheesto` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-ALTER TABLE `dan_cheesto`
+ALTER TABLE `{{prefix}}cheesto`
     ADD INDEX `fk_status_to_user` (`user_id`)
     COMMENT '';
 
-ALTER TABLE `dan_cheesto`
+ALTER TABLE `{{prefix}}cheesto`
     ADD CONSTRAINT `fk_status_to_user_ct`
     FOREIGN KEY (`user_id`)
-    REFERENCES `dan_user`(`id`)
+    REFERENCES `{{prefix}}user`(`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
 --
--- Dumping data for table `dan_cheesto`
+-- Dumping data for table `{{prefix}}cheesto`
 --
 
-INSERT INTO `dan_cheesto` (`id`, `user_id`, `fullname`, `status`, `message`, `returntime`, `modified`, `disabled`) VALUES
-(1, 1, 'Administrator', 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);
+INSERT INTO `{{prefix}}cheesto` (`id`, `user_id`, `status`, `message`, `returntime`, `modified`, `disabled`) VALUES
+(1, 1, 'Available', '', '00:00:00', '2015-05-16 21:05:24', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_group`
+-- Table structure for table `{{prefix}}group`
 --
 
 CREATE TABLE IF NOT EXISTS `{{prefix}}group` (
@@ -96,10 +96,10 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}group` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `dan_group`
+-- Dumping data for table `{{prefix}}group`
 --
 
-INSERT INTO `dan_group` (`id`, `name`, `permissions`) VALUES
+INSERT INTO `{{prefix}}group` (`id`, `name`, `permissions`) VALUES
 (1, 'user', 'a:17:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:10:"editlogall";b:0;s:7:"viewlog";b:1;s:10:"addcomment";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:0;}'),
 (2, 'admin', 'a:17:{s:9:"createlog";b:1;s:7:"editlog";b:1;s:10:"editlogall";b:1;s:7:"viewlog";b:1;s:10:"addcomment";b:1;s:9:"createcat";b:1;s:7:"editcat";b:1;s:9:"deletecat";b:1;s:10:"createuser";b:1;s:8:"edituser";b:1;s:10:"deleteuser";b:1;s:11:"creategroup";b:1;s:9:"editgroup";b:1;s:11:"deletegroup";b:1;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:1;s:5:"admin";b:1;}'),
 (3, 'guest', 'a:15:{s:9:"createlog";b:0;s:7:"editlog";b:0;s:7:"viewlog";b:1;s:9:"createcat";b:0;s:7:"editcat";b:0;s:9:"deletecat";b:0;s:10:"createuser";b:0;s:8:"edituser";b:0;s:10:"deleteuser";b:0;s:11:"creategroup";b:0;s:9:"editgroup";b:0;s:11:"deletegroup";b:0;s:11:"viewcheesto";b:1;s:13:"updatecheesto";b:0;s:5:"admin";b:0;}');
@@ -107,7 +107,7 @@ INSERT INTO `dan_group` (`id`, `name`, `permissions`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_log`
+-- Table structure for table `{{prefix}}log`
 --
 
 CREATE TABLE IF NOT EXISTS `{{prefix}}log` (
@@ -123,21 +123,21 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}log` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-ALTER TABLE `dan_log`
+ALTER TABLE `{{prefix}}log`
     ADD INDEX `fk_log_to_user` (`user_id`)
     COMMENT '';
 
-ALTER TABLE `dan_log`
+ALTER TABLE `{{prefix}}log`
     ADD CONSTRAINT `fk_log_to_user_ct`
     FOREIGN KEY (`user_id`)
-    REFERENCES `dan_user`(`id`)
+    REFERENCES `{{prefix}}user`(`id`)
     ON DELETE SET NULL
     ON UPDATE NO ACTION;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_comment`
+-- Table structure for table `{{prefix}}comment`
 --
 
 CREATE TABLE IF NOT EXISTS `{{prefix}}comment` (
@@ -149,25 +149,25 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}comment` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
-ALTER TABLE `dan_comment`
+ALTER TABLE `{{prefix}}comment`
     ADD INDEX `fk_comment_to_user` (`user_id`)
     COMMENT '';
 
-ALTER TABLE `dan_comment`
+ALTER TABLE `{{prefix}}comment`
     ADD INDEX `fk_comment_to_log` (`log_id`)
     COMMENT '';
 
-ALTER TABLE `dan_comment`
+ALTER TABLE `{{prefix}}comment`
     ADD CONSTRAINT `fk_comment_to_user_ct`
     FOREIGN KEY (`user_id`)
-    REFERENCES `dan_user`(`id`)
+    REFERENCES `{{prefix}}user`(`id`)
     ON DELETE SET NULL
     ON UPDATE NO ACTION;
 
-ALTER TABLE `dan_comment`
+ALTER TABLE `{{prefix}}comment`
     ADD CONSTRAINT `fk_comment_to_log_ct`
     FOREIGN KEY (`log_id`)
-    REFERENCES `dan_log`(`id`)
+    REFERENCES `{{prefix}}log`(`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION;
 
@@ -175,7 +175,7 @@ ALTER TABLE `dan_comment`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_session`
+-- Table structure for table `{{prefix}}session`
 --
 
 CREATE TABLE IF NOT EXISTS `{{prefix}}session` (
@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}session` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dan_user`
+-- Table structure for table `{{prefix}}user`
 --
 
 CREATE TABLE IF NOT EXISTS `{{prefix}}user` (
@@ -205,26 +205,26 @@ CREATE TABLE IF NOT EXISTS `{{prefix}}user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
-ALTER TABLE  `dan_user` ADD UNIQUE (
+ALTER TABLE  `{{prefix}}user` ADD UNIQUE (
     `username`
 );
 
-ALTER TABLE `dan_user`
+ALTER TABLE `{{prefix}}user`
     ADD INDEX `fk_user_to_group` (`group_id`)
     COMMENT '';
 
-ALTER TABLE `dan_user`
+ALTER TABLE `{{prefix}}user`
     ADD CONSTRAINT `fk_user_to_group_ct`
     FOREIGN KEY (`group_id`)
-    REFERENCES `dan_group`(`id`)
+    REFERENCES `{{prefix}}group`(`id`)
     ON DELETE RESTRICT
     ON UPDATE NO ACTION;
 
 --
--- Dumping data for table `dan_user`
+-- Dumping data for table `{{prefix}}user`
 --
 
-INSERT INTO `dan_user` (`id`, `username`, `password`, `fullname`, `group_id`, `created`, `initial_login`, `logs_per_page`, `theme`, `disabled`) VALUES
+INSERT INTO `{{prefix}}user` (`id`, `username`, `password`, `fullname`, `group_id`, `created`, `initial_login`, `logs_per_page`, `theme`, `disabled`) VALUES
 (1, 'admin', '$2y$10$zibMP6jZw5PRMGHGdo/JzeXkb3re0WEIulmkgRe4PC76GwT4M8G5u', 'Administrator', 2, '2015-01-01', 1, 25, '', 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
