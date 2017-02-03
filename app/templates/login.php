@@ -20,25 +20,21 @@
     </head>
     <body>
         <div class="login-box">
-            <h1>Dandelion Login</h1>
+            <h1>Dandelion</h1>
 
             <form>
                 <fieldset>
-                    <label for="username">Username:</label>
-                    <div class="textfield"><input type="text" id="username"></div>
+                    <div class="textfield"><input type="text" id="username" placeholder="Username"></div>
                 </fieldset>
 
                 <fieldset>
-                    <label for="password">Password:</label>
-                    <div class="textfield"><input type="password" id="password"></div>
+                    <div class="textfield"><input type="password" id="password" placeholder="Password"></div>
                 </fieldset>
 
                 <fieldset>
-                    <strong>Remember username:</strong> <input type="checkbox" id="remember-username">
-                </fieldset>
+                    <div class="remember"><strong>Remember username:</strong> <input type="checkbox" id="remember-username"></div>
 
-                <fieldset>
-                    <button type="button" class="button" id="login-btn">Login</button>
+                    <button type="button" class="button" id="login-btn">Log in</button>
                 </fieldset>
             </form>
         </div>
