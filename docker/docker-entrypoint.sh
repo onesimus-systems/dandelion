@@ -46,7 +46,7 @@ cd /var/www/dandelion
 
 if ! [ -e public/index.php ]; then
 	echo >&2 "Dandelion not found in $(pwd) - copying now..."
-	if [ "$(ls -A)" ]; then
+	if [ -z "$SKIP_EMPTY_DIR_CHECK" -a "$(ls -A)" ]; then
 		echo >&2 "WARNING: $(pwd) is not empty - press Ctrl+C now if this is an error!"
 		( set -x; ls -A; sleep 10 )
 	fi

@@ -16,7 +16,7 @@ services:
             - "${DANDY_HOST_PORT}:80"
         volumes:
             - .:/var/www/dandelion
-            - ./docker/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini:ro
+            - ./docker/opcache.ini:/etc/php7/conf.d/opcache.ini:ro
 
     dandy-db:
         image: mariadb:latest
