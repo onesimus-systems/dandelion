@@ -188,6 +188,24 @@
                 .log-body {
                     margin: 20px 0;
                     word-wrap: break-word;
+                    position: relative;
+                    max-height: 220px;
+                    overflow: hidden;
+                }
+
+                .log-body:after {
+                    content:"";
+                    position:absolute;
+                    top:160px;
+                    left:0;
+                    height:60px;
+                    width:100%;
+                    background: linear-gradient(rgba(0,0,0,0), @body-bg-color);
+                }
+
+                .log-overflow {
+                    position: relative;
+                    top: -25px;
                 }
 
                 .log-metadata {

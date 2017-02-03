@@ -41,7 +41,7 @@ Refresh = {
     },
 
     startrefresh: function(): void {
-        refreshc = setInterval(function(){ Refresh.refreshLog(); }, 60000);
+        refreshc = setInterval(function() { Refresh.refreshLog(); }, 60000);
     },
 
     stoprefresh: function(): void {
@@ -97,9 +97,22 @@ View = {
 
     makeLogView: function(data: any): void {
         var logView = $("#log-list");
-        logView.replaceWith(View.displayLogs(data));
+        var newLogs = $(View.displayLogs(data));
+        logView.replaceWith(newLogs);
         View.pageControls(data.metadata);
         View.currentOffset = data.metadata.offset;
+        View.checkOverflow(newLogs);
+    },
+
+    checkOverflow: function(logView: JQuery): void {
+        var logs = $(logView[0].childNodes);
+        logs.each(function(index, elem) {
+            var b = $(elem.childNodes[1]);
+            if (b.overflown()) {
+                var id = b.data("log-id");
+                $(`<div class="log-overflow"><a href="log/${id}" target="_blank">Read more...</a></div>`).insertAfter(b);
+            }
+        });
     },
 
     displayLogs: function(data: any): string {
@@ -120,7 +133,7 @@ View = {
             // Display each log entry
             var html = `<div class="log-entry"><span class="log-title"><a href="log/${log.id}">${log.title}</a></span>`;
 
-            html += `<div class="log-body">${log.body}</div><div class="log-metadata"><span class="log-meta-author">Created by ${creator} on ${log.date_created} @ ${log.time_created} `;
+            html += `<div class="log-body" data-log-id="${log.id}">${log.body}</div><div class="log-metadata"><span class="log-meta-author">Created by ${creator} on ${log.date_created} @ ${log.time_created} `;
 
             if (log.is_edited == "1") { html += "(Amended)"; }
 
@@ -135,15 +148,15 @@ View = {
 
     pageControls: function(data: any): void {
         if (data.offset > 0) {
-            View.prevPage = data.offset-data.limit;
+            View.prevPage = data.offset - data.limit;
             $("#prev-page-button").show();
         } else {
             View.prevPage = -1;
             $("#prev-page-button").hide();
         }
 
-        if (data.offset+data.limit < data.logSize && data.resultCount == data.limit) {
-            View.nextPage = data.offset+data.limit;
+        if (data.offset + data.limit < data.logSize && data.resultCount == data.limit) {
+            View.nextPage = data.offset + data.limit;
             $("#next-page-button").show();
         } else {
             View.nextPage = -1;
@@ -178,7 +191,7 @@ View = {
     },
 
     pagentation: function(pageOffset: number): void {
-        $.getJSON("api/i/logs/read", {offset: pageOffset}, function(json) {
+        $.getJSON("api/i/logs/read", { offset: pageOffset }, function(json) {
             View.makeLogView(json.data);
 
             if (pageOffset <= 0) {
@@ -197,9 +210,9 @@ Search = {
         $("#query-builder-btn").click(Search.showBuilder);
         $("#search-query").on("keypress", Search.check);
         $("#qb-date1").change(function() {
-           if (!$("#qb-date2").val()) {
-               $("#qb-date2").val($("#qb-date1").val());
-           }
+            if (!$("#qb-date2").val()) {
+                $("#qb-date2").val($("#qb-date1").val());
+            }
         });
     },
 
@@ -320,7 +333,7 @@ Search = {
         query = ` category:"${query}"`;
         if (search) {
             var queryBar = $("#search-query").val();
-            $("#search-query").val(queryBar+query);
+            $("#search-query").val(queryBar + query);
         } else {
             $("#search-query").val(query);
         }
@@ -332,13 +345,13 @@ Search = {
         if (typeof query === "undefined") { return false; }
         if (typeof offset === "undefined") { offset = 0; }
 
-        $.get("api/i/logs/search", {query: query, offset: offset}, function(json) {
+        $.get("api/i/logs/search", { query: query, offset: offset }, function(json) {
             search = true;
             Refresh.stoprefresh();
             View.makeLogView(json.data);
         }, "json")
-        .fail(function(json) {
-            $.alert(json.responseJSON.status, "Server Error");
-        });
+            .fail(function(json) {
+                $.alert(json.responseJSON.status, "Server Error");
+            });
     }
 }; // Search

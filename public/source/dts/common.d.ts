@@ -24,3 +24,7 @@ interface JQueryStatic {
     confirmBox(message: string, title: string, ycallback?: () => void, ncallback?: () => void): void;
     dialogBox(html: string, ycallback?: () => void, ncallback?: () => void, options?: dialogBoxOptions): void;
 }
+
+interface JQuery {
+    overflown(): boolean;
+}
