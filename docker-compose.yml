@@ -1,7 +1,7 @@
 version: '2'
 services:
     dandy-app:
-        image: lfkeitel/dandelion:latest
+        image: lfkeitel/dandelion:alpine
         container_name: dandy-app
         depends_on:
             - dandy-db

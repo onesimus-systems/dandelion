@@ -1,14 +1,11 @@
 private/
 database/
 config.php
-docs/
 logs/
 backups/
 vendor/
 node_modules/
-.idea/
 .settings/
-.sublime-gulp.cache
 public/build/
 public/assets/themes/*/*.css
 public/assets/themes/*/maps/
@@ -17,6 +14,5 @@ update.lock
 tsconfig.json
 .vagrant/
 *.bak
-uml/
-public/test.html
 composer.phar
+.vscode

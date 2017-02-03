@@ -19,7 +19,7 @@ return array(
     *  Log file path - Where logs are saved
     */
 
-    'logs' => __DIR__.'/../app/logs',
+    'logs' => __DIR__.'/../logs',
 
     /**
     *  Public Path - The path to the public folder
