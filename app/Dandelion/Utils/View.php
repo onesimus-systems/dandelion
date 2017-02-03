@@ -85,10 +85,15 @@ class View
         }
         $include = '';
 
-        if (is_file($paths['public'] . '/build/js/'.$name)) {
-            $include = '<script src="'.$hostname.'/build/js/'.$name.'"></script>';
-        } elseif (is_file($paths['public'] . '/assets/js/vendor/jquery/js/'.$name)) {
-            $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/'.$name.'"></script>';
+        $filepath = $paths['public'] . '/build/js/'.$name;
+        $vendorFilepath = $paths['public'] . '/assets/js/vendor/jquery/js/'.$name;
+
+        if (is_file($filepath)) {
+            $hash = md5_file($filepath);
+            $include = '<script src="'.$hostname.'/build/js/'.$name.'?'.$hash.'"></script>';
+        } elseif (is_file($vendorFilepath)) {
+            $hash = md5_file($vendorFilepath);
+            $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/'.$name.'?'.$hash.'"></script>';
         }
         return $include;
     }
@@ -229,14 +234,18 @@ class View
                 }
 
                 // If the theme contains a map to a file for this style, use it
-                if (array_key_exists($normalized, $metaJson['files'])) {
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $metaJson['files'][$normalized] . '">';
+                if (array_key_exists($normalized, $metaJson['files']) &&
+                    is_file($themeDir . '/' . $theme . '/' . $metaJson['files'][$normalized])) {
+                    $hash = md5_file($themeDir . '/' . $theme . '/' . $metaJson['files'][$normalized]);
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $metaJson['files'][$normalized] . '?'.$hash.'">';
                 } else {
                     // Otherwise search
                     if (is_file($themeDir . '/' . $theme . '/' . $normalized . '.min.css')) {
-                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.min.css">';
+                        $hash = md5_file($themeDir . '/' . $theme . '/' . $normalized . '.min.css');
+                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.min.css?'.$hash.'">';
                     } elseif (is_file($themeDir . '/' . $theme . '/' . $normalized . '.css')) {
-                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.css">';
+                        $hash = md5_file($themeDir . '/' . $theme . '/' . $normalized . '.css');
+                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.css?'.$hash.'">';
                     }
                 }
             }
