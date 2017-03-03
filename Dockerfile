@@ -50,7 +50,7 @@ RUN	apk update && \
 	# Cleaning up
 	mkdir -p /var/www && \
 	apk del tzdata && \
-	rm -rf /var/cache/apk/* \
+	rm -rf /var/cache/apk/* && \
 	ln -s /usr/bin/php7 /usr/bin/php
 
 RUN { \
