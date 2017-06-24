@@ -99,6 +99,8 @@ class LogSearch
             $methodName = $field.'Process';
             if (method_exists($this, $methodName)) {
                 list($field, $matchedText) = $this->$methodName($field, $matchedText);
+            } else {
+                return [];
             }
 
             if (!is_array($matchedText['text'])) {
