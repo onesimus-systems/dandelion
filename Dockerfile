@@ -2,6 +2,8 @@ FROM alpine:3.5
 
 MAINTAINER Lee Keitel <lfkeitel@usi.edu>
 
+ARG IMG_VERSION
+ENV IMG_VERSION ${IMG_VERSION:-none}
 ENV TIMEZONE            America/Chicago
 ENV PHP_MEMORY_LIMIT    512M
 ENV MAX_UPLOAD          50M
