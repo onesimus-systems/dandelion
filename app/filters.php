@@ -21,7 +21,10 @@ Router::filter('auth', function() {
     if (GateKeeper::authenticated()) {
         return true;
     } else {
-        View::redirect('login');
+        $app = Application::getInstance();
+        $path = $app->request->get('REQUEST_URI');
+
+        View::redirect('login', ['redirect' => $path]);
         return false;
     }
 });

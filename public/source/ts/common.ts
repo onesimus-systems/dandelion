@@ -86,6 +86,18 @@ $.extend({
 });
 
 $.extend({
+    urlParams: function(param: string): string {
+        var parts = location.search.substring(1).split('&');
+        for (var i = 0; i < parts.length; i++) {
+            var nv = parts[i].split('=');
+            if (!nv[0]) continue;
+            if (nv[0] === param) return nv[1];
+        }
+        return null;
+    }
+});
+
+$.extend({
     dialogBox: function(html, yescallback, nocallback, customize) {
         // Check customization settings
         if (typeof customize == "undefined") {

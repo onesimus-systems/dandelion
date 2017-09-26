@@ -309,7 +309,7 @@ class View
      *
      * @return void
      */
-    public static function redirect($page)
+    public static function redirect($page, $urlParams = [])
     {
         $app = Application::getInstance();
         $allPages = array(
@@ -332,7 +332,17 @@ class View
             return;
         }
 
+        $params = "";
+
+        foreach ($urlParams as $key => $value) {
+            $params .= urlencode($key)."=".urlencode($value)."&";
+        }
+
         $newPath = Config::get('hostname', '') . '/' . $allPages[$page];
+        if (!empty($params)) {
+            $newPath .= "?" . rtrim($params,"&");;
+        }
+
         $app->response->redirect($newPath);
         throw new ShutdownException();
         return;

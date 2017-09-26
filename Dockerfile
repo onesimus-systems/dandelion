@@ -1,4 +1,4 @@
-FROM alpine:3.5
+FROM alpine:3.6
 
 MAINTAINER Lee Keitel <lfkeitel@usi.edu>
 
@@ -16,28 +16,28 @@ RUN	apk update && \
 	cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 	echo "${TIMEZONE}" > /etc/timezone && \
 	apk add --update \
-		bash \
-		php7 \
-		php7-mbstring \
-		php7-session \
-		php7-mcrypt \
-		php7-openssl \
-		php7-opcache \
-		php7-gmp \
-		php7-json \
-		php7-dom \
-		php7-pdo \
-		php7-zip \
-		php7-bcmath \
-		php7-gd \
-		php7-odbc \
-		php7-pdo_mysql \
-		php7-gettext \
-		php7-bz2 \
-		php7-iconv \
-		php7-curl \
-		php7-ctype \
-		php7-apache2 && \
+	bash \
+	php7 \
+	php7-mbstring \
+	php7-session \
+	php7-mcrypt \
+	php7-openssl \
+	php7-opcache \
+	php7-gmp \
+	php7-json \
+	php7-dom \
+	php7-pdo \
+	php7-zip \
+	php7-bcmath \
+	php7-gd \
+	php7-odbc \
+	php7-pdo_mysql \
+	php7-gettext \
+	php7-bz2 \
+	php7-iconv \
+	php7-curl \
+	php7-ctype \
+	php7-apache2 && \
 
 	# Set environments
 	sed -i "s|;*date.timezone =.*|date.timezone = \"${TIMEZONE}\"|i" /etc/php7/php.ini && \
@@ -53,16 +53,16 @@ RUN	apk update && \
 	mkdir -p /var/www && \
 	apk del tzdata && \
 	rm -rf /var/cache/apk/* && \
-	ln -s /usr/bin/php7 /usr/bin/php
+	ln -sf /usr/bin/php7 /usr/bin/php
 
 RUN { \
-		echo 'opcache.revalidate_freq=0'; \
-		echo 'opcache.validate_timestamps=0'; \
-		echo 'opcache.max_accelerated_files=2048'; \
-		echo 'opcache.memory_consumption=192'; \
-		echo 'opcache.interned_strings_buffer=16'; \
-		echo 'opcache.fast_shutdown=1'; \
-		echo 'opcache.enable_cli=1'; \
+	echo 'opcache.revalidate_freq=0'; \
+	echo 'opcache.validate_timestamps=0'; \
+	echo 'opcache.max_accelerated_files=2048'; \
+	echo 'opcache.memory_consumption=192'; \
+	echo 'opcache.interned_strings_buffer=16'; \
+	echo 'opcache.fast_shutdown=1'; \
+	echo 'opcache.enable_cli=1'; \
 	} > /etc/php7/conf.d/opcache.ini
 
 COPY docker/apache.conf /etc/apache2/conf.d/dandelion-php.conf

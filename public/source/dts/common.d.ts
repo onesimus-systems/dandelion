@@ -23,6 +23,7 @@ interface JQueryStatic {
     flashMessage(message: string, domid?: string): void;
     confirmBox(message: string, title: string, ycallback?: () => void, ncallback?: () => void): void;
     dialogBox(html: string, ycallback?: () => void, ncallback?: () => void, options?: dialogBoxOptions): void;
+    urlParams(param: string): string;
 }
 
 interface JQuery {

@@ -42,7 +42,13 @@ Login = {
                 if (response == "2") {
                     location.assign("reset");
                 } else if (response == "1") {
-                    location.assign(".");
+                    var redirect = $.urlParams('redirect');
+
+                    if (redirect !== null) {
+                        location.assign(decodeURIComponent(redirect).substr(1));
+                    } else {
+                        location.assign(".");
+                    }
                 }
             });
     },
