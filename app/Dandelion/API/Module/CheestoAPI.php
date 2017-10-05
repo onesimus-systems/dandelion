@@ -74,8 +74,8 @@ class CheestoAPI extends BaseModule
         }
 
         if ($cheesto->updateStatus(
-            $params->message,
-            $params->status,
+            htmlspecialchars($params->message),
+            htmlspecialchars($params->status),
             $params->returntime,
             $userid)) {
             return 'Status updated successfully';
