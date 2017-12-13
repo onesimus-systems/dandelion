@@ -128,15 +128,16 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         ]);
     }
 
-    public function getLogsBySearch($query, $limit, $offset)
+    public function getLogsBySearch($query, $limit, $offset, $count = false)
     {
         $params = [];
         $whereClause = '';
         $statement = $this->database
             ->find($this->table)
             ->belongsTo($this->prefix.'user', 'user_id')
-            ->orderDesc($this->table.'.id')
-            ->limit(((int) $offset).','.((int) $limit));
+            ->orderDesc($this->table.'.id');
+
+        if (!$count) $statement->limit(((int) $offset).','.((int) $limit));
 
         foreach ($query as $command => $struct) {
             $clause = $this->searchWhereClauses[$command]['clause'];
@@ -187,9 +188,14 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         }
 
         $whereClause = trim($whereClause, '& ');
-        $results = $statement
-            ->where($whereClause, $params)
-            ->read($this->table.'.*, '.$this->prefix.'user.fullname');
+        $statement->where($whereClause, $params);
+        $results = [];
+
+        if ($count) {
+            $results = [$statement->count()];
+        } else {
+            $results = $statement->read($this->table.'.*, '.$this->prefix.'user.fullname');
+        }
 
         return $results;
     }

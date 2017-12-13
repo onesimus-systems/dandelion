@@ -36,7 +36,11 @@ class LogSearch
         // Make sure at least one field isn't empty
         foreach ($parsedQuery as $value) {
             if ($value) {
-                $matches = $this->repo->getLogsBySearch($parsedQuery, $limit, $offset);
+                if ($limit === -1) {
+                    $matches = $this->repo->getLogsBySearch($parsedQuery, 0, 0, true);
+                } else {
+                    $matches = $this->repo->getLogsBySearch($parsedQuery, $limit, $offset);
+                }
                 break;
             }
         }

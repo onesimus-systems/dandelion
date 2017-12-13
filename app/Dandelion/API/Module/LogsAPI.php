@@ -110,34 +110,30 @@ class LogsAPI extends BaseModule
 
         $query = $params->query;
 
-        $metadata = $this->offsetLimitCommon($params);
+        $metadata = $this->offsetLimitCommon($params, false);
 
         $logs = new LogSearch($this->repo);
-        // It would appear the +1 extra log, and the -1 count would cancel out...
-        // Well, they don't. So don't touch them
-        $return = $logs->search($query, $metadata['limit']+1, $metadata['offset']);
-        $metadata['resultCount'] = count($return)-1;
-        unset($return[$metadata['limit']]);
+        $result = $logs->search($query, $metadata['limit'], $metadata['offset']);
+        $metadata['resultCount'] = count($result)-1; // Account for extra key added by LogSearch::search()
+        $metadata['logSize'] = $logs->search($query, -1, 0)[0];
 
-        $return['metadata'] = $metadata;
-        return $return;
+        $result['metadata'] = $metadata;
+        return $result;
     }
 
     /**
      * Processes and compiles the offset, limit, and logsize used for paging
      * @return array Metadata used in the query and returned to client
      */
-    private function offsetLimitCommon($params)
+    private function offsetLimitCommon($params, $getSize = true)
     {
-        $userLimit = new UserSettings($this->makeRepo('UserSettings'));
-        $limit = $userLimit->getSetting('logs_per_page', $this->requestUser->get('id'));
-        $limit = $params->limit ?: $limit;
-        $offset = $params->offset;
+        $limit = $params->limit ?? $this->getUserSettingLogsPerPage();
+        $offset = $params->offset ?: 0;
         $offset = $offset < 0 ? 0 : $offset;
 
-        $logSize = $this->repo->numOfLogs();
+        $logSize = $getSize ? $this->repo->numOfLogs() : 0;
 
-        if ($offset > $logSize) {
+        if ($offset > $logSize && $getSize) {
             $offset = $offset - $limit;
         }
 
@@ -146,5 +142,11 @@ class LogsAPI extends BaseModule
             'limit'  => (int) $limit,
             'logSize' => $logSize
         ];
+    }
+
+    private function getUserSettingLogsPerPage()
+    {
+        $userLimit = new UserSettings($this->makeRepo('UserSettings'));
+        return $userLimit->getSetting('logs_per_page', $this->requestUser->get('id'));
     }
 }
