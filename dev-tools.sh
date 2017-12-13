@@ -45,8 +45,7 @@ buildDandelion()
     npm install
 
     echo "Running Build"
-    npm run build:css
-    npm run build:js
+    npm run build
 
     echo "Removing dev directories"
     DEV_ITEMS=(
