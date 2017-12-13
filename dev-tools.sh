@@ -59,12 +59,21 @@ buildDandelion()
         'dev-tools.sh'
         'Vagrantfile'
         'server.php'
+        'docker'
+        '.env'
+        '.git*'
+        'docker-compose.yml'
+        'Dockerfile'
+        'package-lock.json'
     )
 
     for DIR in "${DEV_ITEMS[@]}"; do
         echo "Deleting $FULL_DIR/$DIR"
         rm -rf $FULL_DIR/$DIR
     done
+
+    mv -f $FULL_DIR/public/dist/* $FULL_DIR/public/
+    rm -rf $FULL_DIR/public/dist
 
     echo "Creating tarball"
     cd $TMP_DIR
@@ -119,7 +128,7 @@ buildCommand ()
                 ;;
             -p)
                 shift
-                MV_PATH="$1"
+                MV_PATH="$(realpath $1)"
                 shift
         esac
     done

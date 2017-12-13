@@ -1,6 +1,6 @@
 FROM alpine:3.6
 
-MAINTAINER Lee Keitel <lfkeitel@usi.edu>
+LABEL maintainer=Lee Keitel <lfkeitel@usi.edu>
 
 ARG IMG_VERSION
 ENV IMG_VERSION ${IMG_VERSION:-none}
@@ -70,11 +70,11 @@ COPY public/dist /usr/src/dandelion/public
 COPY vendor /usr/src/dandelion/vendor
 COPY config/config.sample.php /usr/src/dandelion/config/config.sample.php
 COPY config/config.defaults.php /usr/src/dandelion/config/config.defaults.php
-COPY docker/docker-entrypoint.sh /usr/local/bin/
+COPY docker/docker-entrypoint.sh /
 
 WORKDIR /var/www/dandelion
 EXPOSE 80
 VOLUME /var/www/dandelion
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/usr/sbin/httpd", "-DFOREGROUND", "-f", "/etc/apache2/httpd.conf"]
