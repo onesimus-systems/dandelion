@@ -55,5 +55,5 @@ return array(
     // Have Dandelion check online for a new version
     'checkForUpdates' => true,
     // URL to check for updates
-    'updateUrl' => 'http://blog.onesimussystems.com/dandelion/versioncheck',
+    'updateUrl' => 'http://blog.onesimussystems.com/dandelion/versioncheck.json',
 );
