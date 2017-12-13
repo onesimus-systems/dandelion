@@ -151,7 +151,7 @@ var UserManage = {
         var status: string = $("#user-status").val();
         var message: string = $("#user-status-message").val();
         var returntime: string = $("#user-status-return").val();
-        var apiEnable: int = $("#user-api-override").val();
+        var apiEnable: number = $("#user-api-override").val();
 
         $.post("../../api/i/users/edit", {uid: userid, fullname: fullname, role: group, "api_override": apiEnable}, null, "json")
             .done(function(response) {

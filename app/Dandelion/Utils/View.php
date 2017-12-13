@@ -85,12 +85,12 @@ class View
         }
         $include = '';
 
-        $filepath = $paths['public'] . '/build/js/'.$name;
+        $filepath = $paths['public'] . '/js/'.$name;
         $vendorFilepath = $paths['public'] . '/assets/js/vendor/jquery/js/'.$name;
 
         if (is_file($filepath)) {
             $hash = md5_file($filepath);
-            $include = '<script src="'.$hostname.'/build/js/'.$name.'?'.$hash.'"></script>';
+            $include = '<script src="'.$hostname.'/js/'.$name.'?'.$hash.'"></script>';
         } elseif (is_file($vendorFilepath)) {
             $hash = md5_file($vendorFilepath);
             $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/'.$name.'?'.$hash.'"></script>';
@@ -211,6 +211,10 @@ class View
 
         $addedSpecial = []; // Used to prevent double loading of special stylesheets
         foreach ($themes as $metaJson) {
+            if (!array_key_exists('files', $metaJson)) {
+                $metaJson['files'] = [];
+            }
+
             foreach ($optionalSheets as $sheet) {
                 if (!$sheet) { // Possiblity one of the elements may be a bool false
                     continue;

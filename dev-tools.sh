@@ -1,5 +1,6 @@
 #!/bin/bash
 # This script will build a production release of dandelion
+set -e
 
 buildDandelion()
 {
@@ -26,8 +27,8 @@ buildDandelion()
     git checkout $GIT_BRANCH
 
     if [ $? -ne 0 ]; then
-         echo "Error checking out branch $GIT_BRANCH"
-         exit 1
+        echo "Error checking out branch $GIT_BRANCH"
+        exit 1
     fi
 
     echo "Installing Composer"
@@ -40,23 +41,12 @@ buildDandelion()
     echo "Optimizing Autoloader"
     composer dump-autoload --optimize --no-dev
 
-    if [ $? -ne 0 ]; then
-        exit 1
-    fi
-
     echo "Installing Node Modules"
     npm install
 
-    if [ $? -ne 0 ]; then
-        exit 1
-    fi
-
-    echo "Running Gulp"
-    $TMP_DIR/dandelion/node_modules/.bin/gulp
-
-    if [ $? -ne 0 ]; then
-        exit 1
-    fi
+    echo "Running Build"
+    npm run build:css
+    npm run build:js
 
     echo "Removing dev directories"
     DEV_ITEMS=(
@@ -64,14 +54,9 @@ buildDandelion()
         'node_modules'
         'vagrant'
         'public/source'
-        'public/build/js/maps'
-        'public/assets/themes/modern/less'
-        'public/assets/themes/modern/maps'
-        'public/assets/themes/legacy/less'
-        'public/assets/themes/legacy/maps'
+        'public/build'
         'composer.*'
         'package.json'
-        'gulpfile.js'
         'dev-tools.sh'
         'Vagrantfile'
         'server.php'
@@ -112,12 +97,12 @@ buildCommand ()
 
     args=`getopt v:t:b:p: $*`
     if test $? -ne 0; then
-         echo 'Usage: build -t tag'
-         exit 1
+        echo 'Usage: build -t tag'
+        exit 1
     fi
     set -- $args
     for i; do
-      case "$i" in
+        case "$i" in
             -b)
                 shift
                 BRANCH="$1"
@@ -137,7 +122,7 @@ buildCommand ()
                 shift
                 MV_PATH="$1"
                 shift
-      esac
+        esac
     done
 
     buildDandelion $BRANCH $MV_PATH
@@ -170,12 +155,12 @@ bumpverCommand ()
     # Parse arguments
     args=`getopt cd $*`
     if test $? -ne 0; then
-         echo 'Usage: bumpver [major|minor|patch] -c -d'
-         exit 1
+        echo 'Usage: bumpver [major|minor|patch] -c -d'
+        exit 1
     fi
     set -- $args
     for i; do
-      case "$i" in
+        case "$i" in
             -c)
                 shift
                 COMMIT=true
@@ -185,7 +170,7 @@ bumpverCommand ()
                 shift
                 DRY_RUN=true
                 shift
-      esac
+        esac
     done
 
     # Get current version from application file

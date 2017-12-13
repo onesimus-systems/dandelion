@@ -38,7 +38,6 @@ RUN	apk update && \
 	php7-curl \
 	php7-ctype \
 	php7-apache2 && \
-
 	# Set environments
 	sed -i "s|;*date.timezone =.*|date.timezone = \"${TIMEZONE}\"|i" /etc/php7/php.ini && \
 	sed -i "s|;*memory_limit =.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php7/php.ini && \
@@ -48,7 +47,6 @@ RUN	apk update && \
 	sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo= 0|i" /etc/php7/php.ini && \
 	sed -i "s|;*expose_php =.*|expose_php = off|i" /etc/php7/php.ini && \
 	sed -i "s|#LoadModule rewrite_module modules/mod_rewrite.so|LoadModule rewrite_module modules/mod_rewrite.so|i" /etc/apache2/httpd.conf && \
-
 	# Cleaning up
 	mkdir -p /var/www && \
 	apk del tzdata && \
@@ -68,7 +66,7 @@ RUN { \
 COPY docker/apache.conf /etc/apache2/conf.d/dandelion-php.conf
 COPY app /usr/src/dandelion/app
 COPY bootstrap /usr/src/dandelion/bootstrap
-COPY public /usr/src/dandelion/public
+COPY public/dist /usr/src/dandelion/public
 COPY vendor /usr/src/dandelion/vendor
 COPY config/config.sample.php /usr/src/dandelion/config/config.sample.php
 COPY config/config.defaults.php /usr/src/dandelion/config/config.defaults.php
