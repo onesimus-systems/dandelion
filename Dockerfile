@@ -1,6 +1,6 @@
 FROM alpine:3.6
 
-LABEL maintainer=Lee Keitel <lfkeitel@usi.edu>
+LABEL maintainer="Lee Keitel <lfkeitel@usi.edu>"
 
 ARG IMG_VERSION
 ENV IMG_VERSION ${IMG_VERSION:-none}
