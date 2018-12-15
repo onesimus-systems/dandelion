@@ -10,12 +10,14 @@
 namespace Dandelion\Controllers;
 
 use Dandelion\Template;
+use Dandelion\Utils\Configuration as Config;
 
 class DashboardController extends BaseController
 {
 	public function dashboard()
 	{
         $showCheesto = $this->authorized($this->sessionUser, 'view_cheesto');
+        $showCheesto = $showCheesto && Config::get('cheestoEnabled', true);
         $showLog = $this->authorized($this->sessionUser, 'view_log');
         $showCreateButton = $this->authorized($this->sessionUser, 'create_log');
 

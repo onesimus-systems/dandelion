@@ -94,8 +94,9 @@
     }
 
     .logs-panel {
-        border-left: 2px solid @dandelion-dark-grey;
-        margin-left: 250px;
+        min-height: 150px;
+        max-width: 85%;
+        margin: 0 auto;
 
         #dandelion-lib > .media-query(screen, small, {
             display: none;
@@ -225,6 +226,13 @@
                 }
             }
         }
+    }
+
+    .cheesto-enabled {
+        border-left: 2px solid @dandelion-dark-grey;
+        margin: 0;
+        margin-left: 250px;
+        max-width: 100%;
     }
 }
 

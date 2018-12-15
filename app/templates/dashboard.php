@@ -81,28 +81,28 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
 
 <button type="button" class="section-title disabled" id="show-cheesto-button">Show Message Center</button>
 
-<section id="messages-panel" class="messages-panel">
-    <?php if ($showCheesto): ?>
-        <div id="messages-cheesto">
-            <div id="messages-cheesto-header">
-                <span class="messages-title">Ĉeesto</span>
+<?php if ($showCheesto): ?>
+    <section id="messages-panel" class="messages-panel">
+            <div id="messages-cheesto">
+                <div id="messages-cheesto-header">
+                    <span class="messages-title">Ĉeesto</span>
 
-                <div class="messages-controls">
-                    <select id="status-select">
-                        <option value="-1">Set Status:</option>
-                    </select>
+                    <div class="messages-controls">
+                        <select id="status-select">
+                            <option value="-1">Set Status:</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div id="messages-cheesto-content">Loading...</div>
-        </div>
-    <?php endif; ?>
-</section>
+                <div id="messages-cheesto-content">Loading...</div>
+            </div>
+    </section>
+<?php endif; ?>
 
 
 <button type="button" class="section-title disabled" id="show-logs-button">Show Logs</button>
 
-<section id="logs-panel" class="logs-panel">
+<section id="logs-panel" class="logs-panel <?= $showCheesto ? 'cheesto-enabled' : '' ?>">
     <div class="control-panel">
         <div class="search-console">
             <div class="search-buttons">
