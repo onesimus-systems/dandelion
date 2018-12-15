@@ -5,10 +5,10 @@
   "license": "GPL-3.0",
   "version": "6.2.0",
   "devDependencies": {
-    "less": "^2.7.3",
+    "less": "^3.9.0",
     "less-plugin-clean-css": "^1.5.1",
-    "typescript": "^2.6.2",
-    "uglify-js": "^3.2.2"
+    "typescript": "^3.2.2",
+    "uglify-js": "^3.4.9"
   },
   "scripts": {
     "build": "npm run build:js && npm run build:css",
