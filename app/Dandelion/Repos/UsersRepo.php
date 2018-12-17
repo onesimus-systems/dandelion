@@ -42,8 +42,6 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
         $record['id'] = (int) $record['id'];
         $record['group_id'] = (int) $record['group_id'];
         $record['initial_login'] = (int) $record['initial_login'];
-        $record['logs_per_page'] = (int) $record['logs_per_page'];
-        $record['api_override'] = (int) $record['api_override'];
         $record['disabled'] = (bool) $record['disabled'];
     }
 
