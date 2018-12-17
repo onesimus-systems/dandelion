@@ -21,17 +21,28 @@ class CategoriesRepo extends BaseRepo implements Interfaces\CategoriesRepo
         $this->table = $this->prefix.'category';
     }
 
+    private function fixCategoryFieldTypes(&$cat)
+    {
+        $cat['id'] = (int) $cat['id'];
+    }
+
     public function getAllCategories()
     {
-        return $this->database
+        $cats = $this->database
             ->find($this->table)
             ->orderAsc($this->table.'.description')
             ->read();
+
+        foreach ($cats as &$cat) {
+            $this->fixCategoryFieldTypes($cat);
+        }
+
+        return $cats;
     }
 
     public function getIdForCategoryWithParent($cat, $pid)
     {
-        return $this->database
+        return (int) $this->database
             ->find($this->table)
             ->whereEqual('parent', $pid)
             ->whereEqual('description', $cat)
@@ -52,10 +63,12 @@ class CategoriesRepo extends BaseRepo implements Interfaces\CategoriesRepo
 
     public function getCategoryParent($cid)
     {
-        return $this->database
+        $parent = $this->database
             ->find($this->table)
             ->whereEqual('id', $cid)
             ->readRecord('parent')['parent'];
+        $this->fixCategoryFieldTypes($parent);
+        return $parent;
     }
 
     public function deleteCategory($cid)

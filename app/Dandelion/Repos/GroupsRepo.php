@@ -21,24 +21,39 @@ class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
         $this->table = $this->prefix.'group';
     }
 
+    private function fixGroupFieldTypes(&$record)
+    {
+        $record['id'] = (int) $record['id'];
+    }
+
     public function getGroupById($gid)
     {
-        return $this->database
+        $group = $this->database
             ->readItem($this->table, $gid);
+        $this->fixGroupFieldTypes($group);
+        return $group;
     }
 
     public function getGroupByName($gname)
     {
-        return $this->database
+        $group =  $this->database
             ->find($this->table)
             ->whereEqual('name', $gname)
             ->readRecord();
+        $this->fixGroupFieldTypes($group);
+        return $group;
     }
 
     public function getGroupList()
     {
-        return $this->database
+        $groups = $this->database
             ->find($this->table)->read('id, name');
+
+        foreach ($groups as $group) {
+            $this->fixGroupFieldTypes($group);
+        }
+
+        return $groups;
     }
 
     public function createGroup($name, $rights)
@@ -95,7 +110,7 @@ class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
      */
     public function userCountInGroup($gid)
     {
-        return $this->database
+        return (int) $this->database
             ->find($this->prefix.'user')
             ->whereEqual('group_id', $gid)
             ->count();

@@ -37,20 +37,36 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
         }
     }
 
+    private function fixUserFieldTypes(&$record)
+    {
+        $record['id'] = (int) $record['id'];
+        $record['group_id'] = (int) $record['group_id'];
+        $record['initial_login'] = (int) $record['initial_login'];
+        $record['logs_per_page'] = (int) $record['logs_per_page'];
+        $record['api_override'] = (int) $record['api_override'];
+        $record['disabled'] = (bool) $record['disabled'];
+    }
+
     public function getUsers($uid = null, $disabled = 0)
     {
         $fields = 'id, fullname, username, group_id, created, initial_login, theme, disabled';
         if ($uid) {
-            return $this->database
+            $records = $this->database
                     ->find($this->table)
                     ->whereEqual('id', $uid)
                     //->whereEqual('disabled', $disabled)
                     ->read($fields);
         } else {
-            return $this->database
+            $records = $this->database
                     ->find($this->table)
                     //->whereEqual('disabled', $disabled)
                     ->read($fields);
         }
+
+        foreach ($records as &$record) {
+            $this->fixUserFieldTypes($record);
+        }
+
+        return $records;
     }
 }
