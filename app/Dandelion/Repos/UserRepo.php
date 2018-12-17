@@ -28,7 +28,7 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
             'group_id' => $role,
             'initial_login' => $first,
             'theme' => $theme,
-            'disabled' => $disabled,
+            'disabled' => (int) $disabled,
             'api_override' => $apiOverride,
         ];
 

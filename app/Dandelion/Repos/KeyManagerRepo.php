@@ -35,7 +35,10 @@ class KeyManagerRepo extends BaseRepo implements Interfaces\KeyManagerRepo
             ->find($this->table)
             ->whereEqual('user_id', $uid)
             ->readRecord();
-        $this->fixApiKeyFieldTypes($key);
+
+        if ($key) {
+            $this->fixApiKeyFieldTypes($key);
+        }
         return $key;
     }
 
