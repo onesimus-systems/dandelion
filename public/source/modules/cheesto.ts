@@ -5,7 +5,19 @@ import "common";
 
 interface cheestoReadResponse {
     // 0 to many individual status arrays
+    statuses: cheestoStatus[];
     statusOptions: string[];
+}
+
+interface cheestoStatus {
+    id: number;
+    user_id: number;
+    status: string;
+    message: string;
+    returntime: string;
+    modified: string;
+    disabled: boolean;
+    fullname: string;
 }
 
 const statusSelectClass = "__cheesto_status_select";
@@ -45,55 +57,53 @@ namespace Cheesto {
 
     function generateView(dataObj: cheestoReadResponse): void {
         const view = $("<div/>").attr("id", mountPoint);
-        view.append(makeStatusSelect(dataObj));
-        view.append(generateTable(dataObj));
+        view.append(makeStatusSelect(dataObj.statusOptions));
+        view.append(generateTable(dataObj.statuses));
         $(`#${mountPoint}`).replaceWith(view);
     }
 
-    function makeStatusSelect(dataObj: cheestoReadResponse): JQuery {
+    function makeStatusSelect(statusOptions: string[]): JQuery {
         const statusSelect = $("<select/>");
         statusSelect.addClass(statusSelectClass);
         statusSelect.change(setStatus);
 
         statusSelect.append(`<option value="-1">Set Status:</option>`);
 
-        for (const key2 in dataObj.statusOptions) {
-            var html = `<option value="${dataObj.statusOptions[key2]}">${dataObj.statusOptions[key2]}</option>`;
+        for (const key2 in statusOptions) {
+            var html = `<option value="${statusOptions[key2]}">${statusOptions[key2]}</option>`;
             statusSelect.append(html);
         }
 
         return statusSelect;
     }
 
-    function generateTable(dataObj: cheestoReadResponse): JQuery {
+    function generateTable(statuses: cheestoStatus[]): JQuery {
         const div = $("<div/>");
         div.addClass(statusTableClass);
         const table = $("<table/>");
         table.append(`<thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>`);
 
-        for (const key in dataObj) {
-            if (dataObj.hasOwnProperty(key)) {
-                if (key !== "statusOptions") {
-                    const user = dataObj[key];
-                    let html = "";
-                    // The modified date is in the format %Y-%m-%d %H:%m:%s
-                    // To match the return date, format to %m/%d/%Y %H:%m
-                    const modDate = new Date(user.modified);
-                    const formatMin = (modDate.getMinutes() < 10) ? "0"+modDate.getMinutes() : modDate.getMinutes();
-                    const formatHour = (modDate.getHours() < 10) ? "0"+modDate.getHours() : modDate.getHours();
-                    let formatModDate = (modDate.getMonth()+1)+"/"+modDate.getDate()+"/"+modDate.getFullYear();
-                    formatModDate += " "+formatHour+":"+formatMin;
+        for (const key in statuses) {
+            if (statuses.hasOwnProperty(key)) {
+                const user = statuses[key];
+                let html = "";
+                // The modified date is in the format %Y-%m-%d %H:%m:%s
+                // To match the return date, format to %m/%d/%Y %H:%m
+                const modDate = new Date(user.modified);
+                const formatMin = (modDate.getMinutes() < 10) ? "0"+modDate.getMinutes() : modDate.getMinutes();
+                const formatHour = (modDate.getHours() < 10) ? "0"+modDate.getHours() : modDate.getHours();
+                let formatModDate = (modDate.getMonth()+1)+"/"+modDate.getDate()+"/"+modDate.getFullYear();
+                formatModDate += " "+formatHour+":"+formatMin;
 
-                    if (user.status === "Available") {
-                        html = `<tr><td>${user.fullname}</td><td class="status-cell" title="Last Changed: ${formatModDate}">${user.status}</td></tr>`;
-                    } else {
-                        // If the status is not Available show the return time and message
-                        const message = (user.message === "") ? "" : `${user.message}\n\n`;
-                        html = `<tr><td>${user.fullname}</td><td class="status-cell" title="${message}Return: ${user.returntime}\nLast Changed: ${formatModDate}">${user.status}</td></tr>`;
-                    }
-
-                    table.append(html);
+                if (user.status === "Available") {
+                    html = `<tr><td>${user.fullname}</td><td class="status-cell" title="Last Changed: ${formatModDate}">${user.status}</td></tr>`;
+                } else {
+                    // If the status is not Available show the return time and message
+                    const message = (user.message === "") ? "" : `${user.message}\n\n`;
+                    html = `<tr><td>${user.fullname}</td><td class="status-cell" title="${message}Return: ${user.returntime}\nLast Changed: ${formatModDate}">${user.status}</td></tr>`;
                 }
+
+                table.append(html);
             }
         }
 

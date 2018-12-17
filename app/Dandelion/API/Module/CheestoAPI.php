@@ -33,7 +33,10 @@ class CheestoAPI extends BaseModule
         }
 
         $cheesto = new Cheesto($this->repo);
-        return $cheesto->getUserStatus($params->uid);
+        return [
+            'statuses' => $cheesto->getUserStatus($params->uid),
+            'statusOptions' => $cheesto->getStatusText(),
+        ];
     }
 
     /**
