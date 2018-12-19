@@ -5,18 +5,31 @@
   "license": "GPL-3.0",
   "version": "6.2.0",
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "babel-loader": "^8.0.4",
+    "clean-webpack-plugin": "^1.0.0",
+    "eslint": "^5.10.0",
     "less": "^3.9.0",
     "less-plugin-clean-css": "^1.5.1",
+    "ts-loader": "^5.3.1",
     "typescript": "^3.2.2",
-    "uglify-js": "^3.4.9"
+    "uglify-js": "^3.4.9",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-merge": "^4.1.5"
   },
   "scripts": {
-    "build": "npm run build:js && npm run build:css",
-    "build:js": "npm run build:tsc && npm run build:uglify",
-    "build:tsc": "mkdir -p public/build/js && tsc --outDir public/build/js --sourceMap public/source/ts/*.ts public/source/ts/*.ts public/source/dts/*.ts",
-    "build:uglify": "mkdir -p public/dist/js && for file in public/build/js/*.js; do uglifyjs -m -o public/dist/js/$(basename $file .js).min.js $file; done",
-    "build:css": "npm run build:modern && npm run build:legacy",
+    "build": "yarn run build:js:prod && yarn run build:css",
+    "build:dev": "yarn run build:js:dev && yarn run build:css",
+    "build:js:dev": "webpack --mode development --config webpack.dev.js",
+    "build:js:prod": "webpack --mode production --config webpack.prod.js",
+    "build:css": "yarn run build:modern && yarn run build:legacy",
     "build:modern": "for file in public/source/themes/modern/*.less; do lessc --clean-css $file public/dist/assets/themes/modern/$(basename $file .less).css; done",
     "build:legacy": "for file in public/source/themes/legacy/*.less; do lessc --clean-css $file public/dist/assets/themes/legacy/$(basename $file .less).css; done"
+  },
+  "dependencies": {
+    "global": "^4.3.2",
+    "tsc": "^1.20150623.0"
   }
 }

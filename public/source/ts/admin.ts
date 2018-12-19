@@ -1,8 +1,6 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="categories.ts" />
-/* global document, $, location, Categories */
+import Categories from 'categories';
 
-var Admin = {
+const Admin = {
     init: function() {
         "use strict";
 

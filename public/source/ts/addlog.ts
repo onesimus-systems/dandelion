@@ -1,9 +1,5 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/common.d.ts" />
 /// <reference path="../dts/ckeditor.d.ts" />
-/// <reference path="categories.ts" />
-
-"use strict"; // jshint ignore:line
+import Categories from 'categories';
 
 $(document).ready(function(): void {
     Categories.setUrlPrefix("../");

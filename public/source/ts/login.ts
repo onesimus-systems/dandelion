@@ -1,11 +1,3 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/common.d.ts" />
-/* global $, document, location */
-
-"use strict"; // jshint ignore:line
-
-var Login;
-
 $(document).ready(function() {
     var username = Login.getCookie("dan_username");
 
@@ -22,7 +14,7 @@ $(document).ready(function() {
     $("#password").on("keypress", Login.check);
 });
 
-Login = {
+const Login = {
     attemptLogin: function(): boolean {
         var user: string = $("#username").val();
         var pass: string = $("#password").val();

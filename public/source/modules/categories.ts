@@ -1,10 +1,7 @@
 /// <reference path="../dts/jquery.d.ts" />
 /// <reference path="../dts/common.d.ts" />
-/* global $, window */
 
-"use strict"; // jshint ignore:line
-
-module Categories {
+namespace Categories {
     var currentSelection: number[] = [];
     var domid: string = "";
     var urlPrefix: string = "";
@@ -32,7 +29,7 @@ module Categories {
 
         $.get(urlPrefix + "render/categoriesJson", { pastSelection: JSON.stringify(currentSelection) }, null, "json")
             .done(function (json) {
-                $(domid).html(renderSelectsFromJson(json));
+                $(domid).replaceWith(renderSelectsFromJson(json));
             });
     }
 
@@ -45,20 +42,23 @@ module Categories {
     }
 
     export function selectOnChange(elem: any): void {
+        console.log(elem);
         Categories.grabNextLevel(elem.value);
     }
 
-    export function renderSelectsFromJson(json: any): string {
+    export function renderSelectsFromJson(json: any): JQuery {
         currentSelection = json.currentList;
-        var html = "";
+        const selectSpan = $('<div/>').attr("id", domid.replace(/^#/, ''));
+        selectSpan.append(`<span/>`);
 
         for (var key in json.levels) {
             if (!json.levels.hasOwnProperty(key)) {
                 continue;
             }
 
-            html += `<select onChange="Categories.selectOnChange(this);" id="level${key}">`;
-            html += `<option value="">Select:</option>`;
+            var selectRender = $("<select/>").attr("id", `level${key}`);
+            selectRender.change(function() { Categories.selectOnChange(this); });
+            selectRender.append(`<option value="">Select:</option>`);
 
             for (var category in json.levels[key]) {
                 if (!json.levels[key].hasOwnProperty(category)) {
@@ -67,12 +67,14 @@ module Categories {
 
                 var cat = json.levels[key][category];
                 var selected = cat.selected ? "selected" : "";
-                html += `<option value="${key}:${cat.id}" ${selected}>${cat.desc}</option>`;
+                selectRender.append(`<option value="${key}:${cat.id}" ${selected}>${cat.desc}</option>`);
             }
-            html += "</select>";
+            console.log(selectRender);
+            selectSpan.append(selectRender);
         }
 
-        return `<span>${html}</span>`;
+        console.log(selectSpan);
+        return selectSpan;
     }
 
     export function renderCategoriesFromString(str: string, elemid: string): void {
@@ -82,10 +84,12 @@ module Categories {
                 domid = elemid;
 
                 if ($.apiSuccess(json)) {
-                    $(domid).html(rendered);
+                    $(domid).replaceWith(rendered);
                 } else {
-                    rendered = `There was an error getting the category.<br><br>${rendered}`;
-                    $(domid).html(rendered);
+                    rendered = $(`<span>There was an error getting the category.</span>`)
+                        .append(`<br><br>`)
+                        .append(rendered);
+                    $(domid).replaceWith(rendered);
                 }
             });
     }
@@ -202,3 +206,5 @@ module Categories {
         }
     }
 }
+
+export default Categories;

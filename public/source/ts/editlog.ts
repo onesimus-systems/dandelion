@@ -1,9 +1,4 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/common.d.ts" />
-/// <reference path="../dts/ckeditor.d.ts" />
-/// <reference path="categories.ts" />
-
-"use strict"; // jshint ignore:line
+import Categories from 'categories';
 
 $(document).ready(function (): void {
     renderCategories();
@@ -25,5 +20,5 @@ function renderCategories(): void {
     Categories.setDomID("#categories");
     var json: string = $("#category-json").val();
     var rendered = Categories.renderSelectsFromJson(JSON.parse(json));
-    $("#categories").html(rendered);
+    $("#categories").replaceWith(rendered);
 }

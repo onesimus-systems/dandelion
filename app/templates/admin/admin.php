@@ -100,5 +100,5 @@ if ($showUpdateSection): ?>
 </section>
 <?php endif;
 
-echo $this->loadJS(['jquery', 'jqueryui', 'common', 'categories', 'admin']);
+echo $this->loadJS(['jquery', 'jqueryui', 'common', 'admin']);
 ?>

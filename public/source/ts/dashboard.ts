@@ -1,21 +1,8 @@
-/// <reference path="cheesto.ts" />
-/// <reference path="categories.ts" />
-/**
- * Scripts for Dashboard
- */
-/* global document, window, searchFun, $, setInterval,
-    setTimeout, clearInterval, Categories, Cheesto */
-
-"use strict"; // jshint ignore:line
+import Cheesto from 'cheesto';
+import Categories from 'categories';
 
 var search = false,
     refreshc: number;
-
-var Refresh,
-    Section,
-    View,
-    Search,
-    AddEdit;
 
 $(document).ready(function() {
     Refresh.init();
@@ -32,7 +19,7 @@ $(document).ready(function() {
     });
 });
 
-Refresh = {
+const Refresh = {
     init: function(): void {
         if ($("#log-list").length) {
             Refresh.refreshLog();
@@ -66,7 +53,7 @@ Refresh = {
     }
 }; // Refresh
 
-Section = {
+const Section = {
     show: function(elem: any, panel: string): void {
         if (elem.innerHTML.match(/^Show\s/)) {
             elem.innerHTML = elem.innerHTML.replace(/^Show\s/, "Hide ");
@@ -78,7 +65,7 @@ Section = {
     }
 };
 
-View = {
+const View = {
     prevPage: -1,
     nextPage: -1,
     currentOffset: -1,
@@ -204,7 +191,7 @@ View = {
     }
 }; // View
 
-Search = {
+const Search = {
     init: function(): void {
         $("#search-btn").click(Search.searchLog);
         $("#query-builder-btn").click(Search.showBuilder);

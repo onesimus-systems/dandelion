@@ -1,10 +1,3 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/common.d.ts" />
-
-"use strict"; // jshint ignore:line
-
-var Comments, Logs;
-
 $(document).ready(function(){
     $("#add-comment-btn").click(Comments.showAddForm);
     $("#add-comment-form").submit(Comments.saveComment);
@@ -12,14 +5,14 @@ $(document).ready(function(){
     $("#edit-log-btn").click(Logs.edit);
 });
 
-Logs = {
+const Logs = {
     edit: function(): void {
         var logid: string = $("#logid").val();
         location.assign(`edit/${logid}`);
     },
 };
 
-Comments = {
+const Comments = {
     showAddForm: function(): void {
         $("#newComment").val("");
         $("#add-comment-form").show();

@@ -10,7 +10,7 @@ interface cheestoReadResponse {
     statusOptions: string[];
 }
 
-var Cheesto = {
+const Cheesto = {
     firstgen: true,
 
     dashboardInit: function(): void {
@@ -180,3 +180,5 @@ var Cheesto = {
         $("#cheesto-date-pick").val(datetime);
     }
 };
+
+export default Cheesto;

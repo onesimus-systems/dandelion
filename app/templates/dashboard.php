@@ -133,4 +133,4 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     <?php endif; ?>
 </section>
 
-<?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'common', 'categories', 'cheesto', 'dashboard']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'common', 'dashboard']) ?>

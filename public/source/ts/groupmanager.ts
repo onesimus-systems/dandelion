@@ -1,8 +1,4 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/common.d.ts" />
-/* global document, $, console, location */
-
-var GroupManage = {
+const GroupManage = {
     init: function(): void {
         "use strict";
         $("#save-btn").click(GroupManage.save);

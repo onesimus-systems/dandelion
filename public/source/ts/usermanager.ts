@@ -1,12 +1,4 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/jqueryui.d.ts" />
-/// <reference path="../dts/common.d.ts" />
-/// <reference path="../dts/datetimepicker.d.ts" />
-/* global document, $, setTimeout, location */
-
-"use strict"; // jshint ignore:line
-
-var UserManage = {
+const UserManage = {
     init: function(): void {
         var disableBtn = $("#disable-user-btn");
         if (disableBtn.length) {

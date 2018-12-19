@@ -43,5 +43,5 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['editlog']]);
     </div>
 </div>
 
-<?= $this->loadJS(['jquery', 'common', 'categories', 'editlog', 'ckeditor']); ?>
+<?= $this->loadJS(['jquery', 'common', 'editlog', 'ckeditor']); ?>
 <!-- End Page Body -->

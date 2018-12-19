@@ -1,11 +1,4 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/common.d.ts" />
-/* global $, document, page */
-
-"use strict"; // jshint ignore:line
-
 declare var page: string;
-var Settings;
 
 $(document).ready(function(){
     if (typeof page === "undefined") {
@@ -24,7 +17,7 @@ $(document).ready(function(){
     $("#reset-password-btn").click(Settings.resetPassword);
 });
 
-Settings = {
+const Settings = {
     generateKey: function(): void {
         $.post("api/i/key/generate", {}, function(data) {
                 $("#apikey").html(`<strong>Key:</strong> ${data.data}`);
