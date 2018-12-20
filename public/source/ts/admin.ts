@@ -54,7 +54,11 @@ const Admin = {
                     table.append(roleRow);
                     table = $("<form/>").append(table);
 
-                    $.dialogBox(table.html(), Admin.addUser, null, {title: "Add new user", buttonText1: "Add"});
+                    $.dialogBox(table.html(), Admin.addUser, null, {
+                        title: "Add new user",
+                        buttonText1: "Add",
+                        height: 350
+                    });
                 } else {
                     $.alert(json.status, "User Management");
                 }
@@ -72,9 +76,23 @@ const Admin = {
         var group = $("#add_group").val();
         var force_reset = $("#add_force_reset").prop("checked");
 
+        if (!username || !password || !fullname || group == 0) {
+            $.alert(
+                "Username, password, full name, and group are required",
+                "Add User",
+                Admin.showAddUserDialog
+            );
+            return;
+        }
+
         $.post("api/i/users/create", {username: username, password: password, fullname: fullname, role: group, force_reset: force_reset}, null, "json")
             .done(function(data) {
-                location.reload();
+                if (data.errorcode === 0) {
+                    location.reload();
+                    return;
+                }
+
+                $.alert(data.data, "Add User", Admin.showAddUserDialog);
             }).fail(function(req) {
                 var json = JSON.parse(req.responseText);
                 $.alert(json.status, "Add User");
