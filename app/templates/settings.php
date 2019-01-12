@@ -70,5 +70,5 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui
     var page = 'userSettings';
 </script>
 
-<?= $this->loadJS(['jquery', 'jqueryui', 'common', 'settings']); ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'settings']); ?>
 <!-- End Page Body -->

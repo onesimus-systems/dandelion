@@ -1,11 +1,7 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/common.d.ts" />
-/// <reference path="../dts/ckeditor.d.ts" />
-/// <reference path="categories.ts" />
+import Categories from 'categories';
+import "common";
 
-"use strict"; // jshint ignore:line
-
-$(document).ready(function (): void {
+function init() {
     renderCategories();
 
     CKEDITOR.replace("body");
@@ -18,12 +14,13 @@ $(document).ready(function (): void {
             .appendTo(this);
         return true;
     });
-});
+}
 
 function renderCategories(): void {
-    Categories.setUrlPrefix("../../");
     Categories.setDomID("#categories");
-    var json: string = $("#category-json").val();
-    var rendered = Categories.renderSelectsFromJson(JSON.parse(json));
-    $("#categories").html(rendered);
+    const json: string = $("#category-json").val();
+    const rendered = Categories.renderSelectsFromJson(JSON.parse(json));
+    $("#categories").replaceWith(rendered);
 }
+
+init();

@@ -9,11 +9,9 @@
  */
 namespace Dandelion\Controllers;
 
+use Dandelion\Template;
 use Dandelion\Utils\View;
-use Dandelion\Utils\Repos;
-use Dandelion\Application;
 use Dandelion\Auth\GateKeeper;
-use League\Plates\Engine;
 
 class AuthController extends BaseController
 {
@@ -24,15 +22,8 @@ class AuthController extends BaseController
             return;
         }
 
-        $templates = new Engine($this->app->paths['app'].'/templates');
-        $templates->registerFunction('getCssSheets', function() {
-            return View::loadCssSheets('jqueryui','login');
-        });
-        $templates->registerFunction('loadJS', function() {
-            return View::loadJS('jquery','jqueryui','common','login');
-        });
-
-        $this->setResponse($templates->render('login'));
+        $template = new Template($this->app);
+        $this->setResponse($template->render('login', 'Login'));
     }
 
     public function login()

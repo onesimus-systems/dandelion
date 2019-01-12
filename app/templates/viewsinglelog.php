@@ -63,5 +63,5 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['singlelog']]);
     </section>
 </div>
 
-<?= $this->loadJS(['jquery', 'common', 'singlelog']); ?>
+<?= $this->loadJS(['jquery', 'singlelog']); ?>
 <!-- End Page Body -->

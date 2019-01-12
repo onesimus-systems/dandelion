@@ -119,4 +119,4 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','da
 </section>
 </form>
 
-<?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'common', 'usermanager']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'usermanager']) ?>

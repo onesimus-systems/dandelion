@@ -1,52 +1,45 @@
-/// <reference path="../dts/jquery.d.ts" />
-/// <reference path="../dts/common.d.ts" />
+import "common";
 
-"use strict"; // jshint ignore:line
+function init() {
+    $("#add-comment-btn").click(showAddCommentForm);
+    $("#add-comment-form").submit(saveComment);
+    $("#cancel-new-btn").click(hideAddCommentForm);
+    $("#edit-log-btn").click(edit);
+}
 
-var Comments, Logs;
+function edit(): void {
+    const logid: string = $("#logid").val();
+    location.assign(`edit/${logid}`);
+}
 
-$(document).ready(function(){
-    $("#add-comment-btn").click(Comments.showAddForm);
-    $("#add-comment-form").submit(Comments.saveComment);
-    $("#cancel-new-btn").click(Comments.hideAddForm);
-    $("#edit-log-btn").click(Logs.edit);
-});
+function showAddCommentForm(): void {
+    $("#newComment").val("");
+    $("#add-comment-form").show();
+    $("#newComment").focus();
+}
 
-Logs = {
-    edit: function(): void {
-        var logid: string = $("#logid").val();
-        location.assign(`edit/${logid}`);
-    },
-};
+function hideAddCommentForm(): void {
+    $("#add-comment-form").hide();
+}
 
-Comments = {
-    showAddForm: function(): void {
-        $("#newComment").val("");
-        $("#add-comment-form").show();
-        $("#newComment").focus();
-    },
+function saveComment(e: Event): boolean {
+    e.preventDefault();
+    e.returnValue = false;
 
-    hideAddForm: function(): void {
-        $("#add-comment-form").hide();
-    },
+    const commentText: string = $("#newComment").val();
+    const logid: string = $("#logid").val();
 
-    saveComment: function(e): boolean {
-        e.preventDefault();
-        e.returnValue = false;
-
-        var commentText: string = $("#newComment").val();
-        var logid: string = $("#logid").val();
-
-        if (!commentText) {
-            $("#error-message").text("Comments can not be blank");
-            return false;
-        }
-
-        $.post("../api/i/comments/add", {"comment": commentText, "logid": logid}, null, "json")
-            .done(function(msg) {
-                location.reload();
-            });
-
-        return true;
+    if (!commentText) {
+        $("#error-message").text("Comments can not be blank");
+        return false;
     }
-};
+
+    $.post("../api/i/comments/add", {"comment": commentText, "logid": logid}, null, "json")
+        .done(function(msg) {
+            location.reload();
+        });
+
+    return true;
+}
+
+init();
