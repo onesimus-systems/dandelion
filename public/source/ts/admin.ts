@@ -104,7 +104,7 @@ function showAddGroupDialog(): void {
         'Group Name:<br><br><input type="text" id="new_group_name">',
         addGroup,
         null,
-        {title: "Create new group", buttonText1: "Create", height: 200, width: 300}
+        {title: "Create new group", buttonText1: "Create", height: 250, width: 300}
     );
 }
 

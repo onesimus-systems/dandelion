@@ -63,10 +63,10 @@ class View
 
         switch (strtolower($name)) {
             case 'jquery':
-                $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-2.1.3.min.js"></script>';
+                $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-3.3.1.min.js"></script>';
                 break;
             case 'jqueryui':
-                $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-ui-1.11.3.min.js"></script>';
+                $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-ui-1.12.1.min.js"></script>';
                 break;
             case 'ckeditor':
                 $include = '<script src="'.$hostname.'/assets/js/vendor/ckeditor/ckeditor.js"></script>';
@@ -229,6 +229,7 @@ class View
                 // Special case for jQueryUI and datetimepicker styles
                 if ($normalized == 'jqueryui' && !in_array('jqueryui', $addedSpecial)) {
                     $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/jquery-ui.min.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/jquery-ui-theme.min.css">';
                     array_push($addedSpecial, 'jqueryui');
                     continue;
                 } elseif ($normalized == 'datetimepicker' && !in_array('datetimepicker', $addedSpecial)) {

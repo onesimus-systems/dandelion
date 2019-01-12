@@ -126,8 +126,8 @@ namespace Cheesto {
         if (newStatus !== "Available") {
             // Status requires a return time and optional message
             $("#cheesto-status-form").dialog({
-                height: 440,
-                width: 640,
+                height: 500,
+                width: 700,
                 title: "Ĉeesto Status",
                 modal: true,
                 open: function(evt, ui) {

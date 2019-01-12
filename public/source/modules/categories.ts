@@ -96,7 +96,7 @@ namespace Categories {
         }
 
         const dialog = `${message}${catString}<input type="text" id="new_category">`;
-        $.dialogBox(dialog, addNew, null, { title: "Create new category", buttonText1: "Create", height: 200, width: 500 });
+        $.dialogBox(dialog, addNew, null, { title: "Create new category", buttonText1: "Create", height: 220, width: 500 });
     }
 
     function addNew(): void {
