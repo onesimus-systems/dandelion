@@ -2,22 +2,17 @@
 /// <reference path="../dts/common.d.ts" />
 
 namespace Categories {
-    var currentSelection: number[] = [];
-    var domid: string = "";
-    var urlPrefix: string = "";
-
-    export function setUrlPrefix(pre: string): void {
-        urlPrefix = pre;
-    }
+    let currentSelection: number[] = [];
+    let domid: string = "";
 
     export function setDomID(id: string): void {
         domid = id;
     }
 
     export function grabNextLevel(pid: string): void {
-        var pidSplit = pid.split(":");
-        var level = +pidSplit[0] + 1;
-        var cid = +pidSplit[1];
+        const pidSplit = pid.split(":");
+        const level = +pidSplit[0] + 1;
+        const cid = +pidSplit[1];
 
         if (currentSelection[level]) {
             // This is to ensure that if a category is changed in the upper levels,
@@ -27,7 +22,7 @@ namespace Categories {
 
         currentSelection[level] = cid;
 
-        $.get(urlPrefix + "render/categoriesJson", { pastSelection: JSON.stringify(currentSelection) }, null, "json")
+        $.get("/render/categoriesJson", { pastSelection: JSON.stringify(currentSelection) }, null, "json")
             .done(function (json) {
                 $(domid).replaceWith(renderSelectsFromJson(json));
             });
@@ -50,22 +45,22 @@ namespace Categories {
         const selectSpan = $('<div/>').attr("id", domid.replace(/^#/, ''));
         selectSpan.append(`<span/>`);
 
-        for (var key in json.levels) {
+        for (const key in json.levels) {
             if (!json.levels.hasOwnProperty(key)) {
                 continue;
             }
 
-            var selectRender = $("<select/>").attr("id", `level${key}`);
+            const selectRender = $("<select/>").attr("id", `level${key}`);
             selectRender.change(function() { Categories.selectOnChange(this); });
             selectRender.append(`<option value="">Select:</option>`);
 
-            for (var category in json.levels[key]) {
+            for (const category in json.levels[key]) {
                 if (!json.levels[key].hasOwnProperty(category)) {
                     continue;
                 }
 
-                var cat = json.levels[key][category];
-                var selected = cat.selected ? "selected" : "";
+                const cat = json.levels[key][category];
+                const selected = cat.selected ? "selected" : "";
                 selectRender.append(`<option value="${key}:${cat.id}" ${selected}>${cat.desc}</option>`);
             }
             selectSpan.append(selectRender);
@@ -75,9 +70,9 @@ namespace Categories {
     }
 
     export function renderCategoriesFromString(str: string, elemid: string): void {
-        $.get(urlPrefix + "render/editcat", { catstring: str }, null, "json")
+        $.get("/render/editcat", { catstring: str }, null, "json")
             .done(function (json) {
-                var rendered = renderSelectsFromJson(json);
+                let rendered = renderSelectsFromJson(json);
                 domid = elemid;
 
                 if ($.apiSuccess(json)) {
@@ -92,21 +87,21 @@ namespace Categories {
     }
 
     export function createNew(): void {
-        var catString = `${getCatString()}: `;
-        var message = "Add new category<br><br>";
+        let catString = `${getCatString()}: `;
+        let message = "Add new category<br><br>";
 
         if (currentSelection.length == 1) {
             message = "Create new root category:<br><br>";
             catString = "";
         }
 
-        var dialog = `${message}${catString}<input type="text" id="new_category">`;
+        const dialog = `${message}${catString}<input type="text" id="new_category">`;
         $.dialogBox(dialog, addNew, null, { title: "Create new category", buttonText1: "Create", height: 200, width: 500 });
     }
 
     function addNew(): void {
-        var newCatDesc = $("#new_category").val();
-        var parent = currentSelection[currentSelection.length - 1];
+        const newCatDesc = $("#new_category").val();
+        const parent = currentSelection[currentSelection.length - 1];
 
         if (newCatDesc) {
             $.post("api/i/categories/create", { pid: parent, description: newCatDesc }, null, "json")
@@ -120,18 +115,18 @@ namespace Categories {
     }
 
     export function editCat(): void {
-        var cid = currentSelection[currentSelection.length - 1];
-        var lvl = currentSelection.length - 2;
+        const cid = currentSelection[currentSelection.length - 1];
+        const lvl = currentSelection.length - 2;
 
-        var elt = $(`#level${lvl} option:selected`);
+        const elt = $(`#level${lvl} option:selected`);
 
         if (typeof elt.val() !== "undefined") {
-            var editString = elt.text();
+            const editString = elt.text();
 
-            var dialog = `Edit Category Description:<br><br><input type="text" id="edited_category" value="${editString}">`;
+            const dialog = `Edit Category Description:<br><br><input type="text" id="edited_category" value="${editString}">`;
             $.dialogBox(dialog,
                 function () {
-                    var editedCat = $("#edited_category").val();
+                    const editedCat = $("#edited_category").val();
                     if (editedCat) {
                         $.post("api/i/categories/edit", { cid: cid, description: encodeURIComponent(editedCat) }, null, "json")
                             .done(function (json) {
@@ -149,8 +144,8 @@ namespace Categories {
     }
 
     export function deleteCat(): void {
-        var myCatString = getCatString();
-        var cid = currentSelection[currentSelection.length - 1];
+        const myCatString = getCatString();
+        const cid = currentSelection[currentSelection.length - 1];
 
         if (myCatString !== "") {
             $.confirmBox(`Delete "${myCatString}"?\n\nChildren categories will be reassigned one level up`,
@@ -174,7 +169,7 @@ namespace Categories {
     }
 
     export function getCatString(): string {
-        var catString = "";
+        let catString = "";
         /*
          * Note to future self: The jQuery statement below is messier than I would like. Here's the reason.
          * For some reason, jQuery doesn't recognize that the first select in a category has a selected option.
@@ -188,10 +183,10 @@ namespace Categories {
          * the select elements. What's weirder, is according to the dev console, the option's selected attribute is
          * applied appropiatly, and yet jQuery doesn't see it. I don't know. The below statement works. So that's nice.
          */
-        for (var i = 0; i < currentSelection.length; i++) {
+        for (let i = 0; i < currentSelection.length; i++) {
             if ($(`#level${(i)}`)) {
-                var optVal = `${i}:${currentSelection[i + 1]}`;
-                var elt = $(`#level${(i)} option[value='${optVal}']:first`);
+                const optVal = `${i}:${currentSelection[i + 1]}`;
+                const elt = $(`#level${(i)} option[value='${optVal}']:first`);
                 catString += `${elt.text()}:`;
             }
         }

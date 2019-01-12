@@ -1,13 +1,12 @@
 //jQuery UI extention for an alert box
 // Code from: http://coding.abel.nu/2012/01/jquery-ui-replacement-for-alert/
 $.extend({
-    alert: function(message, title, callback) {
-        if (typeof callback === "undefined") {
-            callback = function() { return; };
-        }
-        $("<div></div>").dialog({
+    alert: function(message: string, title: string, callback: CallableFunction): void {
+        callback = callback || function() {}
+
+        $("<div/>").dialog({
             buttons: { "Ok": function() { $(this).dialog("close"); } },
-            close: function(event, ui) { $(this).remove(); callback(); },
+            close: function(event, ui) { $(this).remove(); callback(event, ui); },
             resizable: false,
             title: title,
             modal: true
@@ -16,31 +15,29 @@ $.extend({
 });
 
 $.extend({
-    decodeHTMLEntities: function(str) {
-        if (str && typeof str === "string") {
-            var element = document.createElement("div");
-            // strip script/html tags
-            str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, "");
-            str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, "");
-            element.innerHTML = str;
-            str = element.textContent;
-            element.textContent = "";
-        }
-
-        return str;
+    decodeHTMLEntities: function(str: string): void {
+        const element = document.createElement("div");
+        // strip script/html tags
+        str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, "");
+        str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, "");
+        element.innerHTML = str;
+        str = element.textContent;
+        element.textContent = "";
     }
 });
 
-$.fn.overflown = function() {
-    var e = this[0];
+$.fn.overflown = function(): boolean {
+    const e = this[0];
     return (e.scrollHeight > e.clientHeight && e.scrollHeight > 220) || e.scrollWidth > e.clientWidth;
 };
 
 $.extend({
-    apiSuccess: function(response: apiResponse) {
+    apiSuccess: function(response: APIResponse): boolean {
         if (response.errorcode === 0) {
             return true;
-        } else if (response.errorcode === 3) {
+        }
+
+        if (response.errorcode === 3) {
             // Code 3 means the user is not logged in
             location.assign("login");
         }
@@ -49,11 +46,8 @@ $.extend({
 });
 
 $.extend({
-    flashMessage: function(msg, domid) {
-        if (typeof domid === "undefined") {
-            domid = "#message";
-        }
-        var message = $(domid);
+    flashMessage: function(msg: string, domid: string="#message"): void {
+        const message = $(domid);
         message.hide();
         message.text(msg);
         message.fadeIn();
@@ -62,18 +56,22 @@ $.extend({
 });
 
 $.extend({
-    confirmBox: function(message, title, yescallback, nocallback) {
-        if (typeof yescallback === "undefined") {
-            yescallback = function() { return; };
-        }
-        if (typeof nocallback === "undefined") {
-            nocallback = function() { return; };
-        }
+    confirmBox: function(message: string, title: string, yescallback: CallableFunction, nocallback: CallableFunction) {
+        yescallback = yescallback || function() {}
+        nocallback = nocallback || function() {}
 
         $("<div></div>").dialog({
             buttons: {
-                "Ok": function() { $(this).dialog("close"); yescallback(); $(this).remove(); },
-                "Cancel": function() { $(this).dialog("close"); nocallback(); $(this).remove(); }
+                "Ok": function() {
+                    $(this).dialog("close");
+                    yescallback();
+                    $(this).remove();
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                    nocallback();
+                    $(this).remove();
+                }
             },
             resizable: false,
             title: title,
@@ -84,9 +82,9 @@ $.extend({
 
 $.extend({
     urlParams: function(param: string): string {
-        var parts = location.search.substring(1).split('&');
-        for (var i = 0; i < parts.length; i++) {
-            var nv = parts[i].split('=');
+        const parts = location.search.substring(1).split('&');
+        for (let i = 0; i < parts.length; i++) {
+            const nv = parts[i].split('=');
             if (!nv[0]) continue;
             if (nv[0] === param) return nv[1];
         }
@@ -95,56 +93,39 @@ $.extend({
 });
 
 $.extend({
-    dialogBox: function(html, yescallback, nocallback, customize) {
+    dialogBox: function(html: JQuery, yescallback: CallableFunction, nocallback: CallableFunction, options: DialogOptions): void {
         // Check customization settings
-        if (typeof customize == "undefined") {
-            customize = {};
-        }
-        if (typeof customize.height == "undefined") {
-            customize.height = 300;
-        }
-        if (typeof customize.width == "undefined") {
-            customize.width = 450;
-        }
-        if (typeof customize.title == "undefined") {
-            customize.title = "";
-        }
-        if (typeof customize.buttonText1 == "undefined") {
-            customize.buttonText1 = "Okay";
-        }
-        if (typeof customize.buttonText2 == "undefined") {
-            customize.buttonText2 = "Cancel";
-        }
-        if (typeof yescallback === "undefined" || yescallback === null) {
-            yescallback = function() { return; };
-        }
-        if (typeof nocallback === "undefined" || nocallback === null) {
-            nocallback = function() { return; };
-        }
+        options = options || {};
+        options.height = options.height || 300;
+        options.width = options.width || 450;
+        options.title = options.title || "";
+        options.buttonText1 = options.buttonText1 || "Okay";
+        options.buttonText2 = options.buttonText2 || "Cancel";
+
+        yescallback = yescallback || function() {}
+        nocallback = nocallback || function() {}
 
         // Build dialog buttons
-        var dialog_buttons = {};
-        dialog_buttons[customize.buttonText1] = function() {
+        const dialog_buttons = {};
+        dialog_buttons[options.buttonText1] = function() {
             $(this).dialog("close");
             yescallback();
             $(this).remove();
-            return;
         };
-        dialog_buttons[customize.buttonText2] = function() {
+        dialog_buttons[options.buttonText2] = function() {
             $(this).dialog("close");
             nocallback();
             $(this).remove();
-            return;
         };
 
         // Build and show dialog
-        var dialogBox = $("<div/>");
+        const dialogBox = $("<div/>");
         dialogBox.append(html);
         dialogBox.dialog({
-            height: customize.height,
-            width: customize.width,
+            height: options.height,
+            width: options.width,
             modal: true,
-            title: customize.title,
+            title: options.title,
             show: {
                 effect: "fade",
                 duration: 500
@@ -155,7 +136,5 @@ $.extend({
             },
             buttons: dialog_buttons
         });
-
-        return;
     }
 });

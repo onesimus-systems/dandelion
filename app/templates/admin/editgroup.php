@@ -60,4 +60,4 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['editgroup','jqueryui']])
     </ul>
 </section>
 
-<?= $this->loadJS(['jquery', 'jqueryui', 'common', 'groupmanager']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'groupmanager']) ?>

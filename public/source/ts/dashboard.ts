@@ -1,78 +1,78 @@
 import Cheesto from 'cheesto';
 import Categories from 'categories';
+import "common";
 
-var search = false,
-    refreshc: number;
+let search = false;
 
-$(document).ready(function() {
+function init() {
     Refresh.init();
     View.init();
     Search.init();
     Cheesto.mount("messages-cheesto");
 
     $("#show-cheesto-button").click(function() {
-        Section.show(this, "messages-panel");
+        showSection(this, "messages-panel");
     });
 
     $("#show-logs-button").click(function() {
-        Section.show(this, "logs-panel");
+        showSection(this, "logs-panel");
     });
-});
+}
 
-const Refresh = {
-    init: function(): void {
+namespace Refresh {
+    let refreshc: number;
+
+    export function init(): void {
         if ($("#log-list").length) {
-            Refresh.refreshLog();
-            Refresh.startrefresh();
+            refreshLog();
+            startrefresh();
         }
-    },
+    }
 
-    startrefresh: function(): void {
-        refreshc = setInterval(function() { Refresh.refreshLog(); }, 60000);
-    },
+    export function startrefresh(): void {
+        refreshc = setInterval(function() { refreshLog(); }, 60000);
+    }
 
-    stoprefresh: function(): void {
+    export function stoprefresh(): void {
         clearInterval(refreshc);
-    },
+    }
 
-    refreshLog: function(clearSearch?: boolean): void {
+    export function refreshLog(clearSearch?: boolean): void {
         if (clearSearch) {
             search = false;
-            Refresh.startrefresh();
+            startrefresh();
         }
 
         if (!search) {
-            $.getJSON("api/i/logs/read", {}, function(json: apiResponse) {
+            $.getJSON("api/i/logs/read", {}, function(json: APIResponse) {
                 if ($.apiSuccess(json)) {
                     View.makeLogView(json.data);
                 } else {
-                    Refresh.stoprefresh();
+                    stoprefresh();
                 }
             });
         }
     }
 }; // Refresh
 
-const Section = {
-    show: function(elem: any, panel: string): void {
-        if (elem.innerHTML.match(/^Show\s/)) {
-            elem.innerHTML = elem.innerHTML.replace(/^Show\s/, "Hide ");
-        } else {
-            elem.innerHTML = elem.innerHTML.replace(/^Hide\s/, "Show ");
-        }
-
-        $(`#${panel}`).toggleClass("enabled");
+function showSection(elem: any, panel: string): void {
+    if (elem.innerHTML.match(/^Show\s/)) {
+        elem.innerHTML = elem.innerHTML.replace(/^Show\s/, "Hide ");
+    } else {
+        elem.innerHTML = elem.innerHTML.replace(/^Hide\s/, "Show ");
     }
-};
 
-const View = {
-    prevPage: -1,
-    nextPage: -1,
-    currentOffset: -1,
+    $(`#${panel}`).toggleClass("enabled");
+}
 
-    init: function(): void {
-        $("#prev-page-button").click(View.loadPrevPage);
-        $("#next-page-button").click(View.loadNextPage);
+namespace View {
+    let prevPage = -1;
+    let nextPage = -1;
+    let currentOffset = -1;
+
+    export function init(): void {
+        $("#prev-page-button").click(loadPrevPage);
+        $("#next-page-button").click(loadNextPage);
         $("#create-log-button").click(function() {
             location.assign("log/new");
         });
@@ -80,73 +80,80 @@ const View = {
             $("#search-query").val("");
             Refresh.refreshLog(true);
         });
-    },
+    }
 
-    makeLogView: function(data: any): void {
-        var logView = $("#log-list");
-        var newLogs = $(View.displayLogs(data.logs));
+    export function makeLogView(data: any): void {
+        const logView = $("#log-list");
+        const newLogs = $(displayLogs(data.logs));
         logView.replaceWith(newLogs);
-        View.pageControls(data.metadata);
-        View.currentOffset = data.metadata.offset;
-        View.checkOverflow(newLogs);
-    },
+        pageControls(data.metadata);
+        currentOffset = data.metadata.offset;
+        checkOverflow(newLogs);
+        linkCategorySearchLinks();
+    }
 
-    checkOverflow: function(logView: JQuery): void {
-        var logs = $(logView[0].childNodes);
+    function checkOverflow(logView: JQuery): void {
+        const logs = $(logView[0].childNodes);
         logs.each(function(index, elem) {
-            var b = $(elem.childNodes[1]);
+            const b = $(elem.childNodes[1]);
             if (b.overflown()) {
-                var id = b.data("log-id");
+                const id = b.data("log-id");
                 $(`<div class="log-overflow"><a href="log/${id}" target="_blank">Read more...</a></div>`).insertAfter(b);
             }
         });
-    },
+    }
 
-    displayLogs: function(data: any): string {
-        var logs = `<div id="log-list">`;
+    function linkCategorySearchLinks(): void {
+        $('.category-search-link').click((event) => {
+            Search.searchLogLink(event.target.innerHTML);
+        });
+    }
 
-        for (var key in data) {
+    function displayLogs(data: any): string {
+        let logs = `<div id="log-list">`;
+
+        for (const key in data) {
             if (!data.hasOwnProperty(key)) {
                 continue;
             }
 
-            var log = data[key];
+            const log = data[key];
 
-            var creator = log.fullname;
+            let creator = log.fullname;
             if (creator === "" || creator === null) {
                 creator = "Deleted User";
             }
 
             // Display each log entry
-            var html = `<div class="log-entry"><span class="log-title"><a href="log/${log.id}">${log.title}</a></span>`;
+            let html = `<div class="log-entry"><span class="log-title"><a href="log/${log.id}">${log.title}</a></span>`;
 
             html += `<div class="log-body" data-log-id="${log.id}">${log.body}</div><div class="log-metadata"><span class="log-meta-author">Created by ${creator} on ${log.date_created} @ ${log.time_created} `;
 
             if (log.is_edited == "1") { html += "(Amended)"; }
 
-            html += `</span><span class="log-meta-cat">Categorized as <a href="#" onClick="Search.searchLogLink('${log.category}');">${log.category}</a></span>`;
+            html += `</span><span class="log-meta-cat">Categorized as <a href="#" class="category-search-link">${log.category}</a></span>`;
             html += `<span class="log-meta-comments">Comments: <a href="log/${log.id}#comments">${log.num_of_comments}</a></span></div></div>`;
 
             logs += html;
         }
         logs += "</div>";
         return logs;
-    },
+    }
 
-    pageControls: function(data: any): void {
+    function pageControls(data: any): void {
         if (data.offset > 0) {
-            View.prevPage = data.offset - data.limit;
+            prevPage = data.offset - data.limit;
             $("#prev-page-button").show();
         } else {
-            View.prevPage = -1;
+            prevPage = -1;
             $("#prev-page-button").hide();
         }
 
         if (data.offset + data.limit < data.logSize && data.resultCount == data.limit) {
-            View.nextPage = data.offset + data.limit;
+            nextPage = data.offset + data.limit;
             $("#next-page-button").show();
         } else {
-            View.nextPage = -1;
+            nextPage = -1;
             $("#next-page-button").hide();
         }
 
@@ -155,31 +162,31 @@ const View = {
         } else {
             $("#clear-search-button").hide();
         }
-    },
+    }
 
-    loadPrevPage: function(): void {
-        if (View.prevPage >= 0) {
+    function loadPrevPage(): void {
+        if (prevPage >= 0) {
             if (search) {
-                Search.searchLog(View.prevPage);
+                Search.searchLog(prevPage);
             } else {
-                View.pagentation(View.prevPage);
+                pagentation(prevPage);
             }
         }
-    },
+    }
 
-    loadNextPage: function(): void {
-        if (View.nextPage >= 0) {
+    function loadNextPage(): void {
+        if (nextPage >= 0) {
             if (search) {
-                Search.searchLog(View.nextPage);
+                Search.searchLog(nextPage);
             } else {
-                View.pagentation(View.nextPage);
+                pagentation(nextPage);
             }
         }
-    },
+    }
 
-    pagentation: function(pageOffset: number): void {
+    function pagentation(pageOffset: number): void {
         $.getJSON("api/i/logs/read", { offset: pageOffset }, function(json) {
-            View.makeLogView(json.data);
+            makeLogView(json.data);
 
             if (pageOffset <= 0) {
                 Refresh.refreshLog();
@@ -191,19 +198,19 @@ const View = {
     }
 }; // View
 
-const Search = {
-    init: function(): void {
-        $("#search-btn").click(Search.searchLog);
-        $("#query-builder-btn").click(Search.showBuilder);
-        $("#search-query").on("keypress", Search.check);
+namespace Search {
+    export function init(): void {
+        $("#search-btn").click(searchLog);
+        $("#query-builder-btn").click(showBuilder);
+        $("#search-query").on("keypress", check);
         $("#qb-date1").change(function() {
             if (!$("#qb-date2").val()) {
                 $("#qb-date2").val($("#qb-date1").val());
             }
         });
-    },
+    }
 
-    showBuilder: function(): void {
+    function showBuilder(): void {
         $("#query-builder-form").dialog({
             height: 380,
             width: 540,
@@ -224,29 +231,29 @@ const Search = {
             },
             buttons: {
                 "Search": function() {
-                    Search.buildQuery();
+                    buildQuery();
                     $(this).dialog("close");
-                    Search.clearBuilderForm();
+                    clearBuilderForm();
                 },
                 Cancel: function() {
                     $(this).dialog("close");
-                    Search.clearBuilderForm();
+                    clearBuilderForm();
                 }
             }
         });
-    },
+    }
 
-    buildQuery: function(): void {
-        var title = $("#qb-title");
-        var titleNot = $("#qb-title-not");
-        var body = $("#qb-body");
-        var bodyNot = $("#qb-body-not");
-        var dateNot = $("#qb-date-not");
-        var date1 = $("#qb-date1");
-        var date2 = $("#qb-date2");
-        var cat = Categories.getCatString();
-        var catNot = $("#qb-cat-not");
-        var query = "";
+    function buildQuery(): void {
+        const title = $("#qb-title");
+        const titleNot = $("#qb-title-not");
+        const body = $("#qb-body");
+        const bodyNot = $("#qb-body-not");
+        const dateNot = $("#qb-date-not");
+        const date1 = $("#qb-date1");
+        const date2 = $("#qb-date2");
+        const cat = Categories.getCatString();
+        const catNot = $("#qb-cat-not");
+        let query = "";
 
         if (title.val()) {
             if (titleNot.prop("checked")) {
@@ -265,10 +272,7 @@ const Search = {
         }
 
         if (date1.val()) {
-            var negate = "";
-            if (dateNot.prop("checked")) {
-                negate = "!";
-            }
+            const negate = dateNot.prop("checked") ? "!" : "";
             if (date2.val() && date1.val() != date2.val()) {
                 query += ` date:"${negate}${date1.val()} to ${date2.val()}"`;
             } else {
@@ -285,10 +289,10 @@ const Search = {
         }
 
         $("#search-query").val(query);
-        Search.exec(query, 0);
-    },
+        exec(query, 0);
+    }
 
-    clearBuilderForm: function(): void {
+    function clearBuilderForm(): void {
         $("#qb-title").val("");
         $("#qb-body").val("");
         $("#qb-date1").val("");
@@ -298,37 +302,37 @@ const Search = {
         $("#qb-date-not").prop("checked", false);
         $("#qb-cat-not").prop("checked", false);
         $("#categories2").empty();
-    },
+    }
 
     // Checks if enter key was pressed, if so search
-    check: function(e: any): void {
+    function check(e: any): void {
         if (e.keyCode == 13) {
             e.preventDefault();
-            Search.searchLog();
+            searchLog();
         }
-    },
+    }
 
     // Execute search from button or enter key
-    searchLog: function(offset?: number): void {
+    export function searchLog(offset?: number): void {
         if (typeof offset !== "number") { offset = 0; }
-        var query = $("#search-query").val();
-        Search.exec(query, offset);
-    },
+        const query = $("#search-query").val();
+        exec(query, offset);
+    }
 
     // Execute category search from link
-    searchLogLink: function(query: string): void {
+    export function searchLogLink(query: string): void {
         query = ` category:"${query}"`;
         if (search) {
-            var queryBar = $("#search-query").val();
+            const queryBar = $("#search-query").val();
             $("#search-query").val(queryBar + query);
         } else {
             $("#search-query").val(query);
         }
-        Search.exec(query, 0);
-    },
+        exec(query, 0);
+    }
 
     // Send search query to server
-    exec: function(query: string, offset?: number): boolean {
+    function exec(query: string, offset?: number): boolean {
         if (typeof query === "undefined") { return false; }
         if (typeof offset === "undefined") { offset = 0; }
 
@@ -342,3 +346,5 @@ const Search = {
             });
     }
 }; // Search
+
+init();

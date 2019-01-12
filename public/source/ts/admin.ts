@@ -1,129 +1,120 @@
 import Categories from 'categories';
+import "common";
 
-const Admin = {
-    init: function() {
-        "use strict";
+function init(): void {
+    $("#add-user-btn").click(showAddUserDialog);
+    $("#add-role-button").click(showAddGroupDialog);
 
-        $("#add-user-btn").click(Admin.showAddUserDialog);
-        $("#add-role-button").click(Admin.showAddGroupDialog);
+    Categories.grabFirstLevel("#categories");
+    $("#add-category-button").click(Categories.createNew);
+    $("#edit-category-button").click(Categories.editCat);
+    $("#delete-category-button").click(Categories.deleteCat);
 
-        Categories.grabFirstLevel("#categories");
-        $("#add-category-button").click(Categories.createNew);
-        $("#edit-category-button").click(Categories.editCat);
-        $("#delete-category-button").click(Categories.deleteCat);
-    },
+    $('[data-group-id]').click(function() {
+        editGroup($(this).data('group-id'));
+    });
 
-    editUser: function(userid) {
-        location.assign(`admin/edituser/${userid}`);
-    },
+    $('[data-user-id]').click(function() {
+        editUser($(this).data('user-id'));
+    });
+}
 
-    editGroup: function(group) {
-        location.assign(`admin/editgroup/${group}`);
-    },
+function editUser(userid: string): void {
+    location.assign(`admin/edituser/${userid}`);
+}
 
-    showAddUserDialog: function() {
-        "use strict";
+function editGroup(group: string): void {
+    location.assign(`admin/editgroup/${group}`);
+}
 
-        $.get("api/i/groups/getlist", {}, null, "json")
-            .done(function(json) {
-                if ($.apiSuccess(json)) {
-                    var rightsList = json.data;
-
-                    var table = $("<table/>").attr("id", "add-user-table");
-                    table.append(`<tr><td>Username:</td><td><input type="text" id="add_user" autocomplete="off"></td></tr>`);
-                    table.append(`<tr><td>Password:</td><td><input type="password" id="add_pass"></td></tr>`);
-                    table.append(`<tr><td>Real Name:</td><td><input type="text" id="add_fullname" autocomplete="off"></td></tr>`);
-                    table.append(`<tr><td>Force Password Reset:</td><td><input type="checkbox" id="add_force_reset" checked="true"></td></tr>`);
-
-                    var roleRow = $("<tr/>");
-                    roleRow.append("<td>Role:</td>");
-
-                    var roleCell = $("<td/>");
-                    var select = $("<select/>").attr("id", "add_group");
-                    select.append(`<option value="0">Select:</option>`);
-                    for (var key in rightsList) {
-                        if (!rightsList.hasOwnProperty(key)) {
-                            continue;
-                        }
-
-                        var group = rightsList[key];
-                        select.append(`<option value="${group.id}">${group.name}</option>`);
-                    }
-                    roleCell.append(select);
-                    roleRow.append(roleCell);
-                    table.append(roleRow);
-                    table = $("<form/>").append(table);
-
-                    $.dialogBox(table.html(), Admin.addUser, null, {
-                        title: "Add new user",
-                        buttonText1: "Add",
-                        height: 350
-                    });
-                } else {
-                    $.alert(json.status, "User Management");
-                }
+function showAddUserDialog(): void {
+    $.get("api/i/groups/getlist", {}, null, "json")
+        .done(function(json) {
+            if (!$.apiSuccess(json)) {
+                $.alert(json.status, "User Management");
                 return;
-            });
-        return;
-    },
+            }
 
-    addUser: function() {
-        "use strict";
+            const rightsList = json.data;
 
-        var username = $("#add_user").val();
-        var password = $("#add_pass").val();
-        var fullname = $("#add_fullname").val();
-        var group = $("#add_group").val();
-        var force_reset = $("#add_force_reset").prop("checked");
+            const table = $("<table/>").attr("id", "add-user-table");
+            table.append(`<tr><td>Username:</td><td><input type="text" id="add_user" autocomplete="off"></td></tr>`);
+            table.append(`<tr><td>Password:</td><td><input type="password" id="add_pass"></td></tr>`);
+            table.append(`<tr><td>Real Name:</td><td><input type="text" id="add_fullname" autocomplete="off"></td></tr>`);
+            table.append(`<tr><td>Force Password Reset:</td><td><input type="checkbox" id="add_force_reset" checked="true"></td></tr>`);
 
-        if (!username || !password || !fullname || group == 0) {
-            $.alert(
-                "Username, password, full name, and group are required",
-                "Add User",
-                Admin.showAddUserDialog
-            );
-            return;
-        }
+            const roleRow = $("<tr/>");
+            roleRow.append("<td>Role:</td>");
 
-        $.post("api/i/users/create", {username: username, password: password, fullname: fullname, role: group, force_reset: force_reset}, null, "json")
-            .done(function(data) {
-                if (data.errorcode === 0) {
-                    location.reload();
-                    return;
+            const roleCell = $("<td/>");
+            const select = $("<select/>").attr("id", "add_group");
+            select.append(`<option value="0">Select:</option>`);
+            for (const key in rightsList) {
+                if (!rightsList.hasOwnProperty(key)) {
+                    continue;
                 }
 
-                $.alert(data.data, "Add User", Admin.showAddUserDialog);
-            }).fail(function(req) {
-                var json = JSON.parse(req.responseText);
-                $.alert(json.status, "Add User");
+                const group = rightsList[key];
+                select.append(`<option value="${group.id}">${group.name}</option>`);
+            }
+            roleCell.append(select);
+            roleRow.append(roleCell);
+            table.append(roleRow);
+
+            $.dialogBox($("<form/>").append(table).html(), addUser, null, {
+                title: "Add new user",
+                buttonText1: "Add",
+                height: 350
             });
-        return;
-    },
+        });
+}
 
-    showAddGroupDialog: function() {
-        "use strict";
+function addUser(): void {
+    const username = $("#add_user").val();
+    const password = $("#add_pass").val();
+    const fullname = $("#add_fullname").val();
+    const group = $("#add_group").val();
+    const force_reset = $("#add_force_reset").prop("checked");
 
-        var dialog = `Group Name:<br><br><input type="text" id="new_group_name">`;
-        $.dialogBox(
-            dialog,
-            Admin.addGroup,
-            null,
-            {title: "Create new group", buttonText1: "Create", height: 200, width: 300}
+    if (!username || !password || !fullname || group == 0) {
+        $.alert(
+            "Username, password, full name, and group are required",
+            "Add User",
+            showAddUserDialog
         );
-    },
-
-    addGroup: function() {
-        "use strict";
-
-        var groupName = $("#new_group_name").val();
-
-        $.post("api/i/groups/create", {name: groupName}, null, "json")
-            .done(function(data) {
-                location.reload();
-            });
+        return;
     }
-};
 
-(function() {
-    Admin.init();
-})();
+    $.post("api/i/users/create", {username: username, password: password, fullname: fullname, role: group, force_reset: force_reset}, null, "json")
+        .done(function(data) {
+            if (data.errorcode === 0) {
+                location.reload();
+                return;
+            }
+
+            $.alert(data.data, "Add User", showAddUserDialog);
+        }).fail(function(req) {
+            const json = JSON.parse(req.responseText);
+            $.alert(json.status, "Add User");
+        });
+}
+
+function showAddGroupDialog(): void {
+    $.dialogBox(
+        'Group Name:<br><br><input type="text" id="new_group_name">',
+        addGroup,
+        null,
+        {title: "Create new group", buttonText1: "Create", height: 200, width: 300}
+    );
+}
+
+function addGroup(): void {
+    const groupName = $("#new_group_name").val();
+
+    $.post("api/i/groups/create", {name: groupName}, null, "json")
+        .done(function(data) {
+            location.reload();
+        });
+}
+
+init();

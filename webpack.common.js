@@ -5,7 +5,6 @@ module.exports = {
   entry: {
     addlog: './public/source/ts/addlog.ts',
     admin: './public/source/ts/admin.ts',
-    common: './public/source/ts/common.ts',
     dashboard: './public/source/ts/dashboard.ts',
     editlog: './public/source/ts/editlog.ts',
     groupmanager: './public/source/ts/groupmanager.ts',

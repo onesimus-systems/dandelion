@@ -37,5 +37,5 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['addlog']]);
     </div>
 </div>
 
-<?= $this->loadJS(['jquery', 'common', 'addlog', 'ckeditor']); ?>
+<?= $this->loadJS(['jquery', 'addlog', 'ckeditor']); ?>
 <!-- End Page Body -->

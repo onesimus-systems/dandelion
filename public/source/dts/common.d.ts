@@ -1,6 +1,6 @@
 /// <reference path="jquery.d.ts" />
 
-interface dialogBoxOptions {
+interface DialogOptions {
     height?: number;
     width?: number;
     title?: string;
@@ -8,7 +8,7 @@ interface dialogBoxOptions {
     buttonText2?: string;
 }
 
-interface apiResponse {
+interface APIResponse {
     data: any;
     errorcode: number;
     module: string;
@@ -19,10 +19,10 @@ interface apiResponse {
 interface JQueryStatic {
     alert(message: string, title: string, callback?: () => void): void;
     decodeHTMLEntities(str: string): string;
-    apiSuccess(response: apiResponse): boolean;
+    apiSuccess(response: APIResponse): boolean;
     flashMessage(message: string, domid?: string): void;
     confirmBox(message: string, title: string, ycallback?: () => void, ncallback?: () => void): void;
-    dialogBox(html: string, ycallback?: () => void, ncallback?: () => void, options?: dialogBoxOptions): void;
+    dialogBox(html: string, ycallback?: () => void, ncallback?: () => void, options?: DialogOptions): void;
     urlParams(param: string): string;
 }
 

@@ -1,6 +1,7 @@
 import Categories from 'categories';
+import "common";
 
-$(document).ready(function (): void {
+function init() {
     renderCategories();
 
     CKEDITOR.replace("body");
@@ -13,12 +14,13 @@ $(document).ready(function (): void {
             .appendTo(this);
         return true;
     });
-});
+}
 
 function renderCategories(): void {
-    Categories.setUrlPrefix("../../");
     Categories.setDomID("#categories");
-    var json: string = $("#category-json").val();
-    var rendered = Categories.renderSelectsFromJson(JSON.parse(json));
+    const json: string = $("#category-json").val();
+    const rendered = Categories.renderSelectsFromJson(JSON.parse(json));
     $("#categories").replaceWith(rendered);
 }
+
+init();

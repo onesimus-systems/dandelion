@@ -1,7 +1,6 @@
 /// <reference path="../dts/jquery.d.ts" />
 /// <reference path="../dts/jqueryui.d.ts" />
 /// <reference path="../dts/datetimepicker.d.ts" />
-import "common";
 
 interface cheestoReadResponse {
     // 0 to many individual status arrays
@@ -70,7 +69,7 @@ namespace Cheesto {
         statusSelect.append(`<option value="-1">Set Status:</option>`);
 
         for (const key2 in statusOptions) {
-            var html = `<option value="${statusOptions[key2]}">${statusOptions[key2]}</option>`;
+            const html = `<option value="${statusOptions[key2]}">${statusOptions[key2]}</option>`;
             statusSelect.append(html);
         }
 

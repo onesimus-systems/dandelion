@@ -31,7 +31,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['admin','jqueryui']]);
             <?php
             foreach ($userlist as $user) {
                 $user['disabled'] = $user['disabled'] ? 'Yes' : 'No';
-                echo '<tr onClick="Admin.editUser('.$this->e($user['id']).')">';
+                echo '<tr data-user-id="'.$this->e($user['id']).'">';
                 echo '<td>'.$this->e($user['fullname']).'</td>';
                 echo '<td>'.$this->e($user['username']).'</td>';
                 echo '<td>'.$this->e($grouplist[$user['group_id']]['name']).'</td>';
@@ -59,7 +59,7 @@ if ($grouplist): ?>
 
             <?php
             foreach ($grouplist as $id => $group) {
-                echo '<tr onClick="Admin.editGroup(\''.$this->e($id).'\')">';
+                echo '<tr data-group-id="'.$this->e($id).'">';
                 echo '<td>'.$this->e($group['name']).'</td>';
                 echo '<td>'.$this->e(implode(', ', $group['users'])).'</td>';
                 echo '</tr>';
@@ -100,5 +100,5 @@ if ($showUpdateSection): ?>
 </section>
 <?php endif;
 
-echo $this->loadJS(['jquery', 'jqueryui', 'common', 'admin']);
+echo $this->loadJS(['jquery', 'jqueryui', 'admin']);
 ?>
