@@ -1,5 +1,5 @@
-import Categories from 'categories';
-import "common";
+import Categories from '../modules/categories';
+import "../modules/common";
 
 function init(): void {
     $("#add-user-btn").click(showAddUserDialog);

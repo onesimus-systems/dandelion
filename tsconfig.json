@@ -2,25 +2,19 @@
     "compilerOptions": {
         "moduleResolution": "node",
         "outDir": "./public/dist/js",
-        "module": "es6",
+        "module": "commonjs",
         "target": "es5",
-        "jsx": "react",
-        "allowJs": true,
-        "baseUrl": ".",
-        "paths": {
-            "*": [
-                "*",
-                "public/source/modules/*"
-            ]
-        },
+        "rootDirs": [
+            "./public/source",
+            "./webpack.*",
+        ],
+
         "typeRoots": [
             "public/source/dts"
         ]
     },
     "exclude": [
-        "node_modules"
-    ],
-    "include": [
-        "public/source/ts/*.ts"
+        "node_modules",
+        "public/dist"
     ]
 }

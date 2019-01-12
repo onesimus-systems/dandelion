@@ -1,6 +1,6 @@
 /// <reference path="../dts/ckeditor.d.ts" />
-import Categories from 'categories';
-import "common";
+import Categories from '../modules/categories';
+import "../modules/common";
 
 $(document).ready(function(): void {
     Categories.grabFirstLevel("#categories");

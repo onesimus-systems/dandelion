@@ -1,4 +1,4 @@
-import "common";
+import "../modules/common";
 
 function init(): void {
     const disableBtn = $("#disable-user-btn");

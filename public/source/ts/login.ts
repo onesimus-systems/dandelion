@@ -1,4 +1,4 @@
-import "common";
+import "../modules/common";
 
 function init(): void {
     const username = getCookie("dan_username");

@@ -1,11 +1,12 @@
-import Cheesto from 'cheesto';
-import Categories from 'categories';
-import "common";
+import Cheesto from '../modules/cheesto';
+import Categories from '../modules/categories';
+import "../modules/common";
+import * as Elm from '../elm/LogTable.elm';
 
 let search = false;
 
 function init() {
-    Refresh.init();
+    // Refresh.init();
     View.init();
     Search.init();
     Cheesto.mount("messages-cheesto");
@@ -16,6 +17,10 @@ function init() {
 
     $("#show-logs-button").click(function() {
         showSection(this, "logs-panel");
+    });
+
+    Elm.Elm.Main.init({
+        node: document.getElementById('log-list')
     });
 }
 

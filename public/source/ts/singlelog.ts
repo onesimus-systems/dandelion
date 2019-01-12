@@ -1,4 +1,4 @@
-import "common";
+import "../modules/common";
 
 function init() {
     $("#add-comment-btn").click(showAddCommentForm);

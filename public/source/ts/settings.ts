@@ -1,4 +1,4 @@
-import "common";
+import "../modules/common";
 
 declare var page: string;
 

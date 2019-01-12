@@ -1,4 +1,4 @@
-import "common";
+import "../modules/common";
 
 function init(): void {
     $("#save-btn").click(save);
