@@ -44,11 +44,11 @@
 
         <footer>
             <span class="footer-info">
-                <span class="dash">Copyright &copy;2015 Onesimus Systems</span>
+                <span class="dash">Copyright &copy;2019 Onesimus Systems</span>
                 <span class="dash">License: <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank">GPLv3</a></span>
                 <span class="dash">Version: <?= $this->e($appVersion) ?></span>
                 <span class="dash"><a href="<?= $this->e($hostname) ?>/about">About</a></span>
-                <span><a href="http://onesimussystems.com/dandelion" target="_blank">Help</a></span>
+                <span><a href="http://blog.onesimussystems.com/dandelion" target="_blank">Help</a></span>
             </span>
         </footer>
     </body>

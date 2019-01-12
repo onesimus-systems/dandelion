@@ -317,7 +317,7 @@ class View
     public static function redirect($page, $urlParams = [])
     {
         $app = Application::getInstance();
-        $allPages = array(
+        $allPages = [
             'home' => '',
             'homepage' => '',
             'index' => '',
@@ -329,8 +329,7 @@ class View
             'about' => 'about',
             'installer' => 'install/index.php',
             'resetPassword' => 'reset',
-            'update' => 'update'
-        );
+        ];
 
         if (!array_key_exists($page, $allPages)) {
             trigger_error($page . ' is not an available redirect page.', E_USER_ERROR);

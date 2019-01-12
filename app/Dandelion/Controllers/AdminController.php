@@ -26,13 +26,6 @@ class AdminController extends BaseController
         $userlist = [];
         $grouplist = [];
         $grouplist2 = [];
-        $updateArray = [];
-        $updateArray = [
-            'available' => false,
-            'current' => Application::VERSION,
-            'url' => '',
-            'latest' => '',
-        ];
 
         if ($this->authorized($this->sessionUser, 'manage_current_users')) {
             $userObj = new Users(Repos::makeRepo('Users'));
@@ -53,27 +46,12 @@ class AdminController extends BaseController
             }
         }
 
-        if (Config::get('checkForUpdates')) {
-            $latest = @file_get_contents(Config::get('updateUrl'));
-            if ($latest !== false) {
-                $latest = json_decode($latest, true);
-                $updateArray['latest'] = $latest['version'];
-
-                if (version_compare($latest['version'], Application::VERSION, '>')) {
-                    $updateArray['available'] = true;
-                    $updateArray['url'] = $latest['url'];
-                }
-            }
-        }
-
         $template = new Template($this->app);
         $template->addData([
             'userRights' => $this->rights,
             'userlist' => $userlist,
             'grouplist' => $grouplist2,
             'catList' => $this->authorized($this->sessionUser, 'manage_categories'),
-            'showUpdateSection' => Config::get('checkForUpdates'),
-            'updates' => $updateArray
         ]);
         $template->addFolder('admin', $this->app->paths['app'].'/templates/admin');
         $this->setResponse($template->render('admin::admin', 'Administration'));

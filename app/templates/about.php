@@ -11,20 +11,20 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
-	<h2>About</h2>
+    <h2>About</h2>
 
-	<p class="noindent">
-		<strong>Version</strong>: <?= $this->e($appVersion) ?> "<?= $this->e($appVersionName) ?>"
-	</p>
+    <p class="noindent">
+        <strong>Version</strong>: <?= $this->e($appVersion) ?> "<?= $this->e($appVersionName) ?>"
+    </p>
 
     <h3>What is Dandelion:</h3>
     <p>
-    	Dandelion is designed to be a manual logging platform that can be used in a wide variety of environments. It was inspired and conceived out of an IT environment with the need to log changes to infrastructure. Dandelion provides a clean, easy to use interface for creating log entries so you remember what you did last Tuesday.
+        Dandelion is designed to be a manual logging platform that can be used in a wide variety of environments. It was inspired and conceived out of an IT environment with the need to log changes to infrastructure. Dandelion provides a clean, easy to use interface for creating log entries so you remember what you did last Tuesday.
     </p>
 
     <h3>Creator:</h3>
     <p>
-    	Lee Keitel, Onesimus Systems &lt;keitellf@gmail.com&gt;
+        Lee Keitel, Onesimus Systems &lt;lee@onesimussystems.com&gt;
     </p>
 
     <h3>Source:</h3>
@@ -32,22 +32,22 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
         The source code for Dandelion is availabe on <a href="https://github.com/dragonrider23/dandelion" target="_blank">GitHub</a>.
     </p>
 
-	<h3>Copyright:</h3>
+    <h3>Copyright:</h3>
     <p class="noindent">
-    	Dandelion - Web-based entry log journal.<br>
-		Copyright &copy; 2015  Lee Keitel, Onesimus Systems<br><br>
+        Dandelion - Web-based entry log journal.<br>
+        Copyright &copy; 2019  Lee Keitel, Onesimus Systems<br><br>
 
-		This program is free software: you can redistribute it and/or modify
-		it under the terms of the GNU General Public License version 3 as published by
-		the Free Software Foundation.<br><br>
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License version 3 as published by
+        the Free Software Foundation.<br><br>
 
-		This program is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-		GNU General Public License for more details.<br><br>
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.<br><br>
 
-		A copy of the license is available in LICENSE.md.
-		You can also read the license online at <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_BLANK">https://www.gnu.org/licenses/gpl-3.0.html</a>.
+        A copy of the license is available in LICENSE.md.
+        You can also read the license online at <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_BLANK">https://www.gnu.org/licenses/gpl-3.0.html</a>.
     </p>
 </div>
 <!-- End Page Body -->

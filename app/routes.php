@@ -16,9 +16,8 @@ Router::group(['rprefix' => '\Dandelion\Controllers\\'], [
     ['get', '/login', 'AuthController@loginPage'],
     ['post', '/login', 'AuthController@login'],
     ['get', '/logout', 'AuthController@logout'],
-    ['get', '/update', 'UpdateController@update'],
 
-    ['any', '/api/{?module}/{?method}', 'ApiController@apiCall']
+    ['any', '/api/{?module}/{?method}', 'ApiController@apiCall'],
 ]);
 
 // Authentication required for these routes, sets last accessed timestamp on session
@@ -29,7 +28,7 @@ Router::group([
     ['get', '/', 'DashboardController@dashboard'],
     ['get', '/dashboard', 'DashboardController@dashboard'],
     ['get', '/settings', 'SettingsController@settings'],
-    ['any', '/render/{item}', 'RenderController@render']
+    ['any', '/render/{item}', 'RenderController@render'],
 ]);
 
 // Routes for /log
@@ -40,14 +39,14 @@ Router::group([
     ['get', '/{id}', '@show'],
     ['get', '/new', '@create'],
     ['get', '/edit/{id}', '@edit'],
-    ['post', '/save', '@save']
+    ['post', '/save', '@save'],
 ]);
 
 // Internal API, does not set last accessed timestamp
 Router::group([
     'rprefix' => '\Dandelion\Controllers\\',
     'filter' => 'apiSessionLastAccessed'], [
-    ['any', '/api/i/{?module}/{?method}', 'ApiController@internalApiCall']
+    ['any', '/api/i/{?module}/{?method}', 'ApiController@internalApiCall'],
 ]);
 
 // Group for Administration pages, requires authentication
@@ -57,7 +56,7 @@ Router::group([
     'filter' => 'auth'], [
     ['get', '', '@admin'],
     ['get', '/edituser/{?uid}', '@editUser'],
-    ['get', '/editgroup/{?gid}', '@editGroup']
+    ['get', '/editgroup/{?gid}', '@editGroup'],
 ]);
 
 Router::register404Route('\Dandelion\Controllers\NotFoundController@render');
