@@ -36,7 +36,6 @@ class Cheesto
         } else {
             $statuses = $this->repo->getAllStatuses();
         }
-        $statuses['statusOptions'] = $this->getStatusText();
         return $statuses;
     }
 

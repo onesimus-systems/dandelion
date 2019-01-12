@@ -21,23 +21,38 @@ class CheestoRepo extends BaseRepo implements Interfaces\CheestoRepo
         $this->table = $this->prefix.'cheesto';
     }
 
+    private function fixCheestoFieldTypes(&$ch)
+    {
+        $ch['id'] = (int) $ch['id'];
+        $ch['user_id'] = (int) $ch['user_id'];
+        $ch['disabled'] = (bool) $ch['user_id'];
+    }
+
     public function getAllStatuses()
     {
-        return $this->database
+        $statuses = $this->database
             ->find($this->table)
             ->belongsTo($this->prefix.'user', 'user_id')
             ->whereEqual($this->prefix.'user.disabled', 0)
             ->read($this->table.'.*, '.$this->prefix.'user.fullname');
+
+        foreach ($statuses as &$status) {
+            $this->fixCheestoFieldTypes($status);
+        }
+
+        return $statuses;
     }
 
     public function getUserStatus($uid)
     {
-        return $this->database
+        $status = $this->database
             ->find($this->table)
             ->belongsTo($this->prefix.'user', 'user_id')
             ->whereEqual($this->prefix.'user.id', $uid)
             ->whereEqual($this->prefix.'user.disabled', 0)
             ->read($this->table.'.*, '.$this->prefix.'user.fullname');
+        $this->fixCheestoFieldTypes($status);
+        return $status;
     }
 
     public function updateStatus($uid, $status, $message, $return, $date)

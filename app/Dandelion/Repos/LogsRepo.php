@@ -78,20 +78,32 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
 
     public function numOfLogs()
     {
-        return $this->database
+        return (int) $this->database
             ->find($this->table)
             ->count();
     }
 
+    private function fixLogFieldTypes(&$log)
+    {
+        $log['id'] = (int) $log['id'];
+        $log['user_id'] = (int) $log['user_id'];
+        $log['is_edited'] = (bool) $log['is_edited'];
+        $log['num_of_comments'] = (int) $log['num_of_comments'];
+    }
+
     public function getLogInfo($lid)
     {
-        $log = $this->database
+        $logs = $this->database
             ->find($this->table)
             ->belongsTo($this->prefix.'user', 'user_id')
             ->whereEqual($this->table.'.id', $lid)
             ->read($this->table.'.*, '.$this->prefix.'user.fullname');
 
-        return $log;
+        foreach ($logs as &$log) {
+            $this->fixLogFieldTypes($log);
+        }
+
+        return $logs;
     }
 
     public function getLogList($offset, $limit)
@@ -102,6 +114,10 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
             ->orderDesc($this->table.'.id')
             ->limit(((int) $offset).','.((int) $limit))
             ->read($this->table.'.*, '.$this->prefix.'user.fullname');
+
+        foreach ($logs as &$log) {
+            $this->fixLogFieldTypes($log);
+        }
 
         return $logs;
     }
@@ -192,12 +208,23 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         $results = [];
 
         if ($count) {
-            $results = [$statement->count()];
+            $results = [(int) $statement->count()];
         } else {
             $results = $statement->read($this->table.'.*, '.$this->prefix.'user.fullname');
+
+            foreach ($results as &$log) {
+                $this->fixLogFieldTypes($log);
+            }
         }
 
         return $results;
+    }
+
+    private function fixLogCommentFieldTypes(&$comment)
+    {
+        $comment['id'] = (int) $comment['id'];
+        $comment['user_id'] = (int) $comment['user_id'];
+        $comment['log_id'] = (int) $comment['log_id'];
     }
 
     public function getLogCommentsById($logid, $order = 'new')
@@ -214,6 +241,10 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         }
 
         $results = $logs->read($this->prefix.'comment.*, '.$this->prefix.'user.fullname');
+
+        foreach ($results as &$comment) {
+            $this->fixLogCommentFieldTypes($comment);
+        }
 
         return $results;
     }
@@ -240,7 +271,7 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
 
     public function numOfComments($logid)
     {
-        return $this->database
+        return (int) $this->database
                 ->find($this->prefix.'comment')
                 ->whereEqual('log_id', $logid)
                 ->count();

@@ -33,6 +33,6 @@ class CommentsAPI extends BaseModule
     public function get($params)
     {
         $logObject = new Logs($this->makeRepo('Logs'));
-        return $logObject->getLogCommentsComment($params->logid, $params->order);
+        return $logObject->getLogComments($params->logid, $params->order);
     }
 }

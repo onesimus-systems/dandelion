@@ -97,7 +97,7 @@ View = {
 
     makeLogView: function(data: any): void {
         var logView = $("#log-list");
-        var newLogs = $(View.displayLogs(data));
+        var newLogs = $(View.displayLogs(data.logs));
         logView.replaceWith(newLogs);
         View.pageControls(data.metadata);
         View.currentOffset = data.metadata.offset;
@@ -119,7 +119,7 @@ View = {
         var logs = `<div id="log-list">`;
 
         for (var key in data) {
-            if (!data.hasOwnProperty(key) || !$.isNumeric(key)) {
+            if (!data.hasOwnProperty(key)) {
                 continue;
             }
 

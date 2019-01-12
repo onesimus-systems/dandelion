@@ -64,6 +64,12 @@ class UsersAPI extends BaseModule
             throw new ApiPermissionException();
         }
 
+        $groups = new Groups($this->makeRepo('Groups'));
+        $group = $groups->getGroupList($params->role);
+        if (is_null($group['permissions'])) {
+            throw new ApiException('Group doesn\'t exist', ApiCommander::API_GENERAL_ERROR);
+        }
+
         $uf = new UserFactory();
         $user = $uf->create();
         $user->set('username', $params->username);

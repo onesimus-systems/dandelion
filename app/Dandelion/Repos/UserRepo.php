@@ -28,7 +28,7 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
             'group_id' => $role,
             'initial_login' => $first,
             'theme' => $theme,
-            'disabled' => $disabled,
+            'disabled' => (int) $disabled,
             'api_override' => $apiOverride,
         ];
 
@@ -49,12 +49,23 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
             'created'  => $date,
             'initial_login' => $prompt,
             'api_override' => $apiOverride,
+            'theme' => '',
         ]);
     }
 
     public function deleteUser($uid)
     {
         return $this->database->deleteItem($this->table, $uid);
+    }
+
+    private function fixUserFieldTypes(&$record)
+    {
+        $record['id'] = (int) $record['id'];
+        $record['group_id'] = (int) $record['group_id'];
+        $record['initial_login'] = (int) $record['initial_login'];
+        $record['logs_per_page'] = (int) $record['logs_per_page'];
+        $record['api_override'] = (int) $record['api_override'];
+        $record['disabled'] = (bool) $record['disabled'];
     }
 
     public function getUserById($id)
@@ -70,9 +81,11 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
     private function getUserByField($field, $condition)
     {
         $fields = 'id, fullname, username, password, group_id, created, initial_login, logs_per_page, theme, disabled, api_override';
-        return $this->database
+        $user = $this->database
             ->find($this->table)
             ->whereEqual($field, $condition)
             ->read($fields)[0];
+        $this->fixUserFieldTypes($user);
+        return $user;
     }
 }

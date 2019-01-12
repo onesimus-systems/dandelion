@@ -21,12 +21,25 @@ class KeyManagerRepo extends BaseRepo implements Interfaces\KeyManagerRepo
         $this->table = $this->prefix.'apikey';
     }
 
+    private function fixApiKeyFieldTypes(&$record)
+    {
+        $record['id'] = (int) $record['id'];
+        $record['user_id'] = (int) $record['user_id'];
+        $record['expires'] = (int) $record['expires'];
+        $record['disabled'] = (bool) $record['disabled'];
+    }
+
     public function getKeyForUser($uid)
     {
-        return $this->database
+        $key = $this->database
             ->find($this->table)
             ->whereEqual('user_id', $uid)
             ->readRecord();
+
+        if ($key) {
+            $this->fixApiKeyFieldTypes($key);
+        }
+        return $key;
     }
 
     public function saveKeyForUser($uid, $key)

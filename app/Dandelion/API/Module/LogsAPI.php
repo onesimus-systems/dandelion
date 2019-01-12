@@ -37,8 +37,8 @@ class LogsAPI extends BaseModule
             $return = $logs->getLogInfo($params->logid);
         } else {
             $metadata = $this->offsetLimitCommon($params);
-            $return = $logs->getLogList($metadata['limit'], $metadata['offset']);
-            $metadata['resultCount'] = count($return);
+            $return['logs'] = $logs->getLogList($metadata['limit'], $metadata['offset']);
+            $metadata['resultCount'] = count($return['logs']);
             $return['metadata'] = $metadata;
         }
 
@@ -113,11 +113,13 @@ class LogsAPI extends BaseModule
         $metadata = $this->offsetLimitCommon($params, false);
 
         $logs = new LogSearch($this->repo);
-        $result = $logs->search($query, $metadata['limit'], $metadata['offset']);
-        $metadata['resultCount'] = count($result)-1; // Account for extra key added by LogSearch::search()
+        $result['logs'] = $logs->search($query, $metadata['limit'], $metadata['offset']);
+        $metadata['resultCount'] = count($result['logs'])-1; // Account for extra key added by LogSearch::search()
         $metadata['logSize'] = $logs->search($query, -1, 0)[0];
 
         $result['metadata'] = $metadata;
+        $result['queryData'] = $result['logs']['queryData'];
+        unset($result['logs']['queryData']);
         return $result;
     }
 
