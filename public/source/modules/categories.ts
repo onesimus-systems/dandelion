@@ -42,7 +42,6 @@ namespace Categories {
     }
 
     export function selectOnChange(elem: any): void {
-        console.log(elem);
         Categories.grabNextLevel(elem.value);
     }
 
@@ -69,11 +68,9 @@ namespace Categories {
                 var selected = cat.selected ? "selected" : "";
                 selectRender.append(`<option value="${key}:${cat.id}" ${selected}>${cat.desc}</option>`);
             }
-            console.log(selectRender);
             selectSpan.append(selectRender);
         }
 
-        console.log(selectSpan);
         return selectSpan;
     }
 
