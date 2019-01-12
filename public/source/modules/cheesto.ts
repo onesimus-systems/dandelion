@@ -1,89 +1,95 @@
 /// <reference path="../dts/jquery.d.ts" />
 /// <reference path="../dts/jqueryui.d.ts" />
 /// <reference path="../dts/datetimepicker.d.ts" />
-/* global $, setTimeout */
-
-"use strict"; // jshint ignore:line
+import "common";
 
 interface cheestoReadResponse {
     // 0 to many individual status arrays
     statusOptions: string[];
 }
 
-const Cheesto = {
-    firstgen: true,
+const statusSelectClass = "__cheesto_status_select";
+const statusTableClass = "__cheesto_status_table";
 
-    dashboardInit: function(): void {
-        if ($("#messages-cheesto").length) {
-            Cheesto.getStatuses();
-        }
-    },
+namespace Cheesto {
+    let mountPoint = "";
 
-    getStatuses: function(): void {
+    export function mount(elem: string): void {
+        mountPoint = elem;
+        getStatuses();
+        setupDialog();
+    }
+
+    function setupDialog(): void {
+        const quickTimes = $('[name="quicktime"]');
+        quickTimes.each((index, elem) => {
+            const el = $(elem);
+            const time = parseInt(el.data('time-offset'));
+
+            el.click(() => setDateTime(time));
+        });
+    }
+
+    function getStatuses(): void {
         $.getJSON("api/i/cheesto/read",
-            function (data) {
+            data => {
                 if (!$.apiSuccess(data)) {
-                    setTimeout(Cheesto.getStatuses, 60000);
+                    setTimeout(getStatuses, 60000);
                     return;
                 }
 
-                Cheesto.generateView(data.data);
-                setTimeout(Cheesto.getStatuses, 30000);
-
-                if (Cheesto.firstgen) {
-                    Cheesto.firstgen = false;
-                }
+                generateView(data.data);
+                setTimeout(getStatuses, 30000);
             });
-    },
+    }
 
-    generateView: function(dataObj: cheestoReadResponse): void {
-        Cheesto.generateTable(dataObj);
-        if (Cheesto.firstgen) {
-            Cheesto.makeStatusSelect(dataObj);
-        }
-        return;
-    },
+    function generateView(dataObj: cheestoReadResponse): void {
+        const view = $("<div/>").attr("id", mountPoint);
+        view.append(makeStatusSelect(dataObj));
+        view.append(generateTable(dataObj));
+        $(`#${mountPoint}`).replaceWith(view);
+    }
 
-    makeStatusSelect: function(dataObj: cheestoReadResponse): void {
-        var statusSelect = $("<select/>").attr("id", "status-select");
-        statusSelect.change(Cheesto.setStatus);
+    function makeStatusSelect(dataObj: cheestoReadResponse): JQuery {
+        const statusSelect = $("<select/>");
+        statusSelect.addClass(statusSelectClass);
+        statusSelect.change(setStatus);
 
         statusSelect.append(`<option value="-1">Set Status:</option>`);
 
-        for (var key2 in dataObj.statusOptions) {
+        for (const key2 in dataObj.statusOptions) {
             var html = `<option value="${dataObj.statusOptions[key2]}">${dataObj.statusOptions[key2]}</option>`;
             statusSelect.append(html);
         }
 
-        $("#status-select").replaceWith(statusSelect);
-        return;
-    },
+        return statusSelect;
+    }
 
-    generateTable: function(dataObj: cheestoReadResponse): void {
-        var div = $("<div/>").attr("id", "messages-cheesto-content");
-        var table = $("<table/>");
+    function generateTable(dataObj: cheestoReadResponse): JQuery {
+        const div = $("<div/>");
+        div.addClass(statusTableClass);
+        const table = $("<table/>");
         table.append(`<thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>`);
 
-        for (var key in dataObj) {
+        for (const key in dataObj) {
             if (dataObj.hasOwnProperty(key)) {
                 if (key !== "statusOptions") {
-                    var user = dataObj[key];
-                    var html = "";
+                    const user = dataObj[key];
+                    let html = "";
                     // The modified date is in the format %Y-%m-%d %H:%m:%s
                     // To match the return date, format to %m/%d/%Y %H:%m
-                    var modDate = new Date(user.modified);
-                    var formatMin = (modDate.getMinutes() < 10) ? "0"+modDate.getMinutes() : modDate.getMinutes();
-                    var formatHour = (modDate.getHours() < 10) ? "0"+modDate.getHours() : modDate.getHours();
-                    var formatModDate = (modDate.getMonth()+1)+"/"+modDate.getDate()+"/"+modDate.getFullYear();
+                    const modDate = new Date(user.modified);
+                    const formatMin = (modDate.getMinutes() < 10) ? "0"+modDate.getMinutes() : modDate.getMinutes();
+                    const formatHour = (modDate.getHours() < 10) ? "0"+modDate.getHours() : modDate.getHours();
+                    let formatModDate = (modDate.getMonth()+1)+"/"+modDate.getDate()+"/"+modDate.getFullYear();
                     formatModDate += " "+formatHour+":"+formatMin;
 
                     if (user.status === "Available") {
                         html = `<tr><td>${user.fullname}</td><td class="status-cell" title="Last Changed: ${formatModDate}">${user.status}</td></tr>`;
                     } else {
                         // If the status is not Available show the return time and message
-                        var message = (user.message === "") ? "" : `Message: ${user.message}\n\n`;
-                        html = `<tr><td>${user.fullname}</td><td class="status-cell" title="${message}Return: ${user.returntime}\n
-                            Last Changed: ${formatModDate}">${user.status}</td></tr>`;
+                        const message = (user.message === "") ? "" : `${user.message}\n\n`;
+                        html = `<tr><td>${user.fullname}</td><td class="status-cell" title="${message}Return: ${user.returntime}\nLast Changed: ${formatModDate}">${user.status}</td></tr>`;
                     }
 
                     table.append(html);
@@ -93,20 +99,20 @@ const Cheesto = {
 
         table.append("</tbody>");
         div.append(table);
-        $("#messages-cheesto-content").replaceWith(div);
 
-        $("td.status-cell").tooltip({
+        table.children("td.status-cell").tooltip({
             track: true,
             show: {
                 effect: "fade",
                 delay: 50
             }
         });
-        return;
-    },
 
-    setStatus: function(): void {
-        var newStatus: string = $("#status-select").val();
+        return div;
+    }
+
+    function setStatus(event: JQueryEventObject): void {
+        const newStatus: string = $(event.target).val();
 
         if (newStatus !== "Available") {
             // Status requires a return time and optional message
@@ -133,49 +139,53 @@ const Cheesto = {
                 buttons: {
                     "Save": function() {
                         $(this).dialog("close");
-                        Cheesto.processStatus(newStatus);
+                        processStatus(newStatus);
                     },
                     Cancel: function() {
                         $(this).dialog("close");
-                        $("#status-select").prop("selectedIndex", 0);
+                        resetStatusSelect();
                     }
                 }
             });
         } else {
             // Status is Available
-            Cheesto.sendNewStatus(newStatus, "00:00:00", "");
+            sendNewStatus(newStatus, "00:00:00", "");
         }
-    },
+    }
 
-    processStatus: function(status: string): void {
-        var message = $("#cheesto-message-text");
-        var returnTime = $("#cheesto-date-pick");
+    function resetStatusSelect(): void {
+        $(`.${statusSelectClass}`).prop('selectedIndex', 0);
+    }
 
-        Cheesto.sendNewStatus(status, returnTime.val(), message.val());
+    function processStatus(status: string): void {
+        const message = $("#cheesto-message-text");
+        const returnTime = $("#cheesto-date-pick");
 
-        $("#status-select").prop("selectedIndex", 0);
+        sendNewStatus(status, returnTime.val(), message.val());
+
+        resetStatusSelect();
         message.val("");
         returnTime.val("Today");
         $("input[name=quicktime]").prop("checked", false);
-    },
+    }
 
-    sendNewStatus: function (stat: string, rt: string, message: string): void {
+    function sendNewStatus(stat: string, rt: string, message: string): void {
         $.post("api/i/cheesto/update", {status: stat, returntime: rt, message: message})
-            .done(function() { Cheesto.getStatuses(); });
-    },
+            .done(getStatuses);
+    }
 
-    setDateTime: function(delta: number): void {
-        var currentdate = new Date();
+    function setDateTime(delta: number): void {
+        const currentdate = new Date();
 
-        var minutes = currentdate.getMinutes()+(delta % 60);
-        var hours = currentdate.getHours()+((delta-(delta % 60))/60);
+        let minutes = currentdate.getMinutes()+(delta % 60);
+        let hours = currentdate.getHours()+((delta-(delta % 60))/60);
 
         if (minutes > 59) {
             minutes = minutes - 60;
             hours++;
         }
 
-        var datetime = `${(`0${(currentdate.getMonth()+1)}`).slice(-2)}/${(`0${currentdate.getDate()}`).slice(-2)}/${currentdate.getFullYear()} ${(`0${hours}`).slice(-2)}:${(`0${minutes}`).slice(-2)}`;
+        const datetime = `${(`0${(currentdate.getMonth()+1)}`).slice(-2)}/${(`0${currentdate.getDate()}`).slice(-2)}/${currentdate.getFullYear()} ${(`0${hours}`).slice(-2)}:${(`0${minutes}`).slice(-2)}`;
 
         $("#cheesto-date-pick").val(datetime);
     }

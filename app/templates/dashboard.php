@@ -44,24 +44,24 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
             Time Quick Set:
             <table>
                 <tr>
-                    <td>10 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(10);"></td>
-                    <td>20 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(20);"></td>
+                    <td>10 Minutes<input type="radio" name="quicktime" data-time-offset="10"></td>
+                    <td>20 Minutes<input type="radio" name="quicktime" data-time-offset="20"></td>
                 </tr>
                 <tr>
-                    <td>30 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(30);"></td>
-                    <td>40 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(40);"></td>
+                    <td>30 Minutes<input type="radio" name="quicktime" data-time-offset="30"></td>
+                    <td>40 Minutes<input type="radio" name="quicktime" data-time-offset="40"></td>
                 </tr>
                 <tr>
-                    <td>50 Minutes<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(50);"></td>
-                    <td>1 Hour<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(60);">
+                    <td>50 Minutes<input type="radio" name="quicktime" data-time-offset="50"></td>
+                    <td>1 Hour<input type="radio" name="quicktime" data-time-offset="60"60);">
                 </tr>
                 <tr>
-                    <td>1 Hour 15 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(75);"></td>
-                    <td>1 Hour 30 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(90);"></td>
+                    <td>1 Hour 15 Min.<input type="radio" name="quicktime" data-time-offset="75"></td>
+                    <td>1 Hour 30 Min.<input type="radio" name="quicktime" data-time-offset="90"></td>
                 </tr>
                 <tr>
-                    <td>1 Hour 45 Min.<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(105);"></td>
-                    <td>2 Hours<input type="radio" name="quicktime" onClick="Cheesto.setDateTime(120);"></td>
+                    <td>1 Hour 45 Min.<input type="radio" name="quicktime" data-time-offset="105"></td>
+                    <td>2 Hours<input type="radio" name="quicktime" data-time-offset="120"></td>
                 </tr>
             </table>
         </fieldset>
@@ -82,21 +82,17 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
 <button type="button" class="section-title disabled" id="show-cheesto-button">Show Message Center</button>
 
 <?php if ($showCheesto): ?>
-    <section id="messages-panel" class="messages-panel">
-            <div id="messages-cheesto">
-                <div id="messages-cheesto-header">
-                    <span class="messages-title">Ĉeesto</span>
+<section id="messages-panel" class="messages-panel">
+        <span class="messages-title">Ĉeesto</span>
 
-                    <div class="messages-controls">
-                        <select id="status-select">
-                            <option value="-1">Set Status:</option>
-                        </select>
-                    </div>
-                </div>
+        <div id="messages-cheesto">
+            <select class="__cheesto_status_select">
+                <option value="-1">Set Status:</option>
+            </select>
 
-                <div id="messages-cheesto-content">Loading...</div>
-            </div>
-    </section>
+            <div class="__cheesto_status_table">Loading...</div>
+        </div>
+</section>
 <?php endif; ?>
 
 
@@ -133,4 +129,4 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     <?php endif; ?>
 </section>
 
-<?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'common', 'dashboard']) ?>
+<?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'dashboard']) ?>

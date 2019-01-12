@@ -29,70 +29,6 @@
         });
     }
 
-    .messages-panel {
-        float: left;
-        width: 250px;
-
-        #dandelion-lib > .media-query(screen, small, {
-            width: 100%;
-            display: none;
-            float: none;
-        });
-
-        .messages-common-styles() {
-            height: 50%;
-            margin-bottom: 20px;
-            overflow: auto;
-
-            &-header {
-                padding-left: 10px;
-                margin: 10px 0;
-
-                .messages-title {
-                    font-size: 1.5em;
-                    font-weight: bold;
-                }
-            }
-
-            &-content {
-                padding-left: 10px;
-                width: 90%;
-                overflow: auto;
-
-                table {
-                    width: 100%;
-
-                    th, td {
-                        border: 1px solid black;
-                        word-wrap: break-word;
-                    }
-
-                    td {
-                        padding: 5px;
-
-                        &.status-cell {
-                            color: @dandelion-dark-orange;
-
-                            &:hover {
-                                cursor: pointer;
-                                text-decoration: underline;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        #messages-cheesto {
-            .messages-common-styles();
-
-            #status-select {
-                #dandelion-lib > .select();
-                margin-top: 5px;
-            }
-        }
-    }
-
     .logs-panel {
         min-height: 150px;
         max-width: 85%;
@@ -233,6 +169,63 @@
         margin: 0;
         margin-left: 250px;
         max-width: 100%;
+    }
+}
+
+.messages-panel {
+    float: left;
+    width: 250px;
+
+    #dandelion-lib > .media-query(screen, small, {
+        width: 100%;
+        display: none;
+        float: none;
+    });
+
+    .messages-title {
+        font-size: 1.75rem;
+        font-weight: bold;
+        padding: 1rem 1rem 0 1rem;
+        display: block;
+    }
+
+    #messages-cheesto {
+        height: 50%;
+        margin-bottom: 20px;
+        overflow: auto;
+
+        .__cheesto_status_select {
+            #dandelion-lib > .select();
+            margin: 5px 0 10px 10px;
+        }
+
+        .__cheesto_status_table {
+            padding-left: 10px;
+            width: 90%;
+            overflow: auto;
+
+            table {
+                width: 100%;
+
+                th, td {
+                    border: 1px solid black;
+                    word-wrap: break-word;
+                }
+
+                td {
+                    padding: 5px;
+
+                    &.status-cell {
+                        color: @dandelion-dark-orange;
+
+                        &:hover {
+                            cursor: pointer;
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

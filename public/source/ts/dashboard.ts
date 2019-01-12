@@ -8,7 +8,7 @@ $(document).ready(function() {
     Refresh.init();
     View.init();
     Search.init();
-    Cheesto.dashboardInit();
+    Cheesto.mount("messages-cheesto");
 
     $("#show-cheesto-button").click(function() {
         Section.show(this, "messages-panel");

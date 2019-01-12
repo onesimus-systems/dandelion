@@ -24,9 +24,9 @@
     "build:dev": "yarn run build:js:dev && yarn run build:css",
     "build:js:dev": "webpack --mode development --config webpack.dev.js",
     "build:js:prod": "webpack --mode production --config webpack.prod.js",
-    "build:css": "yarn run build:modern && yarn run build:legacy",
-    "build:modern": "for file in public/source/themes/modern/*.less; do lessc --clean-css $file public/dist/assets/themes/modern/$(basename $file .less).css; done",
-    "build:legacy": "for file in public/source/themes/legacy/*.less; do lessc --clean-css $file public/dist/assets/themes/legacy/$(basename $file .less).css; done"
+    "build:css": "yarn run build:css:modern && yarn run build:css:legacy",
+    "build:css:modern": "for file in public/source/themes/modern/*.less; do lessc --clean-css $file public/dist/assets/themes/modern/$(basename $file .less).css; done",
+    "build:css:legacy": "for file in public/source/themes/legacy/*.less; do lessc --clean-css $file public/dist/assets/themes/legacy/$(basename $file .less).css; done"
   },
   "dependencies": {
     "global": "^4.3.2",
