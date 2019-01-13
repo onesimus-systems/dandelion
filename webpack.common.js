@@ -3,15 +3,15 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: {
-    addlog: './public/source/ts/addlog.ts',
-    admin: './public/source/ts/admin.ts',
-    dashboard: './public/source/ts/dashboard.ts',
-    editlog: './public/source/ts/editlog.ts',
-    groupmanager: './public/source/ts/groupmanager.ts',
-    login: './public/source/ts/login.ts',
-    settings: './public/source/ts/settings.ts',
-    singlelog: './public/source/ts/singlelog.ts',
-    usermanager: './public/source/ts/usermanager.ts'
+    addlog: './public/src/ts/addlog.ts',
+    admin: './public/src/ts/admin.ts',
+    dashboard: './public/src/ts/dashboard.ts',
+    editlog: './public/src/ts/editlog.ts',
+    groupmanager: './public/src/ts/groupmanager.ts',
+    login: './public/src/ts/login.ts',
+    settings: './public/src/ts/settings.ts',
+    singlelog: './public/src/ts/singlelog.ts',
+    usermanager: './public/src/ts/usermanager.ts'
   },
 
   plugins: [

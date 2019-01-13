@@ -5,12 +5,12 @@
         "module": "commonjs",
         "target": "es5",
         "rootDirs": [
-            "./public/source",
+            "./public/src",
             "./webpack.*",
         ],
         "lib": ["es6", "dom"],
         "typeRoots": [
-            "public/source/dts"
+            "public/src/dts"
         ]
     },
     "exclude": [
