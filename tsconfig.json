@@ -8,7 +8,7 @@
             "./public/source",
             "./webpack.*",
         ],
-
+        "lib": ["es6", "dom"],
         "typeRoots": [
             "public/source/dts"
         ]
