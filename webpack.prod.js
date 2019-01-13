@@ -5,6 +5,7 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   devtool: 'source-map',
+
   plugins: [
     new UglifyJSPlugin({
       sourceMap: true
@@ -12,5 +13,20 @@ module.exports = merge(common, {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     })
-  ]
+  ],
+
+  module: {
+    rules: [
+      {
+        test: /\.elm$/,
+        exclude: [/elm-stuff/, /node-modules/],
+        use: [{
+          loader: 'elm-webpack-loader',
+          options: {
+            optimize: true
+          }
+        }]
+      }
+    ]
+  }
 });
