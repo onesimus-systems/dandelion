@@ -27,8 +27,8 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
         <fieldset>
             <label for="qb-date1">Date:</label>
             Not: <input type="checkbox" id="qb-date-not">
-            <input type="text" id="qb-date1" value="" size="10"> to
-            <input type="text" id="qb-date2" value="" size="10">
+            <input type="text" id="qb-date1" class="qb-date" value="" size="10"> to
+            <input type="text" id="qb-date2" class="qb-date" value="" size="10">
         </fieldset>
         <fieldset>
             <label>Category:</label>
@@ -98,35 +98,14 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
 
 <button type="button" class="section-title disabled" id="show-logs-button">Show Logs</button>
 
-<section id="logs-panel" class="logs-panel <?= $showCheesto ? 'cheesto-enabled' : '' ?>">
-    <div class="control-panel">
-        <div class="search-console">
-            <div class="search-buttons">
-                <button type="button" id="query-builder-btn">Filter</button>
-            </div>
-            <span class="query-box">
-                <input type="search" id="search-query" placeholder="Search" value="" autocomplete="off">
-            </span>
-            <div class="search-buttons">
-                <button type="button" id="search-btn">Search</button>
-            </div>
-        </div>
+<section id="logs-panel" class="logs-panel <?= $showCheesto ? 'cheesto-enabled' : '' ?>"></section>
 
-        <div class="top-controls">
-            <form>
-                <button type="button" class="button" id="prev-page-button">Prev</button>
-                <?php if ($showCreateButton): ?>
-                <button type="button" class="button" id="create-log-button">Create New</button>
-                <?php endif; ?>
-                <button type="button" class="button button-right" id="next-page-button">Next</button>
-                <button type="button" class="button button-right" id="clear-search-button">Clear Search</button>
-            </form>
-        </div>
-    </div>
-
-    <?php if ($showLog): ?>
-        <div id="log-list">Loading logs...</div>
-    <?php endif; ?>
-</section>
+<script type="text/javascript">
+    const props = {
+        "showCreateBtn": <?= $showCreateButton ? 'true' : 'false' ?>,
+        "showLog": <?= $showLog ? 'true' : 'false' ?>,
+        "cheestoEnabledClass": "<?= $showCheesto ? 'cheesto-enabled' : '' ?>"
+    }
+</script>
 
 <?= $this->loadJS(['jquery', 'jqueryui', 'timepicker', 'dashboard']) ?>

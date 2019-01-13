@@ -50,7 +50,7 @@ class LogSearch
             $matches[] = [
                 'category' => 'Not Found',
                 'date_created' => date('Y-m-d'),
-                'is_edited' => 0,
+                'is_edited' => false,
                 'body' => 'Your search for <b>'.htmlentities(trim($query)).'</b> returned 0 results. Please check your query syntax and try again.',
                 'id' => -1,
                 'fullname' => 'Search',

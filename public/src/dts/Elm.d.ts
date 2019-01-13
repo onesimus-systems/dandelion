@@ -4,7 +4,7 @@ declare module "*.elm" {
     };
 }
 
- interface IJstoElmPort<T> {
+interface IJstoElmPort<T> {
     send: (params: T) => void;
 }
 
@@ -19,13 +19,16 @@ interface LogMetadata {
     resultCount: number;
 }
 
+interface SearchRequest {
+    query: string;
+    offset: number;
+}
+
 type DashboardElmApp = {
     ports: {
-        searchQuery: IElmToJsPort<(text: string) => void>;
-        logList: IJstoElmPort<any>;
-        startTimedRefresh: IJstoElmPort<boolean>;
-        pageInfo: IElmToJsPort<(metadata: LogMetadata) => void>;
         detectOverflow: IElmToJsPort<() => void>;
+        openSearchBuilder: IElmToJsPort<() => void>;
         reportOverflow: IJstoElmPort<number[]>;
+        searchQueryExt: IJstoElmPort<string>;
     };
 };
