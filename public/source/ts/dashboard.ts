@@ -1,12 +1,13 @@
+/// <reference path="../dts/Elm.d.ts" />
 import Cheesto from '../modules/cheesto';
 import Categories from '../modules/categories';
 import "../modules/common";
-import * as Elm from '../elm/LogTable.elm';
+import { Elm } from '../elm/LogTable.elm';
 
 let search = false;
+let app: DashboardElmApp;
 
 function init() {
-    // Refresh.init();
     View.init();
     Search.init();
     Cheesto.mount("messages-cheesto");
@@ -19,46 +20,15 @@ function init() {
         showSection(this, "logs-panel");
     });
 
-    Elm.Elm.Main.init({
+    app = Elm.Main.init({
         node: document.getElementById('log-list')
     });
+
+    app.ports.searchQuery.subscribe(Search.searchLogLink);
+    app.ports.pageInfo.subscribe(View.pageControls);
+    // Wait for the DOM to update before checking overflown elements
+    app.ports.detectOverflow.subscribe(() => requestAnimationFrame(View.checkOverflow));
 }
-
-namespace Refresh {
-    let refreshc: number;
-
-    export function init(): void {
-        if ($("#log-list").length) {
-            refreshLog();
-            startrefresh();
-        }
-    }
-
-    export function startrefresh(): void {
-        refreshc = setInterval(function() { refreshLog(); }, 60000);
-    }
-
-    export function stoprefresh(): void {
-        clearInterval(refreshc);
-    }
-
-    export function refreshLog(clearSearch?: boolean): void {
-        if (clearSearch) {
-            search = false;
-            startrefresh();
-        }
-
-        if (!search) {
-            $.getJSON("api/i/logs/read", {}, function(json: APIResponse) {
-                if ($.apiSuccess(json)) {
-                    View.makeLogView(json.data);
-                } else {
-                    stoprefresh();
-                }
-            });
-        }
-    }
-}; // Refresh
 
 function showSection(elem: any, panel: string): void {
     if (elem.innerHTML.match(/^Show\s/)) {
@@ -73,7 +43,6 @@ function showSection(elem: any, panel: string): void {
 namespace View {
     let prevPage = -1;
     let nextPage = -1;
-    let currentOffset = -1;
 
     export function init(): void {
         $("#prev-page-button").click(loadPrevPage);
@@ -83,69 +52,28 @@ namespace View {
         });
         $("#clear-search-button").click(function() {
             $("#search-query").val("");
-            Refresh.refreshLog(true);
+            search = false;
+            app.ports.startTimedRefresh.send(true);
         });
     }
 
-    export function makeLogView(data: any): void {
-        const logView = $("#log-list");
-        const newLogs = $(displayLogs(data.logs));
-        logView.replaceWith(newLogs);
-        pageControls(data.metadata);
-        currentOffset = data.metadata.offset;
-        checkOverflow(newLogs);
-        linkCategorySearchLinks();
-    }
+    export function checkOverflow(): void {
+        const ids: number[] = [];
+        const logs = Array.from(($("#log-list")[0]).childNodes);
 
-    function checkOverflow(logView: JQuery): void {
-        const logs = $(logView[0].childNodes);
-        logs.each(function(index, elem) {
-            const b = $(elem.childNodes[1]);
+        logs.forEach(element => {
+            if (element.childNodes.length < 2) return;
+
+            const b = $(element.childNodes[1]);
             if (b.overflown()) {
-                const id = b.data("log-id");
-                $(`<div class="log-overflow"><a href="log/${id}" target="_blank">Read more...</a></div>`).insertAfter(b);
+                ids.push(parseInt(b.data("log-id")))
             }
         });
+
+        app.ports.reportOverflow.send(ids);
     }
 
-    function linkCategorySearchLinks(): void {
-        $('.category-search-link').click((event) => {
-            Search.searchLogLink(event.target.innerHTML);
-        });
-    }
-
-    function displayLogs(data: any): string {
-        let logs = `<div id="log-list">`;
-
-        for (const key in data) {
-            if (!data.hasOwnProperty(key)) {
-                continue;
-            }
-
-            const log = data[key];
-
-            let creator = log.fullname;
-            if (creator === "" || creator === null) {
-                creator = "Deleted User";
-            }
-
-            // Display each log entry
-            let html = `<div class="log-entry"><span class="log-title"><a href="log/${log.id}">${log.title}</a></span>`;
-
-            html += `<div class="log-body" data-log-id="${log.id}">${log.body}</div><div class="log-metadata"><span class="log-meta-author">Created by ${creator} on ${log.date_created} @ ${log.time_created} `;
-
-            if (log.is_edited == "1") { html += "(Amended)"; }
-
-            html += `</span><span class="log-meta-cat">Categorized as <a href="#" class="category-search-link">${log.category}</a></span>`;
-            html += `<span class="log-meta-comments">Comments: <a href="log/${log.id}#comments">${log.num_of_comments}</a></span></div></div>`;
-
-            logs += html;
-        }
-        logs += "</div>";
-        return logs;
-    }
-
-    function pageControls(data: any): void {
+    export function pageControls(data: any): void {
         if (data.offset > 0) {
             prevPage = data.offset - data.limit;
             $("#prev-page-button").show();
@@ -191,13 +119,11 @@ namespace View {
 
     function pagentation(pageOffset: number): void {
         $.getJSON("api/i/logs/read", { offset: pageOffset }, function(json) {
-            makeLogView(json.data);
+            app.ports.logList.send(json);
+            pageControls(json.data.metadata);
 
             if (pageOffset <= 0) {
-                Refresh.refreshLog();
-                Refresh.startrefresh();
-            } else {
-                Refresh.stoprefresh();
+                app.ports.startTimedRefresh.send(true);
             }
         });
     }
@@ -343,8 +269,7 @@ namespace Search {
 
         $.get("api/i/logs/search", { query: query, offset: offset }, function(json) {
             search = true;
-            Refresh.stoprefresh();
-            View.makeLogView(json.data);
+            app.ports.logList.send(json)
         }, "json")
             .fail(function(json) {
                 $.alert(json.responseJSON.status, "Server Error");
