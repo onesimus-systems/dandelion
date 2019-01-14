@@ -10,6 +10,7 @@ import Json.Decode as Decode exposing (Decoder, bool, decodeValue, int, list, st
 import Json.Decode.Pipeline exposing (optional, required)
 import Json.Encode as E
 import Markdown
+import QuickBuilder as QB
 import Time
 import Url.Builder as UB
 
@@ -34,11 +35,6 @@ port searchQueryExt : (E.Value -> msg) -> Sub msg
 {-| Tell JS to check for overflown log bodies, JS will issue a reportOverflow message
 -}
 port detectOverflow : E.Value -> Cmd msg
-
-
-{-| Tell JS to open the search query builder
--}
-port openSearchBuilder : E.Value -> Cmd msg
 
 
 
@@ -67,6 +63,7 @@ type alias Model =
     , search : String
     , searching : Bool
     , page : PageOffsets
+    , quickBuilderState : Maybe QB.State
     }
 
 
@@ -113,6 +110,7 @@ init settings =
       , search = ""
       , searching = False
       , page = PageOffsets -1 -1
+      , quickBuilderState = Nothing
       }
     , getLogEntries
     )
@@ -135,6 +133,7 @@ type Msg
     | CreateNewLog
     | OpenSearchBuilder
     | CheckIfEnterSearch Int
+    | QuickBuilderChanged QB.State
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -171,7 +170,8 @@ update msg model =
             ( model, Navigation.load "log/new" )
 
         OpenSearchBuilder ->
-            ( model, openSearchBuilder E.null )
+            -- ( model, openSearchBuilder E.null )
+            ( { model | quickBuilderState = Just QB.initialState }, Cmd.none )
 
         CheckIfEnterSearch keycode ->
             if keycode == 13 then
@@ -179,6 +179,9 @@ update msg model =
 
             else
                 ( model, Cmd.none )
+
+        QuickBuilderChanged state ->
+            updateQuickBuilderChanged (Debug.log "state" state) model
 
 
 updateGotLogs : Result Http.Error LogsApiResp -> Model -> ( Model, Cmd Msg )
@@ -258,6 +261,40 @@ updateGotoPageOffset offset model =
         ( { model | logs = Loading, timedRefresh = timedRefresh }, getLogEntriesWithOffset offset )
 
 
+updateQuickBuilderChanged : QB.State -> Model -> ( Model, Cmd Msg )
+updateQuickBuilderChanged state model =
+    case QB.closedState state of
+        QB.Not ->
+            -- The builder is still open
+            ( { model | quickBuilderState = Just state }, Cmd.none )
+
+        QB.Cancel ->
+            -- The builder was cancelled
+            ( { model | quickBuilderState = Nothing }, Cmd.none )
+
+        QB.Ok ->
+            -- The builder was okayed
+            updateQuickBuilderChangedOk state model
+
+
+updateQuickBuilderChangedOk : QB.State -> Model -> ( Model, Cmd Msg )
+updateQuickBuilderChangedOk state model =
+    let
+        query =
+            QB.toSearchQuery state
+    in
+    case query of
+        Just q ->
+            let
+                ( newModel, cmd ) =
+                    update (SearchLogs q 0) model
+            in
+            ( { newModel | quickBuilderState = Nothing }, cmd )
+
+        Nothing ->
+            ( { model | quickBuilderState = Nothing }, Cmd.none )
+
+
 httpErrorToString : Http.Error -> String
 httpErrorToString err =
     case err of
@@ -318,23 +355,31 @@ subscriptions _ =
 
 view : Model -> Html Msg
 view model =
-    section [ id "logs-panel", class ("logs-panel " ++ model.viewSettings.cheestoEnabledClass) ]
-        [ div []
-            [ viewControlBar model
-            , if model.viewSettings.showLog then
-                case model.logs of
-                    Loading ->
-                        viewLoading
+    div []
+        [ section [ id "logs-panel", class ("logs-panel " ++ model.viewSettings.cheestoEnabledClass) ]
+            [ div []
+                [ viewControlBar model
+                , if model.viewSettings.showLog then
+                    case model.logs of
+                        Loading ->
+                            viewLoading
 
-                    Loaded logs ->
-                        viewLogTable model.overflowLogIds logs
+                        Loaded logs ->
+                            viewLogTable model.overflowLogIds logs
 
-                    Failure result ->
-                        viewFailureMsg result
+                        Failure result ->
+                            viewFailureMsg result
 
-              else
-                div [] []
+                  else
+                    div [] []
+                ]
             ]
+        , case model.quickBuilderState of
+            Just state ->
+                QB.quickBuilder QuickBuilderChanged state
+
+            Nothing ->
+                text ""
         ]
 
 

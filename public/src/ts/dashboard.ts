@@ -29,7 +29,7 @@ function init() {
     });
 
     app.ports.detectOverflow.subscribe(() => requestAnimationFrame(checkOverflow));
-    app.ports.openSearchBuilder.subscribe(SearchBuilder.show);
+    // app.ports.openSearchBuilder.subscribe(SearchBuilder.show);
 }
 
 function showSection(elem: any, panel: string): void {
