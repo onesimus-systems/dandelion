@@ -188,14 +188,16 @@ update msg model =
             updateQuickBuilderChanged (Debug.log "state" state) cmd model
 
         QuickBuilderMsg qbMsg ->
-            let
-                state =
-                    Maybe.withDefault QB.initialState model.quickBuilderState
+            case model.quickBuilderState of
+                Just state ->
+                    let
+                        ( qbState, qbCmd ) =
+                            QB.update qbMsg state
+                    in
+                    ( { model | quickBuilderState = Just qbState }, Cmd.map QuickBuilderMsg qbCmd )
 
-                ( qbState, qbCmd ) =
-                    QB.update qbMsg state
-            in
-            ( { model | quickBuilderState = Just qbState }, Cmd.map QuickBuilderMsg qbCmd )
+                Nothing ->
+                    ( model, Cmd.none )
 
 
 updateGotLogs : Result Http.Error LogsApiResp -> Model -> ( Model, Cmd Msg )
