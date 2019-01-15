@@ -38,22 +38,16 @@ class Categories
 
         // Cycle through each level
         foreach ($cids as $i => $cid) {
-            $children = [];
             // Find children
-            foreach ($cats as $isChild) {
-                if($isChild['parent'] == $cid) {
-                    array_push($children, [
-                        'id' =>  $isChild['id'],
-                        'description' => $isChild['description']
-                    ]);
-                }
-            }
+            $children = array_filter($cats, function($cat) use ($cid) {
+                return $cat['parent'] == $cid;
+            });
 
             // Add children to array for the level
             foreach ($children as $child) {
                 $selected = (isset($cids[$i+1]) && ($child['id'] == $cids[$i+1]));
 
-                $response['levels'][$i][] = [
+                $response['levels'][$i] []= [
                     'id' => (int) $child['id'],
                     'desc' => $child['description'],
                     'selected' => $selected
@@ -143,6 +137,11 @@ class Categories
     {
         $desc = $this->normalizeCategoryDesc($desc);
         return is_numeric($this->repo->updateCategory($desc, $cid));
+    }
+
+    public function getChildren($cid)
+    {
+        return $this->repo->getChildren($cid);
     }
 
     /**

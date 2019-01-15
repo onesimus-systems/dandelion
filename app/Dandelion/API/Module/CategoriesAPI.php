@@ -82,8 +82,9 @@ class CategoriesAPI extends BaseModule
      *
      *  @return JSON
      */
-    public function getChildren()
+    public function children($params)
     {
-        return null;
+        $cats = new Categories($this->repo);
+        return $cats->getChildren($params->cid);
     }
 }

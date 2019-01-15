@@ -133,7 +133,8 @@ type Msg
     | CreateNewLog
     | OpenSearchBuilder
     | CheckIfEnterSearch Int
-    | QuickBuilderChanged QB.State
+    | QuickBuilderChanged QB.State (Cmd QB.Msg)
+    | QuickBuilderMsg QB.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -170,8 +171,11 @@ update msg model =
             ( model, Navigation.load "log/new" )
 
         OpenSearchBuilder ->
-            -- ( model, openSearchBuilder E.null )
-            ( { model | quickBuilderState = Just QB.initialState }, Cmd.none )
+            let
+                ( state, cmd ) =
+                    QB.initialStateCmd
+            in
+            ( { model | quickBuilderState = Just state }, Cmd.map QuickBuilderMsg cmd )
 
         CheckIfEnterSearch keycode ->
             if keycode == 13 then
@@ -180,8 +184,18 @@ update msg model =
             else
                 ( model, Cmd.none )
 
-        QuickBuilderChanged state ->
-            updateQuickBuilderChanged (Debug.log "state" state) model
+        QuickBuilderChanged state cmd ->
+            updateQuickBuilderChanged (Debug.log "state" state) cmd model
+
+        QuickBuilderMsg qbMsg ->
+            let
+                state =
+                    Maybe.withDefault QB.initialState model.quickBuilderState
+
+                ( qbState, qbCmd ) =
+                    QB.update qbMsg state
+            in
+            ( { model | quickBuilderState = Just qbState }, Cmd.map QuickBuilderMsg qbCmd )
 
 
 updateGotLogs : Result Http.Error LogsApiResp -> Model -> ( Model, Cmd Msg )
@@ -261,12 +275,12 @@ updateGotoPageOffset offset model =
         ( { model | logs = Loading, timedRefresh = timedRefresh }, getLogEntriesWithOffset offset )
 
 
-updateQuickBuilderChanged : QB.State -> Model -> ( Model, Cmd Msg )
-updateQuickBuilderChanged state model =
+updateQuickBuilderChanged : QB.State -> Cmd QB.Msg -> Model -> ( Model, Cmd Msg )
+updateQuickBuilderChanged state cmd model =
     case QB.closedState state of
         QB.Not ->
             -- The builder is still open
-            ( { model | quickBuilderState = Just state }, Cmd.none )
+            ( { model | quickBuilderState = Just state }, Cmd.map QuickBuilderMsg cmd )
 
         QB.Cancel ->
             -- The builder was cancelled

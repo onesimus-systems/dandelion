@@ -24,12 +24,28 @@ class CategoriesRepo extends BaseRepo implements Interfaces\CategoriesRepo
     private function fixCategoryFieldTypes(&$cat)
     {
         $cat['id'] = (int) $cat['id'];
+        $cat['parent'] = (int) $cat['parent'];
     }
 
     public function getAllCategories()
     {
         $cats = $this->database
             ->find($this->table)
+            ->orderAsc($this->table.'.description')
+            ->read();
+
+        foreach ($cats as &$cat) {
+            $this->fixCategoryFieldTypes($cat);
+        }
+
+        return $cats;
+    }
+
+    public function getChildren($pid)
+    {
+        $cats = $this->database
+            ->find($this->table)
+            ->whereEqual('parent', $pid)
             ->orderAsc($this->table.'.description')
             ->read();
 

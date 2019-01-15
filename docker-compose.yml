@@ -27,5 +27,10 @@ services:
             MYSQL_ROOT_PASSWORD: dandy_dev
             MYSQL_DATABASE: dandelion
         volumes:
+            - dandy-db:/var/lib/mysql
             - ./app/install/mysql_schema.sql:/docker-entrypoint-initdb.d/a.sql:ro
             - ./app/install/upgrades/db_upgrade_mysql_6.2.0.sql:/docker-entrypoint-initdb.d/b.sql:ro
+
+volumes:
+    dandy-db:
+        external: true

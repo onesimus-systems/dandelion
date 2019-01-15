@@ -31,6 +31,12 @@ $apiCommander->registerModule('categories', __NAMESPACE__.'\CategoriesAPI',
             'parameters' => [
                 'cid' => [null, 'int', 'required']
             ]
+        ]],
+        ['children', null, [
+            'http_method' => 'get',
+            'parameters' => [
+                'cid' => [null, 'int', 'required']
+            ]
         ]]
     ]);
 
