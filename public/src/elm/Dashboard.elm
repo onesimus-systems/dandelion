@@ -185,7 +185,7 @@ update msg model =
                 ( model, Cmd.none )
 
         QuickBuilderChanged state cmd ->
-            updateQuickBuilderChanged (Debug.log "state" state) cmd model
+            updateQuickBuilderChanged state cmd model
 
         QuickBuilderMsg qbMsg ->
             case model.quickBuilderState of

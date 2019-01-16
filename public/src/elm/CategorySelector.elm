@@ -10,7 +10,7 @@ module CategorySelector exposing
 
 import Dialogs exposing (..)
 import Html
-import Html.Styled as HS exposing (..)
+import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (keyCode, on, onCheck, onClick, onInput)
 import Http
@@ -106,7 +106,7 @@ update msg state =
         HttpRespCategories result ->
             case result of
                 Result.Ok levels ->
-                    ( State { stateValue | levelData = Debug.log "cats: " levels }, Cmd.none )
+                    ( State { stateValue | levelData = levels }, Cmd.none )
 
                 Result.Err _ ->
                     ( state, Cmd.none )
@@ -140,8 +140,15 @@ updateCategorySelects state toMsg val =
         newCategory =
             Category desc id False
 
+        oldList =
+            List.take level state.current
+
         newList =
-            List.append (List.take level state.current) [ newCategory ]
+            if id /= 0 then
+                List.append oldList [ newCategory ]
+
+            else
+                oldList
     in
     toMsg (State { state | current = newList }) (getCategoryList (0 :: toIdList newList))
 
@@ -180,7 +187,7 @@ viewCategorySelect state toMsg level categories =
         [ css [ S.qbSelectStyle ]
         , onInput (updateCategorySelects state toMsg)
         ]
-        (option [] [ text "Select:" ]
+        (option [ value (levelStr ++ ":0:") ] [ text "Select:" ]
             :: List.map
                 (viewCategoryOption levelStr)
                 categories
@@ -239,7 +246,7 @@ type alias Category =
 
 respCategoriesDecoder : D.Decoder CategoryListApi
 respCategoriesDecoder =
-    D.list (D.list respCategoryDecoder)
+    D.field "levels" (D.list (D.list respCategoryDecoder))
 
 
 respCategoryDecoder : D.Decoder Category
