@@ -14,31 +14,22 @@ import Dialogs exposing (..)
 import Html
 import Html.Styled as HS exposing (..)
 import Html.Styled.Attributes exposing (..)
-import Html.Styled.Events exposing (keyCode, on, onCheck, onClick, onInput)
-import Http
-import Json.Decode as D
-import Json.Decode.Pipeline exposing (optional, required)
-import Json.Encode as E
+import Html.Styled.Events exposing (onCheck, onInput)
 import Styles as S
-import Url.Builder as UB
 
 
 
 -- STATE
 
 
-type alias State =
-    InternalState
+type State
+    = State StateValue
 
 
-type InternalState
-    = InternalState StateValue
-
-
-getStateValue : InternalState -> StateValue
+getStateValue : State -> StateValue
 getStateValue state =
     case state of
-        InternalState stateValue ->
+        State stateValue ->
             stateValue
 
 
@@ -102,11 +93,7 @@ isEmptyField field =
 
 closedState : State -> NotOkCancel
 closedState state =
-    let
-        stateValue =
-            getStateValue state
-    in
-    stateValue.closed
+    (getStateValue state).closed
 
 
 toSearchQuery : State -> Maybe String
@@ -125,7 +112,7 @@ toSearchQuery state =
         Nothing
 
     else
-        Just query
+        Just (String.trim query)
 
 
 buildQueryPart : Field -> String -> String
@@ -208,7 +195,7 @@ initialStateCmd =
 
 initialState : CS.State -> State
 initialState csState =
-    InternalState
+    State
         { title = defaultField
         , body = defaultField
         , date1 = defaultField
@@ -252,51 +239,51 @@ update msg state =
                 ( csState, csCmd ) =
                     CS.update csMsg stateValue.csState
             in
-            ( InternalState { stateValue | csState = csState }, Cmd.map CategorySelectMsg csCmd )
+            ( State { stateValue | csState = csState }, Cmd.map CategorySelectMsg csCmd )
 
 
 updateTextInput : StateValue -> ToMsg msg -> IntMsg -> String -> msg
 updateTextInput state toMsg msg val =
     case msg of
         ChangeTitle ->
-            toMsg (InternalState { state | title = changeFieldVal val state.title }) Cmd.none
+            toMsg (State { state | title = changeFieldVal val state.title }) Cmd.none
 
         ChangeBody ->
-            toMsg (InternalState { state | body = changeFieldVal val state.body }) Cmd.none
+            toMsg (State { state | body = changeFieldVal val state.body }) Cmd.none
 
         ChangeDate1 ->
-            toMsg (InternalState { state | date1 = changeFieldVal val state.date1 }) Cmd.none
+            toMsg (State { state | date1 = changeFieldVal val state.date1 }) Cmd.none
 
         ChangeDate2 ->
-            toMsg (InternalState { state | date2 = changeFieldVal val state.date2 }) Cmd.none
+            toMsg (State { state | date2 = changeFieldVal val state.date2 }) Cmd.none
 
         ChangeCategory csState csCmd ->
-            toMsg (InternalState { state | csState = csState }) (Cmd.map CategorySelectMsg csCmd)
+            toMsg (State { state | csState = csState }) (Cmd.map CategorySelectMsg csCmd)
 
         _ ->
-            toMsg (InternalState state) Cmd.none
+            toMsg (State state) Cmd.none
 
 
 updateCheckInput : StateValue -> ToMsg msg -> IntMsg -> Bool -> msg
 updateCheckInput state toMsg msg val =
     case msg of
         ChangeTitle ->
-            toMsg (InternalState { state | title = changeFieldNot val state.title }) Cmd.none
+            toMsg (State { state | title = changeFieldNot val state.title }) Cmd.none
 
         ChangeBody ->
-            toMsg (InternalState { state | body = changeFieldNot val state.body }) Cmd.none
+            toMsg (State { state | body = changeFieldNot val state.body }) Cmd.none
 
         ChangeDate1 ->
-            toMsg (InternalState { state | date1 = changeFieldNot val state.date1 }) Cmd.none
+            toMsg (State { state | date1 = changeFieldNot val state.date1 }) Cmd.none
 
         ChangeDate2 ->
-            toMsg (InternalState { state | date2 = changeFieldNot val state.date2 }) Cmd.none
+            toMsg (State { state | date2 = changeFieldNot val state.date2 }) Cmd.none
 
         ChangeCategoryCheck ->
-            toMsg (InternalState { state | categoryNot = val }) Cmd.none
+            toMsg (State { state | categoryNot = val }) Cmd.none
 
         _ ->
-            toMsg (InternalState state) Cmd.none
+            toMsg (State state) Cmd.none
 
 
 updateClosedState : StateValue -> ToMsg msg -> Bool -> msg
@@ -309,12 +296,12 @@ updateClosedState state toMsg ok =
             else
                 Cancel
     in
-    toMsg (InternalState { state | closed = newClosedState }) Cmd.none
+    toMsg (State { state | closed = newClosedState }) Cmd.none
 
 
 updateCategory : StateValue -> ToMsg msg -> CS.State -> Cmd CS.Msg -> msg
 updateCategory state toMsg csState csCmd =
-    toMsg (InternalState { state | csState = csState }) (Cmd.map CategorySelectMsg csCmd)
+    toMsg (State { state | csState = csState }) (Cmd.map CategorySelectMsg csCmd)
 
 
 
@@ -332,7 +319,14 @@ quickBuilder toMsg state =
 
 view : StateValue -> ToMsg msg -> Html msg
 view state toMsg =
-    dialog (viewDialogBuilder state toMsg) (updateClosedState state toMsg)
+    let
+        defaultConfig =
+            Dialogs.defaultDialogConfig
+    in
+    dialogWithConfig
+        { defaultConfig | title = "Search Query Builder" }
+        (viewDialogBuilder state toMsg)
+        (updateClosedState state toMsg)
 
 
 viewDialogBuilder : StateValue -> ToMsg msg -> List (Html msg)

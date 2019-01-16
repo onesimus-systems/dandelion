@@ -12,23 +12,17 @@ interface IElmToJsPort<T> {
     subscribe: (callback: T) => void;
 }
 
-interface LogMetadata {
-    offset: number;
-    limit: number;
-    logSize: number;
-    resultCount: number;
-}
-
-interface SearchRequest {
-    query: string;
-    offset: number;
+interface DialogInfo {
+    target: string;
+    trigger: string;
 }
 
 type DashboardElmApp = {
     ports: {
         detectOverflow: IElmToJsPort<() => void>;
-        openSearchBuilder: IElmToJsPort<() => void>;
         reportOverflow: IJstoElmPort<number[]>;
-        searchQueryExt: IJstoElmPort<string>;
+
+        bindDialogDrag: IElmToJsPort<(DialogInfo) => void>;
+        centerDialog: IElmToJsPort<(string) => void>;
     };
 };

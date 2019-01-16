@@ -2,6 +2,7 @@ port module Main exposing (ApiResponse, LogEntry, LogStatus(..), LogsApiData, Lo
 
 import Browser
 import Browser.Navigation as Navigation
+import Dialogs
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (keyCode, on, onClick, onInput)
@@ -25,9 +26,6 @@ import Url.Builder as UB
 port reportOverflow : (E.Value -> msg) -> Sub msg
 
 
-port searchQueryExt : (E.Value -> msg) -> Sub msg
-
-
 
 -- Commands
 
@@ -35,6 +33,12 @@ port searchQueryExt : (E.Value -> msg) -> Sub msg
 {-| Tell JS to check for overflown log bodies, JS will issue a reportOverflow message
 -}
 port detectOverflow : E.Value -> Cmd msg
+
+
+port bindDialogDrag : E.Value -> Cmd msg
+
+
+port centerDialog : E.Value -> Cmd msg
 
 
 
@@ -123,7 +127,6 @@ init settings =
 type Msg
     = GotLogs (Result Http.Error LogsApiResp)
     | SearchLogs String Int
-    | SearchLogsExt E.Value
     | RefreshLogsTick Time.Posix
     | ReportOverflowIds E.Value
     | GotoPageOffset Int
@@ -145,9 +148,6 @@ update msg model =
 
         SearchLogs query _ ->
             update StartSearch { model | search = query }
-
-        SearchLogsExt val ->
-            updateSearchLogsExt val model
 
         RefreshLogsTick _ ->
             updateRefreshLogsTick model
@@ -175,7 +175,18 @@ update msg model =
                 ( state, cmd ) =
                     QB.initialStateCmd
             in
-            ( { model | quickBuilderState = Just state }, Cmd.map QuickBuilderMsg cmd )
+            ( { model | quickBuilderState = Just state }
+            , Cmd.batch
+                [ Cmd.map QuickBuilderMsg cmd
+                , bindDialogDrag
+                    (E.object
+                        [ ( "target", E.string "dialog" )
+                        , ( "trigger", E.string "dialog-header" )
+                        ]
+                    )
+                , centerDialog (E.string "dialog")
+                ]
+            )
 
         CheckIfEnterSearch keycode ->
             if keycode == 13 then
@@ -360,7 +371,6 @@ subscriptions : Model -> Sub Msg
 subscriptions _ =
     Sub.batch
         [ reportOverflow ReportOverflowIds
-        , searchQueryExt SearchLogsExt
         , Time.every 30000 RefreshLogsTick
         ]
 
@@ -390,12 +400,14 @@ view model =
                     div [] []
                 ]
             ]
-        , case model.quickBuilderState of
-            Just state ->
-                QB.quickBuilder QuickBuilderChanged state
+        , div []
+            (case model.quickBuilderState of
+                Just state ->
+                    [ Dialogs.overlay, QB.quickBuilder QuickBuilderChanged state ]
 
-            Nothing ->
-                text ""
+                Nothing ->
+                    [ text "" ]
+            )
         ]
 
 

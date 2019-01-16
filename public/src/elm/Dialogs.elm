@@ -1,56 +1,24 @@
-module Dialogs exposing (AlertConfig, DialogConfig, alert, alertWithConfig, confirm, dialog, dialogWithConfig, overlay)
+module Dialogs exposing
+    ( AlertConfig
+    , DialogConfig
+    , alert
+    , alertWithConfig
+    , confirm
+    , defaultAlertConfig
+    , defaultConfirmConfig
+    , defaultDialogConfig
+    , dialog
+    , dialogWithConfig
+    , overlay
+    , overlayStyled
+    )
 
 import Css exposing (..)
+import Html
 import Html.Styled exposing (..)
-import Html.Styled.Attributes exposing (class, css)
+import Html.Styled.Attributes exposing (class, css, id)
 import Html.Styled.Events exposing (onClick)
-
-
-dialogStyle : Style
-dialogStyle =
-    Css.batch
-        [ position fixed
-        , top (px 0)
-        , left (px 0)
-        , zIndex (int 11)
-        ]
-
-
-dialogHeaderStyle : Style
-dialogHeaderStyle =
-    Css.batch
-        [ backgroundColor (hex "666")
-        , fontSize (px 19)
-        , padding (px 10)
-        , color (hex "ddd")
-        ]
-
-
-dialogBodyStyle : Style
-dialogBodyStyle =
-    Css.batch
-        [ backgroundColor (hex "333")
-        , fontSize (Css.em 1.25)
-        , padding (px 20)
-        , color (hex "fff")
-        ]
-
-
-dialogFooterStyle : Style
-dialogFooterStyle =
-    Css.batch
-        [ backgroundColor (hex "666")
-        , padding (px 10)
-        , textAlign right
-        ]
-
-
-dialogFooterBtnStyle : Style
-dialogFooterBtnStyle =
-    Css.batch
-        [ margin2 (px 0) (Css.em 0.25)
-        , fontSize (Css.em 1.25)
-        ]
+import Styles exposing (..)
 
 
 type alias DialogConfig =
@@ -89,8 +57,8 @@ dialog prompt toMsg =
 dialogWithConfig : DialogConfig -> List (Html msg) -> (Bool -> msg) -> Html msg
 dialogWithConfig config prompt toMsg =
     div
-        [ css [ dialogStyle ] ]
-        [ div [ css [ dialogHeaderStyle ] ]
+        [ id "dialog", css [ dialogStyle ] ]
+        [ div [ id "dialog-header", css [ dialogHeaderStyle ] ]
             [ span [ class "dialog-box-title" ] [ text config.title ] ]
         , div [ css [ dialogBodyStyle ] ]
             prompt
@@ -148,8 +116,13 @@ alertWithConfig config prompt toMsg =
         ]
 
 
-overlay : Html msg
+overlay : Html.Html msg
 overlay =
+    toUnstyled overlayStyled
+
+
+overlayStyled : Html msg
+overlayStyled =
     div
         [ css
             [ position absolute
