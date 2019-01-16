@@ -41,7 +41,7 @@ return array(
     // Is the app installed, set to false to rerun install script
     'installed' => false,
     // Application title displayed at top of pages
-    'appTitle' => 'Dandelion Web Log',
+    'appTitle' => 'Dandelion',
     // Application tagline displayed below title
     'tagline' => '',
     // Application default theme

@@ -11,7 +11,7 @@ $config['db']['password'] = 'dandy_dev';
 $config['db']['tablePrefix'] = 'dan_';
 
 $config['hostname'] = 'http://localhost:8081';
-$config['appTitle'] = 'Dandelion Web Log';
+$config['appTitle'] = 'Dandelion';
 $config['tagline'] = 'Website Slogan';
 $config['installed'] = true;
 $config['debugEnabled'] = true;

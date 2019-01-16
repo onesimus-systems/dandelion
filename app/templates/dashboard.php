@@ -10,34 +10,6 @@
 $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 'datetimepicker']]);
 ?>
 
-<div id="query-builder-form" class="hidden-dialog">
-    <form>
-        <fieldset>
-            <label for="qb-title">Title:</label>
-            Not: <input type="checkbox" id="qb-title-not">
-            <input type="text" id="qb-title" value="" size="40">
-        </fieldset>
-
-        <fieldset>
-            <label for="qb-body">Body:</label>
-            Not: <input type="checkbox" id="qb-body-not">
-            <input type="text" id="qb-body" value="" size="40">
-        </fieldset>
-
-        <fieldset>
-            <label for="qb-date1">Date:</label>
-            Not: <input type="checkbox" id="qb-date-not">
-            <input type="text" id="qb-date1" class="qb-date" value="" size="10"> to
-            <input type="text" id="qb-date2" class="qb-date" value="" size="10">
-        </fieldset>
-        <fieldset>
-            <label>Category:</label>
-            Not: <input type="checkbox" id="qb-cat-not">
-            <span id="categories2"></span>
-        </fieldset>
-    </form>
-</div>
-
 <div id="cheesto-status-form" class="hidden-dialog">
     <form>
         <fieldset class="outer">
