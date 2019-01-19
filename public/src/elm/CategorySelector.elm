@@ -205,7 +205,7 @@ viewCategorySelect state toMsg level category =
             [ css [ S.qbSelectStyle ]
             , onInput (updateCategorySelects state toMsg)
             ]
-            (option [ value (levelStr ++ ":0:0:") ] [ text "Select:" ]
+            (option [ value (levelStr ++ ":0:" ++ String.fromInt category.parent ++ ":") ] [ text "Select:" ]
                 :: List.map
                     (viewCategoryOption levelStr category.id)
                     children
