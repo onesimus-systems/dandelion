@@ -387,6 +387,7 @@ viewDialogDateRangeInput state toMsg =
             ]
             []
         , input
+            -- TODO: Connect to date picker
             [ type_ "text"
             , id "qb-date1"
             , class "qb-date"
@@ -397,6 +398,7 @@ viewDialogDateRangeInput state toMsg =
             ]
             []
         , input
+            -- TODO: Connect to date picker
             [ type_ "text"
             , class "qb-date"
             , value (fieldValue state.date2)

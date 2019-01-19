@@ -1,6 +1,4 @@
 /// <reference path="../dts/Elm.d.ts" />
-import Cheesto from '../modules/cheesto';
-import Categories from '../modules/categories';
 import "../modules/common";
 import { Elm } from '../elm/Dashboard.elm';
 import { bindMouseMove, centerDialog } from '../modules/dialogUtils';
@@ -14,18 +12,8 @@ declare const props: {
 let app: DashboardElmApp;
 
 function init() {
-    Cheesto.mount("messages-cheesto");
-
-    $("#show-cheesto-button").click(function() {
-        showSection(this, "messages-panel");
-    });
-
-    $("#show-logs-button").click(function() {
-        showSection(this, "logs-panel");
-    });
-
     app = Elm.Main.init({
-        node: document.getElementById('logs-panel'),
+        node: document.getElementById('elm'),
         flags: props
     });
 

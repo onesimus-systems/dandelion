@@ -2,6 +2,7 @@ port module Main exposing (LogEntry, LogStatus(..), Model, Msg(..), PageOffsets,
 
 import Browser
 import Browser.Navigation as Navigation
+import CheestoDialog as CD
 import DandelionApi as Api
 import Dialogs
 import Html exposing (..)
@@ -13,6 +14,20 @@ import Json.Encode as E
 import Markdown
 import QuickBuilder as QB
 import Time
+
+
+
+-- MAIN
+
+
+main : Program ViewSettings Model Msg
+main =
+    Browser.element
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 
 
 
@@ -45,17 +60,20 @@ port centerDialog : E.Value -> Cmd msg
 
 
 
--- MAIN
+-- SUBSCRIPTIONS
 
 
-main : Program ViewSettings Model Msg
-main =
-    Browser.element
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ reportOverflow ReportOverflowIds
+        , Time.every 30000 RefreshLogsTick
+        , if model.viewSettings.showCheesto then
+            Time.every 30000 RefreshCheestoTick
+
+          else
+            Sub.none
+        ]
 
 
 
@@ -71,13 +89,22 @@ type alias Model =
     , searching : Bool
     , page : PageOffsets
     , quickBuilderState : Maybe QB.State
+    , cheesto : CheestoStatus
+    , cheestoStatus : String
+    , cheestoDialogState : Maybe CD.State
     }
 
 
 type LogStatus
-    = Loading
-    | Loaded (List LogEntry)
-    | Failure String
+    = LogsLoading
+    | LogsLoaded (List LogEntry)
+    | LogsFailure String
+
+
+type CheestoStatus
+    = CheestoLoading
+    | CheestoLoaded Api.CheestoApiData
+    | CheestoFailure String
 
 
 type alias LogEntry =
@@ -87,6 +114,7 @@ type alias LogEntry =
 type alias ViewSettings =
     { showCreateBtn : Bool
     , showLog : Bool
+    , showCheesto : Bool
     , cheestoEnabledClass : String
     }
 
@@ -97,9 +125,13 @@ type alias PageOffsets =
     }
 
 
+
+-- INIT
+
+
 init : ViewSettings -> ( Model, Cmd Msg )
 init settings =
-    ( { logs = Loading
+    ( { logs = LogsLoading
       , overflowLogIds = []
       , timedRefresh = True
       , viewSettings = settings
@@ -107,8 +139,18 @@ init settings =
       , searching = False
       , page = PageOffsets -1 -1
       , quickBuilderState = Nothing
+      , cheesto = CheestoLoading
+      , cheestoStatus = ""
+      , cheestoDialogState = Nothing
       }
-    , Api.logsGet GotLogs
+    , Cmd.batch
+        [ Api.logsGet GotLogs
+        , if settings.showCheesto then
+            Api.cheestoReadAll GotCheesto
+
+          else
+            Cmd.none
+        ]
     )
 
 
@@ -120,6 +162,7 @@ type Msg
     = GotLogs (Result Http.Error Api.LogsApiResp)
     | SearchLogs String Int
     | RefreshLogsTick Time.Posix
+    | RefreshCheestoTick Time.Posix
     | ReportOverflowIds E.Value
     | GotoPageOffset Int
     | ChangeSearchQuery String
@@ -130,6 +173,10 @@ type Msg
     | CheckIfEnterSearch Int
     | QuickBuilderChanged QB.State (Cmd QB.Msg)
     | QuickBuilderMsg QB.Msg
+    | GotCheesto (Result Http.Error Api.CheestoApiResp)
+    | CheestoUpdateResp (Result Http.Error Api.ApiMetadata)
+    | UpdateStatus String
+    | CheestoDialogChanged CD.State
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -138,11 +185,45 @@ update msg model =
         GotLogs result ->
             updateGotLogs result model
 
+        UpdateStatus status ->
+            if status == "Available" then
+                ( model
+                , Api.cheestoUpdate CheestoUpdateResp
+                    { status = status
+                    , returntime = "00:00:00"
+                    , message = ""
+                    }
+                )
+
+            else
+                ( { model | cheestoStatus = status, cheestoDialogState = Just CD.init }
+                , Cmd.batch
+                    [ bindDialogDrag
+                        (E.object
+                            [ ( "target", E.string "dialog" )
+                            , ( "trigger", E.string "dialog-header" )
+                            ]
+                        )
+                    , centerDialog (E.string "dialog")
+                    ]
+                )
+
+        CheestoUpdateResp resp ->
+            case resp of
+                Ok metadata ->
+                    ( model, Api.cheestoReadAll GotCheesto )
+
+                Err _ ->
+                    ( model, Cmd.none )
+
         SearchLogs query _ ->
             update StartSearch { model | search = query }
 
         RefreshLogsTick _ ->
             updateRefreshLogsTick model
+
+        RefreshCheestoTick _ ->
+            updateRefreshCheestoTick model
 
         ReportOverflowIds val ->
             updateReportOverflowIds val model
@@ -202,26 +283,55 @@ update msg model =
                 Nothing ->
                     ( model, Cmd.none )
 
+        GotCheesto result ->
+            updateGotCheesto result model
+
+        CheestoDialogChanged state ->
+            updateCheestoDialogChanged state model
+
 
 updateGotLogs : Result Http.Error Api.LogsApiResp -> Model -> ( Model, Cmd Msg )
 updateGotLogs result model =
     case result of
         Ok resp ->
             ( { model
-                | logs = Loaded resp.data.logs
+                | logs = LogsLoaded resp.data.logs
                 , page = calcPageOffsets resp.data.metadata
               }
             , detectOverflow E.null
             )
 
         Err err ->
-            ( { model | logs = Failure (httpErrorToString err) }, Cmd.none )
+            ( { model | logs = LogsFailure (httpErrorToString err) }, Cmd.none )
+
+
+updateGotCheesto : Result Http.Error Api.CheestoApiResp -> Model -> ( Model, Cmd Msg )
+updateGotCheesto result model =
+    case result of
+        Ok resp ->
+            ( { model
+                | cheesto = CheestoLoaded resp.data
+              }
+            , Cmd.none
+            )
+
+        Err err ->
+            ( { model | cheesto = CheestoFailure (httpErrorToString err) }, Cmd.none )
 
 
 updateRefreshLogsTick : Model -> ( Model, Cmd Msg )
 updateRefreshLogsTick model =
-    if model.logs /= Loading && model.timedRefresh then
+    if model.logs /= LogsLoading && model.timedRefresh then
         ( model, Api.logsGet GotLogs )
+
+    else
+        ( model, Cmd.none )
+
+
+updateRefreshCheestoTick : Model -> ( Model, Cmd Msg )
+updateRefreshCheestoTick model =
+    if model.cheesto /= CheestoLoading then
+        ( model, Api.cheestoReadAll GotCheesto )
 
     else
         ( model, Cmd.none )
@@ -288,6 +398,37 @@ updateQuickBuilderChangedOk state model =
             ( { model | quickBuilderState = Nothing }, Cmd.none )
 
 
+updateCheestoDialogChanged : CD.State -> Model -> ( Model, Cmd Msg )
+updateCheestoDialogChanged state model =
+    case CD.closedState state of
+        CD.Not ->
+            -- The dialog is still open
+            ( { model | cheestoDialogState = Just state }, Cmd.none )
+
+        CD.Cancel ->
+            -- The builder was cancelled
+            ( { model | cheestoDialogState = Nothing }, Cmd.none )
+
+        CD.Ok ->
+            -- The builder was okayed
+            updateCheestoDialogChangedOk state model
+
+
+updateCheestoDialogChangedOk : CD.State -> Model -> ( Model, Cmd Msg )
+updateCheestoDialogChangedOk state model =
+    let
+        cheestoUpdate =
+            CD.getUpdate state
+    in
+    ( { model | cheestoDialogState = Nothing }
+    , Api.cheestoUpdate CheestoUpdateResp
+        { status = model.cheestoStatus
+        , returntime = cheestoUpdate.returntime
+        , message = cheestoUpdate.message
+        }
+    )
+
+
 httpErrorToString : Http.Error -> String
 httpErrorToString err =
     case err of
@@ -330,23 +471,98 @@ calcPageOffsets metadata =
 
 
 
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.batch
-        [ reportOverflow ReportOverflowIds
-        , Time.every 30000 RefreshLogsTick
-        ]
-
-
-
 -- VIEW
 
 
 view : Model -> Html Msg
 view model =
+    div [ id "elm", class "main-info" ]
+        [ button
+            -- TODO: Connect to class toggling for sections
+            [ type_ "button"
+            , class "section-title disabled"
+            , id "show-cheesto-button"
+            ]
+            [ text "Show Cheesto" ]
+        , viewStatusPanel model
+        , button
+            -- TODO: Connect to class toggling for sections
+            [ type_ "button"
+            , class "section-title disabled"
+            , id "show-logs-button"
+            ]
+            [ text "Show Logs" ]
+        , viewLogsPanel model
+        ]
+
+
+viewStatusPanel : Model -> Html Msg
+viewStatusPanel model =
+    div [ class "messages-panel" ]
+        [ section [ id "messages-panel", class "messages-panel" ]
+            [ span [ class "messages-title" ] [ text "Ĉeesto" ]
+            , div [ id "messages-cheesto" ]
+                (case model.cheesto of
+                    CheestoLoading ->
+                        [ text "Loading..." ]
+
+                    CheestoFailure error ->
+                        [ text error ]
+
+                    CheestoLoaded cheesto ->
+                        [ viewStatusSelect cheesto.statusOptions
+                        , div [ class "__cheesto_status_table" ]
+                            [ table [] (List.map viewCheestoStatus cheesto.statuses) ]
+                        ]
+                )
+            ]
+        , case model.cheestoDialogState of
+            Just state ->
+                div [] [ Dialogs.overlay, CD.cheestoDialog CheestoDialogChanged state ]
+
+            Nothing ->
+                text ""
+        ]
+
+
+viewStatusSelect : List String -> Html Msg
+viewStatusSelect options =
+    select
+        [ class "__cheesto_status_select"
+        , onInput UpdateStatus
+        , value "-1"
+        ]
+        (option [ value "-1" ] [ text "Set Status:" ]
+            :: List.map (\o -> option [ value o ] [ text o ]) options
+        )
+
+
+viewCheestoStatus : Api.CheestoStatus -> Html Msg
+viewCheestoStatus status =
+    let
+        message =
+            if status.message == "" then
+                ""
+
+            else
+                status.message ++ "\n\n"
+    in
+    tr []
+        [ td [] [ text status.fullname ]
+        , if status.status == "Available" then
+            td [ class "status-cell", title ("Last Changed: " ++ status.modified) ] [ text status.status ]
+
+          else
+            td
+                [ class "status-cell"
+                , title (message ++ "Return: " ++ status.returntime ++ "\nLast Changed: " ++ status.modified)
+                ]
+                [ text status.status ]
+        ]
+
+
+viewLogsPanel : Model -> Html Msg
+viewLogsPanel model =
     div [ class "logs-panel" ]
         [ section [ id "logs-panel", class ("" ++ model.viewSettings.cheestoEnabledClass) ]
             [ viewControlBar model
@@ -463,13 +679,13 @@ viewPageControls model =
 viewLogList : Model -> Html Msg
 viewLogList model =
     case model.logs of
-        Loading ->
+        LogsLoading ->
             viewLoading
 
-        Loaded logs ->
+        LogsLoaded logs ->
             viewLogTable model.overflowLogIds logs
 
-        Failure result ->
+        LogsFailure result ->
             viewFailureMsg result
 
 

@@ -1,7 +1,12 @@
 module DandelionApi exposing
-    ( ApiResponse
+    ( ApiMetadata
+    , ApiResponse
     , Category
     , CategoryGetAllResp
+    , CheestoApiData
+    , CheestoApiResp
+    , CheestoStatus
+    , CheestoUpdate
     , LogEntry
     , LogsApiData
     , LogsApiMetadata
@@ -11,6 +16,8 @@ module DandelionApi exposing
     , categoryDecoder
     , categoryGetAllDataDecoder
     , categoryGetAllDecoder
+    , cheestoReadAll
+    , cheestoUpdate
     , logDecoder
     , logsApiDataDecoder
     , logsApiRespDecoder
@@ -54,19 +61,59 @@ logsGet toMsg =
     logsGetWithOffset toMsg 0
 
 
-getLogEntriesUrl : Int -> String
-getLogEntriesUrl offset =
-    UB.absolute
-        [ "api/i/logs/read" ]
-        [ UB.int "offset" offset ]
-
-
 logsSearch : (Result.Result Http.Error LogsApiResp -> msg) -> String -> Int -> Cmd msg
 logsSearch toMsg query offset =
     Http.get
         { url = searchApiUrl query offset
         , expect = Http.expectJson toMsg logsApiRespDecoder
         }
+
+
+cheestoReadAll : (Result.Result Http.Error CheestoApiResp -> msg) -> Cmd msg
+cheestoReadAll toMsg =
+    Http.get
+        { url = "api/i/cheesto/read"
+        , expect = Http.expectJson toMsg cheestoApiRespDecoder
+        }
+
+
+type alias CheestoUpdate =
+    { status : String
+    , returntime : String
+    , message : String
+    }
+
+
+cheestoUpdate : (Result.Result Http.Error ApiMetadata -> msg) -> CheestoUpdate -> Cmd msg
+cheestoUpdate toMsg update =
+    Http.post
+        { url = "api/i/cheesto/update"
+        , body =
+            urlencodedForm
+                [ UB.string "status" update.status
+                , UB.string "returntime" update.returntime
+                , UB.string "message" update.message
+                ]
+        , expect = Http.expectJson toMsg apiMetadataDecoder
+        }
+
+
+
+-- URLs
+
+
+urlencodedForm : List UB.QueryParameter -> Http.Body
+urlencodedForm params =
+    UB.toQuery params
+        |> String.dropLeft 1
+        |> Http.stringBody "application/x-www-form-urlencoded"
+
+
+getLogEntriesUrl : Int -> String
+getLogEntriesUrl offset =
+    UB.absolute
+        [ "api/i/logs/read" ]
+        [ UB.int "offset" offset ]
 
 
 searchApiUrl : String -> Int -> String
@@ -84,6 +131,14 @@ type alias ApiResponse a value =
     a -> Int -> String -> String -> String -> value
 
 
+type alias ApiMetadata =
+    { errorcode : Int
+    , moduleName : String
+    , requestTime : String
+    , status : String
+    }
+
+
 apiDecoder : ApiResponse a value -> Decoder a -> Decoder value
 apiDecoder value decoder =
     Decode.succeed value
@@ -92,6 +147,15 @@ apiDecoder value decoder =
         |> required "module" string
         |> required "requestTime" string
         |> required "status" string
+
+
+apiMetadataDecoder : Decoder ApiMetadata
+apiMetadataDecoder =
+    Decode.map4 ApiMetadata
+        (Decode.field "errorcode" int)
+        (Decode.field "module" string)
+        (Decode.field "requestTime" string)
+        (Decode.field "status" string)
 
 
 
@@ -185,6 +249,62 @@ logDecoder =
         |> required "num_of_comments" int
         |> required "time_created" string
         |> required "title" string
+        |> required "user_id" int
+
+
+
+-- JSON - Cheesto
+
+
+cheestoApiRespDecoder : Decoder CheestoApiResp
+cheestoApiRespDecoder =
+    apiDecoder CheestoApiResp cheestoApiDataDecoder
+
+
+type alias CheestoApiResp =
+    { data : CheestoApiData
+    , errorcode : Int
+    , moduleName : String
+    , requestTime : String
+    , status : String
+    }
+
+
+type alias CheestoApiData =
+    { statusOptions : List String
+    , statuses : List CheestoStatus
+    }
+
+
+type alias CheestoStatus =
+    { disabled : Bool
+    , fullname : String
+    , id : Int
+    , message : String
+    , modified : String
+    , returntime : String
+    , status : String
+    , userId : Int
+    }
+
+
+cheestoApiDataDecoder : Decoder CheestoApiData
+cheestoApiDataDecoder =
+    Decode.map2 CheestoApiData
+        (Decode.field "statusOptions" (list string))
+        (Decode.field "statuses" (list cheestoStatusDecoder))
+
+
+cheestoStatusDecoder : Decoder CheestoStatus
+cheestoStatusDecoder =
+    Decode.succeed CheestoStatus
+        |> required "disabled" bool
+        |> required "fullname" string
+        |> required "id" int
+        |> required "message" string
+        |> required "modified" string
+        |> required "returntime" string
+        |> required "status" string
         |> required "user_id" int
 
 
