@@ -12,7 +12,7 @@ $config['db']['tablePrefix'] = 'dan_';
 
 $config['hostname'] = 'http://localhost:8081';
 $config['appTitle'] = 'Dandelion';
-$config['tagline'] = 'Website Slogan';
+$config['tagline'] = '*+*+*DOCKER DEV*+*+*';
 $config['installed'] = true;
 $config['debugEnabled'] = true;
 $config['publicApiEnabled'] = true;
