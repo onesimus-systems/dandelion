@@ -186,7 +186,7 @@ initialStateCmd : ( State, Cmd Msg )
 initialStateCmd =
     let
         ( csState, csCmd ) =
-            CS.initialStateCmd
+            CS.init
     in
     ( initialState csState
     , Cmd.map CategorySelectMsg csCmd
@@ -219,7 +219,7 @@ type IntMsg
     | ChangeBody
     | ChangeDate1
     | ChangeDate2
-    | ChangeCategory CS.State (Cmd CS.Msg)
+    | ChangeCategory CS.State
     | ChangeCategoryCheck
 
 
@@ -236,10 +236,10 @@ update msg state =
     case msg of
         CategorySelectMsg csMsg ->
             let
-                ( csState, csCmd ) =
+                csState =
                     CS.update csMsg stateValue.csState
             in
-            ( State { stateValue | csState = csState }, Cmd.map CategorySelectMsg csCmd )
+            ( State { stateValue | csState = csState }, Cmd.none )
 
 
 updateTextInput : StateValue -> ToMsg msg -> IntMsg -> String -> msg
@@ -257,8 +257,8 @@ updateTextInput state toMsg msg val =
         ChangeDate2 ->
             toMsg (State { state | date2 = changeFieldVal val state.date2 }) Cmd.none
 
-        ChangeCategory csState csCmd ->
-            toMsg (State { state | csState = csState }) (Cmd.map CategorySelectMsg csCmd)
+        ChangeCategory csState ->
+            toMsg (State { state | csState = csState }) Cmd.none
 
         _ ->
             toMsg (State state) Cmd.none
@@ -299,9 +299,9 @@ updateClosedState state toMsg ok =
     toMsg (State { state | closed = newClosedState }) Cmd.none
 
 
-updateCategory : StateValue -> ToMsg msg -> CS.State -> Cmd CS.Msg -> msg
-updateCategory state toMsg csState csCmd =
-    toMsg (State { state | csState = csState }) (Cmd.map CategorySelectMsg csCmd)
+updateCategory : StateValue -> ToMsg msg -> CS.State -> msg
+updateCategory state toMsg csState =
+    toMsg (State { state | csState = csState }) Cmd.none
 
 
 

@@ -37,7 +37,8 @@ $apiCommander->registerModule('categories', __NAMESPACE__.'\CategoriesAPI',
             'parameters' => [
                 'cid' => [null, 'int', 'required']
             ]
-        ]]
+        ]],
+        ['getall', null, ['http_method' => 'get']]
     ]);
 
 $apiCommander->registerModule('dandelion', __NAMESPACE__.'\DandelionAPI',

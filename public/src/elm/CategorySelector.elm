@@ -3,21 +3,19 @@ module CategorySelector exposing
     , State
     , categorySelector
     , categorySelectorStyled
-    , initialStateCmd
+    , init
     , toString
     , update
     )
 
+import DandelionApi as Api
 import Dialogs exposing (..)
 import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
-import Html.Styled.Events exposing (keyCode, on, onCheck, onClick, onInput)
+import Html.Styled.Events exposing (onInput)
 import Http
-import Json.Decode as D
-import Json.Encode as E
 import Styles as S
-import Url.Builder as UB
 
 
 
@@ -36,8 +34,8 @@ getStateValue state =
 
 
 type alias StateValue =
-    { current : List Category
-    , levelData : List (List Category)
+    { current : List Api.Category
+    , categories : List Api.Category
     }
 
 
@@ -51,8 +49,11 @@ toString state =
         stateValue =
             getStateValue state
 
+        list =
+            List.take (List.length stateValue.current - 1) stateValue.current
+
         str =
-            List.map (\c -> c.desc) stateValue.current
+            List.map .desc list
                 |> String.join ":"
     in
     if str == "" then
@@ -62,25 +63,25 @@ toString state =
         Just str
 
 
-toIdList : List Category -> List Int
-toIdList categories =
-    List.map (\c -> c.id) categories
+categoryChildren : List Api.Category -> Int -> List Api.Category
+categoryChildren categories parent =
+    List.filter (\c -> c.parent == parent) categories
 
 
 
 -- INIT
 
 
-initialStateCmd : ( State, Cmd Msg )
-initialStateCmd =
-    ( initialState, getInitialCategoryList )
+init : ( State, Cmd Msg )
+init =
+    ( initialState, Api.categoriesGetAll HttpRespCategories )
 
 
 initialState : State
 initialState =
     State
-        { current = []
-        , levelData = []
+        { current = [ { desc = "", id = 0, parent = 0 } ]
+        , categories = []
         }
 
 
@@ -89,14 +90,14 @@ initialState =
 
 
 type alias ToMsg msg =
-    State -> Cmd Msg -> msg
+    State -> msg
 
 
 type Msg
-    = HttpRespCategories (Result Http.Error CategoryListApi)
+    = HttpRespCategories (Result Http.Error Api.CategoryGetAllResp)
 
 
-update : Msg -> State -> ( State, Cmd Msg )
+update : Msg -> State -> State
 update msg state =
     let
         stateValue =
@@ -105,11 +106,11 @@ update msg state =
     case msg of
         HttpRespCategories result ->
             case result of
-                Result.Ok levels ->
-                    ( State { stateValue | levelData = levels }, Cmd.none )
+                Result.Ok resp ->
+                    State { stateValue | categories = resp.data }
 
                 Result.Err _ ->
-                    ( state, Cmd.none )
+                    state
 
 
 updateCategorySelects : StateValue -> ToMsg msg -> String -> msg
@@ -131,26 +132,36 @@ updateCategorySelects state toMsg val =
                 |> Maybe.andThen String.toInt
                 |> Maybe.withDefault 0
 
-        desc =
+        parent =
             parts
                 |> List.drop 2
+                |> List.head
+                |> Maybe.andThen String.toInt
+                |> Maybe.withDefault 0
+
+        desc =
+            parts
+                |> List.drop 3
                 |> List.head
                 |> Maybe.withDefault ""
 
         newCategory =
-            Category desc id False
+            Api.Category desc id parent
 
         oldList =
             List.take level state.current
 
         newList =
-            if id /= 0 then
-                List.append oldList [ newCategory ]
+            List.append
+                (if id /= 0 then
+                    List.append oldList [ newCategory ]
 
-            else
-                oldList
+                 else
+                    oldList
+                )
+                [ Api.Category "" 0 id ]
     in
-    toMsg (State { state | current = newList }) (getCategoryList (0 :: toIdList newList))
+    toMsg (State { state | current = newList })
 
 
 
@@ -174,84 +185,45 @@ categorySelectorStyled toMsg state =
 view : StateValue -> ToMsg msg -> Html msg
 view state toMsg =
     div []
-        (List.indexedMap (viewCategorySelect state toMsg) state.levelData)
+        (List.indexedMap (viewCategorySelect state toMsg) state.current)
 
 
-viewCategorySelect : StateValue -> ToMsg msg -> Int -> List Category -> Html msg
-viewCategorySelect state toMsg level categories =
+viewCategorySelect : StateValue -> ToMsg msg -> Int -> Api.Category -> Html msg
+viewCategorySelect state toMsg level category =
     let
         levelStr =
             String.fromInt level
+
+        children =
+            categoryChildren state.categories category.parent
     in
-    select
-        [ css [ S.qbSelectStyle ]
-        , onInput (updateCategorySelects state toMsg)
-        ]
-        (option [ value (levelStr ++ ":0:") ] [ text "Select:" ]
-            :: List.map
-                (viewCategoryOption levelStr)
-                categories
-        )
+    if List.length children == 0 then
+        text ""
+
+    else
+        select
+            [ css [ S.qbSelectStyle ]
+            , onInput (updateCategorySelects state toMsg)
+            ]
+            (option [ value (levelStr ++ ":0:0:") ] [ text "Select:" ]
+                :: List.map
+                    (viewCategoryOption levelStr category.id)
+                    children
+            )
 
 
-viewCategoryOption : String -> Category -> Html msg
-viewCategoryOption level category =
+viewCategoryOption : String -> Int -> Api.Category -> Html msg
+viewCategoryOption level current category =
     option
-        [ value (level ++ ":" ++ String.fromInt category.id ++ ":" ++ category.desc)
-        , selected category.selected
+        [ value
+            (level
+                ++ ":"
+                ++ String.fromInt category.id
+                ++ ":"
+                ++ String.fromInt category.parent
+                ++ ":"
+                ++ category.desc
+            )
+        , selected (category.id == current)
         ]
         [ text category.desc ]
-
-
-
--- HTTP
-
-
-getInitialCategoryList : Cmd Msg
-getInitialCategoryList =
-    getCategoryList [ 0 ]
-
-
-getCategoryList : List Int -> Cmd Msg
-getCategoryList categories =
-    let
-        jsonList =
-            E.encode 0 (E.list E.int categories)
-
-        url =
-            UB.absolute
-                [ "render/categoriesJson" ]
-                [ UB.string "pastSelection" jsonList ]
-    in
-    Http.get
-        { url = url
-        , expect = Http.expectJson HttpRespCategories respCategoriesDecoder
-        }
-
-
-
--- JSON
-
-
-type alias CategoryListApi =
-    List (List Category)
-
-
-type alias Category =
-    { desc : String
-    , id : Int
-    , selected : Bool
-    }
-
-
-respCategoriesDecoder : D.Decoder CategoryListApi
-respCategoriesDecoder =
-    D.field "levels" (D.list (D.list respCategoryDecoder))
-
-
-respCategoryDecoder : D.Decoder Category
-respCategoryDecoder =
-    D.map3 Category
-        (D.field "desc" D.string)
-        (D.field "id" D.int)
-        (D.field "selected" D.bool)

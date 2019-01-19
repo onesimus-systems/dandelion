@@ -87,4 +87,14 @@ class CategoriesAPI extends BaseModule
         $cats = new Categories($this->repo);
         return $cats->getChildren($params->cid);
     }
+
+    /**
+     *  Get list of all categories
+     *
+     *  @return JSON
+     */
+    public function getall()
+    {
+        return $this->repo->getAllCategories();
+    }
 }

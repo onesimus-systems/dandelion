@@ -1,19 +1,18 @@
-port module Main exposing (ApiResponse, LogEntry, LogStatus(..), LogsApiData, LogsApiMetadata, LogsApiResp, Model, Msg(..), PageOffsets, ViewSettings, apiDecoder, calcPageOffsets, detectOverflow, getLogEntries, getLogEntriesUrl, getLogEntriesWithOffset, httpErrorToString, init, logDecoder, logsApiDataDecoder, logsApiRespDecoder, logsListDecoder, logsMetadataDecoder, logsMetadataEncoder, main, reportOverflow, searchApiUrl, searchLogsHttp, subscriptions, update, updateGotLogs, updateGotoPageOffset, updateNewLogs, updateRefreshLogsTick, updateReportOverflowIds, view, viewControlBar, viewFailureMsg, viewLoading, viewLogEntry, viewLogMetadata, viewLogOverflow, viewLogTable, viewPageControls, viewSearchControls)
+port module Main exposing (LogEntry, LogStatus(..), Model, Msg(..), PageOffsets, ViewSettings, bindDialogDrag, calcPageOffsets, centerDialog, detectOverflow, httpErrorToString, init, main, onEnter, reportOverflow, subscriptions, update, updateGotLogs, updateGotoPageOffset, updateQuickBuilderChanged, updateQuickBuilderChangedOk, updateRefreshLogsTick, updateReportOverflowIds, view, viewControlBar, viewFailureMsg, viewLoading, viewLogEntry, viewLogMetadata, viewLogOverflow, viewLogTable, viewPageControls, viewSearchControls)
 
 import Browser
 import Browser.Navigation as Navigation
+import DandelionApi as Api
 import Dialogs
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (keyCode, on, onClick, onInput)
 import Http
-import Json.Decode as Decode exposing (Decoder, bool, decodeValue, int, list, string)
-import Json.Decode.Pipeline exposing (optional, required)
+import Json.Decode as Decode exposing (decodeValue, int, list, string)
 import Json.Encode as E
 import Markdown
 import QuickBuilder as QB
 import Time
-import Url.Builder as UB
 
 
 
@@ -35,9 +34,13 @@ port reportOverflow : (E.Value -> msg) -> Sub msg
 port detectOverflow : E.Value -> Cmd msg
 
 
+{-| Tell JS to bind mousedragging to an element with the given id
+-}
 port bindDialogDrag : E.Value -> Cmd msg
 
 
+{-| Tell JS to center an element absolutely with the given id
+-}
 port centerDialog : E.Value -> Cmd msg
 
 
@@ -78,18 +81,7 @@ type LogStatus
 
 
 type alias LogEntry =
-    { body : String
-    , canEdit : Bool
-    , category : String
-    , dateCreated : String
-    , fullname : String
-    , id : Int
-    , isEdited : Bool
-    , numOfComments : Int
-    , timeCreated : String
-    , title : String
-    , userID : Int
-    }
+    Api.LogEntry
 
 
 type alias ViewSettings =
@@ -116,7 +108,7 @@ init settings =
       , page = PageOffsets -1 -1
       , quickBuilderState = Nothing
       }
-    , getLogEntries
+    , Api.logsGet GotLogs
     )
 
 
@@ -125,7 +117,7 @@ init settings =
 
 
 type Msg
-    = GotLogs (Result Http.Error LogsApiResp)
+    = GotLogs (Result Http.Error Api.LogsApiResp)
     | SearchLogs String Int
     | RefreshLogsTick Time.Posix
     | ReportOverflowIds E.Value
@@ -162,10 +154,10 @@ update msg model =
             ( { model | search = query }, Cmd.none )
 
         StartSearch ->
-            ( { model | timedRefresh = False, logs = Loading, searching = True }, searchLogsHttp model.search 0 )
+            ( { model | timedRefresh = False, searching = True }, Api.logsSearch GotLogs model.search 0 )
 
         ClearSearch ->
-            ( { model | timedRefresh = True, logs = Loading, search = "", searching = False }, getLogEntries )
+            ( { model | timedRefresh = True, search = "", searching = False }, Api.logsGet GotLogs )
 
         CreateNewLog ->
             ( model, Navigation.load "log/new" )
@@ -211,7 +203,7 @@ update msg model =
                     ( model, Cmd.none )
 
 
-updateGotLogs : Result Http.Error LogsApiResp -> Model -> ( Model, Cmd Msg )
+updateGotLogs : Result Http.Error Api.LogsApiResp -> Model -> ( Model, Cmd Msg )
 updateGotLogs result model =
     case result of
         Ok resp ->
@@ -226,39 +218,13 @@ updateGotLogs result model =
             ( { model | logs = Failure (httpErrorToString err) }, Cmd.none )
 
 
-updateSearchLogsExt : E.Value -> Model -> ( Model, Cmd Msg )
-updateSearchLogsExt val model =
-    case decodeValue string val of
-        Ok query ->
-            update StartSearch { model | search = query }
-
-        Err err ->
-            ( model, Cmd.none )
-
-
 updateRefreshLogsTick : Model -> ( Model, Cmd Msg )
 updateRefreshLogsTick model =
     if model.logs /= Loading && model.timedRefresh then
-        ( model, getLogEntries )
+        ( model, Api.logsGet GotLogs )
 
     else
         ( model, Cmd.none )
-
-
-updateNewLogs : E.Value -> Model -> ( Model, Cmd Msg )
-updateNewLogs val model =
-    case decodeValue logsApiRespDecoder val of
-        Ok resp ->
-            ( { model
-                | logs = Loaded resp.data.logs
-                , timedRefresh = False
-                , page = calcPageOffsets resp.data.metadata
-              }
-            , detectOverflow E.null
-            )
-
-        Err err ->
-            ( { model | logs = Failure (Decode.errorToString err) }, Cmd.none )
 
 
 updateReportOverflowIds : E.Value -> Model -> ( Model, Cmd Msg )
@@ -274,7 +240,7 @@ updateReportOverflowIds val model =
 updateGotoPageOffset : Int -> Model -> ( Model, Cmd Msg )
 updateGotoPageOffset offset model =
     if model.searching then
-        ( model, searchLogsHttp model.search offset )
+        ( model, Api.logsSearch GotLogs model.search offset )
 
     else
         let
@@ -285,7 +251,7 @@ updateGotoPageOffset offset model =
                 else
                     False
         in
-        ( { model | logs = Loading, timedRefresh = timedRefresh }, getLogEntriesWithOffset offset )
+        ( { model | timedRefresh = timedRefresh }, Api.logsGetWithOffset GotLogs offset )
 
 
 updateQuickBuilderChanged : QB.State -> Cmd QB.Msg -> Model -> ( Model, Cmd Msg )
@@ -341,7 +307,7 @@ httpErrorToString err =
             msg
 
 
-calcPageOffsets : LogsApiMetadata -> PageOffsets
+calcPageOffsets : Api.LogsApiMetadata -> PageOffsets
 calcPageOffsets metadata =
     let
         prevPage =
@@ -605,139 +571,3 @@ onEnter msg =
                 Decode.fail "not ENTER"
     in
     on "keyup" (Decode.andThen isEnter keyCode)
-
-
-
--- HTTP
-
-
-getLogEntriesWithOffset : Int -> Cmd Msg
-getLogEntriesWithOffset offset =
-    Http.get
-        { url = getLogEntriesUrl offset
-        , expect = Http.expectJson GotLogs logsApiRespDecoder
-        }
-
-
-getLogEntries : Cmd Msg
-getLogEntries =
-    getLogEntriesWithOffset 0
-
-
-getLogEntriesUrl : Int -> String
-getLogEntriesUrl offset =
-    UB.absolute
-        [ "api/i/logs/read" ]
-        [ UB.int "offset" offset ]
-
-
-searchLogsHttp : String -> Int -> Cmd Msg
-searchLogsHttp query offset =
-    Http.get
-        { url = searchApiUrl query offset
-        , expect = Http.expectJson GotLogs logsApiRespDecoder
-        }
-
-
-searchApiUrl : String -> Int -> String
-searchApiUrl query offset =
-    UB.absolute
-        [ "api/i/logs/search" ]
-        [ UB.string "query" query, UB.int "offset" offset ]
-
-
-
--- JSON
-
-
-type alias ApiResponse a value =
-    a -> Int -> String -> String -> String -> value
-
-
-logsApiRespDecoder : Decoder LogsApiResp
-logsApiRespDecoder =
-    apiDecoder LogsApiResp logsApiDataDecoder
-
-
-apiDecoder : ApiResponse a value -> Decoder a -> Decoder value
-apiDecoder value decoder =
-    Decode.succeed value
-        |> required "data" decoder
-        |> required "errorcode" int
-        |> required "module" string
-        |> required "requestTime" string
-        |> required "status" string
-
-
-
--- JSON - Get logs api response
-
-
-type alias LogsApiResp =
-    { data : LogsApiData
-    , errorcode : Int
-    , moduleName : String
-    , requestTime : String
-    , status : String
-    }
-
-
-type alias LogsApiData =
-    { logs : List LogEntry
-    , metadata : LogsApiMetadata
-    }
-
-
-logsApiDataDecoder : Decoder LogsApiData
-logsApiDataDecoder =
-    Decode.succeed LogsApiData
-        |> required "logs" logsListDecoder
-        |> required "metadata" logsMetadataDecoder
-
-
-type alias LogsApiMetadata =
-    { offset : Int
-    , limit : Int
-    , logSize : Int
-    , resultCount : Int
-    }
-
-
-logsMetadataDecoder : Decoder LogsApiMetadata
-logsMetadataDecoder =
-    Decode.succeed LogsApiMetadata
-        |> required "offset" int
-        |> required "limit" int
-        |> required "logSize" int
-        |> required "resultCount" int
-
-
-logsMetadataEncoder : LogsApiMetadata -> E.Value
-logsMetadataEncoder metadata =
-    E.object
-        [ ( "offset", E.int metadata.offset )
-        , ( "limit", E.int metadata.limit )
-        , ( "logSize", E.int metadata.logSize )
-        , ( "resultCount", E.int metadata.resultCount )
-        ]
-
-
-logsListDecoder : Decoder (List LogEntry)
-logsListDecoder =
-    list logDecoder
-
-
-logDecoder : Decoder LogEntry
-logDecoder =
-    Decode.succeed LogEntry
-        |> required "body" string
-        |> optional "canEdit" bool False
-        |> required "category" string
-        |> required "date_created" string
-        |> required "fullname" string
-        |> required "id" int
-        |> required "is_edited" bool
-        |> required "num_of_comments" int
-        |> required "time_created" string
-        |> required "title" string
-        |> required "user_id" int
