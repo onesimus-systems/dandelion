@@ -22,10 +22,8 @@
     <body>
         <header>
             <div class="title-bar">
-                <div class="title-lockup">
-                    <span class="app-title"><?= $this->e($appTitle) ?></span>
-                    <span class="app-tagline"><?= $this->e($tagline) ?></span>
-                </div>
+                <span class="app-title"><?= $this->e($appTitle) ?></span>
+                <span class="app-tagline"><?= $this->e($tagline) ?></span>
             </div>
 
             <nav>

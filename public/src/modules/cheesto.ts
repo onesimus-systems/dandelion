@@ -80,7 +80,7 @@ namespace Cheesto {
         const div = $("<div/>");
         div.addClass(statusTableClass);
         const table = $("<table/>");
-        table.append(`<thead><tr><th>Name</th><th>Status</th></tr></thead><tbody>`);
+        table.append(`<tbody>`);
 
         for (const key in statuses) {
             if (statuses.hasOwnProperty(key)) {

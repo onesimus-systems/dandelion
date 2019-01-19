@@ -7,6 +7,14 @@
 .main-content {
     margin: 0;
 
+    .main-info {
+        display: flex;
+
+        #dandelion-lib > .media-query(screen, small, {
+            flex-wrap: wrap;
+        });
+    }
+
     #dandelion-lib > .media-query(screen, small, {
         margin-bottom: 20px;
         height: initial;
@@ -156,19 +164,16 @@
     .cheesto-enabled {
         border-left: 2px solid @dandelion-dark-grey;
         margin: 0;
-        margin-left: 250px;
         max-width: 100%;
     }
 }
 
 .messages-panel {
-    float: left;
-    width: 250px;
+    margin-right: 1rem;
 
     #dandelion-lib > .media-query(screen, small, {
         width: 100%;
         display: none;
-        float: none;
     });
 
     .messages-title {
@@ -181,7 +186,6 @@
     #messages-cheesto {
         height: 50%;
         margin-bottom: 20px;
-        overflow: auto;
 
         .__cheesto_status_select {
             #dandelion-lib > .select();
@@ -191,21 +195,25 @@
         .__cheesto_status_table {
             padding-left: 10px;
             width: 90%;
-            overflow: auto;
 
             table {
                 width: 100%;
 
-                th, td {
-                    border: 1px solid black;
-                    word-wrap: break-word;
+                tr {
+                    border-top: 1px solid black;
+
+                    &:first-child {
+                        border-top: none;
+                    }
                 }
 
                 td {
                     padding: 5px;
+                    word-wrap: break-word;
 
                     &.status-cell {
                         color: @dandelion-dark-orange;
+                        border-left: 1px solid black;
 
                         &:hover {
                             cursor: pointer;

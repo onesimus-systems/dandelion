@@ -51,26 +51,28 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['dashboard', 'jqueryui', 
     </form>
 </div>
 
-<button type="button" class="section-title disabled" id="show-cheesto-button">Show Message Center</button>
+<div class="main-info">
+    <button type="button" class="section-title disabled" id="show-cheesto-button">Show Message Center</button>
 
-<?php if ($showCheesto): ?>
-<section id="messages-panel" class="messages-panel">
-        <span class="messages-title">Ĉeesto</span>
+    <?php if ($showCheesto): ?>
+    <section id="messages-panel" class="messages-panel">
+            <span class="messages-title">Ĉeesto</span>
 
-        <div id="messages-cheesto">
-            <select class="__cheesto_status_select">
-                <option value="-1">Set Status:</option>
-            </select>
+            <div id="messages-cheesto">
+                <select class="__cheesto_status_select">
+                    <option value="-1">Set Status:</option>
+                </select>
 
-            <div class="__cheesto_status_table">Loading...</div>
-        </div>
-</section>
-<?php endif; ?>
+                <div class="__cheesto_status_table">Loading...</div>
+            </div>
+    </section>
+    <?php endif; ?>
 
 
-<button type="button" class="section-title disabled" id="show-logs-button">Show Logs</button>
+    <button type="button" class="section-title disabled" id="show-logs-button">Show Logs</button>
 
-<section id="logs-panel" class="logs-panel <?= $showCheesto ? 'cheesto-enabled' : '' ?>"></section>
+    <section id="logs-panel" class="logs-panel <?= $showCheesto ? 'cheesto-enabled' : '' ?>"></section>
+</div>
 
 <script type="text/javascript">
     const props = {
