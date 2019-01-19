@@ -9,6 +9,7 @@ module QuickBuilder exposing
     , update
     )
 
+import Browser.Dom as Dom
 import CategorySelector as CS
 import Dialogs exposing (..)
 import Html
@@ -16,6 +17,7 @@ import Html.Styled as HS exposing (..)
 import Html.Styled.Attributes exposing (..)
 import Html.Styled.Events exposing (onCheck, onInput)
 import Styles as S
+import Task
 
 
 
@@ -189,7 +191,10 @@ initialStateCmd =
             CS.init
     in
     ( initialState csState
-    , Cmd.map CategorySelectMsg csCmd
+    , Cmd.batch
+        [ Cmd.map CategorySelectMsg csCmd
+        , Dom.focus "qb-title" |> Task.attempt FocusElem
+        ]
     )
 
 
@@ -225,6 +230,7 @@ type IntMsg
 
 type Msg
     = CategorySelectMsg CS.Msg
+    | FocusElem (Result Dom.Error ())
 
 
 update : Msg -> State -> ( State, Cmd Msg )
@@ -240,6 +246,9 @@ update msg state =
                     CS.update csMsg stateValue.csState
             in
             ( State { stateValue | csState = csState }, Cmd.none )
+
+        FocusElem _ ->
+            ( state, Cmd.none )
 
 
 updateTextInput : StateValue -> ToMsg msg -> IntMsg -> String -> msg
@@ -359,6 +368,7 @@ viewDialogNotWithInput baseName labelText field state toExternMsg toInternMsg =
             , size 40
             , css [ S.qbInputStyle ]
             , onInput (updateTextInput state toExternMsg toInternMsg)
+            , autofocus (baseName == "qb-title")
             ]
             []
         ]

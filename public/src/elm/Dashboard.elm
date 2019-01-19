@@ -347,33 +347,21 @@ subscriptions _ =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ section [ id "logs-panel", class ("logs-panel " ++ model.viewSettings.cheestoEnabledClass) ]
-            [ div []
-                [ viewControlBar model
-                , if model.viewSettings.showLog then
-                    case model.logs of
-                        Loading ->
-                            viewLoading
+    div [ class "logs-panel" ]
+        [ section [ id "logs-panel", class ("" ++ model.viewSettings.cheestoEnabledClass) ]
+            [ viewControlBar model
+            , if model.viewSettings.showLog then
+                viewLogList model
 
-                        Loaded logs ->
-                            viewLogTable model.overflowLogIds logs
-
-                        Failure result ->
-                            viewFailureMsg result
-
-                  else
-                    div [] []
-                ]
+              else
+                text ""
             ]
-        , div []
-            (case model.quickBuilderState of
-                Just state ->
-                    [ Dialogs.overlay, QB.quickBuilder QuickBuilderChanged state ]
+        , case model.quickBuilderState of
+            Just state ->
+                div [] [ Dialogs.overlay, QB.quickBuilder QuickBuilderChanged state ]
 
-                Nothing ->
-                    [ text "" ]
-            )
+            Nothing ->
+                text ""
         ]
 
 
@@ -405,6 +393,7 @@ viewSearchControls model =
                 , autocomplete False
                 , onInput ChangeSearchQuery
                 , onEnter StartSearch
+                , autofocus True
                 ]
                 []
             ]
@@ -469,6 +458,19 @@ viewPageControls model =
                 text ""
             ]
         ]
+
+
+viewLogList : Model -> Html Msg
+viewLogList model =
+    case model.logs of
+        Loading ->
+            viewLoading
+
+        Loaded logs ->
+            viewLogTable model.overflowLogIds logs
+
+        Failure result ->
+            viewFailureMsg result
 
 
 viewLoading : Html Msg
