@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['editgroup','jqueryui']]);
+$this->layout('layouts::main', ['css' => ['editgroup','jqueryui']]);
 ?>
 
 <h1>Manage Group - <?= $this->e($group['name']) ?></h1>

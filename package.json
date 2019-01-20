@@ -28,12 +28,8 @@
     "webpack-merge": "^4.1.5"
   },
   "scripts": {
-    "build": "yarn run build:js:prod && yarn run build:css",
-    "build:dev": "yarn run build:js:dev && yarn run build:css",
-    "build:js:dev": "env NODE_ENV=development webpack --mode development --config webpack.dev.js",
-    "build:js:prod": "env NODE_ENV=production webpack --mode production --config webpack.prod.js",
-    "build:css": "yarn run build:css:modern",
-    "build:css:modern": "for file in public/src/themes/modern/*.less; do lessc --clean-css $file public/dist/assets/themes/modern/$(basename $file .less).css; done"
+    "build:": "env NODE_ENV=production webpack --mode production --config webpack.prod.js",
+    "build:dev": "env NODE_ENV=development webpack --mode development --config webpack.dev.js",
   },
   "dependencies": {
     "global": "^4.3.2"

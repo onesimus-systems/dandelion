@@ -2,7 +2,7 @@
  * Styles for administatration page
  */
 
-@import (reference) "_base";
+@import "main";
 
 section {
     margin: 0 20px;
@@ -13,7 +13,7 @@ section {
 
         tr {
             &:hover {
-                background-color: @dandelion-light-orange;
+                background-color: $dandelion-light-orange;
             }
         }
 
@@ -24,15 +24,15 @@ section {
 
         th {
             text-align: left;
-            background-color: @dandelion-mid-grey;
+            background-color: $dandelion-mid-grey;
             color: white;
         }
 
-        #dandelion-lib > .media-query(screen, small, {
+        @include media-query(small) {
             .non-essential-info {
                 display: none;
             }
-        });
+        }
     }
 }
 
@@ -40,15 +40,15 @@ section {
     margin-top: 10px;
 
     select {
-        #dandelion-lib > .select();
-        background-color: lighten(@dandelion-mid-grey, 20%);
+        @include select;
+        background-color: lighten($dandelion-mid-grey, 20%);
         color: black;
         margin-left: 5px;
 
-        #dandelion-lib > .media-query(screen, small, {
+        @include media-query(small) {
             display: block;
             margin-bottom: 10px;
-        });
+        }
     }
 }
 

@@ -2,10 +2,10 @@
  * Styles for login page
  */
 
-@import (reference) "_base";
+@import "main";
 
 body {
-    background-color: darken(@dandelion-light-grey, 0%);
+    background-color: darken($dandelion-light-grey, 0%);
 }
 
 .login-box {

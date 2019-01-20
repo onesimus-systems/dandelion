@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['admin','jqueryui']]);
+$this->layout('layouts::main', ['css' => ['admin','jqueryui']]);
 ?>
 
 <h1>Administration</h1>

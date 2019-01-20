@@ -2,7 +2,7 @@
  * Styles for the user settings page
  */
 
-@import (reference) "_base";
+@import "main";
 
 fieldset {
     border: none;
@@ -21,7 +21,7 @@ label {
     padding: 5px 10px;
     border-radius: 20px;
     border: 1px solid black;
-    background-color: @dandelion-light-grey;
+    background-color: $dandelion-light-grey;
 
     &:focus {
         outline: 1px solid blue;

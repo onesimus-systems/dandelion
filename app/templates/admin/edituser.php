@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['edituser','jqueryui','datetimepicker']]);
+$this->layout('layouts::main', ['css' => ['edituser','jqueryui','datetimepicker']]);
 ?>
 
 <h1>Manage User - <?= $this->e($user->get('fullname')) ?></h1>

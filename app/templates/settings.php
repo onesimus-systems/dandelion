@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui']]);
+$this->layout('layouts::main', ['css' => ['settings', 'jqueryui']]);
 ?>
 <!-- Begin Page Body -->
 <h1>User Settings</h1>

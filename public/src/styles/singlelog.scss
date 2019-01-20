@@ -2,11 +2,11 @@
  * Styles for log page
  */
 
-@import (reference) "_base";
+@import "main";
 
 button {
-    #dandelion-lib > .button();
-    #dandelion-lib > .button-hover();
+    @include button;
+    @include button-hover;
 }
 
 h2 {

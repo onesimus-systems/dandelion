@@ -28,11 +28,7 @@ class Template
         $this->template = new Engine($this->app->paths['app'].'/templates');
         $this->template->addFolder('layouts', $this->app->paths['app'].'/templates/layouts');
 
-        $this->registerFunction('getCssSheets', function($sheets = []) {
-            return call_user_func_array(array('\Dandelion\Utils\View', 'loadCssSheets'), $sheets);
-        });
-
-        $this->registerFunction('getCssSheetsSimple', function($sheets = []) {
+        $this->registerFunction('loadCss', function($sheets = []) {
             return call_user_func_array(array('\Dandelion\Utils\View', 'loadSimpleCss'), $sheets);
         });
 

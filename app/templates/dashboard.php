@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['simpleCss' => ['jqueryui', 'datetimepicker', 'dashboard']]);
+$this->layout('layouts::main', ['css' => ['jqueryui', 'datetimepicker', 'dashboard']]);
 ?>
 
 <div id="elm" class="main-info"></div>

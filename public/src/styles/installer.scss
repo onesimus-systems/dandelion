@@ -1,11 +1,11 @@
 /**
  * Styles for Dandelion installer
  */
-@import (reference) "_base";
+@import "main";
 
 header {
     font-size: initial;
-    background-color: @dandelion-mid-grey;
+    background-color: $dandelion-mid-grey;
     padding: 15px 60px;
     width: 600px;
     border-radius: 0 0 60px;
@@ -21,6 +21,6 @@ td {
 }
 
 button {
-    #dandelion-lib > .button();
-    #dandelion-lib > .button-hover();
+    @include button;
+    @include button-hover;
 }

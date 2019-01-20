@@ -2,11 +2,11 @@
  * Styles for user edit page
  */
 
-@import (reference) "_base";
+@import "main";
 
 #control-panel {
     button {
-        #dandelion-lib > .button();
+        @include button;
     }
 }
 

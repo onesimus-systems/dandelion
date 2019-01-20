@@ -31,7 +31,6 @@ class SettingsController extends BaseController
         $template->addData([
             'publicApiEnabled' => Config::get('publicApiEnabled'),
             'apiKey' => $key,
-            'themeInfo' => View::getThemeListArray(),
             'logsPerPage' => $this->sessionUser->get('logs_per_page')
         ]);
 

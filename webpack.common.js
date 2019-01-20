@@ -5,15 +5,19 @@ const debugMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   entry: {
-    addlog: './public/src/ts/addlog.ts',
-    admin: './public/src/ts/admin.ts',
-    dashboard: './public/src/ts/dashboard.ts',
-    editlog: './public/src/ts/editlog.ts',
-    groupmanager: './public/src/ts/groupmanager.ts',
-    login: './public/src/ts/login.ts',
-    settings: './public/src/ts/settings.ts',
-    singlelog: './public/src/ts/singlelog.ts',
-    usermanager: './public/src/ts/usermanager.ts'
+    addlog: ['./public/src/ts/addlog.ts', './public/src/styles/addlog.scss'],
+    admin: ['./public/src/ts/admin.ts', './public/src/styles/admin.scss'],
+    dashboard: './public/src/ts/dashboard.ts', // Styles are imported from script
+    editgroup: './public/src/styles/editgroup.scss',
+    editlog: ['./public/src/ts/editlog.ts', './public/src/styles/editlog.scss'],
+    edituser: './public/src/styles/edituser.scss',
+    groupmanager: ['./public/src/ts/groupmanager.ts'],
+    installer: './public/src/styles/installer.scss',
+    login: ['./public/src/ts/login.ts', './public/src/styles/login.scss'],
+    main: './public/src/styles/main.scss',
+    settings: ['./public/src/ts/settings.ts', './public/src/styles/settings.scss'],
+    singlelog: ['./public/src/ts/singlelog.ts', './public/src/styles/singlelog.scss'],
+    usermanager: ['./public/src/ts/usermanager.ts'],
   },
 
   plugins: [

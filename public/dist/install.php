@@ -36,9 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="IE=9">
     <title>Dandelion Web Log - Install Script</title>
-    <link rel="stylesheet" type="text/css" href="assets/themes/modern/normalize.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/themes/modern/main.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/themes/modern/installer.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles/installer.min.css">
     <link rel="icon" type="image/ico" href="assets/favicon.ico">
     <style>
         table td.field {

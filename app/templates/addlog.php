@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['addlog']]);
+$this->layout('layouts::main', ['css' => ['addlog']]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">
