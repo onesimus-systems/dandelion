@@ -4,11 +4,6 @@
 
 @import "main";
 
-button {
-    @include button;
-    @include button-hover;
-}
-
 select {
     @include select;
     background-color: lighten($dandelion-mid-grey, 20%);

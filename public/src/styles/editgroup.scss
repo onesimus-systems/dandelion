@@ -4,12 +4,6 @@
 
 @import "main";
 
-#control-panel {
-    button {
-        @include button;
-    }
-}
-
 section {
     margin-top: 15px;
 }

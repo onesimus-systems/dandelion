@@ -10,6 +10,7 @@ section {
     table {
         border: none;
         margin-top: 10px;
+        border-spacing: 0px;
 
         tr {
             &:hover {
@@ -23,7 +24,6 @@ section {
         }
 
         th {
-            text-align: left;
             background-color: $dandelion-mid-grey;
             color: white;
         }

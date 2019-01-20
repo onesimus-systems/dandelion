@@ -4,11 +4,6 @@
 
 @import "main";
 
-button {
-    @include button;
-    @include button-hover;
-}
-
 h2 {
     display: inline-block;
 }
@@ -34,10 +29,6 @@ hr {
     .comment {
         &-author {
             font-weight: bold;
-        }
-
-        &-datetime {
-
         }
 
         &-body {

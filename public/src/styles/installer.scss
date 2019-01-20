@@ -19,8 +19,3 @@ header {
 td {
     padding: 3px 0;
 }
-
-button {
-    @include button;
-    @include button-hover;
-}

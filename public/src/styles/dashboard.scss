@@ -91,9 +91,6 @@
                     button {
                         display: inline-block;
                         @include commonStyles;
-
-                        @include button;
-                        @include button-hover;
                     }
                 }
             }
