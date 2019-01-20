@@ -2,7 +2,7 @@
  * Dashboard styles
  */
 
-@import (reference) "_base";
+@import "main";
 
 .main-content {
     margin: 0;
@@ -10,43 +10,43 @@
     .main-info {
         display: flex;
 
-        #dandelion-lib > .media-query(screen, small, {
+        @include media-query(small) {
             flex-wrap: wrap;
-        });
+        }
     }
 
-    #dandelion-lib > .media-query(screen, small, {
+    @include media-query(small) {
         margin-bottom: 20px;
         height: initial;
-    });
+    }
 
     .section-title {
         font-size: 1.5em;
         width: 100%;
         text-align: center;
-        background-color: @navbar-bg-color;
+        background-color: $navbar-bg-color;
         padding: 10px 0;
-        color: @navbar-text-color;
+        color: $navbar-text-color;
         border: none;
 
-        #dandelion-lib > .button-hover();
+        @include button-hover;
 
-        #dandelion-lib > .media-query(screen, small, {
+        @include media-query(small) {
             display: block;
 
-        });
+        }
     }
 
     .logs-panel {
         min-height: 150px;
-        max-width: 85%;
         margin: 0 auto;
         flex-grow: 1;
+        max-width: 85%;
 
-        #dandelion-lib > .media-query(screen, small, {
+        @include media-query(small) {
             display: none;
             margin-left: 0;
-        });
+        }
 
         .control-panel {
             font-size: 0;
@@ -56,7 +56,7 @@
                 overflow: auto;
                 display: table;
 
-                .commonStyles() {
+                @mixin commonStyles {
                     font-size: 16px;
                     border: none;
                     height: 2em;
@@ -71,7 +71,7 @@
                     display: table-cell;
                     width: 100%;
                     input {
-                        .commonStyles();
+                        @include commonStyles;
                         color: gray;
                         width: 100%;
                         padding-right: 50px;
@@ -90,16 +90,16 @@
 
                     button {
                         display: inline-block;
-                        .commonStyles();
+                        @include commonStyles;
 
-                        #dandelion-lib > .button();
-                        #dandelion-lib > .button-hover();
+                        @include button;
+                        @include button-hover;
                     }
                 }
             }
 
             .top-controls {
-                background-color: @button-bg-color;
+                background-color: $button-bg-color;
 
                 .button-right {
                     float: right;
@@ -143,7 +143,7 @@
                     left:0;
                     height:60px;
                     width:100%;
-                    background: linear-gradient(rgba(0,0,0,0), @body-bg-color);
+                    background: linear-gradient(rgba(0,0,0,0), $body-bg-color);
                 }
 
                 .log-overflow {
@@ -162,8 +162,8 @@
         }
     }
 
-    .cheesto-enabled {
-        border-left: 2px solid @dandelion-dark-grey;
+    .logs-panel.cheesto-enabled {
+        border-left: 2px solid $dandelion-dark-grey;
         margin: 0;
         max-width: 100%;
     }
@@ -172,10 +172,10 @@
 .messages-panel {
     margin-right: 1rem;
 
-    #dandelion-lib > .media-query(screen, small, {
+    @include media-query(small) {
         width: 100%;
         display: none;
-    });
+    }
 
     .messages-title {
         font-size: 1.75rem;
@@ -189,7 +189,7 @@
         margin-bottom: 20px;
 
         .__cheesto_status_select {
-            #dandelion-lib > .select();
+            @include select;
             margin: 5px 0 10px 10px;
         }
 
@@ -199,21 +199,23 @@
 
             table {
                 width: 100%;
+                border-collapse: collapse;
 
                 tr {
-                    border-top: 1px solid black;
-
                     &:first-child {
-                        border-top: none;
+                        td {
+                            border-top: none;
+                        }
                     }
                 }
 
                 td {
                     padding: 5px;
                     word-wrap: break-word;
+                    border-top: 1px solid black;
 
                     &.status-cell {
-                        color: @dandelion-dark-orange;
+                        color: $dandelion-dark-orange;
                         border-left: 1px solid black;
 
                         &:hover {

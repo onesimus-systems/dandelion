@@ -63,13 +63,13 @@ class View
 
         switch (strtolower($name)) {
             case 'jquery':
-                $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-3.3.1.min.js"></script>';
+                $include = '<script src="'.$hostname.'/assets/vendor/jquery/js/jquery-3.3.1.min.js"></script>';
                 break;
             case 'jqueryui':
-                $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/jquery-ui-1.12.1.min.js"></script>';
+                $include = '<script src="'.$hostname.'/assets/vendor/jquery/js/jquery-ui-1.12.1.min.js"></script>';
                 break;
             case 'ckeditor':
-                $include = '<script src="'.$hostname.'/assets/js/vendor/ckeditor/ckeditor.js"></script>';
+                $include = '<script src="'.$hostname.'/assets/vendor/ckeditor/ckeditor.js"></script>';
                 break;
         }
         return $include;
@@ -77,25 +77,21 @@ class View
 
     private static function isJSFile($name, $hostname)
     {
-        $paths = Application::getPaths();
+        $public = Application::getPaths()['public'];
+        $choices = [$name.'.js', $name.'.min.js'];
 
-        // Normalize name
-        if (substr($name, -7) != '.min.js') {
-            $name .= '.min.js';
+        foreach ($choices as $script) {
+            $filepath = $public . '/js/' . $script;
+            $vendorFilepath = $public . '/assets/js/vendor/jquery/js/' . $script;
+
+            if (is_file($filepath)) {
+                $hash = md5_file($filepath);
+                return '<script src="'.$hostname.'/js/'.$script.'?'.$hash.'"></script>';
+            } elseif (is_file($vendorFilepath)) {
+                $hash = md5_file($vendorFilepath);
+                return '<script src="'.$hostname.'/assets/js/vendor/jquery/js/'.$script.'?'.$hash.'"></script>';
+            }
         }
-        $include = '';
-
-        $filepath = $paths['public'] . '/js/'.$name;
-        $vendorFilepath = $paths['public'] . '/assets/js/vendor/jquery/js/'.$name;
-
-        if (is_file($filepath)) {
-            $hash = md5_file($filepath);
-            $include = '<script src="'.$hostname.'/js/'.$name.'?'.$hash.'"></script>';
-        } elseif (is_file($vendorFilepath)) {
-            $hash = md5_file($vendorFilepath);
-            $include = '<script src="'.$hostname.'/assets/js/vendor/jquery/js/'.$name.'?'.$hash.'"></script>';
-        }
-        return $include;
     }
 
     /**
@@ -194,6 +190,10 @@ class View
     public static function loadCssSheets()
     {
         $optionalSheets = func_get_args();
+        if (count($optionalSheets) === 0) {
+            return '';
+        }
+
         $baseTheme = self::getTheme();
         $cssList = '';
         $paths = Application::getPaths();
@@ -228,12 +228,12 @@ class View
 
                 // Special case for jQueryUI and datetimepicker styles
                 if ($normalized == 'jqueryui' && !in_array('jqueryui', $addedSpecial)) {
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/jquery-ui.min.css">';
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/jquery-ui-theme.min.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/vendor/jquery/css/jquery-ui.min.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/vendor/jquery/css/jquery-ui-theme.min.css">';
                     array_push($addedSpecial, 'jqueryui');
                     continue;
                 } elseif ($normalized == 'datetimepicker' && !in_array('datetimepicker', $addedSpecial)) {
-                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/js/vendor/jquery/css/datetimepicker.min.css">';
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/vendor/jquery/css/datetimepicker.min.css">';
                     array_push($addedSpecial, 'datetimepicker');
                     continue;
                 }
@@ -305,6 +305,53 @@ class View
         $metadataJson = array_merge(self::$themeMetadataSchema, $metadataJson);
         $metadataJson['slug'] = $metadataJson['slug'] ?: $theme;
         return $metadataJson;
+    }
+
+    public static function loadSimpleCss()
+    {
+        $optionalSheets = func_get_args();
+        if (count($optionalSheets) === 0) {
+            return '';
+        }
+
+        $cssList = '';
+        $paths = Application::getPaths();
+        $stylesDir = $paths['public'].'/styles';
+
+        $addedSpecial = []; // Used to prevent double loading of special stylesheets
+        foreach ($optionalSheets as $sheet) {
+            if (!$sheet) { // Possiblity one of the elements may be a bool false
+                continue;
+            }
+
+            // Remove css, min.css extensions
+            $normalized = strtolower($sheet);
+            $normalized = str_replace('.min.css', '', $normalized);
+            $normalized = str_replace('.css', '', $normalized);
+
+            // Special case for jQueryUI and datetimepicker styles
+            if ($normalized == 'jqueryui' && !in_array('jqueryui', $addedSpecial)) {
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/vendor/jquery/css/jquery-ui.min.css">';
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/vendor/jquery/css/jquery-ui-theme.min.css">';
+                array_push($addedSpecial, 'jqueryui');
+                continue;
+            } elseif ($normalized == 'datetimepicker' && !in_array('datetimepicker', $addedSpecial)) {
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/assets/vendor/jquery/css/datetimepicker.min.css">';
+                array_push($addedSpecial, 'datetimepicker');
+                continue;
+            }
+
+            // Otherwise search
+            if (is_file($stylesDir . '/' . $normalized . '.min.css')) {
+                $hash = md5_file($stylesDir . '/' . $normalized . '.min.css');
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/styles/' . $normalized . '.min.css?'.$hash.'">';
+            } elseif (is_file($stylesDir . '/' . $normalized . '.css')) {
+                $hash = md5_file($stylesDir . '/' . $normalized . '.css');
+                $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/styles/' . $normalized . '.css?'.$hash.'">';
+            }
+        }
+
+        return $cssList;
     }
 
     /**

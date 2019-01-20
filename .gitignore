@@ -1,13 +1,13 @@
 private/
 config.php
 logs/
-vendor/
+/vendor/
 node_modules/
 public/build/
 public/dist/js/
+public/dist/styles/
 public/dist/assets/themes/*/*.css
 .vagrant/
 composer.phar
 .vscode
-dist/
 elm-stuff/

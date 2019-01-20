@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-$this->layout('layouts::main', ['requiredCssFiles' => ['generic']]);
+$this->layout('layouts::main', ['requiredCssFiles' => []]);
 ?>
 <!-- Begin Page Body -->
 <div id="content">

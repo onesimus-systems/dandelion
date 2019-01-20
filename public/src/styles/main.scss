@@ -1,0 +1,66 @@
+/**
+ * Stysheet for header and footer and other common styles
+ */
+
+@import "base";
+
+html {
+    height: 100%;
+}
+
+body {
+    background-color: $body-bg-color;
+    min-width: 850px;
+    height: 100%;
+
+    @include media-query(small) {
+    	min-width: 0;
+    }
+}
+
+
+a {
+    text-decoration: none;
+    color: $dandelion-accent;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.main-content {
+    margin: 0 50px 10px;
+
+    @include media-query(small) {
+        margin: 0 10px 10px;
+    }
+}
+
+.button {
+	@include button;
+	@include button-hover;
+	font-size: 16px;
+}
+
+.disabled {
+	display: none;
+}
+
+.enabled {
+	display: initial !important;
+}
+
+.hidden-dialog {
+    display: none;
+}
+
+.ui-tooltip {
+    white-space: pre-line;
+}
+
+input, textarea {
+    color: black;
+}
+
+@import "header";
+@import "footer";

@@ -484,7 +484,11 @@ view model =
             , id "show-cheesto-button"
             ]
             [ text "Show Cheesto" ]
-        , viewStatusPanel model
+        , if model.viewSettings.showCheesto then
+            viewStatusPanel model
+
+          else
+            text ""
         , button
             -- TODO: Connect to class toggling for sections
             [ type_ "button"
@@ -563,8 +567,8 @@ viewCheestoStatus status =
 
 viewLogsPanel : Model -> Html Msg
 viewLogsPanel model =
-    div [ class "logs-panel" ]
-        [ section [ id "logs-panel", class ("" ++ model.viewSettings.cheestoEnabledClass) ]
+    div [ class "logs-panel", class ("" ++ model.viewSettings.cheestoEnabledClass) ]
+        [ section [ id "logs-panel" ]
             [ viewControlBar model
             , if model.viewSettings.showLog then
                 viewLogList model

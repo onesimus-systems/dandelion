@@ -1,0 +1,100 @@
+/**
+ * Header styles
+ */
+@import "base";
+
+header {
+    margin-bottom: 0;
+    font-size: 0;
+
+    .title-bar {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        line-height: 30px;
+        display: flex;
+        justify-content: space-between;
+
+        .app-title {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 0 4rem;
+        }
+
+        .app-tagline {
+            font-size: 20px;
+            margin: 0 3rem;
+        }
+
+        @include media-query(small) {
+            line-height: normal;
+            padding-top: 0;
+            flex-wrap: wrap;
+
+            .app-title, .app-tagline {
+                padding: 10px 10px 5px 10px;
+            }
+        }
+    }
+
+    nav {
+    	margin: 0;
+    	font-size: 0;
+        background-color: $navbar-bg-color;
+        width: 100%;
+
+        @include media-query(small) {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        ul {
+            padding-left: 0;
+            display: flex;
+            justify-content: space-between;
+
+            @include media-query(small) {
+                flex-wrap: wrap;
+            };
+
+            li {
+                &:last-child {
+                    margin-left: auto;
+                }
+
+                display: inline-block;
+                font-size: 16px;
+                text-transform: uppercase;
+
+                a {
+                    display: inline-block;
+                    text-decoration: none;
+                    color: $navbar-text-color;
+                    padding: 15px 35px;
+                    font-weight: bold;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: $navbar-hover-bg-color;
+
+                    a {
+                        text-decoration: none;
+                        color: $navbar-hover-text-color;
+                    }
+                }
+
+                @include media-query(small) {
+                    display: block;
+                    width: 100%;
+                    padding: 0;
+
+                    a {
+                        width: 100%;
+                        padding: 15px 0;
+                    }
+                }
+            }
+        }
+    }
+}

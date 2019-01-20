@@ -2,6 +2,7 @@
 import "../modules/common";
 import { Elm } from '../elm/Dashboard.elm';
 import { bindMouseMove, centerDialog } from '../modules/dialogUtils';
+import "../styles/dashboard.scss";
 
 declare const props: {
     showCreateButton: boolean;

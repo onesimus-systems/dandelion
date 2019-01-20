@@ -21,24 +21,6 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['usersettings', 'jqueryui
 
         <button type="button" id="save-per-page-btn" class="button">Save</button>
     </fieldset>
-
-    <fieldset>
-        <label for="theme">Theme:</label>
-        <?php if ($themeInfo) {
-            echo '<select id="theme">';
-            foreach ($themeInfo as $theme) {
-                if ($theme['selected']) {
-                    echo '<option value="'.$theme['slug'].'" selected>'.$theme['name'].'</option>';
-                } else {
-                    echo '<option value="'.$theme['slug'].'">'.$theme['name'].'</option>';
-                }
-            }
-            echo '</select>';
-            echo '<button type="button" id="save-theme-btn" class="button">Save</button>';
-        } else {
-            echo 'Error loading theme list';
-        } ?>
-    </fieldset>
 </form>
 
 <h2>Reset Password</h2>

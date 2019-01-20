@@ -17,6 +17,7 @@
         <link rel="icon" type="image/ico" href="<?= $this->e($hostname) ?>/assets/favicon.ico">
 
         <?= $this->getCssSheets($requiredCssFiles) ?>
+        <?= $this->getCssSheetsSimple($simpleCss) ?>
         <title><?= $this->e($appTitle) ?> - <?= $this->e($pageTitle) ?></title>
     </head>
     <body>

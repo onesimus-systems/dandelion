@@ -32,6 +32,10 @@ class Template
             return call_user_func_array(array('\Dandelion\Utils\View', 'loadCssSheets'), $sheets);
         });
 
+        $this->registerFunction('getCssSheetsSimple', function($sheets = []) {
+            return call_user_func_array(array('\Dandelion\Utils\View', 'loadSimpleCss'), $sheets);
+        });
+
         $this->registerFunction('loadJS', function($js) {
             return call_user_func_array(array('\Dandelion\Utils\View', 'loadJS'), $js);
         });
