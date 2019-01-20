@@ -1,7 +1,7 @@
 import '../modules/common';
 
-const loginResetRedirect = '2';
-const loginSuccessRedirect = '1';
+const loginResetRedirect = 2;
+const loginSuccessRedirect = 1;
 
 function attemptLogin(): boolean {
     const user: string = $('#username').val();
@@ -13,7 +13,7 @@ function attemptLogin(): boolean {
     }
 
     $.post('login', { user: user, pass: pass, remember: remember }, null, 'json')
-        .done(function(response: string) {
+        .done(function(response: number) {
             if (response !== loginSuccessRedirect && response !== loginResetRedirect) {
                 $.alert('Login failed, please check your username and password', 'Dandelion Login');
                 return;
