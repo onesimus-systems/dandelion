@@ -1,8 +1,8 @@
 /// <reference path="../dts/Elm.d.ts" />
-import "../modules/common";
+import '../modules/common';
 import { Elm } from '../elm/Dashboard.elm';
 import { bindMouseMove, centerDialog } from '../modules/dialogUtils';
-import "../styles/dashboard.scss";
+import '../styles/dashboard.scss';
 
 declare const props: {
     showCreateButton: boolean;
@@ -12,7 +12,23 @@ declare const props: {
 
 let app: DashboardElmApp;
 
-function init() {
+function checkOverflow(): void {
+    const ids: number[] = [];
+    const logs = Array.from(($('#log-list')[0]).childNodes);
+
+    logs.forEach(element => {
+        if (element.childNodes.length < 2) return;
+
+        const b = $(element.childNodes[1]);
+        if (b.overflown()) {
+            ids.push(parseInt(b.data('log-id')));
+        }
+    });
+
+    app.ports.reportOverflow.send(ids);
+}
+
+function init(): void {
     app = Elm.Main.init({
         node: document.getElementById('elm'),
         flags: props
@@ -23,31 +39,4 @@ function init() {
     app.ports.bindDialogDrag.subscribe((info: DialogInfo) =>
         requestAnimationFrame(() => bindMouseMove(info.trigger, info.target)));
 }
-
-function showSection(elem: any, panel: string): void {
-    if (elem.innerHTML.match(/^Show\s/)) {
-        elem.innerHTML = elem.innerHTML.replace(/^Show\s/, "Hide ");
-    } else {
-        elem.innerHTML = elem.innerHTML.replace(/^Hide\s/, "Show ");
-    }
-
-    $(`#${panel}`).toggleClass("enabled");
-}
-
-function checkOverflow(): void {
-    const ids: number[] = [];
-    const logs = Array.from(($("#log-list")[0]).childNodes);
-
-    logs.forEach(element => {
-        if (element.childNodes.length < 2) return;
-
-        const b = $(element.childNodes[1]);
-        if (b.overflown()) {
-            ids.push(parseInt(b.data("log-id")))
-        }
-    });
-
-    app.ports.reportOverflow.send(ids);
-}
-
 init();

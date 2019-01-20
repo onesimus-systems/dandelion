@@ -17,7 +17,7 @@ module.exports = {
     main: './public/src/styles/main.scss',
     settings: ['./public/src/ts/settings.ts', './public/src/styles/settings.scss'],
     singlelog: ['./public/src/ts/singlelog.ts', './public/src/styles/singlelog.scss'],
-    usermanager: ['./public/src/ts/usermanager.ts'],
+    usermanager: ['./public/src/ts/usermanager.ts']
   },
 
   plugins: [
@@ -48,11 +48,13 @@ module.exports = {
         use: [{
           loader: MiniCssExtractPlugin.loader
         }, {
-          loader: 'css-loader', options: {
+          loader: 'css-loader',
+          options: {
             sourceMap: true
           }
         }, {
-          loader: 'sass-loader', options: {
+          loader: 'sass-loader',
+          options: {
             sourceMap: true
           }
         }]

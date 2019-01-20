@@ -1,0 +1,23 @@
+{
+    "parserOptions": {
+        "sourceType": "module"
+    },
+
+    "parser": "@typescript-eslint/parser",
+
+    "plugins": ["@typescript-eslint"],
+
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jquery": true
+    },
+
+    "extends": ["standard", "plugin:@typescript-eslint/recommended"],
+
+    "rules": {
+        "semi": ["error", "always"],
+        "space-before-function-paren": ["error", "never"],
+        "@typescript-eslint/no-triple-slash-reference": "off"
+    }
+}

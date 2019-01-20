@@ -3,7 +3,7 @@
         "moduleResolution": "node",
         "outDir": "./public/dist/js",
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "rootDirs": [
             "./public/src",
             "./webpack.*",

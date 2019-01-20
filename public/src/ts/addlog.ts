@@ -1,17 +1,19 @@
 /// <reference path="../dts/ckeditor.d.ts" />
 import Categories from '../modules/categories';
-import "../modules/common";
+import '../modules/common';
+
+declare var CKEDITOR;
 
 $(document).ready(function(): void {
-    Categories.grabFirstLevel("#categories");
+    Categories.grabFirstLevel('#categories');
 
-    CKEDITOR.replace("body");
-    $("#loading").hide();
+    CKEDITOR.replace('body');
+    $('#loading').hide();
 
-    $("#edit-form").submit(function(): boolean {
-        $("<input/>").attr("type", "hidden")
-            .attr("name", "catstring")
-            .attr("value", Categories.getCatString())
+    $('#edit-form').submit(function(): boolean {
+        $('<input/>').attr('type', 'hidden')
+            .attr('name', 'catstring')
+            .attr('value', Categories.getCatString())
             .appendTo(this);
         return true;
     });
