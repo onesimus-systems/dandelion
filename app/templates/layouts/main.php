@@ -13,7 +13,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="x-ua-compatible" content="IE=9">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
         <link rel="icon" type="image/ico" href="<?= $this->e($hostname) ?>/assets/favicon.ico">
 
         <?= $this->loadCss($css) ?>
@@ -24,6 +24,7 @@
             <div class="title-bar">
                 <span class="app-title"><?= $this->e($appTitle) ?></span>
                 <span class="app-tagline"><?= $this->e($tagline) ?></span>
+                <span class="user-fullname"><?= $this->e($userFullname) ?></span>
             </div>
 
             <nav>

@@ -13,6 +13,7 @@ use Dandelion\Logging;
 use Dandelion\Application;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\Exception\AbortException;
+use Dandelion\Session\SessionManager as Session;
 
 use League\Plates\Engine;
 
@@ -41,13 +42,17 @@ class Template
     {
         $title = $title ?: ucfirst($page);
 
+        $userInfo = Session::get('userInfo');
+        $fullname = $userInfo['fullname'] ?? '';
+
         $this->addData([
             'appTitle' => Config::get('appTitle', ''),
             'tagline' => Config::get('tagline', ''),
             'appVersion' => Application::VERSION,
             'appVersionName' => Application::VER_NAME,
             'pageTitle' => $title,
-            'hostname' => Config::get('hostname', '')
+            'hostname' => Config::get('hostname', ''),
+            'userFullname' => $fullname,
         ]);
 
         try {

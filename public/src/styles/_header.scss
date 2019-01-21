@@ -20,9 +20,14 @@ header {
             margin: 0 4rem;
         }
 
+        .user-fullname {
+            font-size: 25px;
+            margin: 0 3rem;
+        }
+
         .app-tagline {
             font-size: 20px;
-            margin: 0 3rem;
+            flex-grow: 1;
         }
 
         @include media-query(small) {
