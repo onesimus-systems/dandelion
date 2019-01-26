@@ -73,11 +73,11 @@ function showPasswordDialog(): void {
         height: 275,
         show: {
             effect: 'fade',
-            duration: 500
+            duration: 500,
         },
         hide: {
             effect: 'fade',
-            duration: 250
+            duration: 250,
         },
         buttons: [
             {
@@ -85,15 +85,15 @@ function showPasswordDialog(): void {
                 click: function() {
                     $(this).dialog('close');
                     resetPassword();
-                }
+                },
             },
             {
                 text: 'Cancel',
                 click: function() {
                     $(this).dialog('close');
-                }
-            }
-        ]
+                },
+            },
+        ],
     });
 }
 
@@ -165,7 +165,7 @@ function init(): void {
     $('#user-status-return').datetimepicker({
         timeFormat: 'HH:mm',
         controlType: 'select',
-        stepMinute: 10
+        stepMinute: 10,
     });
 }
 init();

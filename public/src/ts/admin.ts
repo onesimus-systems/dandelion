@@ -47,7 +47,7 @@ function showAddUserDialog(): void {
             $.dialogBox($('<form/>').append(table).html(), addUser, null, {
                 title: 'Add new user',
                 buttonText1: 'Add',
-                height: 350
+                height: 350,
             });
         });
 }

@@ -15,15 +15,15 @@ function bindMouseMove(binderID: string, moveDivID: string): void {
         };
     });
 
-    binder.addEventListener('mouseup', () => document.onmousemove = null);
+    binder.addEventListener('mouseup', () => { document.onmousemove = null; });
 
     binder.addEventListener('dragstart', () => false);
 }
 
 function centerDialog(id: string): void {
     const elem = document.getElementById(id);
-    elem.style.left = (window.innerWidth/2) - (elem.clientWidth/2) + 'px';
-    elem.style.top = (window.innerHeight/2) - (elem.clientHeight/2) + 'px';
+    elem.style.left = (window.innerWidth / 2) - (elem.clientWidth / 2) + 'px';
+    elem.style.top = (window.innerHeight / 2) - (elem.clientHeight / 2) + 'px';
 }
 
-export { bindMouseMove, centerDialog }
+export { bindMouseMove, centerDialog };

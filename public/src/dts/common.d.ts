@@ -25,7 +25,3 @@ interface JQueryStatic {
     dialogBox(html: string, ycallback?: () => void, ncallback?: () => void, options?: DialogOptions): void;
     urlParams(param: string): string;
 }
-
-interface JQuery {
-    overflown(): boolean;
-}
