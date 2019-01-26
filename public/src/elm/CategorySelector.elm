@@ -3,6 +3,10 @@ module CategorySelector exposing
     , State
     , categorySelector
     , categorySelectorStyled
+    , createNew
+    , currentParent
+    , delete
+    , edit
     , init
     , toString
     , update
@@ -63,6 +67,63 @@ toString state =
         Just str
 
 
+currentParent : StateValue -> Api.Category
+currentParent state =
+    let
+        lastCategory =
+            List.drop (List.length state.current - 2) state.current
+                |> List.head
+    in
+    case lastCategory of
+        Just c ->
+            c
+
+        Nothing ->
+            rootCategory
+
+
+createNew : (Result.Result Http.Error Api.ApiMetadata -> msg) -> String -> State -> Cmd msg
+createNew toMsg desc state =
+    let
+        stateValue =
+            getStateValue state
+
+        parent =
+            currentParent stateValue
+    in
+    Api.categoryCreate toMsg
+        { parentId = parent.id
+        , description = desc
+        }
+
+
+edit : (Result.Result Http.Error Api.ApiMetadata -> msg) -> String -> State -> Cmd msg
+edit toMsg desc state =
+    let
+        stateValue =
+            getStateValue state
+
+        cat =
+            currentParent stateValue
+    in
+    Api.categoryEdit toMsg
+        { id = cat.id
+        , description = desc
+        }
+
+
+delete : (Result.Result Http.Error Api.ApiMetadata -> msg) -> State -> Cmd msg
+delete toMsg state =
+    let
+        stateValue =
+            getStateValue state
+
+        cat =
+            currentParent stateValue
+    in
+    Api.categoryDelete toMsg cat.id
+
+
 categoryChildren : List Api.Category -> Int -> List Api.Category
 categoryChildren categories parent =
     List.filter (\c -> c.parent == parent) categories
@@ -70,6 +131,11 @@ categoryChildren categories parent =
 
 
 -- INIT
+
+
+rootCategory : Api.Category
+rootCategory =
+    { desc = "", id = 0, parent = 0 }
 
 
 init : ( State, Cmd Msg )
@@ -80,7 +146,7 @@ init =
 initialState : State
 initialState =
     State
-        { current = [ { desc = "", id = 0, parent = 0 } ]
+        { current = [ rootCategory ]
         , categories = []
         }
 

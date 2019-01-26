@@ -1,5 +1,7 @@
-import Categories from '../modules/categories';
 import '../modules/common';
+import { bindMouseMove, centerDialog } from '../modules/dialogUtils';
+import { Elm } from '../elm/Administration.elm';
+import '../modules/elm';
 
 function editUser(userid: string): void {
     location.assign(`admin/edituser/${userid}`);
@@ -104,11 +106,6 @@ function init(): void {
     $('#add-user-btn').click(showAddUserDialog);
     $('#add-role-button').click(showAddGroupDialog);
 
-    Categories.grabFirstLevel('#categories');
-    $('#add-category-button').click(Categories.createNew);
-    $('#edit-category-button').click(Categories.editCat);
-    $('#delete-category-button').click(Categories.deleteCat);
-
     $('[data-group-id]').click(function() {
         editGroup($(this).data('group-id'));
     });
@@ -116,5 +113,19 @@ function init(): void {
     $('[data-user-id]').click(function() {
         editUser($(this).data('user-id'));
     });
+
+    const elmMount = document.getElementById('category-mgt');
+    if (elmMount) {
+        const app = Elm.Main.init<AdminElmApp, {}>({
+            node: elmMount,
+            flags: {},
+        });
+
+        app.ports.bindDialogDragAndCenter.subscribe((info: DialogInfo) =>
+            requestAnimationFrame(() => {
+                bindMouseMove(info.trigger, info.target);
+                centerDialog(info.target);
+            }));
+    }
 }
 init();

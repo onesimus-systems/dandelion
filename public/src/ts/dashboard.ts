@@ -29,6 +29,8 @@ app = Elm.Main.init<DashboardElmApp, DashboardElmFlags>({
 });
 
 app.ports.detectOverflow.subscribe(() => requestAnimationFrame(checkOverflow));
-app.ports.centerDialog.subscribe((id: string) => requestAnimationFrame(() => centerDialog(id)));
-app.ports.bindDialogDrag.subscribe((info: DialogInfo) =>
-    requestAnimationFrame(() => bindMouseMove(info.trigger, info.target)));
+app.ports.bindDialogDragAndCenter.subscribe((info: DialogInfo) =>
+    requestAnimationFrame(() => {
+        bindMouseMove(info.trigger, info.target);
+        centerDialog(info.target);
+    }));

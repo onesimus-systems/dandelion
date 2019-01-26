@@ -9,6 +9,7 @@ module Dialogs exposing
     , defaultDialogConfig
     , dialog
     , dialogWithConfig
+    , dialogWithConfigUnstyled
     , overlay
     , overlayStyled
     )
@@ -52,6 +53,16 @@ confirm prompt toMsg =
 dialog : List (Html msg) -> (Bool -> msg) -> Html msg
 dialog prompt toMsg =
     dialogWithConfig defaultDialogConfig prompt toMsg
+
+
+dialogWithConfigUnstyled : DialogConfig -> List (Html.Html msg) -> (Bool -> msg) -> Html.Html msg
+dialogWithConfigUnstyled config prompt toMsg =
+    let
+        styledElems =
+            List.map fromUnstyled prompt
+    in
+    dialogWithConfig config styledElems toMsg
+        |> toUnstyled
 
 
 dialogWithConfig : DialogConfig -> List (Html msg) -> (Bool -> msg) -> Html msg

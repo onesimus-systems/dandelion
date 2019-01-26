@@ -70,17 +70,7 @@ if ($grouplist): ?>
 <?php endif;
 
 if ($catList): ?>
-<section id="category-mgt">
-    <h2>Category Management</h2>
-
-    <div class="admin-div">
-        <button type="button" id="add-category-button" class="button">Add Category</button>
-        <button type="button" id="edit-category-button" class="button">Edit Category</button>
-        <button type="button" id="delete-category-button" class="button">Delete Category</button>
-
-        <div id="categories">Loading Categories...</div>
-    </div>
-</section>
+<section id="category-mgt"></section>
 <?php endif;
 
 echo $this->loadJS(['jquery', 'jqueryui', 'admin']);

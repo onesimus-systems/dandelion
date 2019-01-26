@@ -32,8 +32,7 @@ interface DashboardElmApp {
         detectOverflow: ElmToJsPort<() => void>;
         reportOverflow: JstoElmPort<number[]>;
 
-        bindDialogDrag: ElmToJsPort<(di: DialogInfo) => void>;
-        centerDialog: ElmToJsPort<(id: string) => void>;
+        bindDialogDragAndCenter: ElmToJsPort<(di: DialogInfo) => void>;
     };
 };
 
@@ -42,3 +41,11 @@ interface DashboardElmFlags {
     showLog: boolean;
     cheestoEnabledClass: string;
 }
+
+// Administration Elm application
+
+interface AdminElmApp {
+    ports: {
+        bindDialogDragAndCenter: ElmToJsPort<(di: DialogInfo) => void>;
+    };
+};

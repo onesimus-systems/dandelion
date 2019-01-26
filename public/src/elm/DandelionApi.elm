@@ -2,6 +2,8 @@ module DandelionApi exposing
     ( ApiMetadata
     , ApiResponse
     , Category
+    , CategoryCreate
+    , CategoryEdit
     , CategoryGetAllResp
     , CheestoApiData
     , CheestoApiResp
@@ -13,7 +15,10 @@ module DandelionApi exposing
     , LogsApiResp
     , apiDecoder
     , categoriesGetAll
+    , categoryCreate
     , categoryDecoder
+    , categoryDelete
+    , categoryEdit
     , categoryGetAllDataDecoder
     , categoryGetAllDecoder
     , cheestoReadAll
@@ -94,6 +99,53 @@ cheestoUpdate toMsg update =
                 , UB.string "returntime" update.returntime
                 , UB.string "message" update.message
                 ]
+        , expect = Http.expectJson toMsg apiMetadataDecoder
+        }
+
+
+type alias CategoryCreate =
+    { parentId : Int
+    , description : String
+    }
+
+
+categoryCreate : (Result.Result Http.Error ApiMetadata -> msg) -> CategoryCreate -> Cmd msg
+categoryCreate toMsg new =
+    Http.post
+        { url = "api/i/categories/create"
+        , body =
+            urlencodedForm
+                [ UB.int "pid" new.parentId
+                , UB.string "description" new.description
+                ]
+        , expect = Http.expectJson toMsg apiMetadataDecoder
+        }
+
+
+type alias CategoryEdit =
+    { id : Int
+    , description : String
+    }
+
+
+categoryEdit : (Result.Result Http.Error ApiMetadata -> msg) -> CategoryEdit -> Cmd msg
+categoryEdit toMsg new =
+    Http.post
+        { url = "api/i/categories/edit"
+        , body =
+            urlencodedForm
+                [ UB.int "cid" new.id
+                , UB.string "description" new.description
+                ]
+        , expect = Http.expectJson toMsg apiMetadataDecoder
+        }
+
+
+categoryDelete : (Result.Result Http.Error ApiMetadata -> msg) -> Int -> Cmd msg
+categoryDelete toMsg id =
+    Http.post
+        { url = "api/i/categories/delete"
+        , body = urlencodedForm [ UB.int "cid" id ]
         , expect = Http.expectJson toMsg apiMetadataDecoder
         }
 

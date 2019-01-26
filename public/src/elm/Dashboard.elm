@@ -1,4 +1,4 @@
-port module Main exposing (LogEntry, LogStatus(..), Model, Msg(..), PageOffsets, ViewSettings, bindDialogDrag, calcPageOffsets, centerDialog, detectOverflow, httpErrorToString, init, main, onEnter, reportOverflow, subscriptions, update, updateGotLogs, updateGotoPageOffset, updateQuickBuilderChanged, updateQuickBuilderChangedOk, updateRefreshLogsTick, updateReportOverflowIds, view, viewControlBar, viewFailureMsg, viewLoading, viewLogEntry, viewLogMetadata, viewLogOverflow, viewLogTable, viewPageControls, viewSearchControls)
+port module Main exposing (LogEntry, LogStatus(..), Model, Msg(..), PageOffsets, ViewSettings, bindDialogDragAndCenter, calcPageOffsets, detectOverflow, httpErrorToString, init, main, onEnter, reportOverflow, subscriptions, update, updateGotLogs, updateGotoPageOffset, updateQuickBuilderChanged, updateQuickBuilderChangedOk, updateRefreshLogsTick, updateReportOverflowIds, view, viewControlBar, viewFailureMsg, viewLoading, viewLogEntry, viewLogMetadata, viewLogOverflow, viewLogTable, viewPageControls, viewSearchControls)
 
 import Browser
 import Browser.Navigation as Navigation
@@ -51,12 +51,7 @@ port detectOverflow : E.Value -> Cmd msg
 
 {-| Tell JS to bind mousedragging to an element with the given id
 -}
-port bindDialogDrag : E.Value -> Cmd msg
-
-
-{-| Tell JS to center an element absolutely with the given id
--}
-port centerDialog : E.Value -> Cmd msg
+port bindDialogDragAndCenter : E.Value -> Cmd msg
 
 
 
@@ -197,15 +192,12 @@ update msg model =
 
             else
                 ( { model | cheestoStatus = status, cheestoDialogState = Just CD.init }
-                , Cmd.batch
-                    [ bindDialogDrag
-                        (E.object
-                            [ ( "target", E.string "dialog" )
-                            , ( "trigger", E.string "dialog-header" )
-                            ]
-                        )
-                    , centerDialog (E.string "dialog")
-                    ]
+                , bindDialogDragAndCenter
+                    (E.object
+                        [ ( "target", E.string "dialog" )
+                        , ( "trigger", E.string "dialog-header" )
+                        ]
+                    )
                 )
 
         CheestoUpdateResp resp ->
@@ -251,13 +243,12 @@ update msg model =
             ( { model | quickBuilderState = Just state }
             , Cmd.batch
                 [ Cmd.map QuickBuilderMsg cmd
-                , bindDialogDrag
+                , bindDialogDragAndCenter
                     (E.object
                         [ ( "target", E.string "dialog" )
                         , ( "trigger", E.string "dialog-header" )
                         ]
                     )
-                , centerDialog (E.string "dialog")
                 ]
             )
 
