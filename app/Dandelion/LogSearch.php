@@ -79,7 +79,7 @@ class LogSearch
         $normalizedQuery = ' '.trim($query);
 
         foreach ($fields as $field) {
-            if (strpos($normalizedQuery, ' '.$field.':') === false) {
+            if (strpos($normalizedQuery, " ${field}:") === false) {
                 // If a query doesn't contain a field, there's no need to waste processing
                 // on a regex match
                 continue;
