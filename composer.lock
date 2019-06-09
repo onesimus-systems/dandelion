@@ -1,11 +1,66 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3149ce816b11513ce36d85667b0dd01b",
+    "content-hash": "a744a263243a75048b435f313016429d",
     "packages": [
+        {
+            "name": "lcobucci/jwt",
+            "version": "3.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lcobucci/jwt.git",
+                "reference": "a11ec5f4b4d75d1fcd04e133dede4c317aac9e18"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/a11ec5f4b4d75d1fcd04e133dede4c317aac9e18",
+                "reference": "a11ec5f4b4d75d1fcd04e133dede4c317aac9e18",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "php": "^5.6 || ^7.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "~1.5",
+                "phpmd/phpmd": "~2.2",
+                "phpunit/php-invoker": "~1.1",
+                "phpunit/phpunit": "^5.7 || ^7.3",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Lcobucci\\JWT\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Luís Otávio Cobucci Oblonczyk",
+                    "email": "lcobucci@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to work with JSON Web Token and JSON Web Signature",
+            "keywords": [
+                "JWS",
+                "jwt"
+            ],
+            "time": "2019-05-24T18:30:49+00:00"
+        },
         {
             "name": "league/plates",
             "version": "3.3.0",
@@ -110,16 +165,16 @@
         },
         {
             "name": "onesimus-systems/osrouter",
-            "version": "1.0.8",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/osrouter.git",
-                "reference": "1b87b0b91c227752cc6d3e09cc02d9d2bb4bc7de"
+                "reference": "57517bf907763d7993cb4f7228a7c8f7737b0b64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/1b87b0b91c227752cc6d3e09cc02d9d2bb4bc7de",
-                "reference": "1b87b0b91c227752cc6d3e09cc02d9d2bb4bc7de",
+                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/57517bf907763d7993cb4f7228a7c8f7737b0b64",
+                "reference": "57517bf907763d7993cb4f7228a7c8f7737b0b64",
                 "shasum": ""
             },
             "require-dev": {
@@ -138,8 +193,8 @@
             "authors": [
                 {
                     "name": "Lee Keitel",
-                    "email": "keitellf@gmail.com",
-                    "homepage": "http://dragonrider23.github.io",
+                    "email": "lee@keitel.xyz",
+                    "homepage": "https://github.com/lfkeitel",
                     "role": "Developer"
                 }
             ],
@@ -148,7 +203,7 @@
                 "http",
                 "router"
             ],
-            "time": "2015-11-04T03:58:24+00:00"
+            "time": "2019-06-08T19:21:47+00:00"
         },
         {
             "name": "onesimus-systems/ossession",
@@ -924,6 +979,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2015-10-02T06:51:40+00:00"
         },
         {
