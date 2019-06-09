@@ -7,13 +7,14 @@
  *
  * @license GNU GPL version 3
  */
-namespace Dandelion\API\Module;
+namespace Dandelion\API\v1;
 
 use Dandelion\Application;
 use Dandelion\User;
 use Dandelion\Logs;
 use Dandelion\Exception\ApiException;
 use Dandelion\API\ApiCommander;
+use Dandelion\API\BaseModule;
 
 class CommentsAPI extends BaseModule
 {

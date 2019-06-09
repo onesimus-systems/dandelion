@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-namespace Dandelion\API\Module;
+namespace Dandelion\API\v1;
 
 use Dandelion\Logs;
 use Dandelion\LogSearch;
@@ -16,6 +16,7 @@ use Dandelion\Exception\ApiException;
 use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
 use Dandelion\API\ApiCommander;
+use Dandelion\API\BaseModule;
 
 class LogsAPI extends BaseModule
 {

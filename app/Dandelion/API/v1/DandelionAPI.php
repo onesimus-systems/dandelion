@@ -7,8 +7,9 @@
  *
  * @license GNU GPL version 3
  */
-namespace Dandelion\API\Module;
+namespace Dandelion\API\v1;
 
+use Dandelion\API\BaseModule;
 use Dandelion\Application;
 
 class DandelionAPI extends BaseModule

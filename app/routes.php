@@ -17,7 +17,7 @@ Router::group(['rprefix' => '\Dandelion\Controllers\\'], [
     ['post', '/login', 'AuthController@login'],
     ['get', '/logout', 'AuthController@logout'],
 
-    ['any', '/api/{?module}/{?method}', 'ApiController@apiCall'],
+    ['any', '/api/{?module}/{?method}', 'Api1Controller@apiCall'],
 ]);
 
 // Authentication required for these routes, sets last accessed timestamp on session
@@ -46,7 +46,7 @@ Router::group([
 Router::group([
     'rprefix' => '\Dandelion\Controllers\\',
     'filter' => 'apiSessionLastAccessed'], [
-    ['any', '/api/i/{?module}/{?method}', 'ApiController@internalApiCall'],
+    ['any', '/api/i/{?module}/{?method}', 'Api1Controller@internalApiCall'],
 ]);
 
 // Group for Administration pages, requires authentication

@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-namespace Dandelion\API\Module;
+namespace Dandelion\API\v1;
 
 // Register modules and commands with api commander
 $apiCommander->registerModule('categories', __NAMESPACE__.'\CategoriesAPI',

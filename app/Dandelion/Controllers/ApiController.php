@@ -21,10 +21,11 @@ use Dandelion\Session\SessionManager as Session;
 use Dandelion\User;
 use Dandelion\Factories\UserFactory;
 
-class ApiController extends BaseController
+abstract class ApiController extends BaseController
 {
-    private $apiCommander;
-    private $startTime;
+    protected $moduleInitPath = '';
+    protected $apiCommander;
+    protected $startTime;
 
     /**
      * Inializer called by parent constructor
@@ -33,12 +34,14 @@ class ApiController extends BaseController
     protected function init()
     {
         $this->app->response->headers->replace([
-            ['Content-Type', 'application/json'],
-            ['Access-Control-Allow-Origin', '*']
+            'Content-Type'=> 'application/json',
+            'Access-Control-Allow-Origin'=> '*',
         ]);
 
         $apiCommander = new ApiCommander();
-        include $this->app->paths['app'].'/Dandelion/API/Module/init.php';
+        if ($this->moduleInitPath) {
+            include $this->app->paths['app'].$this->moduleInitPath;
+        }
         $this->apiCommander = $apiCommander;
     }
 
@@ -50,50 +53,7 @@ class ApiController extends BaseController
      *
      * @return null
      */
-    public function apiCall($module, $method)
-    {
-        $publicEnabled = Config::get('publicApiEnabled');
-        // If the full public api is enabled, whitelisting is not
-        $whitelistEnabled = $publicEnabled ? false : Config::get('whitelistApiEnabled');
-
-        $this->startTime = microtime(true);
-        if (!$this->isGoodApiCall($module, $method)) {
-            return;
-        }
-
-        if (!$publicEnabled && !$whitelistEnabled) {
-            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Public API disabled', 'api'));
-            return;
-        }
-
-        $apikey = $this->request->isGet() ?
-                  $this->request->getParam('apikey', '') :
-                  $this->request->postParam('apikey', '');
-
-        $userid = $this->verifyKey($apikey);
-
-        if ($userid === false) {
-            $msg = $publicEnabled ? 'Invalid API key' : 'Public API disabled';
-            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, $msg, 'api'));
-            return;
-        }
-
-        // API key is valid
-        $user = (new UserFactory())->getWithKeycard($userid);
-
-        if (!$user->enabled() || !$user->get('api_override')) {
-            $this->setResponse($this->formatResponse(ApiCommander::API_INSUFFICIENT_PERMISSIONS, 'API disabled', 'api'));
-            return;
-        }
-
-        if ($whitelistEnabled && $user->get('api_override') != 1) {
-            $this->setResponse($this->formatResponse(ApiCommander::API_INSUFFICIENT_PERMISSIONS, 'API disabled', 'api'));
-            return;
-        }
-
-        $this->setResponse($this->processRequest($user, $module, $method));
-        return;
-    }
+    public function apiCall($module, $method) { }
 
     /**
      * Process internal api call
@@ -111,8 +71,7 @@ class ApiController extends BaseController
         }
 
         if (GateKeeper::authenticated()) {
-            $user = (new UserFactory())->getWithKeycard($this->sessionUser->get('id'));
-            $this->setResponse($this->processRequest($user, $module, $method));
+            $this->setResponse($this->processRequest($this->sessionUser, $module, $method));
         } else {
             $this->setResponse($this->formatResponse(ApiCommander::API_LOGIN_REQUIRED, 'Action requires logged in session', 'api'));
         }
@@ -127,7 +86,7 @@ class ApiController extends BaseController
      *
      * @return boolean
      */
-    private function isGoodApiCall($module, $method)
+    protected function isGoodApiCall($module, $method)
     {
         if (!$module || !$method) {
             $this->app->logger->notice(
@@ -150,7 +109,7 @@ class ApiController extends BaseController
      *
      * @return string json
      */
-    private function processRequest(User $user, $module, $request)
+    protected function processRequest(?User $user, $module, $request)
     {
         try {
             $data = $this->apiCommander->dispatchModule(
@@ -184,7 +143,7 @@ class ApiController extends BaseController
      *
      * @return bool
      */
-    private function verifyKey($key)
+    protected function verifyKey($key)
     {
         if (!$key) {
             return false;

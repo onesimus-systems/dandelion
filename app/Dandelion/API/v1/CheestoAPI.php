@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-namespace Dandelion\API\Module;
+namespace Dandelion\API\v1;
 
 use Dandelion\Cheesto;
 use Dandelion\Exception\ApiException;
@@ -15,6 +15,7 @@ use Dandelion\Controllers\ApiController;
 use Dandelion\Exception\ApiPermissionException;
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\API\ApiCommander;
+use Dandelion\API\BaseModule;
 
 class CheestoAPI extends BaseModule
 {

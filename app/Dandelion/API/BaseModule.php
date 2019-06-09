@@ -7,7 +7,7 @@
  *
  * @license GNU GPL version 3
  */
-namespace Dandelion\API\Module;
+namespace Dandelion\API;
 
 use Dandelion\User;
 use Dandelion\Application;
@@ -63,12 +63,14 @@ abstract class BaseModule
 
     protected $makeRepo = true;
 
-    public function __construct(Application $app, User $user) {
+    public function __construct(Application $app, ?User $user) {
         $this->app = $app;
         $this->requestUser = $user;
         $this->request = $app->request;
         // TODO: Remove these objects
-        $this->ur = new UserRightsShim($user);
+        if ($user) {
+            $this->ur = new UserRightsShim($user);
+        }
 
         if ($this->makeRepo) {
             // Remove namespace

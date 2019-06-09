@@ -7,12 +7,13 @@
  *
  * @license GNU GPL version 3
  */
-namespace Dandelion\API\Module;
+namespace Dandelion\API\v1;
 
 use Dandelion\UserSettings;
 use Dandelion\Utils\View;
 use Dandelion\Exception\ApiException;
 use Dandelion\API\ApiCommander;
+use Dandelion\API\BaseModule;
 
 class UserSettingsAPI extends BaseModule
 {
