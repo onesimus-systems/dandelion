@@ -52,16 +52,16 @@ class ApiModule
             switch (count($method)) {
                 case 1:
                     if ($method instanceof ApiModuleMethod) {
-                        $this->methods[$method[0]] = $method;
+                        $this->methods[$method[0]][] = $method;
                     } else {
-                        $this->methods[$method[0]] = new ApiModuleMethod($method[0], $method[0]);
+                        $this->methods[$method[0]][] = new ApiModuleMethod($method[0], $method[0]);
                     }
                     break;
                 case 2:
-                    $this->methods[$method[0]] = new ApiModuleMethod($method[0], $method[1]);
+                    $this->methods[$method[0]][] = new ApiModuleMethod($method[0], $method[1]);
                     break;
                 case 3:
-                    $this->methods[$method[0]] = new ApiModuleMethod($method[0], $method[1], $method[2]);
+                    $this->methods[$method[0]][] = new ApiModuleMethod($method[0], $method[1], $method[2]);
                     break;
             }
         }
@@ -91,10 +91,14 @@ class ApiModule
      * @param  string $method Method name to return
      * @return ApiModuleMethod OR null
      */
-    public function getMethod($method)
+    public function getMethod($path, $httpMethod)
     {
-        if ($this->hasMethod($method)) {
-            return $this->methods[$method];
+        if ($this->hasMethod($path)) {
+            foreach ($this->methods[$path] as $method) {
+                if ($method->getOpt('http_method') === strtolower($httpMethod)) {
+                    return $method;
+                }
+            }
         }
         return null;
     }
@@ -110,7 +114,12 @@ class ApiModule
     public function hasMatchingMethod($path, Request $request)
     {
         if ($this->hasMethod($path)) {
-            return $this->methods[$path]->matches($path, $request);
+            foreach ($this->methods[$path] as $method) {
+                $data = $method->matches($path, $request);
+                if ($data !== false) {
+                    return $data;
+                }
+            }
         }
         return false;
     }

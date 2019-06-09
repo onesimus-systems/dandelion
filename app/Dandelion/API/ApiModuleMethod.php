@@ -55,10 +55,9 @@ class ApiModuleMethod
         }
 
         // Check if an http_method option was set and matches
-        if ($http_method = $this->getOpt('http_method')) {
+        if ($http_method = strtolower($this->getOpt('http_method'))) {
             $http_method_func = 'is'.ucfirst($http_method);
             if (!$request->$http_method_func()) {
-                throw new ApiException('Incorrect HTTP method', ApiCommander::API_INVALID_CALL, 405);
                 return false;
             }
         }
@@ -66,7 +65,7 @@ class ApiModuleMethod
         // Checks if parameters were set and validates
         if ($params = $this->getOpt('parameters')) {
             $batchValidations = [];
-            $paramFunc = $http_method ?: 'get';
+            $paramFunc = $http_method == 'get' ? 'get' : 'post';
             $paramFunc .= 'Param';
             foreach ($params as $id => $opts) {
                 $default = isset($opts[0]) ? $opts[0] : null;

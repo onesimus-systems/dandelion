@@ -103,6 +103,7 @@ class ApiCommander
 
         $dispatching = $this->modules[$module];
         // Check module has a path for the requested URL
+        // Returning request data to be injected
         $injectData = $dispatching->hasMatchingMethod($path, $request);
         if ($injectData === false) {
             throw new ApiException('Module doesn\'t have method', self::API_MODULE_METHOD_NOT_FOUND);
@@ -110,7 +111,7 @@ class ApiCommander
 
         // Get the names of the class and method to call
         $className = $dispatching->getClass();
-        $methodName = $dispatching->getMethod($path)->getMethod();
+        $methodName = $dispatching->getMethod($path, $request->getMethod())->getMethod();
 
         if (!class_exists($className)) {
             throw new ApiException('Module not found', self::API_MODULE_NOT_FOUND);
