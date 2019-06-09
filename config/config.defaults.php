@@ -54,4 +54,6 @@ return array(
     'whitelistApiEnabled' => false,
     // Secret key used to sign JWT api tokens
     'jwtSecret' => 'change me please',
+    // The expiration time for a JWT api token in minutes
+    'jwtExpireTime' => 60,
 );

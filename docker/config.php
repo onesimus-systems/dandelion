@@ -18,3 +18,4 @@ $config['debugEnabled'] = true;
 $config['publicApiEnabled'] = true;
 
 $config['jwtSecret'] = 'l5KZ33Be9wzzVuWVMlqn';
+$config['jwtExpireTime'] = 600;

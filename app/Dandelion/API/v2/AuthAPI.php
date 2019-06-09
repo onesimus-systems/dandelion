@@ -54,7 +54,7 @@ class AuthAPI extends BaseModule
                         ->permittedFor('Dandelion')
                         ->issuedAt($time)
                         ->canOnlyBeUsedAfter($time)
-                        ->expiresAt($time + 3600)
+                        ->expiresAt($time + (60 * Config::get('jwtExpireTime')))
                         ->withClaim('userid', $user->id)
                         ->getToken($signer, new Key(Config::get('jwtSecret')));
 
