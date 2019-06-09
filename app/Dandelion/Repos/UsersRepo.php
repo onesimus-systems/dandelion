@@ -39,6 +39,7 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
 
     private function fixUserFieldTypes(&$record)
     {
+        if (is_null($record)) { return; }
         $record['id'] = (int) $record['id'];
         $record['group_id'] = (int) $record['group_id'];
         $record['initial_login'] = (int) $record['initial_login'];

@@ -85,6 +85,7 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
 
     private function fixLogFieldTypes(&$log)
     {
+        if (is_null($log)) { return; }
         $log['id'] = (int) $log['id'];
         $log['user_id'] = (int) $log['user_id'];
         $log['is_edited'] = (bool) $log['is_edited'];

@@ -23,6 +23,7 @@ class GroupsRepo extends BaseRepo implements Interfaces\GroupsRepo
 
     private function fixGroupFieldTypes(&$record)
     {
+        if (is_null($record)) { return; }
         $record['id'] = (int) $record['id'];
     }
 

@@ -23,6 +23,8 @@ class CategoriesRepo extends BaseRepo implements Interfaces\CategoriesRepo
 
     private function fixCategoryFieldTypes(&$cat)
     {
+        if (is_null($cat)) { return; }
+
         $cat['id'] = (int) $cat['id'];
     }
 

@@ -23,6 +23,7 @@ class KeyManagerRepo extends BaseRepo implements Interfaces\KeyManagerRepo
 
     private function fixApiKeyFieldTypes(&$record)
     {
+        if (is_null($record)) { return; }
         $record['id'] = (int) $record['id'];
         $record['user_id'] = (int) $record['user_id'];
         $record['expires'] = (int) $record['expires'];

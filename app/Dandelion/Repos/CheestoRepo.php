@@ -23,6 +23,8 @@ class CheestoRepo extends BaseRepo implements Interfaces\CheestoRepo
 
     private function fixCheestoFieldTypes(&$ch)
     {
+        if (is_null($ch)) { return; }
+
         $ch['id'] = (int) $ch['id'];
         $ch['user_id'] = (int) $ch['user_id'];
         $ch['disabled'] = (bool) $ch['user_id'];
