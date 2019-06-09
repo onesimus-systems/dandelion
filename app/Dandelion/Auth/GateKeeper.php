@@ -123,6 +123,20 @@ class GateKeeper
     }
 
     /**
+     * Checks if a password matches the user.
+     *
+     * @param User $user
+     * @param string $password
+     *
+     * @return boolean
+     */
+    public function checkPassword(User $user, $password)
+    {
+        $pass = $user->get('password');
+        return password_verify($password, $pass);
+    }
+
+    /**
      * Check if a user is authenticated
      */
     public static function authenticated()

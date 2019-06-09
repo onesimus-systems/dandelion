@@ -52,4 +52,6 @@ return array(
     'publicApiEnabled' => false,
     // If the public api is enabled for whitelisted users only
     'whitelistApiEnabled' => false,
+    // Secret key used to sign JWT api tokens
+    'jwtSecret' => 'change me please',
 );

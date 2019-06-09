@@ -47,4 +47,14 @@ class UserFactory
         $cheestoRepo = new Repos\CheestoRepo();
         return new User($userRepo, $cheestoRepo, 0, $username);
     }
+
+    public function getWithKeycardUsername($username)
+    {
+        $user = $this->getByUsername($username);
+
+        $aclf = new ACLFactory();
+        $user->giveKeycard($aclf->createKeycardForUser($user));
+
+        return $user;
+    }
 }

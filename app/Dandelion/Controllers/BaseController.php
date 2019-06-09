@@ -28,7 +28,7 @@ abstract class BaseController
         $this->app = $app;
         $this->request = $app->request;
 
-        if ($getUser) {
+        if (GateKeeper::authenticated() && $getUser) {
             $uf = new UserFactory;
             $this->sessionUser = $uf->getWithKeycard(Session::get('userInfo')['id']);
         }
