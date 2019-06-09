@@ -18,6 +18,7 @@ services:
             - .:/var/www/dandelion
             - ./public/dist:/var/www/dandelion/public
             - ./docker/config.php:/var/www/dandelion/config/config.php
+            - ./docker/apache.conf:/etc/apache2/conf.d/dandelion-php.conf
             - ./docker/opcache.ini:/etc/php7/conf.d/opcache.ini:ro
 
     dandy-db:

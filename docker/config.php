@@ -16,3 +16,5 @@ $config['tagline'] = 'Website Slogan';
 $config['installed'] = true;
 $config['debugEnabled'] = true;
 $config['publicApiEnabled'] = true;
+
+$config['jwtSecret'] = 'l5KZ33Be9wzzVuWVMlqn';
