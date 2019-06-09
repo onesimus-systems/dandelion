@@ -13,6 +13,9 @@ use Dandelion\Exception\ApiException;
 use Dandelion\Utils\Validator;
 
 use Onesimus\Router\Http\Request;
+use JsonSchema\SchemaStorage;
+use JsonSchema\Validator as JSValidator;
+use JsonSchema\Constraints\Factory;
 
 class ApiModuleMethod
 {
@@ -84,6 +87,23 @@ class ApiModuleMethod
                     400);
             }
             return $validatedData;
+        }
+
+        if ($schema = $this->getOpt('json_schema')) {
+            $jsonSchemaObject = json_decode($schema);
+
+            try {
+                $reqData = json_decode($request->get('INPUT'));
+            } catch (\Exception $e) {
+                throw new ApiException('Invalid JSON body', ApiCommander::API_INVALID_CALL, 400);
+            }
+
+            $validator = new JSValidator();
+            $validator->coerce($reqData, $jsonSchemaObject);
+            if (!$validator->isValid()) {
+                throw new ApiException('Invalid JSON body', ApiCommander::API_INVALID_CALL, 400);
+            }
+            return $reqData;
         }
 
         return true;

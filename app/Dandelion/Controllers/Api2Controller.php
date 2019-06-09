@@ -37,9 +37,6 @@ class Api2Controller extends ApiController
         $whitelistEnabled = $publicEnabled ? false : Config::get('whitelistApiEnabled');
 
         $this->startTime = microtime(true);
-        if (!$this->isGoodApiCall($module, $method)) {
-            return;
-        }
 
         if (!$publicEnabled && !$whitelistEnabled) {
             $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Public API disabled', 'api'));
@@ -54,7 +51,6 @@ class Api2Controller extends ApiController
         $user = $this->checkAuthToken();
 
         if (!$user) {
-            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Invalid auth token', 'api'));
             return;
         }
 
@@ -76,11 +72,13 @@ class Api2Controller extends ApiController
     {
         $authHeader = $this->request->headers->get('Authorization');
         if (!$authHeader) {
+            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Invalid Authorization header', 'api'));
             return;
         }
 
         $authHeaderParts = explode(' ', $authHeader, 2);
         if (count($authHeaderParts) != 2 || $authHeaderParts[0] !== 'Bearer') {
+            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Invalid Authorization header', 'api'));
             return;
         }
 
@@ -88,11 +86,13 @@ class Api2Controller extends ApiController
             $token = (new Parser())->parse((string) $authHeaderParts[1]);
         } catch (\Exception $e) {
             $this->app->logger->error($e);
+            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Invalid auth token', 'api'));
             return;
         }
 
         $signer = new Sha256();
         if (!$token->verify($signer, Config::get('jwtSecret'))) {
+            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Invalid auth token', 'api'));
             return;
         }
 
@@ -101,6 +101,7 @@ class Api2Controller extends ApiController
         $data->setAudience('Dandelion');
 
         if (!$token->validate($data)) {
+            $this->setResponse($this->formatResponse(ApiCommander::API_DISABLED, 'Invalid auth token', 'api'));
             return;
         }
 
