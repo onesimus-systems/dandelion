@@ -186,8 +186,8 @@ abstract class ApiController extends BaseController
             'errorcode' => $ecode,
             'status' => $status,
             'module' => $module,
-            'data' => $data ?: $status,
-            'requestTime' => $endTime.'ms'
+            'data' => $data,
+            'request_time' => $endTime.'ms'
         ];
         return json_encode($response);
     }

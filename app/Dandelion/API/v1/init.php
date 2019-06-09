@@ -34,11 +34,6 @@ $apiCommander->registerModule('categories', __NAMESPACE__.'\CategoriesAPI',
         ]]
     ]);
 
-$apiCommander->registerModule('dandelion', __NAMESPACE__.'\DandelionAPI',
-    [
-        ['version', null, ['http_method' => 'get']],
-    ]);
-
 $apiCommander->registerModule('cheesto', __NAMESPACE__.'\CheestoAPI',
     [
         ['read', null, [
@@ -77,6 +72,11 @@ $apiCommander->registerModule('comments', __NAMESPACE__.'\CommentsAPI',
                 'order' => ['new', 'string']
             ]
         ]]
+    ]);
+
+$apiCommander->registerModule('dandelion', __NAMESPACE__.'\DandelionAPI',
+    [
+        ['version', null, ['http_method' => 'get']],
     ]);
 
 $apiCommander->registerModule('groups', __NAMESPACE__.'\GroupsAPI',

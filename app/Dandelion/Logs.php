@@ -46,7 +46,7 @@ class Logs
         $getLogs = $this->repo->getLogList($offset, $limit);
 
         foreach ($getLogs as $key => $value) {
-            $getLogs[$key]['canEdit'] = ($this->ur->isAdmin() || $value['user_id'] == $this->ur->userid);
+            $getLogs[$key]['can_edit'] = ($this->ur->isAdmin() || $value['user_id'] == $this->ur->userid);
         }
         return $getLogs;
     }

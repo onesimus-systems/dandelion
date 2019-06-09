@@ -31,15 +31,18 @@ class LogSearch
     public function search($query, $limit = 25, $offset = 0)
     {
         $parsedQuery = $this->parseSearchQuery($query);
-        $matches = [];
+        $matches = [
+            'logs' => [],
+            'query_data' => $parsedQuery,
+        ];
 
         // Make sure at least one field isn't empty
         foreach ($parsedQuery as $value) {
             if ($value) {
                 if ($limit === -1) {
-                    $matches = $this->repo->getLogsBySearch($parsedQuery, 0, 0, true);
+                    $matches['logs'] = $this->repo->getLogsBySearch($parsedQuery, 0, 0, true);
                 } else {
-                    $matches = $this->repo->getLogsBySearch($parsedQuery, $limit, $offset);
+                    $matches['logs'] = $this->repo->getLogsBySearch($parsedQuery, $limit, $offset);
                 }
                 break;
             }
@@ -47,7 +50,7 @@ class LogSearch
 
         if (!$matches) {
             // Simple generic message saying no results were found
-            $matches[] = [
+            $matches['logs'][] = [
                 'category' => 'Not Found',
                 'date_created' => date('Y-m-d'),
                 'is_edited' => 0,
@@ -61,7 +64,6 @@ class LogSearch
             ];
         }
 
-        $matches['queryData'] = $parsedQuery;
         return $matches;
     }
 
