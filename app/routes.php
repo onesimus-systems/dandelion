@@ -39,6 +39,7 @@ Router::group([
     ['get', '/{id}', '@show'],
     ['get', '/new', '@create'],
     ['get', '/edit/{id}', '@edit'],
+    ['get', '/duplicate', '@duplicate'],
     ['post', '/save', '@save'],
 ]);
 

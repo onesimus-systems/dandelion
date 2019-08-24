@@ -12,7 +12,11 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['singlelog']]);
 <!-- Begin Page Body -->
 <div id="content">
     <div id="log-data">
-        <h2>Log #<?= $this->e($id) ?> - <?= $this->e($title) ?></h2> <?= $editButton ?>
+        <h2>Log #<?= $this->e($id) ?> - <?= $this->e($title) ?></h2>
+
+        <p class="controls">
+            <?= $editButton ?> <?= $dupButton ?>
+        </p>
 
         <p>
             <strong>Author:</strong> <?= $this->e($author) ?>

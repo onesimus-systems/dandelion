@@ -67,6 +67,7 @@ class LogController extends BaseController
             'is_edited' => $log['is_edited'] ? 'Yes' : 'No',
             'time_created' => $log['time_created'],
             'editButton' => $canEdit ? '<button type="button" id="edit-log-btn">Edit</button>' : '',
+            'dupButton' => $this->authorized($this->sessionUser, 'create_log') ? "<a href=\"/log/duplicate?template={$logid}\" class=\"button\">Duplicate</a>" : '',
             'comments' => $comments,
             'newOldLink' => $commentOrderLink,
             'addCommentButton' => $addCommentButton
@@ -215,5 +216,39 @@ class LogController extends BaseController
         ]);
         Session::remove('last_error');
         $this->setResponse($template->render('addlog', 'Create Log'));
+    }
+
+    public function duplicate()
+    {
+        $logid = $this->request->getParam('template');
+
+        // Check for a logid
+        if (!$logid) {
+            View::redirect('dashboard');
+            return;
+        }
+
+        $logs = new Logs(Repos::makeRepo('Logs'));
+        $log = $this->getLog($logid, $logs);
+
+        if (!$this->authorized($this->sessionUser, 'create_log')) {
+            View::redirect('dashboard');
+            return;
+        }
+
+        $displayCats = new Categories(Repos::makeRepo('Categories'));
+        $cats = $displayCats->renderFromString($log['category']);
+
+        $template = new Template($this->app);
+
+        $template->addData([
+            'title' => $log['title'],
+            'body' => $log['body'],
+            'category' => $cats,
+            'last_error' => Session::get('last_error', ''),
+        ]);
+        Session::remove('last_error');
+
+        $this->setResponse($template->render('duplog', 'Create Log'));
     }
 }

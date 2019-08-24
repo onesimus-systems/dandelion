@@ -14,7 +14,7 @@ body {
     height: 100%;
 
     #dandelion-lib > .media-query(screen, small, {
-    	min-width: 0;
+        min-width: 0;
     });
 }
 
@@ -37,17 +37,21 @@ a {
 }
 
 .button {
-	#dandelion-lib > .button();
-	#dandelion-lib > .button-hover();
-	font-size: 16px;
+    #dandelion-lib > .button();
+    #dandelion-lib > .button-hover();
+    font-size: 16px;
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .disabled {
-	display: none;
+    display: none;
 }
 
 .enabled {
-	display: initial !important;
+    display: initial !important;
 }
 
 .hidden-dialog {
