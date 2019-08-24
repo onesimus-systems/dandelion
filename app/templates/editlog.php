@@ -22,20 +22,21 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['editlog']]);
                 </p>
             <?php endif; ?>
             <p>
-                <strong>Title:</strong> <input type="text" name="title" value="<?= $this->e($title) ?>" size="60"></input>
+                <strong>Title:</strong><br>
+                <input type="text" name="title" value="<?= $this->e($title) ?>" size="60"></input>
+            </p>
+            <p>
+                <span id="loading">Loading log textarea...</span>
+                <textarea name="body" cols="60" rows="10" style="display: none;"><?= $body ?></textarea>
+            </p>
+            <p>
+                <strong>Category:</strong> <span id="categories"></span>
             </p>
             <p>
                 <strong>Author:</strong> <?= $this->e($author) ?>
             </p>
             <p>
                 <strong>Created:</strong> <?= $this->e($date_created) ?> <?= $this->e($time_created) ?>
-            </p>
-            <p>
-                <strong>Category:</strong> <span id="categories"></span>
-            </p>
-            <p>
-                <span id="loading">Loading log textarea...</span>
-                <textarea name="body" cols="60" rows="10" style="display: none;"><?= $body ?></textarea>
             </p>
 
             <button type="submit">Save</button>

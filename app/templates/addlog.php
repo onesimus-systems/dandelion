@@ -22,7 +22,8 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['addlog']]);
                 </p>
             <?php endif; ?>
             <p>
-                <strong>Title:</strong> <input type="text" name="title" value="" size="60"></input>
+                <strong>Title:</strong><br>
+                <input type="text" name="title" value="" size="60"></input>
             </p>
             <p>
                 <span id="loading">Loading log textarea...</span>
