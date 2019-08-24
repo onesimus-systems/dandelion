@@ -21,6 +21,10 @@ class CommentsAPI extends BaseModule
 
     public function add($params)
     {
+        if (!$this->authorized($this->requestUser, 'add_comment')) {
+            throw new ApiPermissionException();
+        }
+
         $logObject = new Logs($this->makeRepo('Logs'));
 
         if ($logObject->addComment($params->logid, $this->requestUser->get('id'), $params->comment)) {
@@ -32,7 +36,15 @@ class CommentsAPI extends BaseModule
 
     public function get($params)
     {
+        if (!$this->authorized($this->requestUser, 'view_log')) {
+            throw new ApiPermissionException();
+        }
+
         $logObject = new Logs($this->makeRepo('Logs'));
-        return $logObject->getLogComments($params->logid, $params->order);
+        $comments = $logObject->getLogComments($params->logid, $params->order);
+        if ($comments) {
+            return $comments;
+        }
+        return [];
     }
 }
