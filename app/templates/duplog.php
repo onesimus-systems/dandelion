@@ -14,7 +14,7 @@ $this->layout('layouts::main', ['requiredCssFiles' => ['editlog']]);
     <div id="log-data">
         <h2>Create Log</h2>
         <input type="hidden" id="category-json" value="<?= $this->e($category) ?>">
-        <form method="POST" action="../save" id="edit-form">
+        <form method="POST" action="save" id="edit-form">
             <?php if ($last_error !== ''): ?>
                 <p>
                     <strong>Error:</strong> <?= $this->e($last_error) ?>
