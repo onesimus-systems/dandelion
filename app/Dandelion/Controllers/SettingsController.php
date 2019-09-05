@@ -22,14 +22,16 @@ class SettingsController extends BaseController
     {
         $template = new Template($this->app);
 
+        $apiEnabled = Config::get('publicApiEnabled') && $this->sessionUser->get('api_override') > 0;
+
         $key = '';
-        if (Config::get('publicApiEnabled')) {
+        if ($apiEnabled) {
             $keyManager = new KeyManager(Repos::makeRepo('KeyManager'));
             $key = $keyManager->getKey($this->sessionUser->get('id'));
         }
 
         $template->addData([
-            'publicApiEnabled' => Config::get('publicApiEnabled'),
+            'publicApiEnabled' => $apiEnabled,
             'apiKey' => $key,
             'themeInfo' => View::getThemeListArray(),
             'logsPerPage' => $this->sessionUser->get('logs_per_page')
