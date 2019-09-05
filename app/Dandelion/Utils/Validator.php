@@ -4,6 +4,8 @@
  */
 namespace Dandelion\Utils;
 
+use StdClass;
+
 class Validator
 {
     private function __construct() { }
@@ -11,12 +13,12 @@ class Validator
 
     /**
      * Validate data as a string. Really, just return it type casted as a string
-     * @param  mixed $d
+     * @param  mixed $data
      * @return string | null
      */
-    protected static function validateString($d)
+    protected static function validateString($data)
     {
-        return (is_object($d) || is_null($d)) ? null : (string) $d;
+        return (is_object($data) || is_null($data)) ? null : (string) $data;
     }
 
     /**
@@ -40,6 +42,9 @@ class Validator
      * @param  string $type 'string'|'int'|'float'|'bool'|'email'|'url'|'ip'|'object'
      * @param  array $options Options for validation. Options to pass to the filter_var function should be keyed 'filter_opts'.
      * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ElseExpressions)
      */
     public static function validate($data, $type = 'string', array $options = [])
     {
@@ -117,10 +122,12 @@ class Validator
      *
      * @param array $data
      * @return StdClass
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function validateBatchKeys(array $data)
     {
-        $return = new \StdClass();
+        $return = new StdClass();
         $return->_valid = true;
         $return->_invalidFields = [];
 

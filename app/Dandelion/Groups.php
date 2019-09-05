@@ -75,22 +75,24 @@ class Groups
      *
      * @param int $groupID - Group ID number, if omitted returns all groups
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function getGroupList($groupID = null)
     {
         if ($groupID === null) {
             return $this->repo->getGroupList();
-        } else {
-            if (is_numeric($groupID)) {
-                $group = $this->repo->getGroupById($groupID);
-            } else {
-                $group = $this->repo->getGroupByName($groupID);
-            }
-            $group['permissions'] = unserialize($group['permissions']);
-            $group['permissions'] = array_merge($this->defaultPermissions, $group['permissions']);
-            $group['permissionNames'] = $this->permissionNames;
-            return $group;
         }
+
+        if (is_numeric($groupID)) {
+            $group = $this->repo->getGroupById($groupID);
+        } else {
+            $group = $this->repo->getGroupByName($groupID);
+        }
+        $group['permissions'] = unserialize($group['permissions']);
+        $group['permissions'] = array_merge($this->defaultPermissions, $group['permissions']);
+        $group['permissionNames'] = $this->permissionNames;
+        return $group;
     }
 
     /**
@@ -140,7 +142,7 @@ class Groups
      */
     public function loadRights($gid)
     {
-       return (array) unserialize($this->repo->loadRights($gid));
+        return (array) unserialize($this->repo->loadRights($gid));
     }
 
     /**

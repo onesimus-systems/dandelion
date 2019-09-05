@@ -19,6 +19,9 @@ use Dandelion\Session\SessionManager as Session;
 
 class LogController extends BaseController
 {
+    /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     public function show($logid)
     {
         if (!$logid || !$this->authorized($this->sessionUser, 'view_log')) {
@@ -37,10 +40,9 @@ class LogController extends BaseController
             $comments = $logs->getLogComments($logid, $commentOrder);
 
             if ($comments) {
+                $commentOrderLink = '<a href="?c_ord=old">Oldest First</a>';
                 if ($commentOrder == 'old') {
                     $commentOrderLink = '<a href="?c_ord=new">Newest First</a>';
-                } else {
-                    $commentOrderLink = '<a href="?c_ord=old">Oldest First</a>';
                 }
             }
 
@@ -76,9 +78,9 @@ class LogController extends BaseController
         $this->setResponse($template->render('viewsinglelog', 'Log'));
     }
 
-    private function getLog($id, Logs $logs)
+    private function getLog($logID, Logs $logs)
     {
-        $log = $logs->getLogInfo($id);
+        $log = $logs->getLogInfo($logID);
 
         if (!$log) {
             return [
@@ -87,7 +89,7 @@ class LogController extends BaseController
                 'category' => '',
                 'date_created' => date('Y-m-d'),
                 'author' => 'Dandelion',
-                'id' => $id,
+                'id' => $logID,
                 'is_edited' => '',
                 'time_created' => date('H:i:s'),
                 'editButton' => '',
@@ -152,9 +154,9 @@ class LogController extends BaseController
         $logid = $postParams['log-id'];
         if ($logid == 0) {
             $this->saveNew($postParams);
-        } else {
-            $this->saveExisting($postParams);
+            return;
         }
+        $this->saveExisting($postParams);
     }
 
     private function saveNew(array $postParams)
@@ -171,12 +173,12 @@ class LogController extends BaseController
         $logs = new Logs(Repos::makeRepo('Logs'));
         $newId = $logs->addLog($title, $body, $cat, Session::get('userInfo')['id']);
 
-        if ($newId != 0) {
-            $this->app->response->redirect(Config::get('hostname').'/log/'.$newId);
-        } else {
+        if ($newId == 0) {
             Session::set('last_error', 'Failed to save new log');
             $this->app->response->redirect(Config::get('hostname').'/log/new');
+            return;
         }
+        $this->app->response->redirect(Config::get('hostname').'/log/'.$newId);
     }
 
     private function saveExisting(array $postParams)
@@ -202,10 +204,11 @@ class LogController extends BaseController
 
         if ($logs->editLog($logid, $title, $body, $cat)) {
             $this->app->response->redirect(Config::get('hostname').'/log/'.$logid);
-        } else {
-            Session::set('last_error', 'Failed to save log');
-            $this->app->response->redirect(Config::get('hostname').'/log/edit/'.$logid);
+            return;
         }
+
+        Session::set('last_error', 'Failed to save log');
+        $this->app->response->redirect(Config::get('hostname').'/log/edit/'.$logid);
     }
 
     public function create()

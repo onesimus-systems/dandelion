@@ -28,10 +28,9 @@ class AuthController extends BaseController
 
     public function login()
     {
-        $auth = new GateKeeper();
         $rem = $this->request->postParam('remember') == 'true' ? true : false;
 
-        $tryAuth = $auth->login($this->request->postParam('user'), $this->request->postParam('pass'), $rem);
+        $tryAuth = GateKeeper::login($this->request->postParam('user'), $this->request->postParam('pass'), $rem);
         if (!$tryAuth) {
             $this->app->logger->info("Failed login attempt by user '{user}'", ['user' => $this->request->postParam('user')]);
         }

@@ -13,61 +13,115 @@ use Dandelion\Session\SessionManager as Session;
 use Dandelion\User;
 use Dandelion\Factories\UserFactory;
 
+class Permission
+{
+    const SINGLE = 'single';
+    const REQ1 = 'req1';
+    const REQALL = 'reqall';
+
+    private $mode;
+    private $permissions;
+
+    public function __construct($mode, Array $permissions)
+    {
+        $this->mode = $mode;
+        $this->permissions = $permissions;
+    }
+
+    public function granted($keycard)
+    {
+        switch ($this->mode) {
+        case self::SINGLE:
+            return $keycard->read($this->permissions[0]);
+        case self::REQ1:
+            return $this->grantedR1($keycard);
+        case self::REQALL:
+            return $this->grantedRA($keycard);
+        }
+    }
+
+    private function grantedR1($keycard)
+    {
+        foreach ($this->permissions as $permission) {
+            if ($keycard->read($permission) === true) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function grantedRA($keycard)
+    {
+        foreach ($this->permissions as $permission) {
+            if ($keycard->read($permission) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
 class GateKeeper
 {
-    // Array of task => permissions needed
-    private static $taskPermissions = [
-        // For arrays, the first element must be one of these:
-        // 'r1' = requires at lease one permission in the set
-        // 'ra' = requires all permissions in the set
-        // Defaults to 'ra'
-        'manage_current_users' => ['r1', 'edituser', 'deleteuser'],
-        'manage_users' => ['r1', 'createuser', 'edituser', 'deleteuser'],
+    private static $instance;
+    private $taskPermissions = [];
 
-        'manage_current_groups' => ['r1', 'editgroup', 'deletegroup'],
-        'manage_groups' => ['r1', 'creategroup', 'editgroup', 'deletegroup'],
-
-        'manage_current_categories' => ['r1', 'editcat', 'deletecat'],
-        'manage_categories' => ['r1', 'createcat', 'editcat', 'deletecat'],
-
-        'create_log' => 'createlog',
-        'edit_log' => 'editlog',
-        'edit_any_log' => 'editlogall',
-        'view_log' => 'viewlog',
-        'add_comment' => 'addcomment',
-
-        'create_cat' => 'createcat',
-        'edit_cat' => 'editcat',
-        'delete_cat' => 'deletecat',
-
-        'create_user' => 'createuser',
-        'edit_user' => 'edituser',
-        'delete_user' => 'deleteuser',
-
-        'create_group' => 'creategroup',
-        'edit_group' => 'editgroup',
-        'delete_group' => 'deletegroup',
-
-        'view_cheesto' => 'viewcheesto',
-        'update_cheesto' => 'updatecheesto',
-
-        'admin' => 'admin'
-    ];
-
-    public function __construct()
+    private function __construct()
     {
+        $this->taskPermissions = [
+            'manage_current_users' => new Permission(Permission::REQ1, ['edituser', 'deleteuser']),
+            'manage_users' => new Permission(Permission::REQ1, ['createuser', 'edituser', 'deleteuser']),
+
+            'manage_current_groups' => new Permission(Permission::REQ1, ['editgroup', 'deletegroup']),
+            'manage_groups' => new Permission(Permission::REQ1, ['creategroup', 'editgroup', 'deletegroup']),
+
+            'manage_current_categories' => new Permission(Permission::REQ1, ['editcat', 'deletecat']),
+            'manage_categories' => new Permission(Permission::REQ1, ['createcat', 'editcat', 'deletecat']),
+
+            'create_log' => new Permission(Permission::SINGLE, ['createlog']),
+            'edit_log' => new Permission(Permission::SINGLE, ['editlog']),
+            'edit_any_log' => new Permission(Permission::SINGLE, ['editlogall']),
+            'view_log' => new Permission(Permission::SINGLE, ['viewlog']),
+            'add_comment' => new Permission(Permission::SINGLE, ['addcomment']),
+
+            'create_cat' => new Permission(Permission::SINGLE, ['createcat']),
+            'edit_cat' => new Permission(Permission::SINGLE, ['editcat']),
+            'delete_cat' => new Permission(Permission::SINGLE, ['deletecat']),
+
+            'create_user' => new Permission(Permission::SINGLE, ['createuser']),
+            'edit_user' => new Permission(Permission::SINGLE, ['edituser']),
+            'delete_user' => new Permission(Permission::SINGLE, ['deleteuser']),
+
+            'create_group' => new Permission(Permission::SINGLE, ['creategroup']),
+            'edit_group' => new Permission(Permission::SINGLE, ['editgroup']),
+            'delete_group' => new Permission(Permission::SINGLE, ['deletegroup']),
+
+            'view_cheesto' => new Permission(Permission::SINGLE, ['viewcheesto']),
+            'update_cheesto' => new Permission(Permission::SINGLE, ['updatecheesto']),
+
+            'admin' => new Permission(Permission::SINGLE, ['admin']),
+        ];
+    }
+
+    public static function getInstance()
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new GateKeeper();
+        }
+
+        return self::$instance;
     }
 
     /**
      * Perform a user logon.
      */
-    public function login($username, $password, $remember = false)
+    public static function login($username, $password, $remember = false)
     {
         if (!$username || !$password) {
             return false;
         }
 
-        $user = $this->checkUser($username, $password);
+        $user = self::checkUser($username, $password);
 
         if (!$user) {
             return false;
@@ -107,10 +161,9 @@ class GateKeeper
      *
      * @return User object or null
      */
-    private function checkUser($username, $password)
+    private static function checkUser($username, $password)
     {
-        $uf = new UserFactory();
-        $user = $uf->getByUsername($username);
+        $user = (new UserFactory())->getByUsername($username);
 
         if ($user->isValid() && $user->enabled()) {
             $pass = $user->get('password');
@@ -118,8 +171,6 @@ class GateKeeper
                 return $user;
             }
         }
-
-        return null;
     }
 
     /**
@@ -144,45 +195,12 @@ class GateKeeper
         session_destroy();
     }
 
-    public static function authorized(User $user, $task)
+    public function authorized(Keycard $keycard, $task)
     {
-        $keycard = $user->getKeycard();
-
-        if (!array_key_exists($task, self::$taskPermissions)) {
+        if (!array_key_exists($task, $this->taskPermissions)) {
             return false;
         }
 
-        $neededPermissions = self::$taskPermissions[$task];
-        if (!is_array($neededPermissions)) {
-            // Simple mapping of task to permission
-            return $keycard->read($neededPermissions);
-        }
-
-        // Multiple permissions need checked
-        $mode = $neededPermissions[0];
-        if ($mode != 'r1' && $mode != 'ra') {
-            // Mode defaults to require all
-            $mode = 'ra';
-        } else {
-            // Remove mode from front of array
-            array_shift($neededPermissions);
-        }
-
-        foreach ($neededPermissions as $permission) {
-            if ($mode === 'r1' && $keycard->read($permission) === true) {
-                return true;
-            }
-
-            if ($mode === 'ra' && $keycard->read($permission) === false) {
-                return false;
-            }
-        }
-
-        switch ($mode) {
-        case 'r1':
-            return false;
-        case 'ra':
-            return true;
-        }
+        return $this->taskPermissions[$task]->granted($keycard);
     }
 }

@@ -21,18 +21,18 @@ class KeyManager
         return;
     }
 
-    public function getKey($uid, $force = false)
+    /**
+     * getKey will return the current API key for the user identified by $uid.
+     * If the user doesn't have a key, one will be generated.
+     *
+     * @param int $uid - User's ID number
+     */
+    public function getKey($uid)
     {
-        if (!$force) {
-            $key = $this->repo->getKeyForUser($uid);
-
-            if ($key) {
-                return $key['keystring'];
-            }
+        $key = $this->repo->getKeyForUser($uid);
+        if ($key) {
+            return $key['keystring'];
         }
-
-        // Clear database of old keys for user
-        $this->revoke($uid);
 
         // Generate new key
         $newKey = $this->generateKey(15);
@@ -41,13 +41,10 @@ class KeyManager
         }
 
         // Insert new key
-        $success = $this->repo->saveKeyForUser($uid, $newKey);
-
-        if ($success) {
+        if ($this->repo->saveKeyForUser($uid, $newKey)) {
             return $newKey;
-        } else {
-            return 'Error generating key.';
         }
+        return 'Error generating key.';
     }
 
     public function revoke($uid)

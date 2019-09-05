@@ -10,6 +10,7 @@
 namespace Dandelion;
 
 use Exception;
+use InvalidArgumentException;
 
 use Dandelion\Utils\Configuration as Config;
 use Dandelion\Session\SessionManager;
@@ -25,8 +26,12 @@ use Onesimus\Logger\ErrorHandler;
 use Onesimus\Logger\Adaptors\FileAdaptor;
 use Onesimus\Logger\Adaptors\ChromeLoggerAdaptor;
 
+use Psr\Log\LogLevel;
+
 /**
  * DandelionApplication represents an instance of Dandelion.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Application
 {
@@ -100,7 +105,7 @@ class Application
     {
         if (is_null(self::$instance)) {
             if (is_null($req)) {
-                throw new \InvalidArgumentException('A request object must be passed to the application.');
+                throw new InvalidArgumentException('A request object must be passed to the application.');
             }
             self::$instance = new Application($req);
         }
@@ -165,28 +170,29 @@ class Application
      */
     protected function setupLogging()
     {
+        $debug = Config::get('debugEnabled');
         // Set PHP logging/error values
         error_reporting(E_ALL);
         ini_set('log_errors', true);
-        ini_set('display_errors', Config::get('debugEnabled'));
-        ini_set('display_startup_errors', Config::get('debugEnabled'));
+        ini_set('display_errors', $debug);
+        ini_set('display_startup_errors', $debug);
 
         // Create a file adaptor for logs
-        $fileAdaptor = new FileAdaptor($this->paths['logs'].'/logs.log');
+        $fileAdaptor = new FileAdaptor(
+            $this->paths['logs'].'/logs.log',
+            $debug ? LogLevel::DEBUG : LogLevel::WARNING,
+        );
         $this->logger = new Logger($fileAdaptor, 'mainlogger');
 
         // Create debug logger with null adaptor
         $this->debugLogger = new Logger();
 
-        if (Config::get('debugEnabled')) {
+        if ($debug) {
             $fileAdaptor->separateLogFiles('.log');
             // Remove Null adaptor
             $this->debugLogger->removeAdaptor(0);
             // Add ChromeLogger to debug logger
             $this->debugLogger->addAdaptor(new ChromeLoggerAdaptor());
-        } else {
-            // Set minimum log level for non-debug
-            $fileAdaptor->setLevel('warning');
         }
 
         // Register last ditch error functions
@@ -202,14 +208,9 @@ class Application
      * @param bool $reset Reset the paths array to what's given
      * @return void
      */
-    public function bindInstallPaths(array $paths, $reset = false)
+    public function bindInstallPaths(array $paths)
     {
-        if ($reset) {
-            $this->paths = $paths;
-        } else {
-            $this->paths = array_merge($this->paths, $paths);
-        }
-        return;
+        $this->paths = $paths;
     }
 
     /**
@@ -240,11 +241,11 @@ class Application
 
     protected function getRealRequestURI()
     {
-        $r = $this->request;
+        $request = $this->request;
         // Get the base URI from the hostname
         preg_match("~https?://.*?/(.*)~", Config::get('hostname'), $subDirMatch);
         // Get the request URI as set the web server
-        $realRequestUri = $r->get('REQUEST_URI');
+        $realRequestUri = $request->get('REQUEST_URI');
         // If there's a base URI in the hostname, deal with it
         if (count($subDirMatch) > 0) {
             // Chop off the base URI from the given URI

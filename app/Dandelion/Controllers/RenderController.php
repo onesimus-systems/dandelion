@@ -14,25 +14,6 @@ use Dandelion\Utils\Repos;
 
 class RenderController extends BaseController
 {
-
-    public function render($item)
-    {
-        $this->$item();
-    }
-
-    /**
-     * Returns JSON with list of categories from a category string
-     */
-    public function editcat()
-    {
-        if ($this->request->postParam('catstring')) {
-            $catRepo = Repos::makeRepo('Categories');
-            $displayCats = new Categories($catRepo);
-            $this->setResponse($displayCats->renderFromString($urlParams->catstring));
-        }
-        return;
-    }
-
     /**
      * Returns JSON with list of categories at each level
      */
@@ -42,6 +23,5 @@ class RenderController extends BaseController
         $catRepo = Repos::makeRepo('Categories');
         $displayCats = new Categories($catRepo);
         $this->setResponse($displayCats->renderChildrenJson($past));
-        return;
     }
 }

@@ -21,11 +21,11 @@ class CheestoRepo extends BaseRepo implements Interfaces\CheestoRepo
         $this->table = $this->prefix.'cheesto';
     }
 
-    private function fixCheestoFieldTypes(&$ch)
+    private function fixCheestoFieldTypes(&$record)
     {
-        $ch['id'] = (int) $ch['id'];
-        $ch['user_id'] = (int) $ch['user_id'];
-        $ch['disabled'] = (bool) $ch['user_id'];
+        $record['id'] = (int) $record['id'];
+        $record['user_id'] = (int) $record['user_id'];
+        $record['disabled'] = (bool) $record['user_id'];
     }
 
     public function getAllStatuses()

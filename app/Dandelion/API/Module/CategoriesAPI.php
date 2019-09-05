@@ -32,9 +32,8 @@ class CategoriesAPI extends BaseModule
 
         if ($createCat->addCategory($params->pid, $params->description)) {
             return 'Category created successfully';
-        } else {
-            throw new ApiException('Error creating category', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error creating category', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -52,9 +51,8 @@ class CategoriesAPI extends BaseModule
 
         if ($editCat->editCategory($params->cid, $params->description)) {
             return 'Category edited successfully';
-        } else {
-            throw new ApiException('Error editing category', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error editing category', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -72,9 +70,8 @@ class CategoriesAPI extends BaseModule
 
         if ($deleteCat->delCategory($params->cid)) {
             return 'Category deleted successfully';
-        } else {
-            throw new ApiException('Error deleting category', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error deleting category', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**

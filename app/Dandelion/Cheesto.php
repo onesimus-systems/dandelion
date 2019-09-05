@@ -26,17 +26,15 @@ class Cheesto
 
     public function getUserStatus($uid = null)
     {
-        if ($uid) {
-            $statuses = $this->repo->getUserStatus($uid);
-            if (count($statuses) > 0) {
-                $statuses = $statuses[0];
-            } else {
-                return false;
-            }
-        } else {
-            $statuses = $this->repo->getAllStatuses();
+        if (!$uid) {
+            return $this->repo->getAllStatuses();
         }
-        return $statuses;
+
+        $statuses = $this->repo->getUserStatus($uid);
+        if (count($statuses) === 0) {
+            return false;
+        }
+        return $statuses[0];
     }
 
     public function getStatusText()

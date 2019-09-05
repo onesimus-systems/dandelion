@@ -78,7 +78,8 @@ class Categories
         $pid = 0;
 
         // TODO: Refactor so the database isn't being read with each iteration
-        for ($i = 0; $i < count($catStrExploded); $i++) {
+        $catPartCnt = count($catStrExploded);
+        for ($i = 0; $i < $catPartCnt; $i++) {
             $pid = (int) $this->repo->getIdForCategoryWithParent($catStrExploded[$i], $pid);
             if ($pid) {
                 array_push($idArr, $pid);
@@ -86,10 +87,9 @@ class Categories
         }
 
         $mainJson = json_decode($this->renderChildrenJson($idArr), true);
-        if ((count($catStrExploded) + 1) > count($idArr)) {
+        $mainJson['errorcode'] = 0;
+        if ($catPartCnt + 1 > count($idArr)) {
             $mainJson['errorcode'] = 1;
-        } else {
-            $mainJson['errorcode'] = 0;
         }
         $mainJson['string'] = $catstring;
 

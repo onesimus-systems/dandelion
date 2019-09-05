@@ -19,6 +19,6 @@ if (!function_exists('version_compare') || version_compare(PHP_VERSION, '7.0.0',
 $paths = require __DIR__.'/paths.php';
 
 $app = Application::getInstance(Request::getRequest());
-$app->bindInstallPaths($paths, true);
+$app->bindInstallPaths($paths);
 
 return $app;

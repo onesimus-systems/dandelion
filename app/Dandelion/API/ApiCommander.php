@@ -9,6 +9,8 @@
  */
 namespace Dandelion\API;
 
+use ReflectionClass;
+
 use Dandelion\Exception\ApiException;
 
 use Onesimus\Router\Http\Request;
@@ -39,11 +41,8 @@ class ApiCommander
      */
     public function registerModule($path, $className = '', array $methods = [])
     {
-        if ($path instanceof ApiModule) {
-            // Function was given an already created ApiModule object
-            $module = $path;
-        } else {
-            // ApiModule needs to be created
+        $module = $path;
+        if (!($path instanceof ApiModule)) {
             $module = new ApiModule($path, $className);
             $module->addMethods($methods);
         }
@@ -117,17 +116,17 @@ class ApiCommander
         }
 
         // Create a new class using $args as the parameters
-        $reflectedClass = new \ReflectionClass($className);
-        $ApiModule = $reflectedClass->newInstanceArgs($args);
+        $reflectedClass = new ReflectionClass($className);
+        $apiModule = $reflectedClass->newInstanceArgs($args);
 
         // Check the method is available
-        if (!is_callable([$ApiModule, $methodName])) {
+        if (!is_callable([$apiModule, $methodName])) {
             throw new ApiException('Controller method is not callable', self::API_MODULE_METHOD_NOT_FOUND);
         }
 
         // Attempt calling the method
         try {
-            $response = $ApiModule->$methodName($injectData);
+            $response = $apiModule->$methodName($injectData);
         } catch (ApiException $e) {
             $e->setModule($module);
             throw $e;

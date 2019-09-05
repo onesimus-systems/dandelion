@@ -68,9 +68,9 @@ class UserRepo extends BaseRepo implements Interfaces\UserRepo
         $record['disabled'] = (bool) $record['disabled'];
     }
 
-    public function getUserById($id)
+    public function getUserById($userID)
     {
-        return $this->getUserByField('id', $id);
+        return $this->getUserByField('id', $userID);
     }
 
     public function getUserByName($username)

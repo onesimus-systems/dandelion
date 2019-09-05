@@ -9,6 +9,8 @@
  */
 namespace Dandelion;
 
+use DateTime;
+
 use Dandelion\Auth\Keycard;
 use Dandelion\Repos\Interfaces\UserRepo;
 use Dandelion\Repos\Interfaces\CheestoRepo;
@@ -92,9 +94,8 @@ class User
     {
         if ($this->get('id') <= 0) {
             return $this->create();
-        } else {
-            return $this->update();
         }
+        return $this->update();
     }
 
     public function setPassword($pass = '')
@@ -142,9 +143,9 @@ class User
         return $this->keycard;
     }
 
-    public function setMakeCheesto($b = true)
+    public function setMakeCheesto($setting = true)
     {
-        $this->createCheesto = $b;
+        $this->createCheesto = $setting;
     }
 
     private function update()
@@ -170,9 +171,9 @@ class User
 
     private function create()
     {
-        $date = new \DateTime();
-        $il = $this->get('initial_login');
-        $il = is_null($il) ? 1 : $il;
+        $date = new DateTime();
+        $initialLogin = $this->get('initial_login');
+        $initialLogin = is_null($initialLogin) ? 1 : $initialLogin;
 
         // Create row in users table
         $userCreated = $this->repo->createUser(
@@ -181,26 +182,24 @@ class User
             $this->get('fullname'),
             $this->get('group_id'),
             $date->format('Y-m-d'),
-            $il,
+            $initialLogin,
             $this->get('api_override')
         );
 
-        $userCheestoCreated = true;
+        $userCheestoCreated = 1;
         if ($this->createCheesto) {
             $userCheestoCreated = $this->cheestoRepo->createCheesto(
                 $userCreated,
                 $date->format('Y-m-d H:i:s')
             );
-        } else {
-            $userCheestoCreated = 1;
         }
 
         return (is_numeric($userCreated) && is_numeric($userCheestoCreated));
     }
 
-    private function doHash($s)
+    private function doHash($string)
     {
-        return password_hash($s, PASSWORD_BCRYPT);
+        return password_hash($string, PASSWORD_BCRYPT);
     }
 
     public function getApiData()

@@ -50,9 +50,8 @@ class GroupsAPI extends BaseModule
 
         if ($permissions->editGroup($gid, $rights)) {
             return 'User group saved';
-        } else {
-            throw new ApiException('Error saving user group', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error saving user group', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -66,19 +65,12 @@ class GroupsAPI extends BaseModule
 
         $permissions = new Groups($this->repo);
         $name = $params->name;
-        $rights = $params->rights;
-
-        if ($rights) {
-            $rights = json_decode($rights, true);
-        } else {
-            $rights = [];
-        }
+        $rights = $params->rights ? json_decode($params->rights, true) : [];
 
         if (is_numeric($permissions->createGroup($name, $rights))) {
             return 'User group created successfully';
-        } else {
-            throw new ApiException('Error creating user group', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error creating user group', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -96,10 +88,10 @@ class GroupsAPI extends BaseModule
 
         if ($users) {
             throw new ApiException('This group is assigned to users. Cannot delete group.', ApiCommander::API_GENERAL_ERROR);
-        } else {
-            $permissions->deleteGroup($gid);
-            return 'Group deleted successfully.';
         }
+
+        $permissions->deleteGroup($gid);
+        return 'Group deleted successfully.';
     }
 
     /**

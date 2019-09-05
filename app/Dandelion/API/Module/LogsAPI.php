@@ -30,17 +30,19 @@ class LogsAPI extends BaseModule
             throw new ApiPermissionException();
         }
 
-        $return = [];
-        $logs = new Logs($this->repo, $this->ur);
+        $logs = new Logs($this->repo, $this->userRights);
 
         if ($params->logid) {
-            $return = $logs->getLogInfo($params->logid);
-        } else {
-            $metadata = $this->offsetLimitCommon($params);
-            $return['logs'] = $logs->getLogList($metadata['limit'], $metadata['offset']);
-            $metadata['resultCount'] = count($return['logs']);
-            $return['metadata'] = $metadata;
+            return $logs->getLogInfo($params->logid);
         }
+
+        $logSize = $this->repo->numOfLogs();
+        $return = [];
+        $metadata = $this->offsetLimitCommon($params, $logSize);
+        $return['logs'] = $logs->getLogList($metadata['limit'], $metadata['offset']);
+        $metadata['resultCount'] = count($return['logs']);
+        $metadata['logSize'] = $logSize;
+        $return['metadata'] = $metadata;
 
         return $return;
     }
@@ -62,9 +64,8 @@ class LogsAPI extends BaseModule
 
         if ($logs->addLog($title, $body, $cat, $this->requestUser->get('id'))) {
             return 'Log created successfully';
-        } else {
-            throw new ApiException('Error creating log', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error creating log', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -93,9 +94,8 @@ class LogsAPI extends BaseModule
 
         if ($logs->editLog($lid, $title, $body, $cat)) {
             return "'{$title}' edited successfully";
-        } else {
-            throw new ApiException("Error saving log", ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException("Error saving log", ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -115,7 +115,7 @@ class LogsAPI extends BaseModule
         $logs = new LogSearch($this->repo);
         $result['logs'] = $logs->search($query, $metadata['limit'], $metadata['offset']);
         $metadata['resultCount'] = count($result['logs'])-1; // Account for extra key added by LogSearch::search()
-        $metadata['logSize'] = $logs->search($query, -1, 0)[0];
+        $metadata['logSize'] = $logs->searchCount($query);
 
         $result['metadata'] = $metadata;
         $result['queryData'] = $result['logs']['queryData'];
@@ -127,22 +127,19 @@ class LogsAPI extends BaseModule
      * Processes and compiles the offset, limit, and logsize used for paging
      * @return array Metadata used in the query and returned to client
      */
-    private function offsetLimitCommon($params, $getSize = true)
+    private function offsetLimitCommon($params, $logSize = 0)
     {
-        $limit = $params->limit ?? $this->getUserSettingLogsPerPage();
-        $offset = $params->offset ?: 0;
+        $limit = (int) ($params->limit ?? $this->getUserSettingLogsPerPage());
+        $offset = (int) ($params->offset ?: 0);
         $offset = $offset < 0 ? 0 : $offset;
 
-        $logSize = $getSize ? $this->repo->numOfLogs() : 0;
-
-        if ($offset > $logSize && $getSize) {
+        if ($logSize > 0 && $offset > $logSize) {
             $offset = $offset - $limit;
         }
 
         return [
             'offset' => $offset,
-            'limit'  => (int) $limit,
-            'logSize' => $logSize
+            'limit'  => $limit,
         ];
     }
 

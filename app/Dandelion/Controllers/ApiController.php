@@ -49,6 +49,9 @@ class ApiController extends BaseController
      * @param $method string - Method to call on module
      *
      * @return null
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function apiCall($module, $method)
     {
@@ -92,7 +95,6 @@ class ApiController extends BaseController
         }
 
         $this->setResponse($this->processRequest($user, $module, $method));
-        return;
     }
 
     /**
@@ -110,13 +112,13 @@ class ApiController extends BaseController
             return;
         }
 
-        if (GateKeeper::authenticated()) {
-            $user = (new UserFactory())->getWithKeycard($this->sessionUser->get('id'));
-            $this->setResponse($this->processRequest($user, $module, $method));
-        } else {
+        if (!GateKeeper::authenticated()) {
             $this->setResponse($this->formatResponse(ApiCommander::API_LOGIN_REQUIRED, 'Action requires logged in session', 'api'));
+            return;
         }
-        return;
+
+        $user = (new UserFactory())->getWithKeycard($this->sessionUser->get('id'));
+        $this->setResponse($this->processRequest($user, $module, $method));
     }
 
     /**

@@ -18,7 +18,17 @@ class LogSearch
     public function __construct(LogsRepo $repo)
     {
         $this->repo = $repo;
-        return;
+    }
+
+    public function searchCount($query)
+    {
+        $parsedQuery = $this->parseSearchQuery($query);
+
+        if (count($parsedQuery) > 0) {
+            return $this->repo->getCountLogsBySearch($parsedQuery);
+        }
+
+        return 0;
     }
 
     /**
@@ -31,18 +41,10 @@ class LogSearch
     public function search($query, $limit = 25, $offset = 0)
     {
         $parsedQuery = $this->parseSearchQuery($query);
-        $matches = [];
+        $matches = null;
 
-        // Make sure at least one field isn't empty
-        foreach ($parsedQuery as $value) {
-            if ($value) {
-                if ($limit === -1) {
-                    $matches = $this->repo->getLogsBySearch($parsedQuery, 0, 0, true);
-                } else {
-                    $matches = $this->repo->getLogsBySearch($parsedQuery, $limit, $offset);
-                }
-                break;
-            }
+        if (count($parsedQuery) > 0) {
+            $matches = $this->repo->getLogsBySearch($parsedQuery, $limit, $offset);
         }
 
         if (!$matches) {
@@ -103,49 +105,61 @@ class LogSearch
             $methodName = $field.'Process';
             if (method_exists($this, $methodName)) {
                 list($field, $matchedText) = $this->$methodName($field, $matchedText);
-            } else {
+
+                if (!is_array($matchedText['text'])) {
+                    // Replace all instances of \\ with \\\\ in order to survive stripslashes()
+                    if (strpos($matchedText['text'], '\\\\') !== false) {
+                        $matchedText['text'] = str_replace('\\\\', '\\\\\\\\', $matchedText['text']);
+                    }
+                    $matchedText['text'] = stripslashes($matchedText['text']);
+                }
+
+                $parsedQuery[$field] = $matchedText;
+            }
+        }
+
+        if (!$parsedQuery) {
+            if ($attemptedField) {
                 return [];
             }
 
-            if (!is_array($matchedText['text'])) {
-                // Replace all instances of \\ with \\\\ in order to survive stripslashes()
-                if (strpos($matchedText['text'], '\\\\') !== false) {
-                    $matchedText['text'] = str_replace('\\\\', '\\\\\\\\', $matchedText['text']);
-                }
-                $matchedText['text'] = stripslashes($matchedText['text']);
-            }
-
-            $parsedQuery[$field] = $matchedText;
-        }
-
-        if (!$parsedQuery && !$attemptedField) {
             // If parsing failed for all fields, and the query didn't
             // contain a valid field syntax, assume it's a general search
             // and recursively run with the field 'log'
             $query = 'log:"'.$query.'"';
             return $this->parseSearchQuery($query);
-        } elseif (!$parsedQuery && $attemptedField) {
-            return [];
-        } else {
-            return $parsedQuery;
         }
+
+        return $parsedQuery;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
     private function titleProcess($field, $data)
     {
         return $this->negateQuery($field, $data);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
     private function bodyProcess($field, $data)
     {
         return $this->negateQuery($field, $data);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
     private function logProcess($field, $data)
     {
         return $this->negateQuery($field, $data);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
     private function categoryProcess($field, $data)
     {
         return $this->negateQuery($field, $data);
@@ -161,6 +175,10 @@ class LogSearch
         return [$field, ['text' => $data, 'negate' => $negate]];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     */
     private function dateProcess($field, $data)
     {
         $data = strtolower($data);

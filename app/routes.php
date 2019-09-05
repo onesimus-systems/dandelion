@@ -28,7 +28,7 @@ Router::group([
     ['get', '/', 'DashboardController@dashboard'],
     ['get', '/dashboard', 'DashboardController@dashboard'],
     ['get', '/settings', 'SettingsController@settings'],
-    ['any', '/render/{item}', 'RenderController@render'],
+    ['any', '/render/categoriesJson', 'RenderController@categoriesJson'],
 ]);
 
 // Routes for /log

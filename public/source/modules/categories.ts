@@ -69,23 +69,6 @@ namespace Categories {
         return selectSpan;
     }
 
-    export function renderCategoriesFromString(str: string, elemid: string): void {
-        $.get("/render/editcat", { catstring: str }, null, "json")
-            .done(function (json) {
-                let rendered = renderSelectsFromJson(json);
-                domid = elemid;
-
-                if ($.apiSuccess(json)) {
-                    $(domid).replaceWith(rendered);
-                } else {
-                    rendered = $(`<span>There was an error getting the category.</span>`)
-                        .append(`<br><br>`)
-                        .append(rendered);
-                    $(domid).replaceWith(rendered);
-                }
-            });
-    }
-
     export function createNew(): void {
         let catString = `${getCatString()}: `;
         let message = "Add new category<br><br>";

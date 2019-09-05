@@ -29,35 +29,34 @@ class Users
 
     public function deleteUser($uid, Groups $permissions)
     {
-        $delete = false;
         $userGroup = $this->repo->getUserRole($uid);
-        $isAdmin = $permissions->loadRights($userGroup);
+        $userPermissions = $permissions->loadRights($userGroup);
 
-        if (!$isAdmin['admin']) {
-            // If the account being deleted isn't an admin, then there's nothing to worry about
-            $delete = true;
-        } else {
-            // If the account IS an admin, check all other users to make sure
+        // TODO: Verify this actually protects against an admin deleting the
+        // only admin account.
+        if ($userPermissions['admin']) {
+            // If the account is an admin, check all other users to make sure
             // there's at least one other user with the admin rights flag
             $otherUsers = $this->repo->getUserRole($uid, true);
 
+            $adminFound = false;
             foreach ($otherUsers as $areTheyAdmin) {
-                $isAdmin = $permissions->loadRights($areTheyAdmin['id']);
+                $userPermissions = $permissions->loadRights($areTheyAdmin['id']);
 
-                if ($isAdmin['admin']) {
+                if ($userPermissions['admin']) {
                     // If one is found, stop for loop and allow the delete
-                    $delete = true;
+                    $adminFound = true;
                     break;
                 }
             }
+
+            if (!$adminFound) {
+                return 'At least one admin account must be left to delete another admin account';
+            }
         }
 
-        if ($delete) {
-            // Should return 1 row
-            return $this->repo->deleteUser($uid);
-        } else {
-            return 'At least one admin account must be left to delete another admin account';
-        }
+        // Should return 1 row
+        return $this->repo->deleteUser($uid);
     }
 
     public function getUserList()

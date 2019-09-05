@@ -11,7 +11,7 @@ namespace Dandelion\API\Module;
 
 use Dandelion\KeyManager;
 use Dandelion\Controllers\ApiController;
-use Dandelion\Exception\ApiPermissionException;
+use Dandelion\Exception\{ApiPermissionException, ApiException};
 use Dandelion\API\ApiCommander;
 
 class KeyManagerAPI extends BaseModule
@@ -21,23 +21,9 @@ class KeyManagerAPI extends BaseModule
     // get method was set as the public one. Thus, this is simply a wrapper.
     public function get()
     {
-        return $this->getInternal($this->requestUser->get('id'), false);
-    }
-
-    /**
-     *  Retrieve key from database for current user.
-     *  If a key isn't present, create one
-     *
-     *  @param int  $user Id of user to get api key
-     *  @param bool $force Force a new key to be generated
-     *
-     *  @return JSON - API Key or error message
-     */
-    protected function getInternal($user = null, $force = false)
-    {
-        $user = $user ?: $this->requestUser->get('id');
+        $user = $this->requestUser->get('id');
         $key = new KeyManager($this->repo);
-        return $key->getKey($user, $force);
+        return $key->getKey($user);
     }
 
     /**
@@ -45,7 +31,12 @@ class KeyManagerAPI extends BaseModule
      */
     public function generate()
     {
-        return $this->getInternal($this->requestUser->get('id'), true);
+        $user = $this->requestUser->get('id');
+        $key = new KeyManager($this->repo);
+        if (!$key->revoke($user)) {
+            throw new ApiException('Error revoking API key');
+        }
+        return $key->getKey($user);
     }
 
     /**
@@ -58,20 +49,18 @@ class KeyManagerAPI extends BaseModule
 
         // Check permissions
         if ($requestedUid) {
-            if ($this->authorized($this->requestUser, 'edit_user') || $requestedUid == $userid) {
-                $userid = $requestedUid;
-            } else {
+            if ($requestedUid != $userid && !$this->authorized($this->requestUser, 'edit_user')) {
                 throw new ApiPermissionException();
             }
+            $userid = $requestedUid;
         }
 
         $key = new KeyManager($this->repo);
 
         if (is_numeric($key->revoke($userid))) {
             return 'Key revoked successfully';
-        } else {
-            throw new ApiException('Error revoking key', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error revoking key', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**

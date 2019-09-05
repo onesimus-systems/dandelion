@@ -51,11 +51,7 @@ class ApiModule
 
             switch (count($method)) {
                 case 1:
-                    if ($method instanceof ApiModuleMethod) {
-                        $this->methods[$method[0]] = $method;
-                    } else {
-                        $this->methods[$method[0]] = new ApiModuleMethod($method[0], $method[0]);
-                    }
+                    $this->methods[$method[0]] = $method instanceof ApiModuleMethod ? $method : new ApiModuleMethod($method[0], $method[0]);
                     break;
                 case 2:
                     $this->methods[$method[0]] = new ApiModuleMethod($method[0], $method[1]);

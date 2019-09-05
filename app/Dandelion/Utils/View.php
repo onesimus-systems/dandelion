@@ -14,6 +14,9 @@ use Dandelion\Utils\Configuration as Config;
 use Dandelion\Exception\ShutdownException;
 use Dandelion\Session\SessionManager as Session;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class View
 {
     // Schema for a theme metadata file
@@ -102,11 +105,11 @@ class View
      * Determine the theme to use. Either a user assigned theme or the default.
      *
      * @return string - Theme slug
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public static function getTheme()
     {
-        $paths = Application::getPaths();
-
         if (isset($_COOKIE[Config::get('cookiePrefix').'usertheme'])) {
             if (self::isTheme($_COOKIE[Config::get('cookiePrefix').'usertheme'])) {
                 return $_COOKIE[Config::get('cookiePrefix').'usertheme'];
@@ -148,7 +151,6 @@ class View
     public static function setThemeCookie($theme)
     {
         setcookie(Config::get('cookiePrefix').'usertheme', $theme, time() + 60 * 60 * 24 * 30, '/');
-        return;
     }
 
     /**
@@ -163,7 +165,8 @@ class View
         $themeDir = $paths['public'].'/'.self::$themeHttpDir;
         $currentTheme = self::getTheme();
 
-        if (!$handle = opendir($themeDir)) {
+        $handle = opendir($themeDir);
+        if (!$handle) {
             return [];
         }
 
@@ -190,6 +193,9 @@ class View
      * by func_get_args()
      *
      * @return string - HTML link tags
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public static function loadCssSheets()
     {
@@ -243,15 +249,16 @@ class View
                     is_file($themeDir . '/' . $theme . '/' . $metaJson['files'][$normalized])) {
                     $hash = md5_file($themeDir . '/' . $theme . '/' . $metaJson['files'][$normalized]);
                     $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $metaJson['files'][$normalized] . '?'.$hash.'">';
-                } else {
-                    // Otherwise search
-                    if (is_file($themeDir . '/' . $theme . '/' . $normalized . '.min.css')) {
-                        $hash = md5_file($themeDir . '/' . $theme . '/' . $normalized . '.min.css');
-                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.min.css?'.$hash.'">';
-                    } elseif (is_file($themeDir . '/' . $theme . '/' . $normalized . '.css')) {
-                        $hash = md5_file($themeDir . '/' . $theme . '/' . $normalized . '.css');
-                        $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.css?'.$hash.'">';
-                    }
+                    continue;
+                }
+
+                // Otherwise search
+                if (is_file($themeDir . '/' . $theme . '/' . $normalized . '.min.css')) {
+                    $hash = md5_file($themeDir . '/' . $theme . '/' . $normalized . '.min.css');
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.min.css?'.$hash.'">';
+                } elseif (is_file($themeDir . '/' . $theme . '/' . $normalized . '.css')) {
+                    $hash = md5_file($themeDir . '/' . $theme . '/' . $normalized . '.css');
+                    $cssList .= '<link rel="stylesheet" type="text/css" href="'.Config::get('hostname', '').'/' . self::$themeHttpDir . '/' . $theme . '/' . $normalized . '.css?'.$hash.'">';
                 }
             }
         }
@@ -280,8 +287,6 @@ class View
             // Make sure the theme isn't already in the chain and is a theme
             if (!in_array($chain[0]['extends'], $themes) && self::isTheme($chain[0]['extends'])) {
                 array_unshift($chain, self::loadThemeMetadata($chain[0]['extends']));
-            } else {
-                break;
             }
         }
 
@@ -349,6 +354,5 @@ class View
 
         $app->response->redirect($newPath);
         throw new ShutdownException();
-        return;
     }
 }

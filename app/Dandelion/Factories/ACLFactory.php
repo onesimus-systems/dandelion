@@ -19,20 +19,14 @@ class ACLFactory
     {
     }
 
-    public function create()
+    public function createKeycard($groupID)
     {
-        return $this->get(0);
-    }
+        if (!$groupID) {
+            return new Keycard();
+        }
 
-    public function get($groupid)
-    {
-        return;
-    }
-
-    public function createKeycard($id)
-    {
         $groupRepo = new Repos\GroupsRepo();
-        $group = $groupRepo->getGroupById($id);
+        $group = $groupRepo->getGroupById($groupID);
 
         $card = new Keycard();
         $card->loadPermissions((array) unserialize($group['permissions']));

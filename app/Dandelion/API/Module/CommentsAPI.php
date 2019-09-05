@@ -29,9 +29,8 @@ class CommentsAPI extends BaseModule
 
         if ($logObject->addComment($params->logid, $this->requestUser->get('id'), $params->comment)) {
             return 'Comment created successfully';
-        } else {
-            throw new ApiException('Error creating comment',ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error creating comment',ApiCommander::API_GENERAL_ERROR);
     }
 
     public function get($params)

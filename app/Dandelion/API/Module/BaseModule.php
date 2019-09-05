@@ -47,7 +47,7 @@ abstract class BaseModule
 {
     // Shim classes
     // TODO: Remove properties
-    protected $ur;
+    protected $userRights;
 
     // Application
     protected $app;
@@ -68,7 +68,7 @@ abstract class BaseModule
         $this->requestUser = $user;
         $this->request = $app->request;
         // TODO: Remove these objects
-        $this->ur = new UserRightsShim($user);
+        $this->userRights = new UserRightsShim($user);
 
         if ($this->makeRepo) {
             // Remove namespace
@@ -82,15 +82,14 @@ abstract class BaseModule
     protected function makeRepo($module)
     {
         $repo = Repos::makeRepo($module);
-        if ($repo) {
-            return $repo;
-        } else {
+        if (!$repo) {
             throw new ApiException('Error initializing API request', ApiCommander::API_SERVER_ERROR);
         }
+        return $repo;
     }
 
     protected function authorized(User $user, $task)
     {
-        return GateKeeper::authorized($user, $task);
+        return (GateKeeper::getInstance())->authorized($user->getKeycard(), $task);
     }
 }

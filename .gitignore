@@ -10,3 +10,5 @@ public/dist/assets/themes/*/*.css
 composer.phar
 .vscode
 dist/
+phpmd.phar
+phpmd.html

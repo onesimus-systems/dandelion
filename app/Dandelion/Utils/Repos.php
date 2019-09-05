@@ -18,8 +18,6 @@ class Repos
 
         if (class_exists($repo)) {
             return new $repo();
-        } else {
-            return null;
         }
     }
 }

@@ -69,11 +69,10 @@ class CheestoAPI extends BaseModule
         $userid = $this->requestUser->get('id');
 
         if ($params->uid) { // A status of another user is trying to be updated
-            if ($params->uid == $userid || $this->authorized($this->requestUser, 'edit_user')) {
-                $userid = $params->uid;
-            } else {
+            if ($params->uid != $userid && !$this->authorized($this->requestUser, 'edit_user')) {
                 throw new ApiPermissionException();
             }
+            $userid = $params->uid;
         }
 
         if ($cheesto->updateStatus(
@@ -82,8 +81,7 @@ class CheestoAPI extends BaseModule
             $params->returntime,
             $userid)) {
             return 'Status updated successfully';
-        } else {
-            throw new ApiException('Error updating status', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error updating status', ApiCommander::API_GENERAL_ERROR);
     }
 }

@@ -38,20 +38,14 @@ class UsersAPI extends BaseModule
         }
 
         // Do action
-        $uf = new UserFactory();
-        $user = $uf->get($userid);
+        $user = (new UserFactory())->get($userid);
         $user->setPassword($newPass);
-        if ($params->force_reset) {
-            $user->set('initial_login', 1);
-        } else {
-            $user->set('initial_login', 0);
-        }
+        $user->set('initial_login', $params->force_reset ? 1 : 0);
 
         if ($user->save()) {
             return 'Password changed successfully';
-        } else {
-            throw new ApiException('Error changing password', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error changing password', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -70,25 +64,19 @@ class UsersAPI extends BaseModule
             throw new ApiException('Group doesn\'t exist', ApiCommander::API_GENERAL_ERROR);
         }
 
-        $uf = new UserFactory();
-        $user = $uf->create();
+        $user = (new UserFactory())->create();
         $user->set('username', $params->username);
         $user->set('fullname', $params->fullname);
         $user->set('group_id', $params->role);
         $user->set('api_override', $params->api_override);
         $user->setPassword($params->password);
         $user->setMakeCheesto($params->cheesto);
-        if ($params->force_reset) {
-            $user->set('initial_login', 1);
-        } else {
-            $user->set('initial_login', 0);
-        }
+        $user->set('initial_login', $params->force_reset ? 1 : 0);
 
         if ($user->save()) {
             return 'User created successfully';
-        } else {
-            throw new ApiException('Error creating user', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error creating user', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -106,26 +94,24 @@ class UsersAPI extends BaseModule
             throw new ApiException('No user id given', ApiCommander::API_GENERAL_ERROR);
         }
 
-        $uf = new UserFactory();
-        $user = $uf->get($uid);
+        $user = (new UserFactory())->get($uid);
 
-        $fn = $params->fullname ?? $user->get('fullname');
-        $gi = $params->role ?? $user->get('group_id');
-        $il = $params->prompt ?? $user->get('initial_login');
-        $t = $params->theme ?? $user->get('theme');
-        $ao = $params->api_override ?? $user->get('api_override');
+        $fullname = $params->fullname ?? $user->get('fullname');
+        $groupID = $params->role ?? $user->get('group_id');
+        $initialLogin = $params->prompt ?? $user->get('initial_login');
+        $theme = $params->theme ?? $user->get('theme');
+        $apiOverride = $params->api_override ?? $user->get('api_override');
 
-        $user->set('fullname', $fn);
-        $user->set('group_id', $gi);
-        $user->set('initial_login', $il);
-        $user->set('theme', $t);
-        $user->set('api_override', $ao);
+        $user->set('fullname', $fullname);
+        $user->set('group_id', $groupID);
+        $user->set('initial_login', $initialLogin);
+        $user->set('theme', $theme);
+        $user->set('api_override', $apiOverride);
 
         if ($user->save()) {
             return 'User saved successfully';
-        } else {
-            throw new ApiException('Error saving user', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error saving user', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -134,7 +120,18 @@ class UsersAPI extends BaseModule
      */
     public function disable($params)
     {
-        return $this->enableDisable($params->uid, true);
+        if (!$this->authorized($this->requestUser, 'edit_user')) {
+            throw new ApiPermissionException();
+        }
+
+        $user = (new UserFactory())->get($params->uid);
+        $user->disable();
+
+        if ($user->save()) {
+            return 'User disabled';
+        }
+
+        throw new ApiException('Error disabling user', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -143,29 +140,17 @@ class UsersAPI extends BaseModule
      */
     public function enable($params)
     {
-        return $this->enableDisable($params->uid, false);
-    }
-
-    private function enableDisable($uid, $disable)
-    {
         if (!$this->authorized($this->requestUser, 'edit_user')) {
             throw new ApiPermissionException();
         }
 
-        $uf = new UserFactory();
-        $user = $uf->get($uid);
-        if ($disable) {
-            $user->disable();
-        } else {
-            $user->enable();
-        }
+        $user = (new UserFactory())->get($params->uid);
+        $user->enable();
 
         if ($user->save()) {
-            return $disable ? 'User disabled' : 'User enabled';
-        } else {
-            $msg = $disable ? 'Error disabling user' : 'Error enabling user';
-            throw new ApiException($msg, ApiCommander::API_GENERAL_ERROR);
+            return 'User enabled';
         }
+        throw new ApiException('Error enabling user', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**
@@ -190,9 +175,8 @@ class UsersAPI extends BaseModule
 
         if ($user->deleteUser($userid, $permissions)) {
             return 'User deleted successfully';
-        } else {
-            throw new ApiException('Error deleting user', ApiCommander::API_GENERAL_ERROR);
         }
+        throw new ApiException('Error deleting user', ApiCommander::API_GENERAL_ERROR);
     }
 
     /**

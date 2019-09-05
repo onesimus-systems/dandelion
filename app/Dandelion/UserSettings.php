@@ -29,9 +29,9 @@ class UserSettings
         }
 
         if ($limit < 5) {
-          $limit = 5;
+            $limit = 5;
         } elseif ($limit > 500) {
-          $limit = 500;
+            $limit = 500;
         }
 
         if ($this->repo->saveLogViewLimit($user, $limit)) {
@@ -55,8 +55,8 @@ class UserSettings
         return false;
     }
 
-    public function getSetting($setting, $id)
+    public function getSetting($setting, $userID)
     {
-        return $this->repo->getUserSetting($id, $setting);
+        return $this->repo->getUserSetting($userID, $setting);
     }
 }

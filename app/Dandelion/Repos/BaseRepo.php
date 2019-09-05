@@ -35,7 +35,7 @@ abstract class BaseRepo
             }
 
             // Connect to database
-            $ok = self::$dbconnection->connect(
+            $connectOK = self::$dbconnection->connect(
                 $dbConfig['type'],
                 $dbConfig['hostname'],
                 $dbConfig['dbname'],
@@ -44,7 +44,7 @@ abstract class BaseRepo
                 $pdoParams);
 
             // Check for proper connection
-            if (!$ok || !self::$dbconnection->pdo()) {
+            if (!$connectOK || !self::$dbconnection->pdo()) {
                 throw new Exception("Error Connecting to Database", 1);
             }
         }

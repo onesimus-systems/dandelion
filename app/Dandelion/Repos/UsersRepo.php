@@ -32,9 +32,9 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
 
         if ($invert) {
             return $group->whereNotEqual('id', $uid)->read();
-        } else {
-            return $group->whereEqual('id', $uid)->readField('group_id');
         }
+
+        return $group->whereEqual('id', $uid)->readField('group_id');
     }
 
     private function fixUserFieldTypes(&$record)
@@ -48,18 +48,14 @@ class UsersRepo extends BaseRepo implements Interfaces\UsersRepo
     public function getUsers($uid = null, $disabled = 0)
     {
         $fields = 'id, fullname, username, group_id, created, initial_login, theme, disabled';
+        $statement = $this->database
+                        ->find($this->table);
+
         if ($uid) {
-            $records = $this->database
-                    ->find($this->table)
-                    ->whereEqual('id', $uid)
-                    //->whereEqual('disabled', $disabled)
-                    ->read($fields);
-        } else {
-            $records = $this->database
-                    ->find($this->table)
-                    //->whereEqual('disabled', $disabled)
-                    ->read($fields);
+            $statement->whereEqual('id', $uid);
         }
+
+        $records = $statement->read($fields);
 
         foreach ($records as &$record) {
             $this->fixUserFieldTypes($record);

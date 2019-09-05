@@ -46,6 +46,9 @@ class ApiModuleMethod
      * Returns if this method matches the given path and set options
      * @param  string $path Path to check
      * @return boolean | StdClass (validated data)
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function matches($path, Request $request)
     {
@@ -55,18 +58,20 @@ class ApiModuleMethod
         }
 
         // Check if an http_method option was set and matches
-        if ($http_method = $this->getOpt('http_method')) {
-            $http_method_func = 'is'.ucfirst($http_method);
-            if (!$request->$http_method_func()) {
+        $httpMethod = $this->getOpt('http_method');
+        if ($httpMethod) {
+            $httpMethodFunc = 'is'.ucfirst($httpMethod);
+            if (!$request->$httpMethodFunc()) {
                 throw new ApiException('Incorrect HTTP method', ApiCommander::API_INVALID_CALL, 405);
                 return false;
             }
         }
 
         // Checks if parameters were set and validates
-        if ($params = $this->getOpt('parameters')) {
+        $params = $this->getOpt('parameters');
+        if ($params) {
             $batchValidations = [];
-            $paramFunc = $http_method ?: 'get';
+            $paramFunc = $httpMethod ?: 'get';
             $paramFunc .= 'Param';
             foreach ($params as $id => $opts) {
                 $default = isset($opts[0]) ? $opts[0] : null;

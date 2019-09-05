@@ -29,8 +29,7 @@ abstract class BaseController
         $this->request = $app->request;
 
         if ($getUser) {
-            $uf = new UserFactory;
-            $this->sessionUser = $uf->getWithKeycard(Session::get('userInfo')['id']);
+            $this->sessionUser = (new UserFactory)->getWithKeycard(Session::get('userInfo')['id']);
         }
 
         $this->init();
@@ -48,7 +47,7 @@ abstract class BaseController
 
     protected function authorized(User $user, $task)
     {
-        return GateKeeper::authorized($user, $task);
+        return (GateKeeper::getInstance())->authorized($user->getKeycard(), $task);
     }
 
     protected function init() { }

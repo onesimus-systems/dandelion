@@ -14,12 +14,12 @@ use Dandelion\Repos\Interfaces\LogsRepo;
 class Logs
 {
     private $repo;
-    private $ur;
+    private $userRepo;
 
-    public function __construct(LogsRepo $repo, $ur = null)
+    public function __construct(LogsRepo $repo, $userRepo = null)
     {
         $this->repo = $repo;
-        $this->ur = $ur;
+        $this->userRepo = $userRepo;
         return;
     }
 
@@ -46,7 +46,7 @@ class Logs
         $getLogs = $this->repo->getLogList($offset, $limit);
 
         foreach ($getLogs as $key => $value) {
-            $getLogs[$key]['canEdit'] = ($this->ur->isAdmin() || $value['user_id'] == $this->ur->userid);
+            $getLogs[$key]['canEdit'] = ($this->userRepo->isAdmin() || $value['user_id'] == $this->userRepo->userid);
         }
         return $getLogs;
     }

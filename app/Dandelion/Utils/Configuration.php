@@ -16,7 +16,6 @@ class Configuration
 
     private function __construct() {}
     private function __clone() {}
-    private function __wakeup() {}
 
     public static function load($configPath)
     {
@@ -44,7 +43,7 @@ class Configuration
                 return false;
             }
 
-            self::$config = self::array_merge_recursive_deep($defaults, $config);
+            self::$config = self::arrayMergeRecursiveDeep($defaults, $config);
             // Ensure hostname is formatted properly for rest of application
             self::$config['hostname'] = rtrim(self::$config['hostname'], '/');
         }
@@ -73,8 +72,10 @@ class Configuration
      *
      * @param array $ Arrays to merge, values in later arrays will overwrite earlier values
      * @return array Merged values
+     *
+     * @SuppressWarnings(PHPMD.ElseExpressions)
      */
-    private static function array_merge_recursive_deep()
+    private static function arrayMergeRecursiveDeep()
     {
         $arrays = func_get_args();
         $result = [];
@@ -84,7 +85,7 @@ class Configuration
                 if (is_integer($key)) {
                     $result[] = $value;
                 } elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
-                    $result[$key] = self::array_merge_recursive_deep($result[$key], $value);
+                    $result[$key] = self::arrayMergeRecursiveDeep($result[$key], $value);
                 } else {
                     $result[$key] = $value;
                 }

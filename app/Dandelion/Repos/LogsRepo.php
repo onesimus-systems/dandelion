@@ -144,16 +144,48 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         ]);
     }
 
-    public function getLogsBySearch($query, $limit, $offset, $count = false)
+    public function getCountLogsBySearch($query)
     {
-        $params = [];
-        $whereClause = '';
         $statement = $this->database
             ->find($this->table)
             ->belongsTo($this->prefix.'user', 'user_id')
             ->orderDesc($this->table.'.id');
 
-        if (!$count) $statement->limit(((int) $offset).','.((int) $limit));
+        list($params, $whereClause) = $this->buildSearchClause($query);
+
+        $statement->where($whereClause, $params);
+
+        return (int) $statement->count();
+    }
+
+    public function getLogsBySearch($query, $limit, $offset)
+    {
+        $statement = $this->database
+            ->find($this->table)
+            ->belongsTo($this->prefix.'user', 'user_id')
+            ->orderDesc($this->table.'.id')
+            ->limit(((int) $offset).','.((int) $limit));
+
+        list($params, $whereClause) = $this->buildSearchClause($query);
+
+        $statement->where($whereClause, $params);
+
+        $results = $statement->read($this->table.'.*, '.$this->prefix.'user.fullname');
+
+        foreach ($results as &$log) {
+            $this->fixLogFieldTypes($log);
+        }
+
+        return $results;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ElseExpressions)
+     */
+    private function buildSearchClause($query)
+    {
+        $params = [];
+        $whereClause = '';
 
         foreach ($query as $command => $struct) {
             $clause = $this->searchWhereClauses[$command]['clause'];
@@ -203,21 +235,7 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
             }
         }
 
-        $whereClause = trim($whereClause, '& ');
-        $statement->where($whereClause, $params);
-        $results = [];
-
-        if ($count) {
-            $results = [(int) $statement->count()];
-        } else {
-            $results = $statement->read($this->table.'.*, '.$this->prefix.'user.fullname');
-
-            foreach ($results as &$log) {
-                $this->fixLogFieldTypes($log);
-            }
-        }
-
-        return $results;
+        return [$params, trim($whereClause, '& ')];
     }
 
     private function fixLogCommentFieldTypes(&$comment)
@@ -227,6 +245,9 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         $comment['log_id'] = (int) $comment['log_id'];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ElseExpressions)
+     */
     public function getLogCommentsById($logid, $order = 'new')
     {
         $logs = $this->database

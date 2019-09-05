@@ -36,6 +36,6 @@ class Keycard
 
     public function set($permission, $value)
     {
-        $permissions[$permission] = $value;
+        $this->permissions[$permission] = $value;
     }
 }
