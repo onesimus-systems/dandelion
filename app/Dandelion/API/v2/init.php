@@ -14,6 +14,7 @@ $apiCommander->registerModule('dandelion', __NAMESPACE__.'\DandelionAPI',
     [
         // [url path, method name (if different), validation schema]
         ['version', null, ['http_method' => 'get']],
+        ['test/othertest', 'thetest', ['http_method' => 'get']]
     ]);
 
 $loginJsonSchema = <<<'JSON'
@@ -57,12 +58,38 @@ $createLogJsonSchema = <<<'JSON'
 }
 JSON;
 
+$editLogJsonSchema = <<<'JSON'
+{
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "number"
+        },
+        "title": {
+            "type": "string"
+        },
+        "body": {
+            "type": "string"
+        },
+        "category": {
+            "type": "string"
+        }
+    },
+    "anyOf": [
+        {"required": ["title"]},
+        {"required": ["body"]},
+        {"required": ["category"]}
+    ],
+    "required": ["id"]
+}
+JSON;
+
 $apiCommander->registerModule('logs', __NAMESPACE__.'\LogsAPI',
     [
         ['', 'read', [
             'http_method' => 'get',
             'parameters' => [
-                'logid' => [null, 'int'],
+                'id' => [null, 'int'],
                 'offset' => [0, 'int'],
                 'limit' => [null, 'int']
             ]
@@ -70,6 +97,10 @@ $apiCommander->registerModule('logs', __NAMESPACE__.'\LogsAPI',
         ['', 'create', [
             'http_method' => 'post',
             'json_schema' => $createLogJsonSchema,
+        ]],
+        ['', 'edit', [
+            'http_method' => 'patch',
+            'json_schema' => $editLogJsonSchema,
         ]],
         ['search', null, [
             'http_method' => 'get',

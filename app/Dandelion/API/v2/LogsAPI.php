@@ -34,8 +34,8 @@ class LogsAPI extends BaseModule
         $return = [];
         $logs = new Logs($this->repo, $this->ur);
 
-        if ($params->logid) {
-            $return = $logs->getLogInfo($params->logid);
+        if ($params->id) {
+            $return = $logs->getLogInfo($params->id);
         } else {
             $metadata = $this->offsetLimitCommon($params);
             $return['logs'] = $logs->getLogList($metadata['limit'], $metadata['offset']);
@@ -68,36 +68,36 @@ class LogsAPI extends BaseModule
         }
     }
 
-    // /**
-    //  * Save an edit to an existing log
-    //  */
-    // public function edit($params)
-    // {
-    //     $log = $this->read($params)[0];
+    /**
+     * Save an edit to an existing log
+     */
+    public function edit($params)
+    {
+        $log = $this->read($params)[0];
 
-    //     $canEdit = (
-    //         $this->authorized($this->requestUser, 'admin') ||
-    //         $this->authorized($this->requestUser, 'edit_any_log') ||
-    //         ($this->authorized($this->requestUser, 'edit_log') && $log['user_id'] == $this->requestUser->get('id'))
-    //     );
+        $canEdit = (
+            $this->authorized($this->requestUser, 'admin') ||
+            $this->authorized($this->requestUser, 'edit_any_log') ||
+            ($this->authorized($this->requestUser, 'edit_log') && $log['user_id'] == $this->requestUser->get('id'))
+        );
 
-    //     if (!$canEdit) {
-    //         throw new ApiPermissionException();
-    //     }
+        if (!$canEdit) {
+            throw new ApiPermissionException();
+        }
 
-    //     $lid = $params->logid;
-    //     $title = $params->title;
-    //     $body = $params->body;
-    //     $cat = rtrim($this->cat, ':');
+        $lid = $params->id;
+        $title = $params->title ?: null;
+        $body = $params->body ?: null;
+        $cat = $this->cat ? rtrim($this->cat, ':') : null;
 
-    //     $logs = new Logs($this->repo);
+        $logs = new Logs($this->repo);
 
-    //     if ($logs->editLog($lid, $title, $body, $cat)) {
-    //         return "'{$title}' edited successfully";
-    //     } else {
-    //         throw new ApiException("Error saving log", ApiCommander::API_GENERAL_ERROR);
-    //     }
-    // }
+        if (!$logs->editLog($lid, $title, $body, $cat)) {
+            throw new ApiException("Error saving log", ApiCommander::API_GENERAL_ERROR);
+        }
+
+        return "'{$title}' edited successfully";
+    }
 
     /**
      * Search logs using provided query string

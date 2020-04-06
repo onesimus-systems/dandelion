@@ -25,4 +25,9 @@ class DandelionAPI extends BaseModule
     {
         return Application::VERSION;
     }
+
+    public function thetest()
+    {
+        return Application::VERSION . "-Blah";
+    }
 }

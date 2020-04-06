@@ -135,14 +135,23 @@ class LogsRepo extends BaseRepo implements Interfaces\LogsRepo
         ]);
     }
 
-    public function updateLog($lid, $title, $body, $cat)
+    public function updateLog($lid, $title=null, $body=null, $cat=null)
     {
-        return $this->database->updateItem($this->table, $lid, [
-            'title' => $title,
-            'body' => $body,
-            'category' => $cat,
+        $params = [
             'is_edited' => 1
-        ]);
+        ];
+
+        if (!is_null($title)) {
+            $params['title'] = $title;
+        }
+        if (!is_null($body)) {
+            $params['body'] = $body;
+        }
+        if (!is_null($cat)) {
+            $params['category'] = $cat;
+        }
+
+        return $this->database->updateItem($this->table, $lid, $params);
     }
 
     public function getLogsBySearch($query, $limit, $offset, $count = false)

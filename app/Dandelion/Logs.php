@@ -80,9 +80,9 @@ class Logs
      *
      * @return string Confirmation message or error message
      */
-    public function editLog($lid, $title, $body, $cat)
+    public function editLog($lid, $title=null, $body=null, $cat=null)
     {
-        if (!$body || !$title || !$lid || !$cat) {
+        if (!$lid) {
             return false;
         }
 

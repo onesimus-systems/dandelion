@@ -30,8 +30,10 @@ class Api2Controller extends ApiController
      *
      * @return null
      */
-    public function apiCall($module, $method)
+    public function apiCall($path)
     {
+        list($module, $method) = explode('/', $path, 2);
+
         $publicEnabled = Config::get('publicApiEnabled');
         // If the full public api is enabled, whitelisting is not
         $whitelistEnabled = $publicEnabled ? false : Config::get('whitelistApiEnabled');

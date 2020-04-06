@@ -231,20 +231,20 @@
         },
         {
             "name": "onesimus-systems/osrouter",
-            "version": "1.3.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/onesimus-systems/osrouter.git",
-                "reference": "7ce39bdace254b76d33be097bc119abd6290dd83"
+                "reference": "b10652217ae0311b1dde1d896797320026bde1c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/7ce39bdace254b76d33be097bc119abd6290dd83",
-                "reference": "7ce39bdace254b76d33be097bc119abd6290dd83",
+                "url": "https://api.github.com/repos/onesimus-systems/osrouter/zipball/b10652217ae0311b1dde1d896797320026bde1c3",
+                "reference": "b10652217ae0311b1dde1d896797320026bde1c3",
                 "shasum": ""
             },
             "require-dev": {
-                "phpunit/phpunit": "4.7.*"
+                "phpunit/phpunit": "9.1.*"
             },
             "type": "library",
             "autoload": {
@@ -269,7 +269,7 @@
                 "http",
                 "router"
             ],
-            "time": "2019-06-09T18:20:42+00:00"
+            "time": "2020-04-06T18:04:24+00:00"
         },
         {
             "name": "onesimus-systems/ossession",
